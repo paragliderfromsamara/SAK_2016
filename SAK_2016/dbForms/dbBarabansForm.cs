@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace SAK_2016
 {
@@ -16,21 +17,18 @@ namespace SAK_2016
         {
             mForm = f;
             InitializeComponent();
-           // initBarabansList();
+            initBarabansList();
         }
-        /*
         private void initBarabansList()
         {
             DBControl mysql = new DBControl("bd_baraban");
             barabanTypeDataSet.Reset();
-            mysql.MyConn.Open();
             string com = mysql.GetSQLCommand("Barabans");
-            CoreLab.MySql.MySqlDataAdapter da = new CoreLab.MySql.MySqlDataAdapter(com, mysql.MyConn);
+            MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
             da.Fill(barabanTypeDataSet);
             mysql.MyConn.Close();
             barabanTypeList.DataSource = barabanTypeDataSet.Tables[0];
             barabanTypeList.Refresh();
-
         }
 
         private void closeBut_Click(object sender, EventArgs e)
@@ -52,10 +50,8 @@ namespace SAK_2016
             {
                 int[] arr = new int[barabanTypeList.Rows.Count - 1];
                 com = String.Format(com, barabanName.Text, barabanWeight.Text);
-                mysql.MyConn.Open();
                 long id = mysql.RunNoQuery(com);
                 mysql.MyConn.Close();
-                //usersList.Rows.Add(id, userLastName.Text, userFirstName.Text, userThirdName.Text, userPassword.Text, userTabNum.Text, userRole.SelectedValue);
                 for (int i = 0; i < barabanTypeList.Rows.Count - 1; i++)
                 {
                     arr[i] = Convert.ToInt32(barabanTypeList.Rows[i].Cells[0].Value);
@@ -97,6 +93,15 @@ namespace SAK_2016
             }
             else return false;
         }
-        */
+
+        private void barabanWeight_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !ServiceFunctions.DoubleCharChecker(e.KeyChar);
+        }
+
+        private void barabanWeight_Leave(object sender, EventArgs e)
+        {
+            barabanWeight.Text = ServiceFunctions.checkDecimalValInTextBox(barabanWeight);
+        }
     }
 }

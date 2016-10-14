@@ -166,7 +166,7 @@ namespace SAK_2016
         }
 
 
-
+       
         private bool DoubleCharChecker(char key) //проверка на ввод числа типа Double
         {
             return ((key >= Convert.ToChar(Keys.D0) && key <= Convert.ToChar(Keys.D9)) || key == Convert.ToChar(Keys.Separator) || key == Convert.ToChar(Keys.Delete) || key == Convert.ToChar(Keys.Back));

@@ -8,7 +8,7 @@ namespace SAK_2016
     public class measureMain  
     {
         public double[] measureMemory;
-        private int maxMeasMemIndex = 100;
+        //private int maxMeasMemIndex = 100;
 
 
         public string[] measuredParameters = {"Rж", "C0", "Cр", "Rиз", "al", "A0", "Aз", "ВсВИ" };

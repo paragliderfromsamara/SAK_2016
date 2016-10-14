@@ -212,14 +212,28 @@ namespace SAK_2016
 
         private bool checkForm(bool isEdit)
         {
-           if (String.IsNullOrWhiteSpace(userLastNameLabel.Text) || String.IsNullOrWhiteSpace(userFirstName.Text) || (String.IsNullOrWhiteSpace(userPassword.Text) && !isEdit))
+            bool noLastName = String.IsNullOrWhiteSpace(userLastName.Text);
+            bool noName = String.IsNullOrWhiteSpace(userFirstName.Text);
+            bool noPswrd = String.IsNullOrWhiteSpace(userPassword.Text);
+            bool noTabNum = String.IsNullOrWhiteSpace(userTabNum.Text);
+            userLastName.BackColor = noLastName ? System.Drawing.Color.FromArgb(255, 193, 193) : System.Drawing.Color.Empty;
+            userFirstName.BackColor = noName ? System.Drawing.Color.FromArgb(255, 193, 193) : System.Drawing.Color.Empty;
+            userPassword.BackColor = noPswrd && !isEdit ? System.Drawing.Color.FromArgb(255, 193, 193) : System.Drawing.Color.Empty;
+            userTabNum.BackColor = noTabNum ? System.Drawing.Color.FromArgb(255, 193, 193) : System.Drawing.Color.Empty;
+            if ((noLastName || noName || noPswrd || noTabNum) && !isEdit)
            {
-               string msgText = (isEdit) ? "Поля имя и фамилия должны быть заполнены!" : "Поля имя, фамилия и пароль должны быть заполнены!";
-               MessageBox.Show(msgText, "Недопустимы пустые поля", MessageBoxButtons.OK, MessageBoxIcon.Error);
+               string msgText = (isEdit) ? "Поля имя, фамилия и табельный номер должны быть заполнены!" : "Поля имя, фамилия, табельный номер и пароль должны быть заполнены!";
+
+                MessageBox.Show(msgText, "Недопустимы пустые поля", MessageBoxButtons.OK, MessageBoxIcon.Error);
+               
                return true;
            }
            else return false;
         }
 
+        private void userTabNum_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !ServiceFunctions.IntCharChecker(e.KeyChar);
+        }
     }
 }

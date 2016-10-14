@@ -92,13 +92,13 @@ namespace SAK_2016
 
         private void measuredParamsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (measuredParamsList.SelectedItem == "Rж")         mMain = new measureResLeads();
-            else if (measuredParamsList.SelectedItem == "C0")    mMain = new measureCapacityZero();
-            else if (measuredParamsList.SelectedItem == "A0")    mMain = new measureTransitiveAttenuationNearSide();
-            else if (measuredParamsList.SelectedItem == "Aз")    mMain = new measureTransitiveAttenuationFarSide();
-            else if (measuredParamsList.SelectedItem == "al")    mMain = new measureWorkAttenuation();
-            else if (measuredParamsList.SelectedItem == "Rиз")   mMain = new measureResIsolation();
-            else if (measuredParamsList.SelectedItem == "ВсВИ")  mMain = new measureHightVoltageTest();
+            if (measuredParamsList.SelectedItem.ToString() == "Rж")         mMain = new measureResLeads();
+            else if (measuredParamsList.SelectedItem.ToString() == "C0")    mMain = new measureCapacityZero();
+            else if (measuredParamsList.SelectedItem.ToString() == "A0")    mMain = new measureTransitiveAttenuationNearSide();
+            else if (measuredParamsList.SelectedItem.ToString() == "Aз")    mMain = new measureTransitiveAttenuationFarSide();
+            else if (measuredParamsList.SelectedItem.ToString() == "al")    mMain = new measureWorkAttenuation();
+            else if (measuredParamsList.SelectedItem.ToString() == "Rиз")   mMain = new measureResIsolation();
+            else if (measuredParamsList.SelectedItem.ToString() == "ВсВИ")  mMain = new measureHightVoltageTest();
             else mMain = new measureMain();
             updForm();
         }

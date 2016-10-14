@@ -14,7 +14,6 @@ namespace SAK_2016
         {
             #region Данные класса DBControl
             public MySqlConnection MyConn;
-          
             MySqlCommand MC;
             private string cur_base;
             private string connstr = "UserId=root;Server=localhost;Password=; CharacterSet=cp1251;";
@@ -25,15 +24,10 @@ namespace SAK_2016
                 cur_base = cb;
             try
                 {
-                    //if (Host == null || Host == "") throw new DBException("Неверный хост!");
                     MyConn = new MySqlConnection(connstr);
-                  
-                   // MyConn.Direct = false;
                     MyConn.Open();
                     MC = new MySqlCommand("USE " + cur_base, MyConn);
                     if (cur_base != "") MC.ExecuteScalar();
-                    //MC.CommandText = "SET NAMES '" + encoding + "'";
-                    //MC.ExecuteScalar();
                 }
                 catch (MySqlException ex)
                 {
@@ -51,8 +45,6 @@ namespace SAK_2016
             {
                 try
                 {
-                    //MC.CommandText = "SET NAMES '"+ encoding + "';";
-                    //MC.ExecuteScalar();
                     MC.CommandText = GetSQLCommand("CreateTables");
                     MC.ExecuteScalar();
                 }
@@ -107,7 +99,6 @@ namespace SAK_2016
                 try
                 {
                     MC.CommandText = comm;
-                    // MC.FetchAll = true;
                     return MC.ExecuteReader();
                 }
                 catch (MySqlException ex)
@@ -121,8 +112,6 @@ namespace SAK_2016
             {
                 try
                 {
-                    //MC.CommandText = "SET NAMES cp1251;";
-                    //MC.ExecuteScalar();
                     MC.CommandText = comm;
                     object or = MC.ExecuteScalar();
                     long ret;

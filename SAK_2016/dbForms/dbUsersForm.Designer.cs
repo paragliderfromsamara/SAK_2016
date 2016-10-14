@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.closeBut = new System.Windows.Forms.Button();
             this.addUserButton = new System.Windows.Forms.Button();
             this.userFirstName = new System.Windows.Forms.TextBox();
@@ -217,6 +217,7 @@
             this.userTabNum.Name = "userTabNum";
             this.userTabNum.Size = new System.Drawing.Size(99, 20);
             this.userTabNum.TabIndex = 3;
+            this.userTabNum.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.userTabNum_KeyPress);
             // 
             // userPasswordLabel
             // 
@@ -270,12 +271,12 @@
             this.usersList.DataSource = this.usersDataSet;
             this.usersList.Location = new System.Drawing.Point(12, 146);
             this.usersList.Name = "usersList";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.NullValue = "-";
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Teal;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.usersList.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.NullValue = "-";
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Teal;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.usersList.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.usersList.RowTemplate.Height = 30;
             this.usersList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.usersList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
