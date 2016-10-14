@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SQLQuery>
+ 
+  <Roles>
+  SELECT Dolshnosti.DolshNum, Dolshnosti.Dolshnost FROM Dolshnosti
+  ORDER BY Dolshnosti.DolshNum ASC
+  </Roles>
+
+  <Users>
+  select Familija_imja_ot.UserNum, Familija_imja_ot.Familija, Familija_imja_ot.Imja, Familija_imja_ot.Otchestvo, Familija_imja_ot.TabNum, Familija_imja_ot.Pass, Dolshnosti.Dolshnost from Familija_imja_ot LEFT JOIN Dolshnosti ON (Familija_imja_ot.Dolshnost = Dolshnosti.DolshNum) WHERE Familija_imja_ot.Activ = 1 
+  ORDER BY Familija_imja_ot.Familija ASC
+  </Users>
+
+  <UpdateUserWithoutPass>
+	UPDATE Familija_imja_ot SET Familija_imja_ot.Imja = "{1}", Familija_imja_ot.Familija = "{2}", Familija_imja_ot.Otchestvo = "{3}", Familija_imja_ot.TabNum = {4}, Familija_imja_ot.Dolshnost = {5}
+	WHERE Familija_imja_ot.UserNum IN({0})
+  </UpdateUserWithoutPass>
+  
+  <UpdateUserWithPass>
+	UPDATE Familija_imja_ot SET Familija_imja_ot.Imja = "{1}", Familija_imja_ot.Familija = "{2}", Familija_imja_ot.Otchestvo = "{3}", Familija_imja_ot.TabNum = {4}, Familija_imja_ot.Dolshnost = {5}, Familija_imja_ot.Pass = "{6}"   
+	WHERE Familija_imja_ot.UserNum IN({0})
+  </UpdateUserWithPass>
+  
+  <AddUser>
+  INSERT INTO Familija_imja_ot(Familija_imja_ot.Familija, Familija_imja_ot.Imja, Familija_imja_ot.Otchestvo, Familija_imja_ot.Pass, Familija_imja_ot.TabNum, Familija_imja_ot.Dolshnost,Familija_imja_ot.Activ) VALUES("{0}","{1}","{2}","{3}",{4},{5}, 1)
+  </AddUser>
+  
+  <HideUsers>
+	UPDATE Familija_imja_ot SET Familija_imja_ot.Activ = 0 
+	WHERE Familija_imja_ot.UserNum IN({0})
+  </HideUsers>
+
+  <Barabans>
+	SELECT * FROM Tipy_baraban ORDER BY Tipy_baraban.TipName ASC
+  </Barabans>
+  <AddBaraban>
+	INSERT INTO Tipy_baraban (Tipy_baraban.TipName, Tipy_baraban.Massa) VALUES ("{0}", {1})
+  </AddBaraban>
+  
+  <ShowCables>
+	SELECT Cables.CabNum, Cables.CabName, CabNameStruct, norm_docum.DocNum, Cables.TextPrim, Cables.KodOKP, Cables.KodOKP_KCH FROM Cables LEFT JOIN norm_docum ON (Cables.DocInd = norm_docum.DocInd)
+  </ShowCables>
+  
+  <ShowCableMarks>
+	SELECT Distinct Cables.CabName from Cables ORDER BY Cables.CabName ASC
+  </ShowCableMarks>
+  
+  <ShowNormaDocs>
+	SELECT Distinct Norm_Docum.DocInd, Norm_Docum.DocNum, Norm_Docum.DocName  from Norm_Docum ORDER BY Norm_Docum.DocNum ASC
+  </ShowNormaDocs>
+  
+  <ShowStructTypes>
+	SELECT * from Tipy_Poviv ORDER BY Tipy_Poviv.StruktNum ASC
+  </ShowStructTypes>
+  
+  <ShowLeadsMaterial>
+	SELECT Materialy_Gil.MaterInd, Materialy_Gil.MaterName from Materialy_Gil ORDER BY Materialy_Gil.MaterInd ASC
+  </ShowLeadsMaterial>
+  
+  <ShowLeadsDiameters>
+	SELECT Distinct Struktury_Cab.DiamGil from Struktury_Cab ORDER BY Struktury_Cab.DiamGil ASC
+  </ShowLeadsDiameters>
+  
+  <ShowIsolationMaterial>
+	SELECT Materialy_Izol.MaterInd, Materialy_Izol.MaterName from Materialy_Izol ORDER BY Materialy_Izol.MaterInd ASC
+  </ShowIsolationMaterial>
+  
+  <ShowWaveResistance>
+	SELECT Distinct Struktury_Cab.Zwave from Struktury_Cab ORDER BY Struktury_Cab.Zwave ASC
+  </ShowWaveResistance>
+  
+  <ShowDrFormuls>
+	SELECT * from dr_formuls ORDER BY dr_formuls.drind ASC
+  </ShowDrFormuls>
+  
+  <ShowDrPrivFormuls>
+	SELECT * from dr_priv_formuls ORDER BY dr_priv_formuls.drprivind ASC
+  </ShowDrPrivFormuls>
+  
+</SQLQuery>

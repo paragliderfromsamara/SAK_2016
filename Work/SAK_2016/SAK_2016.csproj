@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1FB918A7-A0B7-4DD2-81CB-FD61CD5689DD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SAK_2016</RootNamespace>
+    <AssemblyName>SAK_2016</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <DocumentationFile>bin\Debug\SAK_2016.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CoreLab.Data">
+      <HintPath>.\CoreLab.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreLab.MySql">
+      <HintPath>.\CoreLab.MySql.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="dbForms\addCableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dbForms\addCableForm.Designer.cs">
+      <DependentUpon>addCableForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="testsForm\autoTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="testsForm\autoTestForm.Designer.cs">
+      <DependentUpon>autoTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dbForms\dbBarabansForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dbForms\dbBarabansForm.Designer.cs">
+      <DependentUpon>dbBarabansForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dbForms\dbCablesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dbForms\dbCablesForm.Designer.cs">
+      <DependentUpon>dbCablesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dbForms\dbTestsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dbForms\dbTestsForm.Designer.cs">
+      <DependentUpon>dbTestsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dbForms\dbUsersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dbForms\dbUsersForm.Designer.cs">
+      <DependentUpon>dbUsersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IniFile.cs" />
+    <Compile Include="mainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mainForm.Designer.cs">
+      <DependentUpon>mainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="testsForm\manualTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="testsForm\manualTestForm.Designer.cs">
+      <DependentUpon>manualTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="measureClasses\manualTestThread.cs" />
+    <Compile Include="measureClasses\measureCapacityZero.cs" />
+    <Compile Include="measureClasses\measureHightVoltageTest.cs" />
+    <Compile Include="measureClasses\measureResIsolation.cs" />
+    <Compile Include="measureClasses\measureResLeads.cs" />
+    <Compile Include="measureClasses\measureMain.cs" />
+    <Compile Include="measureClasses\measureTransitiveAttenuationFarSide.cs" />
+    <Compile Include="measureClasses\measureTransitiveAttenuationNearSide.cs" />
+    <Compile Include="measureClasses\measureWorkAttenuation.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="userControl\Signin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="userControl\Signin.Designer.cs">
+      <DependentUpon>Signin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="userControl\UserGrants.cs" />
+    <EmbeddedResource Include="dbForms\addCableForm.resx">
+      <DependentUpon>addCableForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="testsForm\autoTestForm.resx">
+      <DependentUpon>autoTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dbForms\dbBarabansForm.resx">
+      <DependentUpon>dbBarabansForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dbForms\dbCablesForm.resx">
+      <DependentUpon>dbCablesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dbForms\dbUsersForm.resx">
+      <DependentUpon>dbUsersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mainForm.resx">
+      <DependentUpon>mainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="testsForm\manualTestForm.resx">
+      <DependentUpon>manualTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="userControl\Signin.resx">
+      <DependentUpon>Signin.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.SQL.Server.Compact.3.5">
+      <Visible>False</Visible>
+      <ProductName>SQL Server Compact 3.5 SP2</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
