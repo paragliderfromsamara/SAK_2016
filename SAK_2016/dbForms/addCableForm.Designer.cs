@@ -38,7 +38,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cableMarksDataSet = new System.Data.DataSet();
             this.normDocsDataSet = new System.Data.DataSet();
-            this.button1 = new System.Windows.Forms.Button();
+            this.closeBut = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.buildLength = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -147,7 +147,6 @@
             this.normDocComboBox.Name = "normDocComboBox";
             this.normDocComboBox.Size = new System.Drawing.Size(156, 21);
             this.normDocComboBox.TabIndex = 4;
-            //this.normDocComboBox.SelectedIndexChanged += new System.EventHandler(this.normDocComboBox_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -182,15 +181,15 @@
             // 
             this.normDocsDataSet.DataSetName = "NewDataSet";
             // 
-            // button1
+            // closeBut
             // 
-            this.button1.Location = new System.Drawing.Point(12, 680);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(127, 28);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "Закрыть";
-            this.button1.UseVisualStyleBackColor = true;
-            //this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.closeBut.Location = new System.Drawing.Point(12, 680);
+            this.closeBut.Name = "closeBut";
+            this.closeBut.Size = new System.Drawing.Size(127, 28);
+            this.closeBut.TabIndex = 8;
+            this.closeBut.Text = "Закрыть";
+            this.closeBut.UseVisualStyleBackColor = true;
+            this.closeBut.Click += new System.EventHandler(this.closeBut_Click);
             // 
             // button2
             // 
@@ -207,8 +206,6 @@
             this.buildLength.Name = "buildLength";
             this.buildLength.Size = new System.Drawing.Size(156, 20);
             this.buildLength.TabIndex = 10;
-            //this.buildLength.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.buildLength_KeyPress);
-            //this.buildLength.Leave += new System.EventHandler(this.buildLength_Leave);
             // 
             // label5
             // 
@@ -225,8 +222,6 @@
             this.cableWeight.Name = "cableWeight";
             this.cableWeight.Size = new System.Drawing.Size(144, 20);
             this.cableWeight.TabIndex = 12;
-            //this.cableWeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cableWeight_KeyPress);
-            //this.cableWeight.Leave += new System.EventHandler(this.cableWeight_Leave);
             // 
             // label6
             // 
@@ -243,8 +238,6 @@
             this.testVoltageObol.Name = "testVoltageObol";
             this.testVoltageObol.Size = new System.Drawing.Size(138, 20);
             this.testVoltageObol.TabIndex = 14;
-            //this.testVoltageObol.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.testVoltageObol_KeyPress);
-            //this.testVoltageObol.Leave += new System.EventHandler(this.testVoltageObol_Leave);
             // 
             // label7
             // 
@@ -261,8 +254,6 @@
             this.minPleasure.Name = "minPleasure";
             this.minPleasure.Size = new System.Drawing.Size(75, 20);
             this.minPleasure.TabIndex = 16;
-            //this.minPleasure.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.minPleasure_KeyPress);
-            //this.minPleasure.Leave += new System.EventHandler(this.minPleasure_Leave);
             // 
             // maxPleasure
             // 
@@ -270,8 +261,6 @@
             this.maxPleasure.Name = "maxPleasure";
             this.maxPleasure.Size = new System.Drawing.Size(75, 20);
             this.maxPleasure.TabIndex = 17;
-            //this.maxPleasure.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.maxPleasure_KeyPress);
-            //this.maxPleasure.Leave += new System.EventHandler(this.maxPleasure_Leave);
             // 
             // label8
             // 
@@ -342,7 +331,6 @@
             this.factElNumb.Name = "factElNumb";
             this.factElNumb.Size = new System.Drawing.Size(104, 20);
             this.factElNumb.TabIndex = 26;
-           // this.factElNumb.ValueChanged += new System.EventHandler(this.factElNumb_ValueChanged);
             // 
             // groupBox2
             // 
@@ -381,7 +369,6 @@
             this.nomElNumb.Name = "nomElNumb";
             this.nomElNumb.Size = new System.Drawing.Size(98, 20);
             this.nomElNumb.TabIndex = 28;
-            //this.nomElNumb.ValueChanged += new System.EventHandler(this.nomElNumb_ValueChanged);
             // 
             // structTypeComboBox
             // 
@@ -391,7 +378,6 @@
             this.structTypeComboBox.Name = "structTypeComboBox";
             this.structTypeComboBox.Size = new System.Drawing.Size(218, 21);
             this.structTypeComboBox.TabIndex = 28;
-            //this.structTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.structTypeComboBox_SelectedIndexChanged);
             // 
             // label14
             // 
@@ -427,7 +413,6 @@
             this.leadDiametersComboBox.Name = "leadDiametersComboBox";
             this.leadDiametersComboBox.Size = new System.Drawing.Size(94, 21);
             this.leadDiametersComboBox.TabIndex = 32;
-            //this.leadDiametersComboBox.SelectedIndexChanged += new System.EventHandler(this.leadDiametersComboBox_SelectedIndexChanged);
             // 
             // label16
             // 
@@ -484,8 +469,6 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(94, 20);
             this.textBox3.TabIndex = 2;
-            //this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
-            //this.textBox3.Leave += new System.EventHandler(this.textBox3_Leave);
             // 
             // label18
             // 
@@ -502,8 +485,6 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(94, 20);
             this.textBox2.TabIndex = 0;
-            //this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
-            //this.textBox2.Leave += new System.EventHandler(this.textBox2_Leave);
             // 
             // label20
             // 
@@ -625,7 +606,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(902, 720);
-            this.ControlBox = false;
             this.Controls.Add(this.groupCapacityCheckBox);
             this.Controls.Add(this.label23);
             this.Controls.Add(this.richTextBox1);
@@ -658,7 +638,7 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.buildLength);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.closeBut);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.fullNameNormDoc);
             this.Controls.Add(this.label3);
@@ -670,6 +650,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "addCableForm";
             this.Text = "Новый кабель";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.addCableForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.cableMarksDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.normDocsDataSet)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -704,7 +685,7 @@
         private System.Windows.Forms.Label label4;
         private System.Data.DataSet cableMarksDataSet;
         private System.Data.DataSet normDocsDataSet;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button closeBut;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox buildLength;
         private System.Windows.Forms.Label label5;

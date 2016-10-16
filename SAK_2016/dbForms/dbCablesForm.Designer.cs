@@ -70,13 +70,13 @@
             this.TextPrim,
             this.KodOKP,
             this.KodOKP_KCH});
-            this.cablesList.Location = new System.Drawing.Point(31, 83);
+            this.cablesList.Location = new System.Drawing.Point(12, 56);
             this.cablesList.Name = "cablesList";
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Teal;
             this.cablesList.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.cablesList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.cablesList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.cablesList.Size = new System.Drawing.Size(897, 348);
+            this.cablesList.Size = new System.Drawing.Size(943, 390);
             this.cablesList.StandardTab = true;
             this.cablesList.TabIndex = 1;
             // 
@@ -144,13 +144,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(967, 503);
-            this.ControlBox = false;
             this.Controls.Add(this.openCableFormBut);
             this.Controls.Add(this.cablesList);
             this.Controls.Add(this.closeBut);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "dbCablesForm";
             this.Text = "База данных кабелей";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.dbCablesForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dbCablesDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cablesList)).EndInit();
             this.ResumeLayout(false);

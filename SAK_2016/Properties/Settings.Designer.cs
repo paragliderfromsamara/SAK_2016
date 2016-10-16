@@ -40,5 +40,24 @@ namespace SAK_2016.Properties {
                 return ((int)(this["numberOfComUnits"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("UserId=root;Server=localhost;Password=;CharacterSet=cp1251;")]
+        public string rootConnectionString {
+            get {
+                return ((string)(this["rootConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("db_sak")]
+        public string dbName {
+            get {
+                return ((string)(this["dbName"]));
+            }
+        }
     }
 }

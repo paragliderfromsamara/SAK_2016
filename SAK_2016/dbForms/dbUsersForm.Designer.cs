@@ -369,7 +369,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.closeBut;
             this.ClientSize = new System.Drawing.Size(987, 563);
-            this.ControlBox = false;
             this.Controls.Add(this.userIdLbl);
             this.Controls.Add(this.usersList);
             this.Controls.Add(this.userFormField);
@@ -377,6 +376,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "dbUsersForm";
             this.Text = "Информация о пользователях";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.dbUsersForm_FormClosing);
             this.userFormField.ResumeLayout(false);
             this.userFormField.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rolesDataSet)).EndInit();

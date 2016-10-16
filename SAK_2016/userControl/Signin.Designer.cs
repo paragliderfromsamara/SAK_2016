@@ -54,7 +54,7 @@
             this.tabNum.Name = "tabNum";
             this.tabNum.Size = new System.Drawing.Size(100, 20);
             this.tabNum.TabIndex = 1;
-            this.tabNum.Text = "130000";
+            this.tabNum.Text = "0";
             // 
             // password
             // 
@@ -63,7 +63,7 @@
             this.password.PasswordChar = '*';
             this.password.Size = new System.Drawing.Size(100, 20);
             this.password.TabIndex = 2;
-            this.password.Text = "013389";
+            this.password.Text = "123456";
             // 
             // nameLbl
             // 

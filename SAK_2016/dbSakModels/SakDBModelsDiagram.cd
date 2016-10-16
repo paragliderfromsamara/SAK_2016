@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SAK_2016.dbBase">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEACAAAAAAAAAAAAAAAAAAAAECAAAAAAAAAA=</HashCode>
+      <FileName>dbSakModels\dbBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SAK_2016.dbCable">
+    <Position X="2.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>dbSakModels\dbCable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SAK_2016.dbBarabanType">
+    <Position X="4.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>dbSakModels\dbBaraban.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SAK_2016.dbBaraban">
+    <Position X="6.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>dbSakModels\dbBaraban.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SAK_2016.dbCableStructureType">
+    <Position X="8.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>dbSakModels\dbCableStructureType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SAK_2016.dbCableStructure">
+    <Position X="10.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>dbSakModels\dbCableStructure.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SAK_2016.User">
+    <Position X="0.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAADAAAAAAAAAAAAAAAAAAEAEEBIAAAggAAQgA=</HashCode>
+      <FileName>dbSakModels\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

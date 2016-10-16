@@ -27,9 +27,9 @@ namespace SAK_2016
         private void closeBut_Click(object sender, EventArgs e)
         {
             this.Close();
-            mForm.switchMenuStripItems(true);
-            this.Dispose();
-
+            //mForm.switchMenuStripItems(true);
+            //this.Dispose();
+            //MessageBox.Show("Good", "GD", MessageBoxButtons.OK);
         }
 
 
@@ -234,6 +234,13 @@ namespace SAK_2016
         private void userTabNum_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !ServiceFunctions.IntCharChecker(e.KeyChar);
+        }
+
+        private void dbUsersForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            mForm.switchMenuStripItems(true);
+            this.Dispose();
+            MessageBox.Show("Good", "GD", MessageBoxButtons.OK);
         }
     }
 }

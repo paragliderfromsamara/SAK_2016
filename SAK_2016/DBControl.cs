@@ -28,7 +28,8 @@ namespace SAK_2016
                     MyConn.Open();
                     MC = new MySqlCommand("USE " + cur_base, MyConn);
                     if (cur_base != "") MC.ExecuteScalar();
-                }
+                    MyConn.Close();
+            }
                 catch (MySqlException ex)
                 {
                     MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -41,18 +42,7 @@ namespace SAK_2016
                 }
             }
             //------------------------------------------------------------------------------------------------------------------------
-            public void CheckAndCreateTables()
-            {
-                try
-                {
-                    MC.CommandText = GetSQLCommand("CreateTables");
-                    MC.ExecuteScalar();
-                }
-                catch (MySqlException ex)
-                {
-                    MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString(), "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+             
             //------------------------------------------------------------------------------------------------------------------------
             public void Dispose()
             {
@@ -126,8 +116,30 @@ namespace SAK_2016
                     throw new DBException("");
                 }
             }
-            //------------------------------------------------------------------------------------------------------------------------
-            public string GetOneValue(string com)
+        /// <summary>
+        /// Проверяет наличие записи в таблице по названию таблицы и условиям в основноей БД
+        /// </summary>
+        /// <param name="tabName">Наименование </param>
+        /// <param name="conditions"></param>
+        /// <returns></returns>
+        public bool checkFieldExistingInDb(string tabName, string conditions)
+        {
+            string qe = String.Format("SELECT * FROM {0} WHERE {1};", tabName, conditions);
+            return (RunNoQuery(qe) > 0) ? true : false;
+        }
+        /// <summary>
+        /// Проверяет наличие записи в таблице по названию таблицы и условиям в основноей БД
+        /// </summary>
+        /// <param name="tabName">Наименование </param>
+        /// <param name="conditions"></param>
+        /// <returns></returns>
+        public bool checkFieldExistingInDb(string tabName)
+        {
+            string qe = String.Format("SELECT * FROM {0}", tabName);
+            return (RunNoQuery(qe) > 0) ? true : false;
+        }
+        //------------------------------------------------------------------------------------------------------------------------
+        public string GetOneValue(string com)
             {
                 MySqlDataReader msdr = GetReader(com);
                 string ins = "";

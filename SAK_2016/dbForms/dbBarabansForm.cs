@@ -34,8 +34,7 @@ namespace SAK_2016
         private void closeBut_Click(object sender, EventArgs e)
         {
             this.Close();
-            mForm.switchMenuStripItems(true);
-            this.Dispose();
+
         }
 
         private void addBarabanType_Click(object sender, EventArgs e)
@@ -102,6 +101,12 @@ namespace SAK_2016
         private void barabanWeight_Leave(object sender, EventArgs e)
         {
             barabanWeight.Text = ServiceFunctions.checkDecimalValInTextBox(barabanWeight);
+        }
+
+        private void dbBarabansForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            mForm.switchMenuStripItems(true);
+            this.Dispose();
         }
     }
 }

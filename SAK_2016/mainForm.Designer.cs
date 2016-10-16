@@ -41,6 +41,7 @@
             this.sesUserName = new System.Windows.Forms.ToolStripStatusLabel();
             this.sesTabNum = new System.Windows.Forms.ToolStripStatusLabel();
             this.sesRole = new System.Windows.Forms.ToolStripStatusLabel();
+            this.oldDbMigrationStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -87,36 +88,37 @@
             this.dbTestToolStripMenuItem,
             this.dbUsersToolStripMenuItem,
             this.dbCableToolStripMenuItem,
-            this.dbBarabanToolStripMenuItem});
+            this.dbBarabanToolStripMenuItem,
+            this.oldDbMigrationStripMenuItem});
             this.dbControlToolStripMenuItem.Name = "dbControlToolStripMenuItem";
-            this.dbControlToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
-            this.dbControlToolStripMenuItem.Text = "Базы данных";
+            this.dbControlToolStripMenuItem.Size = new System.Drawing.Size(163, 20);
+            this.dbControlToolStripMenuItem.Text = "Управление базой данных";
             // 
             // dbTestToolStripMenuItem
             // 
             this.dbTestToolStripMenuItem.Name = "dbTestToolStripMenuItem";
-            this.dbTestToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.dbTestToolStripMenuItem.Text = "БД Испытаний";
+            this.dbTestToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.dbTestToolStripMenuItem.Text = "Испытания";
             // 
             // dbUsersToolStripMenuItem
             // 
             this.dbUsersToolStripMenuItem.Name = "dbUsersToolStripMenuItem";
-            this.dbUsersToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.dbUsersToolStripMenuItem.Text = "БД Пользователей";
+            this.dbUsersToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.dbUsersToolStripMenuItem.Text = "Пользователи";
             this.dbUsersToolStripMenuItem.Click += new System.EventHandler(this.dbUsersToolStripMenuItem_Click);
             // 
             // dbCableToolStripMenuItem
             // 
             this.dbCableToolStripMenuItem.Name = "dbCableToolStripMenuItem";
-            this.dbCableToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.dbCableToolStripMenuItem.Text = "БД Кабелей";
+            this.dbCableToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.dbCableToolStripMenuItem.Text = "Кабели";
             this.dbCableToolStripMenuItem.Click += new System.EventHandler(this.dbCableToolStripMenuItem_Click);
             // 
             // dbBarabanToolStripMenuItem
             // 
             this.dbBarabanToolStripMenuItem.Name = "dbBarabanToolStripMenuItem";
-            this.dbBarabanToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.dbBarabanToolStripMenuItem.Text = "БД Барабанов";
+            this.dbBarabanToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.dbBarabanToolStripMenuItem.Text = "Типы барабанов";
             this.dbBarabanToolStripMenuItem.Click += new System.EventHandler(this.dbBarabanToolStripMenuItem_Click);
             // 
             // statusStrip1
@@ -148,6 +150,13 @@
             this.sesRole.Name = "sesRole";
             this.sesRole.Size = new System.Drawing.Size(69, 17);
             this.sesRole.Text = "Должность";
+            // 
+            // oldDbMigrationStripMenuItem
+            // 
+            this.oldDbMigrationStripMenuItem.Name = "oldDbMigrationStripMenuItem";
+            this.oldDbMigrationStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.oldDbMigrationStripMenuItem.Text = "Загрузка данных из старой БД";
+            this.oldDbMigrationStripMenuItem.Click += new System.EventHandler(this.oldDbMigrationStripMenuItem_Click);
             // 
             // mainForm
             // 
@@ -186,6 +195,7 @@
         private System.Windows.Forms.ToolStripMenuItem dbTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dbCableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dbBarabanToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem oldDbMigrationStripMenuItem;
     }
 }
 

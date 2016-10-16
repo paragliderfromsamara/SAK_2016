@@ -77,4 +77,7 @@
 	SELECT * from dr_priv_formuls ORDER BY dr_priv_formuls.drprivind ASC
   </ShowDrPrivFormuls>
   
+  <users_in_old_db>
+    SELECT familija_imja_ot.UserNum as id, familija_imja_ot.familija as last_name, familija_imja_ot.imja as name, familija_imja_ot.otchestvo as third_name, familija_imja_ot.tabnum as employee_number, familija_imja_ot.pass as password, dolshnosti.dolshnost as role_name, dolshnosti.dolshnum as role_id, familija_imja_ot.activ as is_active  FROM Familija_imja_ot LEFT JOIN Dolshnosti ON (Familija_imja_ot.Dolshnost = Dolshnosti.DolshNum)
+  </users_in_old_db>
 </SQLQuery>

@@ -21,6 +21,7 @@ namespace SAK_2016
         public dbTestsForm dbTestForm = null;
         public dbUsersForm dbUsersForm = null;
         public dbBarabansForm dbBarabansForm = null;
+        public dbForms.oldDbDataMigration oldDbDataMigrationForm = null;
 
         public mainForm()
         {
@@ -69,6 +70,8 @@ namespace SAK_2016
 
         private void mainForm_Load(object sender, EventArgs e)
         {
+            dbSakModels.dataMigration dm = new dbSakModels.dataMigration();
+            dm.createTables();
             Signin signForm = new Signin();
             DialogResult result = signForm.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.Cancel) this.Close();
@@ -92,6 +95,7 @@ namespace SAK_2016
             dbBarabanToolStripMenuItem.Enabled = grants.userCouldSeeBarabansDb();
             dbCableToolStripMenuItem.Enabled = grants.userCouldSeeCablesDb();
             dbTestToolStripMenuItem.Enabled = grants.userCouldSeeTestDb();
+            oldDbMigrationStripMenuItem.Enabled = grants.userCouldMigrateDataFromOldDB();
         }
 
         private void dbBarabanToolStripMenuItem_Click(object sender, EventArgs e)
@@ -110,5 +114,10 @@ namespace SAK_2016
             dbCablesForm.Show();
         }
 
+        private void oldDbMigrationStripMenuItem_Click(object sender, EventArgs e)
+        {
+            oldDbDataMigrationForm = new dbForms.oldDbDataMigration(this);
+            oldDbDataMigrationForm.Show();
+        }
     }
 }

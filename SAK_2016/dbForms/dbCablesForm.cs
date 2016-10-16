@@ -25,8 +25,6 @@ namespace SAK_2016
         private void closeBut_Click(object sender, EventArgs e)
         {
             this.Close();
-            mForm.switchMenuStripItems(true);
-            this.Dispose();
         }
 
         private void openCableFormBut_Click(object sender, EventArgs e)
@@ -34,23 +32,29 @@ namespace SAK_2016
             newCableForm = new addCableForm();
             newCableForm.Show();
         }
-        /*
-        private void initCablesList()
+
+        private void dbCablesForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DBControl mysql = new DBControl("bd_cable");
-            dbCablesDataSet.Reset();
-            mysql.MyConn.Open();
-            string com = mysql.GetSQLCommand("ShowCables");
-            CoreLab.MySql.MySqlDataAdapter da = new CoreLab.MySql.MySqlDataAdapter(com, mysql.MyConn);
-            da.Fill(dbCablesDataSet);
-            mysql.MyConn.Close();
-            cablesList.DataSource = dbCablesDataSet.Tables[0];
-            cablesList.Refresh();
+            mForm.switchMenuStripItems(true);
+            this.Dispose();
         }
+        /*
+private void initCablesList()
+{
+   DBControl mysql = new DBControl("bd_cable");
+   dbCablesDataSet.Reset();
+   mysql.MyConn.Open();
+   string com = mysql.GetSQLCommand("ShowCables");
+   CoreLab.MySql.MySqlDataAdapter da = new CoreLab.MySql.MySqlDataAdapter(com, mysql.MyConn);
+   da.Fill(dbCablesDataSet);
+   mysql.MyConn.Close();
+   cablesList.DataSource = dbCablesDataSet.Tables[0];
+   cablesList.Refresh();
+}
 
 
 
-    */
+*/
 
     }
 }

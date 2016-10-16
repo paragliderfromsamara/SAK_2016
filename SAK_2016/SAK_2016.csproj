@@ -91,6 +91,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="dbForms\oldDbDataMigration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dbForms\oldDbDataMigration.Designer.cs">
+      <DependentUpon>oldDbDataMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dbSakModels\dataMigration.cs" />
+    <Compile Include="dbSakModels\dbBaraban.cs" />
+    <Compile Include="dbSakModels\dbCable.cs" />
+    <Compile Include="dbSakModels\dbCableStructure.cs" />
+    <Compile Include="dbSakModels\dbCableStructureType.cs" />
     <Compile Include="DBControl.cs" />
     <Compile Include="dbForms\addCableForm.cs">
       <SubType>Form</SubType>
@@ -98,6 +109,8 @@
     <Compile Include="dbForms\addCableForm.Designer.cs">
       <DependentUpon>addCableForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="dbSakModels\User.cs" />
+    <Compile Include="dbSakModels\dbBase.cs" />
     <Compile Include="ServiceFunctions.cs" />
     <Compile Include="testsForm\autoTestForm.cs">
       <SubType>Form</SubType>
@@ -163,6 +176,9 @@
     <EmbeddedResource Include="dbForms\addCableForm.resx">
       <DependentUpon>addCableForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="dbForms\oldDbDataMigration.resx">
+      <DependentUpon>oldDbDataMigration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="testsForm\autoTestForm.resx">
       <DependentUpon>autoTestForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -195,6 +211,7 @@
       <DependentUpon>Signin.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="dbSakModels\SakDBModelsDiagram.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -235,8 +252,10 @@
   <ItemGroup>
     <Content Include="sql_queries.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
