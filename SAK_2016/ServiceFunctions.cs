@@ -50,5 +50,9 @@ namespace SAK_2016
             }
         }
 
+        public static string BinaryToText(byte[] data)
+        {
+            return Encoding.UTF8.GetString(data);
+        }
     }
 }

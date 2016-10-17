@@ -2,41 +2,41 @@
 <SQLQuery>
  
   <Roles>
-  SELECT Dolshnosti.DolshNum, Dolshnosti.Dolshnost FROM Dolshnosti
-  ORDER BY Dolshnosti.DolshNum ASC
+  SELECT roles.id, roles.name FROM roles
+  ORDER BY roles.id ASC
   </Roles>
 
   <Users>
-  select Familija_imja_ot.UserNum, Familija_imja_ot.Familija, Familija_imja_ot.Imja, Familija_imja_ot.Otchestvo, Familija_imja_ot.TabNum, Familija_imja_ot.Pass, Dolshnosti.Dolshnost from Familija_imja_ot LEFT JOIN Dolshnosti ON (Familija_imja_ot.Dolshnost = Dolshnosti.DolshNum) WHERE Familija_imja_ot.Activ = 1 
-  ORDER BY Familija_imja_ot.Familija ASC
+  select users.id, users.last_name, users.name, users.third_name, users.employee_number, users.password, roles.name as role_name from users LEFT JOIN roles ON (users.role_id = roles.id) WHERE users.is_active = 1 AND users.role_id > 1 
+  ORDER BY users.last_name ASC
   </Users>
 
   <UpdateUserWithoutPass>
-	UPDATE Familija_imja_ot SET Familija_imja_ot.Imja = "{1}", Familija_imja_ot.Familija = "{2}", Familija_imja_ot.Otchestvo = "{3}", Familija_imja_ot.TabNum = {4}, Familija_imja_ot.Dolshnost = {5}
-	WHERE Familija_imja_ot.UserNum IN({0})
+	UPDATE users SET users.name = "{1}", users.last_name = "{2}", users.third_name = "{3}", users.employee_number = {4}, users.role_id = {5}
+	WHERE users.id IN({0})
   </UpdateUserWithoutPass>
   
   <UpdateUserWithPass>
-	UPDATE Familija_imja_ot SET Familija_imja_ot.Imja = "{1}", Familija_imja_ot.Familija = "{2}", Familija_imja_ot.Otchestvo = "{3}", Familija_imja_ot.TabNum = {4}, Familija_imja_ot.Dolshnost = {5}, Familija_imja_ot.Pass = "{6}"   
-	WHERE Familija_imja_ot.UserNum IN({0})
+    UPDATE users SET users.name = "{1}", users.last_name = "{2}", users.third_name = "{3}", users.employee_number = {4}, users.role_id = {5}, users.password = "{6}"
+    WHERE users.id IN({0})
   </UpdateUserWithPass>
   
   <AddUser>
-  INSERT INTO Familija_imja_ot(Familija_imja_ot.Familija, Familija_imja_ot.Imja, Familija_imja_ot.Otchestvo, Familija_imja_ot.Pass, Familija_imja_ot.TabNum, Familija_imja_ot.Dolshnost,Familija_imja_ot.Activ) VALUES("{0}","{1}","{2}","{3}",{4},{5}, 1)
+  INSERT INTO users (users.last_name, users.name, users.third_name, users.password, users.employee_number, users.role_id, users.is_active) VALUES("{0}","{1}","{2}","{3}",{4},{5}, 1)
   </AddUser>
   
   <HideUsers>
-	UPDATE Familija_imja_ot SET Familija_imja_ot.Activ = 0 
-	WHERE Familija_imja_ot.UserNum IN({0})
+	UPDATE users SET users.is_active = 0 
+	WHERE users.id IN({0})
   </HideUsers>
 
   <Barabans>
-	SELECT * FROM Tipy_baraban ORDER BY Tipy_baraban.TipName ASC
+	SELECT * FROM baraban_types ORDER BY baraban_types.name ASC
   </Barabans>
   <AddBaraban>
-	INSERT INTO Tipy_baraban (Tipy_baraban.TipName, Tipy_baraban.Massa) VALUES ("{0}", {1})
+    INSERT INTO baraban_types (baraban_types.name, baraban_types.weight) VALUES ("{0}", {1})
   </AddBaraban>
-  
+
   <ShowCables>
 	SELECT Cables.CabNum, Cables.CabName, CabNameStruct, norm_docum.DocNum, Cables.TextPrim, Cables.KodOKP, Cables.KodOKP_KCH FROM Cables LEFT JOIN norm_docum ON (Cables.DocInd = norm_docum.DocInd)
   </ShowCables>
@@ -80,4 +80,11 @@
   <users_in_old_db>
     SELECT familija_imja_ot.UserNum as id, familija_imja_ot.familija as last_name, familija_imja_ot.imja as name, familija_imja_ot.otchestvo as third_name, familija_imja_ot.tabnum as employee_number, familija_imja_ot.pass as password, dolshnosti.dolshnost as role_name, dolshnosti.dolshnum as role_id, familija_imja_ot.activ as is_active  FROM Familija_imja_ot LEFT JOIN Dolshnosti ON (Familija_imja_ot.Dolshnost = Dolshnosti.DolshNum)
   </users_in_old_db>
+  
+  <barabans_in_old_db>
+    SELECT Tipy_Baraban.TipInd as id, Tipy_Baraban.TipName as name, Tipy_Baraban.massa as weight  FROM Tipy_Baraban
+  </barabans_in_old_db>
+  <AddBarabanFromOldDB>
+    INSERT IGNORE INTO baraban_types (baraban_types.id, baraban_types.name, baraban_types.weight) VALUES ({0}, "{1}", {2})
+  </AddBarabanFromOldDB>
 </SQLQuery>

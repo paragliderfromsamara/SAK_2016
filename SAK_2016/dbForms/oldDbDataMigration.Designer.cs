@@ -35,7 +35,10 @@
             this.oldDbCablesCheckBox = new System.Windows.Forms.CheckBox();
             this.oldDbBarabansCheckBox = new System.Windows.Forms.CheckBox();
             this.test = new System.Windows.Forms.Label();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.oldBarabansDataSet = new System.Data.DataSet();
             ((System.ComponentModel.ISupportInitialize)(this.oldUserDbDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldBarabansDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -103,11 +106,24 @@
             this.test.TabIndex = 6;
             this.test.Text = "label2";
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(268, 26);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(823, 321);
+            this.richTextBox1.TabIndex = 7;
+            this.richTextBox1.Text = "";
+            // 
+            // oldBarabansDataSet
+            // 
+            this.oldBarabansDataSet.DataSetName = "NewDataSet";
+            // 
             // oldDbDataMigration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(345, 259);
+            this.ClientSize = new System.Drawing.Size(1147, 372);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.test);
             this.Controls.Add(this.oldDbBarabansCheckBox);
             this.Controls.Add(this.oldDbCablesCheckBox);
@@ -119,6 +135,7 @@
             this.Text = "Миграция данных из старых Баз Данных";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.oldDbDataMigration_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.oldUserDbDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldBarabansDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -132,5 +149,7 @@
         private System.Windows.Forms.CheckBox oldDbCablesCheckBox;
         private System.Windows.Forms.CheckBox oldDbBarabansCheckBox;
         private System.Windows.Forms.Label test;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Data.DataSet oldBarabansDataSet;
     }
 }

@@ -15,6 +15,7 @@ namespace SAK_2016.dbForms
     public partial class oldDbDataMigration : Form
     {
         public mainForm mForm = null;
+        private DBControl mySql = new DBControl(Properties.Settings.Default.dbName);
         public oldDbDataMigration(mainForm f)
         {
             mForm = f;
@@ -56,7 +57,6 @@ namespace SAK_2016.dbForms
                 sysCon.MyConn.Open();
                 MySqlDataAdapter sysAd = new MySqlDataAdapter(selOldUsersQuery, sysCon.MyConn);
                 sysAd.Fill(oldUserDbDataSet);
-                sysCon.MyConn.Close();
                 sysCon.Dispose();
                 oldUsersCheckBox.Enabled = (oldUserDbDataSet.Tables[0].Rows.Count > 0) ? true : false;
             } else
@@ -66,6 +66,14 @@ namespace SAK_2016.dbForms
             if (bdBarabanFlag)
             {
                 oldDbBarabansCheckBox.Enabled = true;
+                DBControl brbCon = new DBControl("bd_baraban");
+                string selOldBarabanTypesQuery = brbCon.GetSQLCommand("barabans_in_old_db");
+                brbCon.MyConn.Open();
+                MySqlDataAdapter brbAd = new MySqlDataAdapter(selOldBarabanTypesQuery, brbCon.MyConn);
+                brbAd.Fill(oldBarabansDataSet);
+                brbCon.MyConn.Close();
+                brbCon.Dispose();
+                oldDbBarabansCheckBox.Enabled = (oldBarabansDataSet.Tables[0].Rows.Count > 0) ? true : false;
             }
             else
             {
@@ -98,12 +106,31 @@ namespace SAK_2016.dbForms
         }
 
         private void oldDbBarabansCheckBox_CheckedChanged(object sender, EventArgs e)
-        { 
+        {
+            checkMigrateButEnable();
         }
 
         private void migrateSelected_Click(object sender, EventArgs e)
         {
             if (oldUsersCheckBox.Enabled && oldUsersCheckBox.Checked) migrateOldUsers();
+            if (oldDbBarabansCheckBox.Enabled && oldDbBarabansCheckBox.Checked) migrateOldBarabans();
+        }
+
+        private void migrateOldBarabans()
+        {
+            mySql = new DBControl(Properties.Settings.Default.dbName);
+            string rowQuery = mySql.GetSQLCommand("AddBarabanFromOldDB");
+            DataTable b_types = oldBarabansDataSet.Tables[0];
+            mySql.MyConn.Open();
+            foreach (DataRow r in b_types.Rows)
+            {
+                string q = String.Format(rowQuery, r["id"], r["name"], r["weight"].ToString().Replace(",", ".") );
+                richTextBox1.Text += q + "\n";
+                mySql.RunNoQuery(q);
+                //MySqlCommand cmd = new MySqlCommand(q, mySql.MyConn);
+                //cmd.ExecuteNonQuery();
+            }
+            mySql.MyConn.Close();
         }
 
         /// <summary>
@@ -111,13 +138,13 @@ namespace SAK_2016.dbForms
         /// </summary>
         private void migrateOldUsers()
         {
-            
+            mySql = new DBControl(Properties.Settings.Default.dbName);
             //newUsersArr.IsFixedSize = false;
             string[][] chUsrParams = { new string[] { "name", "string" }, new string[] { "last_name", "string" }, new string[] { "third_name", "string" }, new string[] { "employee_number", "int" } };
             string[][] chRolesParams = { new string[] { "id", "int" }, new string[] { "name", "string" } };
             DataTable usrs = oldUserDbDataSet.Tables[0];
             string[][] newUsersArr = new string[usrs.Rows.Count][];
-            DBControl mySql = new DBControl(Properties.Settings.Default.dbName);
+            
             
             int difCounter = 0;
             for (int i=0; i< usrs.Rows.Count; i++)
@@ -134,11 +161,17 @@ namespace SAK_2016.dbForms
                 //{
                     User usr = new User(r);
                     usr.Create();
-                    difCounter++;
+                    
+                   
+                   
+                     difCounter++;
                     
                 //}
                 
             }
+            dbBase.dbColumn[] selVal = { new dbBase.dbColumn("name", "Sysadmin", "string", "users"), new dbBase.dbColumn("last_name", "Sysadmin", "string", "users") };
+            
+            richTextBox1.Text += dbBase.makeWhere(selVal);;
             if (newUsersArr.Length > 0)
             {
                 string query = dataMigration.makeColumnsStringFromBiLevelArray(newUsersArr);

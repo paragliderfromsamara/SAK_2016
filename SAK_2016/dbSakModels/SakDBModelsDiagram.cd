@@ -2,8 +2,23 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SAK_2016.dbBase">
     <Position X="6.25" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="SAK_2016.dbBase.dbColumn" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>dbSakModels\dbBase.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="SAK_2016.dbBase.selectQueries" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>dbSakModels\dbBase.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAEACAAAAAAAAAAAAAAAAAAAAECAAAAAAAAAA=</HashCode>
+      <HashCode>AgSAIAAAAAAAIAAIAAAIAAgAAAAAAEAFAAAACAAAAAg=</HashCode>
       <FileName>dbSakModels\dbBase.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -22,7 +37,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SAK_2016.dbBaraban">
-    <Position X="6.25" Y="2.75" Width="1.5" />
+    <Position X="6.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>dbSakModels\dbBaraban.cs</FileName>
@@ -43,9 +58,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SAK_2016.User">
-    <Position X="0.75" Y="2.75" Width="1.5" />
+    <Position X="0.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgAAAAAADAAAAAAAAAAAAAAAAAAEAEEBIAAAggAAQgA=</HashCode>
+      <HashCode>AiAAAAAACAAAAAAAAAgAAAAAABAEAAMAIAAAggAAQgA=</HashCode>
       <FileName>dbSakModels\User.cs</FileName>
     </TypeIdentifier>
   </Class>

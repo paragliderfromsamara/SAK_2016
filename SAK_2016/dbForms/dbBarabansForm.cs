@@ -13,6 +13,7 @@ namespace SAK_2016
     public partial class dbBarabansForm : Form
     {
         public mainForm mForm = null;
+        private DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
         public dbBarabansForm(mainForm f)
         {
             mForm = f;
@@ -21,9 +22,9 @@ namespace SAK_2016
         }
         private void initBarabansList()
         {
-            DBControl mysql = new DBControl("bd_baraban");
             barabanTypeDataSet.Reset();
             string com = mysql.GetSQLCommand("Barabans");
+            mysql.MyConn.Open();
             MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
             da.Fill(barabanTypeDataSet);
             mysql.MyConn.Close();
@@ -39,7 +40,6 @@ namespace SAK_2016
 
         private void addBarabanType_Click(object sender, EventArgs e)
         {
-            DBControl mysql = new DBControl("bd_baraban");
             string com = mysql.GetSQLCommand("AddBaraban");
             if (checkForm())
             {
@@ -49,6 +49,7 @@ namespace SAK_2016
             {
                 int[] arr = new int[barabanTypeList.Rows.Count - 1];
                 com = String.Format(com, barabanName.Text, barabanWeight.Text);
+                mysql.MyConn.Open();
                 long id = mysql.RunNoQuery(com);
                 mysql.MyConn.Close();
                 for (int i = 0; i < barabanTypeList.Rows.Count - 1; i++)

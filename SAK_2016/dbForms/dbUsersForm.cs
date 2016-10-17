@@ -13,6 +13,7 @@ namespace SAK_2016
     public partial class dbUsersForm : Form
     {
         public mainForm mForm = null;
+        private DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
         public dbUsersForm(mainForm f)
         {
            
@@ -35,13 +36,12 @@ namespace SAK_2016
 
        private void initRolesList()
         {
-            DBControl mysql = new DBControl("bd_system");
             string com = mysql.GetSQLCommand("Roles");
             MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
             da.Fill(rolesDataSet);
             userRole.DataSource = rolesDataSet.Tables[0];
-            userRole.DisplayMember = "Dolshnost";
-            userRole.ValueMember = "DolshNum";
+            userRole.DisplayMember = "name";
+            userRole.ValueMember = "id";
             mysql.MyConn.Close();
             userRole.Update();
 
@@ -49,9 +49,8 @@ namespace SAK_2016
 
         private void initUserList()
         {
-            DBControl mysql = new DBControl("bd_system");
             usersDataSet.Reset();
-            //mysql.MyConn.Open();
+            mysql.MyConn.Open();
             string com = mysql.GetSQLCommand("Users");
             MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
             da.Fill(usersDataSet);
@@ -62,8 +61,6 @@ namespace SAK_2016
 
         private void addUserButton_Click(object sender, EventArgs e)
         {
-            DBControl mysql = new DBControl("bd_system");
-           // MySqlCommand com;
             string com = mysql.GetSQLCommand("AddUser");
             if (checkForm(false))
             {
@@ -73,10 +70,7 @@ namespace SAK_2016
             {
                 int[] arr = new int[usersList.Rows.Count - 1];
                 com = String.Format(com, userLastName.Text, userFirstName.Text, userThirdName.Text, userPassword.Text, userTabNum.Text, userRole.SelectedValue);
-                
-                //queryView.Text = com;
-                //MessageBox.Show(com, "Запрос", MessageBoxButtons.AbortRetryIgnore);
-                //mysql.MyConn.Open();
+                mysql.MyConn.Open();
                 long id = mysql.RunNoQuery(com);
                 mysql.MyConn.Close();
                 //usersList.Rows.Add(id, userLastName.Text, userFirstName.Text, userThirdName.Text, userPassword.Text, userTabNum.Text, userRole.SelectedValue);
@@ -113,7 +107,7 @@ namespace SAK_2016
             string val = ""; 
             if (usersList.SelectedRows.Count > 0)
             {
-                DBControl mysql = new DBControl("bd_system");
+                DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
                 string com = mysql.GetSQLCommand("HideUsers");
                 for (int i = 0; i < usersList.SelectedRows.Count; i++)
                 {
@@ -122,7 +116,7 @@ namespace SAK_2016
                     usersList.Rows.RemoveAt(usersList.SelectedRows[i].Index);
                 }
                 com = String.Format(com, val);
-                //mysql.MyConn.Open();
+                mysql.MyConn.Open();
                 mysql.RunNoQuery(com);
                 mysql.MyConn.Close();
             }
@@ -156,7 +150,6 @@ namespace SAK_2016
         {
             //UPDATE Familija_imja_ot SET Familija_imja_ot.Imja = "{1}", Familija_imja_ot.Familija = "{2}", Familija_imja_ot.Otchestvo = "{3}", Familija_imja_ot.TabNum = {4}, Familija_imja_ot.Dolshnost = {5}, Familija_imja_ot.Pass = "{6}"   
 	        //WHERE Familija_imja_ot.UserNum IN({0})
-            DBControl mysql = new DBControl("bd_system");
             int id = Convert.ToInt32(userIdLbl.Text);
             string com = "";
             if (!checkForm(true))
@@ -171,7 +164,7 @@ namespace SAK_2016
                     com = mysql.GetSQLCommand("UpdateUserWithPass");
                     com = String.Format(com, userIdLbl.Text, userFirstName.Text, userLastName.Text, userThirdName.Text, userTabNum.Text, userRole.SelectedValue, userPassword.Text);
                 }
-                //mysql.MyConn.Open();
+                mysql.MyConn.Open();
                 mysql.RunNoQuery(com);
                 mysql.MyConn.Close();
                 for (int i = 0; i < usersList.Rows.Count - 1; i++)
@@ -239,6 +232,7 @@ namespace SAK_2016
         private void dbUsersForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             mForm.switchMenuStripItems(true);
+            this.mysql.Dispose();
             this.Dispose();
             MessageBox.Show("Good", "GD", MessageBoxButtons.OK);
         }

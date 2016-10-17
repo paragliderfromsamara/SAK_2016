@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.closeBut = new System.Windows.Forms.Button();
             this.addUserButton = new System.Windows.Forms.Button();
             this.userFirstName = new System.Windows.Forms.TextBox();
@@ -51,16 +51,16 @@
             this.rolesDataSet = new System.Data.DataSet();
             this.usersDataSet = new System.Data.DataSet();
             this.usersList = new System.Windows.Forms.DataGridView();
-            this.UserNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Familija = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Imja = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Otchestvo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TabNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Dolshnost = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Pass = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cellContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editUserListRow = new System.Windows.Forms.ToolStripMenuItem();
             this.delUserListRow = new System.Windows.Forms.ToolStripMenuItem();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.last_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.third_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.employee_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.role_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.password = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.userFormField.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rolesDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.usersDataSet)).BeginInit();
@@ -260,86 +260,29 @@
             this.usersList.BackgroundColor = System.Drawing.Color.LightGray;
             this.usersList.ColumnHeadersHeight = 30;
             this.usersList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.UserNum,
-            this.Familija,
-            this.Imja,
-            this.Otchestvo,
-            this.TabNum,
-            this.Dolshnost,
-            this.Pass});
+            this.id,
+            this.last_name,
+            this.name,
+            this.third_name,
+            this.employee_number,
+            this.role_name,
+            this.password});
             this.usersList.ContextMenuStrip = this.cellContextMenu;
             this.usersList.DataSource = this.usersDataSet;
             this.usersList.Location = new System.Drawing.Point(12, 146);
             this.usersList.Name = "usersList";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.NullValue = "-";
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Teal;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.usersList.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.NullValue = "-";
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Teal;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.usersList.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.usersList.RowTemplate.Height = 30;
             this.usersList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.usersList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.usersList.Size = new System.Drawing.Size(952, 366);
             this.usersList.StandardTab = true;
             this.usersList.TabIndex = 12;
-            // 
-            // UserNum
-            // 
-            this.UserNum.DataPropertyName = "UserNum";
-            this.UserNum.FillWeight = 101.7259F;
-            this.UserNum.HeaderText = "id";
-            this.UserNum.Name = "UserNum";
-            this.UserNum.ReadOnly = true;
-            // 
-            // Familija
-            // 
-            this.Familija.DataPropertyName = "Familija";
-            this.Familija.FillWeight = 101.7259F;
-            this.Familija.HeaderText = "Фамилия";
-            this.Familija.Name = "Familija";
-            this.Familija.ReadOnly = true;
-            // 
-            // Imja
-            // 
-            this.Imja.DataPropertyName = "Imja";
-            this.Imja.FillWeight = 101.7259F;
-            this.Imja.HeaderText = "Имя";
-            this.Imja.Name = "Imja";
-            this.Imja.ReadOnly = true;
-            // 
-            // Otchestvo
-            // 
-            this.Otchestvo.DataPropertyName = "Otchestvo";
-            this.Otchestvo.FillWeight = 101.7259F;
-            this.Otchestvo.HeaderText = "Отчество";
-            this.Otchestvo.Name = "Otchestvo";
-            this.Otchestvo.ReadOnly = true;
-            // 
-            // TabNum
-            // 
-            this.TabNum.DataPropertyName = "TabNum";
-            this.TabNum.FillWeight = 91.37056F;
-            this.TabNum.HeaderText = "Табельный номер";
-            this.TabNum.MinimumWidth = 30;
-            this.TabNum.Name = "TabNum";
-            this.TabNum.ReadOnly = true;
-            // 
-            // Dolshnost
-            // 
-            this.Dolshnost.DataPropertyName = "Dolshnost";
-            this.Dolshnost.FillWeight = 101.7259F;
-            this.Dolshnost.HeaderText = "Должность";
-            this.Dolshnost.Name = "Dolshnost";
-            this.Dolshnost.ReadOnly = true;
-            // 
-            // Pass
-            // 
-            this.Pass.DataPropertyName = "Pass";
-            this.Pass.HeaderText = "Пароль";
-            this.Pass.Name = "Pass";
-            this.Pass.ReadOnly = true;
-            this.Pass.Visible = false;
             // 
             // cellContextMenu
             // 
@@ -362,6 +305,63 @@
             this.delUserListRow.Size = new System.Drawing.Size(126, 22);
             this.delUserListRow.Text = "удалить";
             this.delUserListRow.Click += new System.EventHandler(this.delUserToolStripMenuItem_Click);
+            // 
+            // id
+            // 
+            this.id.DataPropertyName = "id";
+            this.id.FillWeight = 101.7259F;
+            this.id.HeaderText = "id";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            // 
+            // last_name
+            // 
+            this.last_name.DataPropertyName = "last_name";
+            this.last_name.FillWeight = 101.7259F;
+            this.last_name.HeaderText = "Фамилия";
+            this.last_name.Name = "last_name";
+            this.last_name.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.DataPropertyName = "name";
+            this.name.FillWeight = 101.7259F;
+            this.name.HeaderText = "Имя";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // third_name
+            // 
+            this.third_name.DataPropertyName = "third_name";
+            this.third_name.FillWeight = 101.7259F;
+            this.third_name.HeaderText = "Отчество";
+            this.third_name.Name = "third_name";
+            this.third_name.ReadOnly = true;
+            // 
+            // employee_number
+            // 
+            this.employee_number.DataPropertyName = "employee_number";
+            this.employee_number.FillWeight = 91.37056F;
+            this.employee_number.HeaderText = "Табельный номер";
+            this.employee_number.MinimumWidth = 30;
+            this.employee_number.Name = "employee_number";
+            this.employee_number.ReadOnly = true;
+            // 
+            // role_name
+            // 
+            this.role_name.DataPropertyName = "role_name";
+            this.role_name.FillWeight = 101.7259F;
+            this.role_name.HeaderText = "Должность";
+            this.role_name.Name = "role_name";
+            this.role_name.ReadOnly = true;
+            // 
+            // password
+            // 
+            this.password.DataPropertyName = "password";
+            this.password.HeaderText = "Пароль";
+            this.password.Name = "password";
+            this.password.ReadOnly = true;
+            this.password.Visible = false;
             // 
             // dbUsersForm
             // 
@@ -414,12 +414,12 @@
         private System.Windows.Forms.Button cancelEditUser;
         private System.Windows.Forms.Button saveUserData;
         private System.Windows.Forms.Label userIdLbl;
-        private System.Windows.Forms.DataGridViewTextBoxColumn UserNum;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Familija;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Imja;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Otchestvo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TabNum;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Dolshnost;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Pass;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn last_name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn third_name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn employee_number;
+        private System.Windows.Forms.DataGridViewTextBoxColumn role_name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn password;
     }
 }

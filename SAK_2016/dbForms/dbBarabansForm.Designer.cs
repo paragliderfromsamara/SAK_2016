@@ -38,10 +38,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.barabanName = new System.Windows.Forms.TextBox();
             this.barabanTypeList = new System.Windows.Forms.DataGridView();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TipName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.barabanTypeDataSet = new System.Data.DataSet();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.newBarabanType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barabanTypeList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barabanTypeDataSet)).BeginInit();
@@ -122,7 +122,7 @@
             this.barabanTypeList.ColumnHeadersHeight = 41;
             this.barabanTypeList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
-            this.TipName,
+            this.name,
             this.Weight});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
@@ -146,36 +146,36 @@
             this.barabanTypeList.Size = new System.Drawing.Size(605, 229);
             this.barabanTypeList.TabIndex = 0;
             // 
+            // barabanTypeDataSet
+            // 
+            this.barabanTypeDataSet.DataSetName = "NewDataSet";
+            // 
             // id
             // 
             this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.id.DataPropertyName = "TipInd";
+            this.id.DataPropertyName = "id";
             this.id.Frozen = true;
             this.id.HeaderText = "id";
             this.id.MinimumWidth = 100;
             this.id.Name = "id";
             this.id.ReadOnly = true;
             // 
-            // TipName
+            // name
             // 
-            this.TipName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.TipName.DataPropertyName = "TipName";
-            this.TipName.FillWeight = 90.28419F;
-            this.TipName.HeaderText = "Наименование типа";
-            this.TipName.Name = "TipName";
-            this.TipName.ReadOnly = true;
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.name.DataPropertyName = "name";
+            this.name.FillWeight = 90.28419F;
+            this.name.HeaderText = "Наименование типа";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
             // 
             // Weight
             // 
-            this.Weight.DataPropertyName = "Massa";
+            this.Weight.DataPropertyName = "weight";
             this.Weight.HeaderText = "Вес, кг";
             this.Weight.MinimumWidth = 100;
             this.Weight.Name = "Weight";
             this.Weight.ReadOnly = true;
-            // 
-            // barabanTypeDataSet
-            // 
-            this.barabanTypeDataSet.DataSetName = "NewDataSet";
             // 
             // dbBarabansForm
             // 
@@ -209,7 +209,7 @@
         private System.Windows.Forms.TextBox barabanName;
         private System.Data.DataSet barabanTypeDataSet;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TipName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn Weight;
     }
 }
