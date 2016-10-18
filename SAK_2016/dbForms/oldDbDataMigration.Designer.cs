@@ -37,8 +37,17 @@
             this.test = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.oldBarabansDataSet = new System.Data.DataSet();
+            this.oldCables = new System.Data.DataSet();
+            this.oldStructures = new System.Data.DataSet();
+            this.oldFreqRanges = new System.Data.DataSet();
+            this.oldMeasParams = new System.Data.DataSet();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.oldUserDbDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.oldBarabansDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldCables)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldStructures)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldFreqRanges)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldMeasParams)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -118,6 +127,23 @@
             // 
             this.oldBarabansDataSet.DataSetName = "NewDataSet";
             // 
+            // oldCables
+            // 
+            this.oldCables.DataSetName = "NewDataSet";
+            // 
+            // oldStructures
+            // 
+            this.oldStructures.DataSetName = "NewDataSet";
+            // 
+            // oldFreqRanges
+            // 
+            this.oldFreqRanges.DataSetName = "NewDataSet";
+            // 
+            // oldMeasParams
+            // 
+            this.oldMeasParams.DataSetName = "NewDataSet";
+            // 
+            // 
             // oldDbDataMigration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -136,6 +162,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.oldDbDataMigration_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.oldUserDbDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.oldBarabansDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldCables)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldStructures)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldFreqRanges)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldMeasParams)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -151,5 +181,10 @@
         private System.Windows.Forms.Label test;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Data.DataSet oldBarabansDataSet;
+        private System.Data.DataSet oldCables;
+        private System.Data.DataSet oldStructures;
+        private System.Data.DataSet oldFreqRanges;
+        private System.Data.DataSet oldMeasParams;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

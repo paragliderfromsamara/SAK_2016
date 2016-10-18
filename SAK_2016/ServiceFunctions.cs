@@ -49,7 +49,10 @@ namespace SAK_2016
                 return "0";
             }
         }
-
+        public static string setDefaultForDb(string s)
+        {
+            return (String.IsNullOrWhiteSpace(s)) ? "DEFAULT" : s;
+        }
         public static string BinaryToText(byte[] data)
         {
             return Encoding.UTF8.GetString(data);

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace SAK_2016
 {
@@ -19,7 +20,7 @@ namespace SAK_2016
             UserGrants grants = new UserGrants(f.user_type);
             mForm = f;
             InitializeComponent();
-            //initCablesList();
+            initCablesList();
             openCableFormBut.Visible = grants.userCouldAddCable();
         }
         private void closeBut_Click(object sender, EventArgs e)
@@ -38,14 +39,14 @@ namespace SAK_2016
             mForm.switchMenuStripItems(true);
             this.Dispose();
         }
-        /*
+
 private void initCablesList()
 {
-   DBControl mysql = new DBControl("bd_cable");
+   DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
    dbCablesDataSet.Reset();
    mysql.MyConn.Open();
    string com = mysql.GetSQLCommand("ShowCables");
-   CoreLab.MySql.MySqlDataAdapter da = new CoreLab.MySql.MySqlDataAdapter(com, mysql.MyConn);
+   MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
    da.Fill(dbCablesDataSet);
    mysql.MyConn.Close();
    cablesList.DataSource = dbCablesDataSet.Tables[0];
@@ -53,8 +54,6 @@ private void initCablesList()
 }
 
 
-
-*/
 
     }
 }

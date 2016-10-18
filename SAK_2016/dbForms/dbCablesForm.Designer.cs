@@ -32,6 +32,7 @@
             this.closeBut = new System.Windows.Forms.Button();
             this.dbCablesDataSet = new System.Data.DataSet();
             this.cablesList = new System.Windows.Forms.DataGridView();
+            this.openCableFormBut = new System.Windows.Forms.Button();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CabName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CabNameStruct = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -39,7 +40,6 @@
             this.TextPrim = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.KodOKP = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.KodOKP_KCH = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.openCableFormBut = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dbCablesDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cablesList)).BeginInit();
             this.SuspendLayout();
@@ -80,55 +80,6 @@
             this.cablesList.StandardTab = true;
             this.cablesList.TabIndex = 1;
             // 
-            // id
-            // 
-            this.id.DataPropertyName = "CabNum";
-            this.id.HeaderText = "id";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            // 
-            // CabName
-            // 
-            this.CabName.DataPropertyName = "CabName";
-            this.CabName.HeaderText = "Марка кабеля";
-            this.CabName.Name = "CabName";
-            this.CabName.ReadOnly = true;
-            // 
-            // CabNameStruct
-            // 
-            this.CabNameStruct.DataPropertyName = "CabNameStruct";
-            this.CabNameStruct.HeaderText = "Структура кабеля";
-            this.CabNameStruct.Name = "CabNameStruct";
-            this.CabNameStruct.ReadOnly = true;
-            // 
-            // DocNum
-            // 
-            this.DocNum.DataPropertyName = "DocNum";
-            this.DocNum.HeaderText = "Норматив";
-            this.DocNum.Name = "DocNum";
-            this.DocNum.ReadOnly = true;
-            // 
-            // TextPrim
-            // 
-            this.TextPrim.DataPropertyName = "TextPrim";
-            this.TextPrim.HeaderText = "Примечание";
-            this.TextPrim.Name = "TextPrim";
-            this.TextPrim.ReadOnly = true;
-            // 
-            // KodOKP
-            // 
-            this.KodOKP.DataPropertyName = "KodOKP";
-            this.KodOKP.HeaderText = "Код ОКП";
-            this.KodOKP.Name = "KodOKP";
-            this.KodOKP.ReadOnly = true;
-            // 
-            // KodOKP_KCH
-            // 
-            this.KodOKP_KCH.DataPropertyName = "KodOKP_KCH";
-            this.KodOKP_KCH.HeaderText = "КЧ";
-            this.KodOKP_KCH.Name = "KodOKP_KCH";
-            this.KodOKP_KCH.ReadOnly = true;
-            // 
             // openCableFormBut
             // 
             this.openCableFormBut.Location = new System.Drawing.Point(93, 468);
@@ -138,6 +89,55 @@
             this.openCableFormBut.Text = "Добавить тип кабеля";
             this.openCableFormBut.UseVisualStyleBackColor = true;
             this.openCableFormBut.Click += new System.EventHandler(this.openCableFormBut_Click);
+            // 
+            // id
+            // 
+            this.id.DataPropertyName = "id";
+            this.id.HeaderText = "id";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            // 
+            // CabName
+            // 
+            this.CabName.DataPropertyName = "name";
+            this.CabName.HeaderText = "Марка кабеля";
+            this.CabName.Name = "CabName";
+            this.CabName.ReadOnly = true;
+            // 
+            // CabNameStruct
+            // 
+            this.CabNameStruct.DataPropertyName = "struct_name";
+            this.CabNameStruct.HeaderText = "Структура кабеля";
+            this.CabNameStruct.Name = "CabNameStruct";
+            this.CabNameStruct.ReadOnly = true;
+            // 
+            // DocNum
+            // 
+            this.DocNum.DataPropertyName = "document_name";
+            this.DocNum.HeaderText = "Норматив";
+            this.DocNum.Name = "DocNum";
+            this.DocNum.ReadOnly = true;
+            // 
+            // TextPrim
+            // 
+            this.TextPrim.DataPropertyName = "notes";
+            this.TextPrim.HeaderText = "Примечание";
+            this.TextPrim.Name = "TextPrim";
+            this.TextPrim.ReadOnly = true;
+            // 
+            // KodOKP
+            // 
+            this.KodOKP.DataPropertyName = "code_okp";
+            this.KodOKP.HeaderText = "Код ОКП";
+            this.KodOKP.Name = "KodOKP";
+            this.KodOKP.ReadOnly = true;
+            // 
+            // KodOKP_KCH
+            // 
+            this.KodOKP_KCH.DataPropertyName = "code_kch";
+            this.KodOKP_KCH.HeaderText = "КЧ";
+            this.KodOKP_KCH.Name = "KodOKP_KCH";
+            this.KodOKP_KCH.ReadOnly = true;
             // 
             // dbCablesForm
             // 
@@ -162,6 +162,7 @@
         private System.Windows.Forms.Button closeBut;
         private System.Data.DataSet dbCablesDataSet;
         private System.Windows.Forms.DataGridView cablesList;
+        private System.Windows.Forms.Button openCableFormBut;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn CabName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CabNameStruct;
@@ -169,6 +170,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TextPrim;
         private System.Windows.Forms.DataGridViewTextBoxColumn KodOKP;
         private System.Windows.Forms.DataGridViewTextBoxColumn KodOKP_KCH;
-        private System.Windows.Forms.Button openCableFormBut;
     }
 }

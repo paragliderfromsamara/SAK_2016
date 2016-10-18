@@ -54,8 +54,83 @@ namespace SAK_2016.dbSakModels
             createCableStructureTypesTable(); //Добавляет таблицу типов структур кабеля
             createMeasuredParameterTypesTable(); //Добавляет таблицу с измеряемыми параметрами
             createMeasuredParameterValuesTable(); //Добавляет таблицу для нормативных значений измеряемых параметров
-            createBringingLengthTypesTable();
-            createFrequencyRangesTable(); 
+            createBringingLengthTypesTable(); //
+            createFrequencyRangesTable(); //
+            createDRFormulsTable();
+            createDRBringingFormulsTable();
+            createDRCableStructuresTable();
+        }
+
+        /// <summary>
+        /// Добавляет таблицу для структур кабеля
+        /// </summary>
+        private void createDRCableStructuresTable()
+        {
+            string tableName = "cable_structures";
+            string[] colsArray = {
+                                    "id INT UNSIGNED AUTO_INCREMENT NOT NULL",
+                                    "cable_id INT UNSIGNED DEFAULT NULL",
+                                    "structure_type_id INT UNSIGNED NOT NULL",
+                                    "nominal_amount INT UNSIGNED",
+                                    "fact_amount INT UNSIGNED",
+                                    "lead_material_id INT UNSIGNED NOT NULL",
+                                    "lead_diameter FLOAT NOT NULL",
+                                    "isolation_material_id INT UNSIGNED NOT NULL",
+                                    "wave_resistance FLOAT NOT NULL",
+                                    "u_lead_lead FLOAT",
+                                    "u_lead_shield FLOAT",
+                                    "test_group_work_capacity BOOL DEFAULT 0",
+                                    "dr_formula_id INT UNSIGNED DEFAULT 1",
+                                    "dr_bringing_formula_id INT UNSIGNED DEFAULT 1",
+                                    "PRIMARY KEY (id)"
+                                 };
+            checkAndAddTable(tableName, colsArray);
+        }
+
+        /// <summary>
+        /// Добавляет таблицу для вычисления Омической ассиметрии
+        /// </summary>
+        private static void createDRFormulsTable()
+        {
+            string tableName = "dr_formuls";
+            string[] colsArray = {
+                                    "id INT UNSIGNED AUTO_INCREMENT NOT NULL",
+                                    "name VARCHAR(15)",
+                                    "measure_of VARCHAR(15)",
+                                    "formula TINYTEXT",
+                                    "description TINYTEXT",
+                                    "PRIMARY KEY (id)"
+                                 };
+            string[][] defaultData = {
+                                        new string[] {"1", "'DR1'", "'Ом'", "'Ra-Rb'", "NULL"},
+                                        new string[] {"2", "'DR2'", "'Ом'", "'(Ra-Rb)/2'", "NULL"},
+                                        new string[] {"3", "'DR3'", "'%'", "'(Ra-Rb)/(Ra-Rb)*100%'", "NULL"},
+                                        new string[] {"4", "'DR4'", "'%'", "'(Ra-Rb)/(Ra-Rb)*200%'", "NULL"}
+                                     };
+            checkAndAddTable(tableName, colsArray);
+            addBasicDataToTable(tableName, defaultData);
+        }
+
+        /// <summary>
+        /// Добавляет таблицу с формулами приведения для омической ассиметрии
+        /// </summary>
+        private static void createDRBringingFormulsTable()
+        {
+            string tableName = "dr_bringing_formuls";
+            string[] colsArray = {
+                                    "id INT UNSIGNED AUTO_INCREMENT NOT NULL",
+                                    "name VARCHAR(15)",
+                                    "formula TINYTEXT",
+                                    "description TINYTEXT",
+                                    "PRIMARY KEY (id)"
+                                 };
+            string[][] defaultData = {
+                                        new string[] {"1", "'Priv1'", "'без приведения'", "NULL"},
+                                        new string[] {"2", "'Priv2'", "'DR*Lпр/Lф'", "NULL"},
+                                        new string[] {"3", "'Priv3'", "'DR*sqrt(Lпр/Lф)'", "NULL"}
+                                     };
+            checkAndAddTable(tableName, colsArray);
+            addBasicDataToTable(tableName, defaultData);
         }
         /// <summary>
         /// Добавляет таблицу пользователей администратора если его нет

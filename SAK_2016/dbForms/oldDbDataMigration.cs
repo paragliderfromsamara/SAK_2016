@@ -82,6 +82,22 @@ namespace SAK_2016.dbForms
             if (bdCableFlag)
             {
                 oldDbCablesCheckBox.Enabled = true;
+                DBControl cblCon = new DBControl("bd_cable");
+                string selCables = cblCon.GetSQLCommand("cables_in_old_db");
+                string selStructures = cblCon.GetSQLCommand("structures_in_old_db");
+                string selMeasuredParams = cblCon.GetSQLCommand("measured_parameters_in_old_db");
+                string selFreqRanges = cblCon.GetSQLCommand("frequency_ranges_in_old_db");
+                cblCon.MyConn.Open();
+                MySqlDataAdapter cAd = new MySqlDataAdapter(selCables, cblCon.MyConn);
+                MySqlDataAdapter sAd = new MySqlDataAdapter(selStructures, cblCon.MyConn);
+                MySqlDataAdapter mpAd = new MySqlDataAdapter(selMeasuredParams, cblCon.MyConn);
+                MySqlDataAdapter frAd = new MySqlDataAdapter(selFreqRanges, cblCon.MyConn);
+                cAd.Fill(oldCables);
+                sAd.Fill(oldStructures);
+                mpAd.Fill(oldMeasParams);
+                frAd.Fill(oldFreqRanges);
+                cblCon.MyConn.Close();
+                cblCon.Dispose();
             }
             else
             {
@@ -114,6 +130,61 @@ namespace SAK_2016.dbForms
         {
             if (oldUsersCheckBox.Enabled && oldUsersCheckBox.Checked) migrateOldUsers();
             if (oldDbBarabansCheckBox.Enabled && oldDbBarabansCheckBox.Checked) migrateOldBarabans();
+            if (oldDbCablesCheckBox.Enabled && oldDbCablesCheckBox.Checked) migrateOldCables();
+        }
+
+        private void migrateOldCables()
+        {
+            mySql = new DBControl(Properties.Settings.Default.dbName);
+            DataTable c = oldCables.Tables[0];
+            DataTable s = oldStructures.Tables[0];
+            DataTable f = oldFreqRanges.Tables[0];
+            DataTable m = oldMeasParams.Tables[0];
+            string rowQuery = mySql.GetSQLCommand("AddCableFromOldDB");
+            mySql.MyConn.Open();
+            /*
+            foreach (DataRow r in c.Rows)
+                {
+
+                ServiceFunctions.setDefaultForDb(r["id"].ToString());
+                    string q = String.Format(rowQuery,
+                        r["id"],
+                        r["name"],
+                        r["struct_name"],
+                        r["build_length"],
+                        r["document_id"],
+                        r["notes"],
+                        ServiceFunctions.setDefaultForDb(r["linear_mass"].ToString()),
+                        r["code_okp"],
+                        r["code_kch"],
+                        ServiceFunctions.setDefaultForDb(r["u_cover"].ToString()),
+                        ServiceFunctions.setDefaultForDb(r["p_min"].ToString()),
+                        ServiceFunctions.setDefaultForDb(r["p_max"].ToString())
+                        );
+                    mySql.RunNoQuery(q);
+            } */
+            rowQuery = mySql.GetSQLCommand("AddStructureFromOldDB");
+            foreach (DataRow r in s.Rows)
+            {
+                string q = String.Format(rowQuery,
+                                        r["id"],
+                                        r["cable_id"],
+                                        r["structure_type_id"],
+                                        r["nominal_amount"],
+                                        r["fact_amount"],
+                                        r["lead_material_id"],
+                                        r["lead_diameter"],
+                                        r["isolation_material_id"],
+                                        r["wave_resistance"],
+                                        r["u_lead_lead"],
+                                        r["u_lead_shield"],
+                                        r["test_group_work_capacity"],
+                                        r["dr_formula_id"],
+                                        r["dr_bringing_formula_id"]
+                                        );
+                mySql.RunNoQuery(q);
+            }
+            mySql.MyConn.Close();
         }
 
         private void migrateOldBarabans()
@@ -180,5 +251,6 @@ namespace SAK_2016.dbForms
             
             //test.Text = query;
         }
+
     }
 }
