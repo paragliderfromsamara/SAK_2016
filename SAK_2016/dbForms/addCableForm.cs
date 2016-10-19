@@ -201,7 +201,7 @@ namespace SAK_2016
     {
     t.Text = Convert.ToDecimal(t.Text).ToString();
     }
-    catch (FormatException ex)
+    catch (FormatException)
     {
     t.Text = "";
     }
@@ -216,7 +216,7 @@ namespace SAK_2016
     else if (val > 3000) val = 3000;
     t.Text = Convert.ToInt32(val).ToString();
     }
-    catch (FormatException ex)
+    catch (FormatException)
     {
     t.Text = "";
     }
