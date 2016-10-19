@@ -674,30 +674,7 @@ namespace SAK_2016.dbSakModels
             return str;
         }
 
-        /// <summary>
-        /// Проверяет наличие БД путем попытки соединения к ней
-        /// </summary>
-        /// <param name="db_name"></param>
-        /// <returns></returns>
-        public static bool checkDBExists(string db_name)
-        {
-            string query = "USE " + db_name;
-            try
-            {
-                MySqlConnection con = new MySqlConnection(Properties.Settings.Default.rootConnectionString);
-                MySqlCommand com = new MySqlCommand(query, con);
-                con.Open();
-                com.ExecuteNonQuery();
-                con.Close();
-                con.Dispose();
-                com.Dispose();
-                return true;
-                
-            }catch(MySqlException)
-            {
-                return false;
-            }
-        }
+
 
 
     }

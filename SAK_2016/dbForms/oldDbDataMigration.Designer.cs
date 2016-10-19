@@ -28,40 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
             this.migrateSelected = new System.Windows.Forms.Button();
-            this.oldUserDbDataSet = new System.Data.DataSet();
+            this.oldEntitiesDS = new System.Data.DataSet();
             this.oldUsersCheckBox = new System.Windows.Forms.CheckBox();
             this.oldDbCablesCheckBox = new System.Windows.Forms.CheckBox();
             this.oldDbBarabansCheckBox = new System.Windows.Forms.CheckBox();
-            this.test = new System.Windows.Forms.Label();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.oldBarabansDataSet = new System.Data.DataSet();
-            this.oldCables = new System.Data.DataSet();
-            this.oldStructures = new System.Data.DataSet();
-            this.oldFreqRanges = new System.Data.DataSet();
-            this.oldMeasParams = new System.Data.DataSet();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            ((System.ComponentModel.ISupportInitialize)(this.oldUserDbDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldBarabansDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldCables)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldStructures)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldFreqRanges)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldMeasParams)).BeginInit();
+            this.cancelBut = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.users = new System.Data.DataTable();
+            this.cables = new System.Data.DataTable();
+            this.baraban_types = new System.Data.DataTable();
+            this.cable_structures = new System.Data.DataTable();
+            this.freq_ranges = new System.Data.DataTable();
+            this.measured_params = new System.Data.DataTable();
+            ((System.ComponentModel.ISupportInitialize)(this.oldEntitiesDS)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.users)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cables)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baraban_types)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable_structures)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.freq_ranges)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.measured_params)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 26);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(138, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Список доступных таблиц";
             // 
             // migrateSelected
             // 
-            this.migrateSelected.Location = new System.Drawing.Point(12, 218);
+            this.migrateSelected.Location = new System.Drawing.Point(12, 174);
             this.migrateSelected.Name = "migrateSelected";
             this.migrateSelected.Size = new System.Drawing.Size(123, 23);
             this.migrateSelected.TabIndex = 2;
@@ -69,25 +63,32 @@
             this.migrateSelected.UseVisualStyleBackColor = true;
             this.migrateSelected.Click += new System.EventHandler(this.migrateSelected_Click);
             // 
-            // oldUserDbDataSet
+            // oldEntitiesDS
             // 
-            this.oldUserDbDataSet.DataSetName = "NewDataSet";
+            this.oldEntitiesDS.DataSetName = "NewDataSet";
+            this.oldEntitiesDS.Tables.AddRange(new System.Data.DataTable[] {
+            this.users,
+            this.cables,
+            this.baraban_types,
+            this.cable_structures,
+            this.freq_ranges,
+            this.measured_params});
             // 
             // oldUsersCheckBox
             // 
             this.oldUsersCheckBox.AutoSize = true;
-            this.oldUsersCheckBox.Location = new System.Drawing.Point(12, 53);
+            this.oldUsersCheckBox.Location = new System.Drawing.Point(5, 4);
             this.oldUsersCheckBox.Name = "oldUsersCheckBox";
-            this.oldUsersCheckBox.Size = new System.Drawing.Size(220, 17);
+            this.oldUsersCheckBox.Size = new System.Drawing.Size(181, 17);
             this.oldUsersCheckBox.TabIndex = 3;
-            this.oldUsersCheckBox.Text = "Старая БД пользователей (bd_system)";
+            this.oldUsersCheckBox.Text = "БД пользователей (bd_system)";
             this.oldUsersCheckBox.UseVisualStyleBackColor = true;
             this.oldUsersCheckBox.CheckedChanged += new System.EventHandler(this.oldUsersCheckBox_CheckedChanged);
             // 
             // oldDbCablesCheckBox
             // 
             this.oldDbCablesCheckBox.AutoSize = true;
-            this.oldDbCablesCheckBox.Location = new System.Drawing.Point(12, 76);
+            this.oldDbCablesCheckBox.Location = new System.Drawing.Point(5, 27);
             this.oldDbCablesCheckBox.Name = "oldDbCablesCheckBox";
             this.oldDbCablesCheckBox.Size = new System.Drawing.Size(140, 17);
             this.oldDbCablesCheckBox.TabIndex = 4;
@@ -98,93 +99,119 @@
             // oldDbBarabansCheckBox
             // 
             this.oldDbBarabansCheckBox.AutoSize = true;
-            this.oldDbBarabansCheckBox.Location = new System.Drawing.Point(12, 99);
+            this.oldDbBarabansCheckBox.Location = new System.Drawing.Point(5, 50);
             this.oldDbBarabansCheckBox.Name = "oldDbBarabansCheckBox";
-            this.oldDbBarabansCheckBox.Size = new System.Drawing.Size(100, 17);
+            this.oldDbBarabansCheckBox.Size = new System.Drawing.Size(166, 17);
             this.oldDbBarabansCheckBox.TabIndex = 5;
-            this.oldDbBarabansCheckBox.Text = "БД Барабанов";
+            this.oldDbBarabansCheckBox.Text = "БД Барабанов (bd_baraban)";
             this.oldDbBarabansCheckBox.UseVisualStyleBackColor = true;
             this.oldDbBarabansCheckBox.CheckedChanged += new System.EventHandler(this.oldDbBarabansCheckBox_CheckedChanged);
             // 
-            // test
+            // cancelBut
             // 
-            this.test.AutoSize = true;
-            this.test.Location = new System.Drawing.Point(62, 152);
-            this.test.Name = "test";
-            this.test.Size = new System.Drawing.Size(35, 13);
-            this.test.TabIndex = 6;
-            this.test.Text = "label2";
+            this.cancelBut.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelBut.Location = new System.Drawing.Point(141, 174);
+            this.cancelBut.Name = "cancelBut";
+            this.cancelBut.Size = new System.Drawing.Size(123, 23);
+            this.cancelBut.TabIndex = 6;
+            this.cancelBut.Text = "Ничего не делать";
+            this.cancelBut.UseVisualStyleBackColor = true;
+            this.cancelBut.Click += new System.EventHandler(this.cancelBut_Click);
             // 
-            // richTextBox1
+            // label1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(268, 26);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(823, 321);
-            this.richTextBox1.TabIndex = 7;
-            this.richTextBox1.Text = "";
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(9, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(368, 36);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "На данном устройстве обнаружены следующие БД \nот предыдущих систем";
             // 
-            // oldBarabansDataSet
+            // panel1
             // 
-            this.oldBarabansDataSet.DataSetName = "NewDataSet";
+            this.panel1.Controls.Add(this.progressBar1);
+            this.panel1.Controls.Add(this.oldDbBarabansCheckBox);
+            this.panel1.Controls.Add(this.oldDbCablesCheckBox);
+            this.panel1.Controls.Add(this.oldUsersCheckBox);
+            this.panel1.Location = new System.Drawing.Point(7, 70);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(399, 90);
+            this.panel1.TabIndex = 8;
             // 
-            // oldCables
+            // progressBar1
             // 
-            this.oldCables.DataSetName = "NewDataSet";
+            this.progressBar1.Location = new System.Drawing.Point(251, 50);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(100, 23);
+            this.progressBar1.TabIndex = 6;
             // 
-            // oldStructures
+            // users
             // 
-            this.oldStructures.DataSetName = "NewDataSet";
+            this.users.TableName = "users";
             // 
-            // oldFreqRanges
+            // cables
             // 
-            this.oldFreqRanges.DataSetName = "NewDataSet";
+            this.cables.TableName = "cables";
             // 
-            // oldMeasParams
+            // baraban_types
             // 
-            this.oldMeasParams.DataSetName = "NewDataSet";
+            this.baraban_types.TableName = "baraban_types";
             // 
+            // cable_structures
+            // 
+            this.cable_structures.TableName = "cable_structures";
+            // 
+            // freq_ranges
+            // 
+            this.freq_ranges.TableName = "freq_ranges";
+            // 
+            // measured_params
+            // 
+            this.measured_params.TableName = "measured_params";
             // 
             // oldDbDataMigration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1147, 372);
-            this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.test);
-            this.Controls.Add(this.oldDbBarabansCheckBox);
-            this.Controls.Add(this.oldDbCablesCheckBox);
-            this.Controls.Add(this.oldUsersCheckBox);
-            this.Controls.Add(this.migrateSelected);
+            this.ClientSize = new System.Drawing.Size(423, 209);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.cancelBut);
+            this.Controls.Add(this.migrateSelected);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "oldDbDataMigration";
-            this.Text = "Миграция данных из старых Баз Данных";
+            this.Text = "Миграция данных из старых Баз Данных ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.oldDbDataMigration_FormClosing);
-            ((System.ComponentModel.ISupportInitialize)(this.oldUserDbDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldBarabansDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldCables)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldStructures)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldFreqRanges)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.oldMeasParams)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.oldEntitiesDS)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.users)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cables)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baraban_types)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable_structures)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.freq_ranges)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.measured_params)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button migrateSelected;
-        private System.Data.DataSet oldUserDbDataSet;
+        private System.Data.DataSet oldEntitiesDS;
         private System.Windows.Forms.CheckBox oldUsersCheckBox;
         private System.Windows.Forms.CheckBox oldDbCablesCheckBox;
         private System.Windows.Forms.CheckBox oldDbBarabansCheckBox;
-        private System.Windows.Forms.Label test;
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Data.DataSet oldBarabansDataSet;
-        private System.Data.DataSet oldCables;
-        private System.Data.DataSet oldStructures;
-        private System.Data.DataSet oldFreqRanges;
-        private System.Data.DataSet oldMeasParams;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Button cancelBut;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Data.DataTable users;
+        private System.Data.DataTable cables;
+        private System.Data.DataTable baraban_types;
+        private System.Data.DataTable cable_structures;
+        private System.Data.DataTable freq_ranges;
+        private System.Data.DataTable measured_params;
     }
 }

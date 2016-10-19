@@ -11,6 +11,18 @@
   ORDER BY users.last_name ASC
   </Users>
 
+  <users_count>
+    select COUNT(*) FROM users WHERE users.is_active = 1   
+  </users_count>
+  
+  <cables_count>
+    SELECT COUNT(*) FROM cables
+  </cables_count>
+
+  <baraban_types_count>
+    SELECT COUNT(*) FROM baraban_types
+  </baraban_types_count>
+  
   <UpdateUserWithoutPass>
 	UPDATE users SET users.name = "{1}", users.last_name = "{2}", users.third_name = "{3}", users.employee_number = {4}, users.role_id = {5}
 	WHERE users.id IN({0})
@@ -82,9 +94,18 @@
     SELECT familija_imja_ot.UserNum as id, familija_imja_ot.familija as last_name, familija_imja_ot.imja as name, familija_imja_ot.otchestvo as third_name, familija_imja_ot.tabnum as employee_number, familija_imja_ot.pass as password, dolshnosti.dolshnost as role_name, dolshnosti.dolshnum as role_id, familija_imja_ot.activ as is_active  FROM Familija_imja_ot LEFT JOIN Dolshnosti ON (Familija_imja_ot.Dolshnost = Dolshnosti.DolshNum)
   </users_in_old_db>
   
+  <users_in_old_db_count>
+    SELECT COUNT(*) FROM Familija_imja_ot
+  </users_in_old_db_count>
+  
   <barabans_in_old_db>
     SELECT Tipy_Baraban.TipInd as id, Tipy_Baraban.TipName as name, Tipy_Baraban.massa as weight  FROM Tipy_Baraban
   </barabans_in_old_db>
+  
+  <barabans_in_old_db_count>
+    SELECT COUNT(*) FROM Tipy_Baraban
+  </barabans_in_old_db_count>
+  
   <AddBarabanFromOldDB>
     INSERT IGNORE INTO baraban_types (baraban_types.id, baraban_types.name, baraban_types.weight) VALUES ({0}, "{1}", {2})
   </AddBarabanFromOldDB>
@@ -96,17 +117,23 @@
   <cables_in_old_db>
     SELECT cables.CabNum as id, cables.CabName as name, cables.CabNameStruct as struct_name, cables.StrLengt as build_length, cables.DocInd as document_id, cables.TextPrim as notes, cables.PogMass as linear_mass, cables.KodOKP as code_okp, cables.KodOKP_KCH as code_kch, cables.U_Obol as u_cover, cables.P_min as p_min, cables.P_max as p_max FROM cables ORDER BY cables.CabNum ASC
   </cables_in_old_db>
+  
   <frequency_ranges_in_old_db>
     SELECT Freq_Diap.FreqDiapInd as id, Freq_Diap.FreqMin as freq_min, Freq_Diap.FreqMax as freq_max, Freq_Diap.FreqStep as freq_step FROM Freq_Diap ORDER BY Freq_Diap.FreqDiapInd ASC
   </frequency_ranges_in_old_db>
+  
   <measured_parameters_in_old_db>
     SELECT Param_Data.CabNum as cable_id, Param_Data.ParamInd as measured_parameter_type_id, Param_Data.StruktInd as cable_structure_id, Param_Data.Min as min_val, Param_Data.Max as max_val, Param_Data.Min as min_val, Param_Data.Lpriv as bringing_length, Param_Data.LprivInd as bringing_length_type_id, Param_Data.Percent as percent, Param_Data.Percent as percent, Param_Data.FreqDiap as frequency_range_id  FROM Param_Data ORDER BY Param_Data.CabNum  ASC
   </measured_parameters_in_old_db>
-
+  
   <AddCableFromOldDB>
     INSERT IGNORE INTO cables VALUE ({0}, "{1}", "{2}", {3}, {4}, "{5}", {6}, "{7}", "{8}", {9}, {10}, {11})
   </AddCableFromOldDB>
   <AddStructureFromOldDB>
     INSERT IGNORE INTO cable_structures  VALUE ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13})
   </AddStructureFromOldDB >
+
+  <cables_in_old_db_count>
+    SELECT SUM(T.cnt) AS k FROM (SELECT COUNT(FreqDiapInd) AS cnt FROM Freq_Diap UNION ALL SELECT COUNT(CabNum) AS cnt FROM cables UNION ALL SELECT COUNT(ParamInd) AS cnt FROM Param_Data UNION ALL SELECT COUNT(StruktInd) AS cnt FROM Struktury_Cab) AS T;
+  </cables_in_old_db_count>
 </SQLQuery>

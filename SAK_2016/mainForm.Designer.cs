@@ -37,11 +37,11 @@
             this.dbUsersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dbCableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dbBarabanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oldDbMigrationStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.sesUserName = new System.Windows.Forms.ToolStripStatusLabel();
             this.sesTabNum = new System.Windows.Forms.ToolStripStatusLabel();
             this.sesRole = new System.Windows.Forms.ToolStripStatusLabel();
-            this.oldDbMigrationStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -121,6 +121,13 @@
             this.dbBarabanToolStripMenuItem.Text = "Типы барабанов";
             this.dbBarabanToolStripMenuItem.Click += new System.EventHandler(this.dbBarabanToolStripMenuItem_Click);
             // 
+            // oldDbMigrationStripMenuItem
+            // 
+            this.oldDbMigrationStripMenuItem.Name = "oldDbMigrationStripMenuItem";
+            this.oldDbMigrationStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.oldDbMigrationStripMenuItem.Text = "Загрузка данных из старой БД";
+            this.oldDbMigrationStripMenuItem.Click += new System.EventHandler(this.oldDbMigrationStripMenuItem_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -150,13 +157,6 @@
             this.sesRole.Name = "sesRole";
             this.sesRole.Size = new System.Drawing.Size(69, 17);
             this.sesRole.Text = "Должность";
-            // 
-            // oldDbMigrationStripMenuItem
-            // 
-            this.oldDbMigrationStripMenuItem.Name = "oldDbMigrationStripMenuItem";
-            this.oldDbMigrationStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            this.oldDbMigrationStripMenuItem.Text = "Загрузка данных из старой БД";
-            this.oldDbMigrationStripMenuItem.Click += new System.EventHandler(this.oldDbMigrationStripMenuItem_Click);
             // 
             // mainForm
             // 
