@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Globalization;
+using System.Threading;
 
 namespace SAK_2016
 {
@@ -27,10 +29,10 @@ namespace SAK_2016
         {
             InitializeComponent();
             if (isTestApp) this.Text += " (Тестовый режим)";
-            //MessageBox.Show(user_type, "Check", MessageBoxButtons.OK);
-            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("my");
+            Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
         }
-//Управление дочерними окнами
+        //Управление дочерними окнами
         private void autoTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             autoTestForm = new autoTestForm(this);

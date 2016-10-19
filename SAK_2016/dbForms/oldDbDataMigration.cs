@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using SAK_2016.dbSakModels;
+using System.Threading;
 
 namespace SAK_2016.dbForms
 {
@@ -20,13 +21,14 @@ namespace SAK_2016.dbForms
         private int oldCablesCount = 0;
         private int oldBarabansCount = 0;
         private int pbScope = 0;
+        private string baseStatus = "На данном устройстве обнаружены следующие БД от \nпредыдущих систем".ToString();
         public oldDbDataMigration(mainForm f)
         {
             mForm = f;
             mForm.switchMenuStripItems(false);
             InitializeComponent();
             loadOldDataSets();
-            checkMigrateButEnable();
+            switchProgressBar(false);
         }
 
         private void oldDbDataMigration_FormClosing(object sender, FormClosingEventArgs e)
@@ -34,6 +36,8 @@ namespace SAK_2016.dbForms
             //e.Cancel = true;
             mForm.switchMenuStripItems(true);
             mForm.oldDbDataMigrationForm = null;
+            mySql.Dispose();
+            oldEntitiesDS.Dispose();
             this.Dispose();
         }
 
@@ -62,12 +66,12 @@ namespace SAK_2016.dbForms
             if (bdSysFlag && cUsers == 1)
             {
                 oldUsersCheckBox.Enabled = true;
-                DBControl sysCon = new DBControl("bd_system");
-                string selOldUsersQuery = sysCon.GetSQLCommand("users_in_old_db");
-                sysCon.MyConn.Open();
-                MySqlDataAdapter sysAd = new MySqlDataAdapter(selOldUsersQuery, sysCon.MyConn);
+                mySql = new DBControl("bd_system");
+                string selOldUsersQuery = mySql.GetSQLCommand("users_in_old_db");
+                mySql.MyConn.Open();
+                MySqlDataAdapter sysAd = new MySqlDataAdapter(selOldUsersQuery, mySql.MyConn);
                 sysAd.Fill(oldEntitiesDS.Tables["users"]);
-                sysCon.Dispose();
+                mySql.Dispose();
                 oldUsersCount = oldEntitiesDS.Tables["users"].Rows.Count;
                 oldUsersCheckBox.Enabled = (oldUsersCount > 0) ? true : false;
             } else
@@ -77,13 +81,13 @@ namespace SAK_2016.dbForms
             if (bdBarabanFlag && cBarabans == 0)
             {
                 oldDbBarabansCheckBox.Enabled = true;
-                DBControl brbCon = new DBControl("bd_baraban");
-                string selOldBarabanTypesQuery = brbCon.GetSQLCommand("barabans_in_old_db");
-                brbCon.MyConn.Open();
-                MySqlDataAdapter brbAd = new MySqlDataAdapter(selOldBarabanTypesQuery, brbCon.MyConn);
+                mySql = new DBControl("bd_baraban");
+                string selOldBarabanTypesQuery = mySql.GetSQLCommand("barabans_in_old_db");
+                mySql.MyConn.Open();
+                MySqlDataAdapter brbAd = new MySqlDataAdapter(selOldBarabanTypesQuery, mySql.MyConn);
                 brbAd.Fill(oldEntitiesDS.Tables["baraban_types"]);
-                brbCon.MyConn.Close();
-                brbCon.Dispose();
+                mySql.MyConn.Close();
+                mySql.Dispose();
                 oldBarabansCount = oldEntitiesDS.Tables["baraban_types"].Rows.Count;
                 oldDbBarabansCheckBox.Enabled = (oldBarabansCount > 0) ? true : false;
             }
@@ -94,23 +98,27 @@ namespace SAK_2016.dbForms
             if (bdCableFlag && cCables == 0)
             {
                 oldDbCablesCheckBox.Enabled = true;
-                DBControl cblCon = new DBControl("bd_cable");
-                string selCables = cblCon.GetSQLCommand("cables_in_old_db");
-                string selStructures = cblCon.GetSQLCommand("structures_in_old_db");
-                string selMeasuredParams = cblCon.GetSQLCommand("measured_parameters_in_old_db");
-                string selFreqRanges = cblCon.GetSQLCommand("frequency_ranges_in_old_db");
-                cblCon.MyConn.Open();
-                MySqlDataAdapter cAd = new MySqlDataAdapter(selCables, cblCon.MyConn);
-                MySqlDataAdapter sAd = new MySqlDataAdapter(selStructures, cblCon.MyConn);
-                MySqlDataAdapter mpAd = new MySqlDataAdapter(selMeasuredParams, cblCon.MyConn);
-                MySqlDataAdapter frAd = new MySqlDataAdapter(selFreqRanges, cblCon.MyConn);
+                mySql = new DBControl("bd_cable");
+                string selCables = mySql.GetSQLCommand("cables_in_old_db");
+                string selStructures = mySql.GetSQLCommand("structures_in_old_db");
+                string selMeasuredParams = mySql.GetSQLCommand("measured_parameters_in_old_db");
+                string selFreqRanges = mySql.GetSQLCommand("frequency_ranges_in_old_db");
+                mySql.MyConn.Open();
+                MySqlDataAdapter cAd = new MySqlDataAdapter(selCables, mySql.MyConn);
+                MySqlDataAdapter sAd = new MySqlDataAdapter(selStructures, mySql.MyConn);
+                MySqlDataAdapter mpAd = new MySqlDataAdapter(selMeasuredParams, mySql.MyConn);
+                MySqlDataAdapter frAd = new MySqlDataAdapter(selFreqRanges, mySql.MyConn);
                 cAd.Fill(oldEntitiesDS.Tables["cables"]);
                 sAd.Fill(oldEntitiesDS.Tables["cable_structures"]);
                 mpAd.Fill(oldEntitiesDS.Tables["measured_params"]);
                 frAd.Fill(oldEntitiesDS.Tables["freq_ranges"]);
-                cblCon.MyConn.Close();
-                cblCon.Dispose();
-                oldCablesCount = oldEntitiesDS.Tables["cables"].Rows.Count;// + oldEntitiesDS.Tables["measured_params"].Rows.Count +  oldEntitiesDS.Tables["cable_structures"].Rows.Count + oldEntitiesDS.Tables["freq_ranges"].Rows.Count;
+                mySql.MyConn.Close();
+                mySql.Dispose();
+                oldCablesCount = oldEntitiesDS.Tables["cables"].Rows.Count + oldEntitiesDS.Tables["cable_structures"].Rows.Count + oldEntitiesDS.Tables["measured_params"].Rows.Count;//  +  oldEntitiesDS.Tables["cable_structures"].Rows.Count + oldEntitiesDS.Tables["freq_ranges"].Rows.Count;
+                cAd.Dispose();
+                sAd.Dispose();
+                mpAd.Dispose();
+                mySql.Dispose();
             }
             else
             {
@@ -121,7 +129,7 @@ namespace SAK_2016.dbForms
                 MessageBox.Show("Базы данных предыдущих версий отсутствуют", "Устаревшие БД отсутствуют", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 migrateSelected.Enabled = false;
             }
-                
+            checkMigrateButEnable();
         }
 
         private void oldUsersCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -147,27 +155,69 @@ namespace SAK_2016.dbForms
             if (u) pbScope += oldUsersCount;
             if (b) pbScope += oldBarabansCount;
             if (c) pbScope += oldCablesCount;
-            progressBar1.Maximum = pbScope;
-            progressBar1.Minimum = 1;
-            progressBar1.Step = 1;
-            if (u) migrateOldUsers();
-            if (b) migrateOldBarabans();
-            if (c) migrateOldCables();
+            if (pbScope > 0) switchProgressBar(true); //включаем прогресс бар
+            oldDBMigrationPBar.Maximum = pbScope;
+            oldDBMigrationPBar.Minimum = 1;
+            oldDBMigrationPBar.Step = 1;
+            try
+            {
+                if (u) migrateOldUsers();
+                if (b) migrateOldBarabans();
+                if (c) migrateOldCables();
+            }catch(DBException)
+            {
+                MessageBox.Show(String.Format("Произошла ошибка во время операции \"{0}\"", pBarStatus.Text), "Ошибка при миграции данных", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            switchProgressBar(false); //выключаем прогресс бар
+            oldDbBarabansCheckBox.Checked = oldDbCablesCheckBox.Checked = oldUsersCheckBox.Checked = false;
+            loadOldDataSets();
         }
 
         private void migrateOldCables()
         {
+            string cQueryMask, sQueryMask, mQueryMask, fQueryMask, cQuery, sQuery, mQuery, fQuery;
+            DataRowCollection c, s, f, m;
             mySql = new DBControl(Properties.Settings.Default.dbName);
-            DataRowCollection c = oldEntitiesDS.Tables["cables"].Rows;
-            DataRowCollection s = oldEntitiesDS.Tables["cables_structures"].Rows;
-            DataRowCollection f = oldEntitiesDS.Tables["freq_ranges"].Rows;
-            DataRowCollection m = oldEntitiesDS.Tables["measured_params"].Rows;
-            string rowQuery = mySql.GetSQLCommand("AddCableFromOldDB");
-            mySql.MyConn.Open();
-            rowQuery = mySql.GetSQLCommand("AddStructureFromOldDB");
+            c = oldEntitiesDS.Tables["cables"].Rows;
+            s = oldEntitiesDS.Tables["cable_structures"].Rows;
+            f = oldEntitiesDS.Tables["freq_ranges"].Rows;
+            m = oldEntitiesDS.Tables["measured_params"].Rows;
+            cQueryMask = "({0}, \"{1}\", \"{2}\", {3}, {4}, \"{5}\", {6}, \"{7}\", \"{8}\", {9}, {10}, {11})";
+            sQueryMask = "({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13})";
+            mQueryMask = "({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})";
+            fQueryMask = "({0}, {1}, {2}, {3})";
+            cQuery = "";
+            sQuery = "";
+            mQuery = "";
+            fQuery = "";
+            //Создаём список для добавления в БД кабелей
+            changePBStatus("Формирование списка кабелей");
+            foreach (DataRow r in c)
+            {
+                if (cQuery.Length > 0) cQuery += ", ";
+                cQuery += String.Format(cQueryMask,
+                                        r["id"],
+                                        r["name"],
+                                        r["struct_name"],
+                                        DBControl.setDbDefaultIfNull(r["build_length"].ToString()),
+                                        r["document_id"],
+                                        r["notes"],
+                                        DBControl.setDbDefaultIfNull(r["linear_mass"].ToString()),
+                                        r["code_okp"],
+                                        r["code_kch"],
+                                        DBControl.setDbDefaultIfNull(r["u_cover"].ToString()),
+                                        DBControl.setDbDefaultIfNull(r["p_min"].ToString()),
+                                        DBControl.setDbDefaultIfNull(r["p_max"].ToString())
+                                        );
+                oldDBMigrationPBar.PerformStep();
+            }
+            //Создаём список для добавления в БД структур кабелей
+            changePBStatus("Формирование списка структур кабелей");
             foreach (DataRow r in s)
             {
-                string q = String.Format(rowQuery,
+                if (sQuery.Length > 0) sQuery += ", ";
+                sQuery += String.Format(sQueryMask,
                                         r["id"],
                                         r["cable_id"],
                                         r["structure_type_id"],
@@ -183,27 +233,81 @@ namespace SAK_2016.dbForms
                                         r["dr_formula_id"],
                                         r["dr_bringing_formula_id"]
                                         );
-                mySql.RunNoQuery(q);
-                progressBar1.PerformStep();
+                
+                oldDBMigrationPBar.PerformStep();
             }
-
+            //Создаём список для добавления в БД значений измеряемых параметров
+            changePBStatus("Формирование списка измеряемых параметров");
+            foreach (DataRow r in m)
+            {
+                if (mQuery.Length > 0) mQuery += ", ";
+                mQuery += String.Format(mQueryMask,
+                                        r["cable_id"],
+                                        r["cable_structure_id"],
+                                        r["measured_parameter_type_id"],
+                                        DBControl.setDbDefaultIfNull(r["min_val"].ToString()),
+                                        DBControl.setDbDefaultIfNull(r["max_val"].ToString()),
+                                        DBControl.setDbDefaultIfNull(r["bringing_length"].ToString()),
+                                        DBControl.setDbDefaultIfNull(r["bringing_length_type_id"].ToString()),
+                                        DBControl.setDbDefaultIfNull(r["percent"].ToString()),
+                                        DBControl.setDbDefaultIfNull(r["frequency_range_id"].ToString())
+                                        );
+                oldDBMigrationPBar.PerformStep();
+            }
+            //Создаём список для добавления в БД диапазонов частот
+            changePBStatus("Формирование списка диапазонов частот");
+            foreach (DataRow r in f)
+            {
+                if (fQuery.Length > 0) fQuery += ", ";
+                fQuery += String.Format(fQueryMask,
+                                        r["id"],
+                                        DBControl.setDbDefaultIfNull(r["freq_min"].ToString()),
+                                        DBControl.setDbDefaultIfNull(r["freq_max"].ToString()),
+                                        DBControl.setDbDefaultIfNull(r["freq_step"].ToString())
+                                        );
+                oldDBMigrationPBar.PerformStep();
+            }
+            cQuery = "INSERT IGNORE INTO cables VALUES " + cQuery;
+            sQuery = "INSERT IGNORE INTO cable_structures VALUES " + sQuery;
+            mQuery = "INSERT IGNORE INTO measured_parameter_values VALUES " + mQuery;
+            fQuery = "INSERT IGNORE INTO frequency_ranges VALUES " + fQuery;
+            changePBStatus("Подключение к " + Properties.Settings.Default.dbName);
+            mySql.MyConn.Open();
+            changePBStatus("Заполнение таблицы Кабелей");
+            mySql.RunNoQuery(cQuery);
+            changePBStatus("Заполнение таблицы Структур кабелей");
+            mySql.RunNoQuery(sQuery);
+            changePBStatus("Заполнение таблицы Значений измеряемых параметров");
+            mySql.RunNoQuery(mQuery);
+            changePBStatus("Заполнение таблицы диапазонов частот");
+            mySql.RunNoQuery(fQuery);
             mySql.MyConn.Close();
+            cQuery = sQuery = mQuery = fQuery = "";
+
         }
 
         private void migrateOldBarabans()
         {
             mySql = new DBControl(Properties.Settings.Default.dbName);
-            string rowQuery = mySql.GetSQLCommand("AddBarabanFromOldDB");
+            
             DataRowCollection b_types = oldEntitiesDS.Tables["baraban_types"].Rows;
-            mySql.MyConn.Open();
+            string bQueryMask = "({0}, \"{1}\", {2})";
+            string bQuery = "";
+            changePBStatus("Формирование списка типов барабанов");
             foreach (DataRow r in b_types)
             {
-                string q = String.Format(rowQuery, r["id"], r["name"], r["weight"].ToString().Replace(",", ".") );
-                mySql.RunNoQuery(q);
-                progressBar1.PerformStep();
-                //MySqlCommand cmd = new MySqlCommand(q, mySql.MyConn);
-                //cmd.ExecuteNonQuery();
+                if (bQuery.Length > 0) bQuery += ", ";
+                bQuery += String.Format(bQueryMask, 
+                                                    r["id"], 
+                                                    r["name"],
+                                                    DBControl.setDbDefaultIfNull(r["weight"].ToString())
+                                         );
+                oldDBMigrationPBar.PerformStep();
             }
+            bQuery = "INSERT IGNORE INTO baraban_types VALUES " + bQuery;
+            mySql.MyConn.Open();
+            changePBStatus("Заполнение таблицы типов барабанов");
+            mySql.RunNoQuery(bQuery);
             mySql.MyConn.Close();
         }
 
@@ -213,28 +317,55 @@ namespace SAK_2016.dbForms
         private void migrateOldUsers()
         {
             mySql = new DBControl(Properties.Settings.Default.dbName);
-            //newUsersArr.IsFixedSize = false;
             DataRowCollection u = oldEntitiesDS.Tables["users"].Rows;
             string result_query = "";
             string s = "({0}, \"{1}\", \"{2}\", \"{3}\", {4}, {5}, \"{6}\", {7})";
+            changePBStatus("Формирование списка пользователей");
             foreach (DataRow r in u)
             {
                
                 if (result_query.Length > 0) result_query += ", ";
-                result_query += String.Format(s, r["id"].ToString(), r["last_name"].ToString(), r["name"].ToString(), r["third_name"].ToString(), r["employee_number"].ToString(), r["role_id"].ToString(), "123".ToString(), r["is_active"].ToString());
-
-                progressBar1.PerformStep();
+                result_query += String.Format(s, r["id"].ToString(), r["last_name"].ToString(), r["name"].ToString(), r["third_name"].ToString(), DBControl.setDbDefaultIfNull(r["employee_number"].ToString()), r["role_id"].ToString(), "123".ToString(), r["is_active"].ToString());
+                oldDBMigrationPBar.PerformStep();
             }
             result_query = "INSERT IGNORE INTO users VALUES " + result_query;
+            changePBStatus("Подключение к " + Properties.Settings.Default.dbName);
             mySql.MyConn.Open();
+            changePBStatus("Заполнение таблицы пользователей");
             mySql.RunNoQuery(result_query);
             mySql.MyConn.Close();
             //test.Text = query;
         }
 
+
         private void cancelBut_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
+        /// <summary>
+        /// Переключает форму во время миграции
+        /// </summary>
+        /// <param name="s"></param>
+        private void switchProgressBar(bool s)
+        {
+            migrateSelected.Enabled = cancelBut.Enabled = oldDbBarabansCheckBox.Visible = oldDbCablesCheckBox.Visible = oldUsersCheckBox.Visible = !s;
+            oldDBMigrationPBar.Visible = pBarStatus.Visible = s;
+            pBarStatus.Text = "";
+            label1.Text = (s) ? "Подождите... Идёт загрузка данных" : baseStatus;
+            label1.Update();
+            this.ControlBox = !s;
+        }
+        /// <summary>
+        /// Изменяет статус строки прогресс бара
+        /// </summary>
+        /// <param name="status"></param>
+        private void changePBStatus(string status)
+        {
+            pBarStatus.Text = status;
+            pBarStatus.Update();
+            Thread.Sleep(500);
+        }
+
     }
 }

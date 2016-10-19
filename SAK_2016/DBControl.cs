@@ -42,7 +42,15 @@ namespace SAK_2016
                 }
             }
         //------------------------------------------------------------------------------------------------------------------------
-        //KRA Functions   
+        //KRA Functions  
+        
+        public static string setDbDefaultIfNull(string str)
+        {
+            if (String.IsNullOrWhiteSpace(str))
+                return "DEFAULT";
+            else
+                return str;
+        } 
         /// <summary>
         /// Возвращает количество записей из таблицы с названием tableName. Необходимо наличие в файле с запросами запроса с названием tableName_count
         /// </summary>

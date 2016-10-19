@@ -527,7 +527,7 @@ namespace SAK_2016.dbSakModels
                 new string[] {"3", "5", "0.58"},
                 new string[] {"3", "6", "0.6"},
                 new string[] {"3", "7", "0.64"},
-                new string[] {"3", "8", "0.67"},
+                new  string[] {"3", "8", "0.67"},
                 new string[] {"3", "9", "0.69"},
                 new string[] {"3", "10", "0.72"},
                 new string[] {"3", "11", "0.74"},

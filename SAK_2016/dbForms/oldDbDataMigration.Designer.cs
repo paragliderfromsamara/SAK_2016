@@ -30,32 +30,33 @@
         {
             this.migrateSelected = new System.Windows.Forms.Button();
             this.oldEntitiesDS = new System.Data.DataSet();
-            this.oldUsersCheckBox = new System.Windows.Forms.CheckBox();
-            this.oldDbCablesCheckBox = new System.Windows.Forms.CheckBox();
-            this.oldDbBarabansCheckBox = new System.Windows.Forms.CheckBox();
-            this.cancelBut = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.users = new System.Data.DataTable();
             this.cables = new System.Data.DataTable();
             this.baraban_types = new System.Data.DataTable();
             this.cable_structures = new System.Data.DataTable();
             this.freq_ranges = new System.Data.DataTable();
             this.measured_params = new System.Data.DataTable();
+            this.oldUsersCheckBox = new System.Windows.Forms.CheckBox();
+            this.oldDbCablesCheckBox = new System.Windows.Forms.CheckBox();
+            this.oldDbBarabansCheckBox = new System.Windows.Forms.CheckBox();
+            this.cancelBut = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.oldDBMigrationPBar = new System.Windows.Forms.ProgressBar();
+            this.pBarStatus = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.oldEntitiesDS)).BeginInit();
-            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.users)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cables)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baraban_types)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cable_structures)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.freq_ranges)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.measured_params)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // migrateSelected
             // 
-            this.migrateSelected.Location = new System.Drawing.Point(12, 174);
+            this.migrateSelected.Location = new System.Drawing.Point(12, 159);
             this.migrateSelected.Name = "migrateSelected";
             this.migrateSelected.Size = new System.Drawing.Size(123, 23);
             this.migrateSelected.TabIndex = 2;
@@ -73,6 +74,30 @@
             this.cable_structures,
             this.freq_ranges,
             this.measured_params});
+            // 
+            // users
+            // 
+            this.users.TableName = "users";
+            // 
+            // cables
+            // 
+            this.cables.TableName = "cables";
+            // 
+            // baraban_types
+            // 
+            this.baraban_types.TableName = "baraban_types";
+            // 
+            // cable_structures
+            // 
+            this.cable_structures.TableName = "cable_structures";
+            // 
+            // freq_ranges
+            // 
+            this.freq_ranges.TableName = "freq_ranges";
+            // 
+            // measured_params
+            // 
+            this.measured_params.TableName = "measured_params";
             // 
             // oldUsersCheckBox
             // 
@@ -110,7 +135,7 @@
             // cancelBut
             // 
             this.cancelBut.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelBut.Location = new System.Drawing.Point(141, 174);
+            this.cancelBut.Location = new System.Drawing.Point(141, 159);
             this.cancelBut.Name = "cancelBut";
             this.cancelBut.Size = new System.Drawing.Size(123, 23);
             this.cancelBut.TabIndex = 6;
@@ -130,51 +155,38 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.progressBar1);
+            this.panel1.Controls.Add(this.pBarStatus);
+            this.panel1.Controls.Add(this.oldDBMigrationPBar);
             this.panel1.Controls.Add(this.oldDbBarabansCheckBox);
             this.panel1.Controls.Add(this.oldDbCablesCheckBox);
             this.panel1.Controls.Add(this.oldUsersCheckBox);
             this.panel1.Location = new System.Drawing.Point(7, 70);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(399, 90);
+            this.panel1.Size = new System.Drawing.Size(399, 77);
             this.panel1.TabIndex = 8;
             // 
-            // progressBar1
+            // oldDBMigrationPBar
             // 
-            this.progressBar1.Location = new System.Drawing.Point(251, 50);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 23);
-            this.progressBar1.TabIndex = 6;
+            this.oldDBMigrationPBar.Location = new System.Drawing.Point(32, 39);
+            this.oldDBMigrationPBar.Name = "oldDBMigrationPBar";
+            this.oldDBMigrationPBar.Size = new System.Drawing.Size(338, 23);
+            this.oldDBMigrationPBar.TabIndex = 6;
             // 
-            // users
+            // pBarStatus
             // 
-            this.users.TableName = "users";
-            // 
-            // cables
-            // 
-            this.cables.TableName = "cables";
-            // 
-            // baraban_types
-            // 
-            this.baraban_types.TableName = "baraban_types";
-            // 
-            // cable_structures
-            // 
-            this.cable_structures.TableName = "cable_structures";
-            // 
-            // freq_ranges
-            // 
-            this.freq_ranges.TableName = "freq_ranges";
-            // 
-            // measured_params
-            // 
-            this.measured_params.TableName = "measured_params";
+            this.pBarStatus.AutoSize = true;
+            this.pBarStatus.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.pBarStatus.Location = new System.Drawing.Point(29, 16);
+            this.pBarStatus.Name = "pBarStatus";
+            this.pBarStatus.Size = new System.Drawing.Size(70, 16);
+            this.pBarStatus.TabIndex = 7;
+            this.pBarStatus.Text = "pBarStatus";
             // 
             // oldDbDataMigration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(423, 209);
+            this.ClientSize = new System.Drawing.Size(423, 191);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cancelBut);
@@ -184,14 +196,14 @@
             this.Text = "Миграция данных из старых Баз Данных ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.oldDbDataMigration_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.oldEntitiesDS)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.users)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cables)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baraban_types)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cable_structures)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.freq_ranges)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.measured_params)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -206,12 +218,13 @@
         private System.Windows.Forms.Button cancelBut;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ProgressBar oldDBMigrationPBar;
         private System.Data.DataTable users;
         private System.Data.DataTable cables;
         private System.Data.DataTable baraban_types;
         private System.Data.DataTable cable_structures;
         private System.Data.DataTable freq_ranges;
         private System.Data.DataTable measured_params;
+        private System.Windows.Forms.Label pBarStatus;
     }
 }
