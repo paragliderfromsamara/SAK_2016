@@ -111,7 +111,14 @@
     </Compile>
     <Compile Include="dbSakModels\User.cs" />
     <Compile Include="dbSakModels\dbBase.cs" />
+    <Compile Include="Properties\dbSakQueries.cs" />
+    <Compile Include="Properties\dbSakQueries.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>dbSakQueries.settings</DependentUpon>
+    </Compile>
     <Compile Include="ServiceFunctions.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="testsForm\autoTestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -212,6 +219,10 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="dbSakModels\SakDBModelsDiagram.cd" />
+    <None Include="Properties\dbSakQueries.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>dbSakQueries.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

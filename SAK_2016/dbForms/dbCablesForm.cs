@@ -40,13 +40,15 @@ namespace SAK_2016
             this.Dispose();
         }
 
+/// <summary>
+/// Подгружаем список кабелей
+/// </summary>
 private void initCablesList()
 {
-   DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
+   DBControl mysql = new DBControl(Properties.dbSakQueries.Default.dbName);
    dbCablesDataSet.Reset();
    mysql.MyConn.Open();
-   string com = mysql.GetSQLCommand("ShowCables");
-   MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
+   MySqlDataAdapter da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectCables, mysql.MyConn);
    da.Fill(dbCablesDataSet);
    mysql.MyConn.Close();
    cablesList.DataSource = dbCablesDataSet.Tables[0];

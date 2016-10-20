@@ -14,7 +14,7 @@ namespace SAK_2016.dbSakModels
     
     class dataMigration
     {
-        private static string dbName = Properties.Settings.Default.dbName;
+        private static string dbName = Properties.dbSakQueries.Default.dbName;
         private static string query;
         private static string message;
         private static string connString = Properties.Settings.Default.rootConnectionString;

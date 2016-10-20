@@ -16,7 +16,7 @@ namespace SAK_2016.dbForms
     public partial class oldDbDataMigration : Form
     {
         public mainForm mForm = null;
-        private DBControl mySql = new DBControl(Properties.Settings.Default.dbName);
+        private DBControl mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
         private int oldUsersCount = 0;
         private int oldCablesCount = 0;
         private int oldBarabansCount = 0;
@@ -57,7 +57,7 @@ namespace SAK_2016.dbForms
             bool bdSysFlag = DBControl.checkDBExists("bd_system");
             bool bdBarabanFlag = DBControl.checkDBExists("bd_baraban");
             bool bdCableFlag = DBControl.checkDBExists("bd_cable");
-            mySql = new DBControl(Properties.Settings.Default.dbName);
+            mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
             mySql.MyConn.Open();
             long cUsers = mySql.Count("users");
             long cCables = mySql.Count("cables");
@@ -178,7 +178,7 @@ namespace SAK_2016.dbForms
         {
             string cQueryMask, sQueryMask, mQueryMask, fQueryMask, cQuery, sQuery, mQuery, fQuery;
             DataRowCollection c, s, f, m;
-            mySql = new DBControl(Properties.Settings.Default.dbName);
+            mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
             c = oldEntitiesDS.Tables["cables"].Rows;
             s = oldEntitiesDS.Tables["cable_structures"].Rows;
             f = oldEntitiesDS.Tables["freq_ranges"].Rows;
@@ -271,7 +271,7 @@ namespace SAK_2016.dbForms
             sQuery = "INSERT IGNORE INTO cable_structures VALUES " + sQuery;
             mQuery = "INSERT IGNORE INTO measured_parameter_values VALUES " + mQuery;
             fQuery = "INSERT IGNORE INTO frequency_ranges VALUES " + fQuery;
-            changePBStatus("Подключение к " + Properties.Settings.Default.dbName);
+            changePBStatus("Подключение к " + Properties.dbSakQueries.Default.dbName);
             mySql.MyConn.Open();
             changePBStatus("Заполнение таблицы Кабелей");
             mySql.RunNoQuery(cQuery);
@@ -288,7 +288,7 @@ namespace SAK_2016.dbForms
 
         private void migrateOldBarabans()
         {
-            mySql = new DBControl(Properties.Settings.Default.dbName);
+            mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
             
             DataRowCollection b_types = oldEntitiesDS.Tables["baraban_types"].Rows;
             string bQueryMask = "({0}, \"{1}\", {2})";
@@ -316,7 +316,7 @@ namespace SAK_2016.dbForms
         /// </summary>
         private void migrateOldUsers()
         {
-            mySql = new DBControl(Properties.Settings.Default.dbName);
+            mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
             DataRowCollection u = oldEntitiesDS.Tables["users"].Rows;
             string result_query = "";
             string s = "({0}, \"{1}\", \"{2}\", \"{3}\", {4}, {5}, \"{6}\", {7})";
@@ -329,7 +329,7 @@ namespace SAK_2016.dbForms
                 oldDBMigrationPBar.PerformStep();
             }
             result_query = "INSERT IGNORE INTO users VALUES " + result_query;
-            changePBStatus("Подключение к " + Properties.Settings.Default.dbName);
+            changePBStatus("Подключение к " + Properties.dbSakQueries.Default.dbName);
             mySql.MyConn.Open();
             changePBStatus("Заполнение таблицы пользователей");
             mySql.RunNoQuery(result_query);

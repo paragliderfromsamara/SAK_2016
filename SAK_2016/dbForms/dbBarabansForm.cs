@@ -13,7 +13,7 @@ namespace SAK_2016
     public partial class dbBarabansForm : Form
     {
         public mainForm mForm = null;
-        private DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
+        private DBControl mysql = new DBControl(Properties.dbSakQueries.Default.dbName);
         public dbBarabansForm(mainForm f)
         {
             mForm = f;

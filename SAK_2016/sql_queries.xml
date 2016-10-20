@@ -54,7 +54,7 @@
   </ShowCables>
   
   <ShowCableMarks>
-	SELECT Distinct Cables.name from Cables ORDER BY Cables.name ASC
+	  SELECT Distinct Cables.name from Cables ORDER BY Cables.name ASC
   </ShowCableMarks>
   
   <ShowNormaDocs>

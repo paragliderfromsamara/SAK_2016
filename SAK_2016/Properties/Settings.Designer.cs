@@ -50,14 +50,5 @@ namespace SAK_2016.Properties {
                 return ((string)(this["rootConnectionString"]));
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("db_sak")]
-        public string dbName {
-            get {
-                return ((string)(this["dbName"]));
-            }
-        }
     }
 }

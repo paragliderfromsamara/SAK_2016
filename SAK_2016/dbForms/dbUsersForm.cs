@@ -13,7 +13,7 @@ namespace SAK_2016
     public partial class dbUsersForm : Form
     {
         public mainForm mForm = null;
-        private DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
+        private DBControl mysql = new DBControl(Properties.dbSakQueries.Default.dbName);
         public dbUsersForm(mainForm f)
         {
            
@@ -107,7 +107,7 @@ namespace SAK_2016
             string val = ""; 
             if (usersList.SelectedRows.Count > 0)
             {
-                DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
+                DBControl mysql = new DBControl(Properties.dbSakQueries.Default.dbName);
                 string com = mysql.GetSQLCommand("HideUsers");
                 for (int i = 0; i < usersList.SelectedRows.Count; i++)
                 {

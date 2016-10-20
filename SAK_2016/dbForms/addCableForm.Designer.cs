@@ -36,8 +36,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.fullNameNormDoc = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.cableMarksDataSet = new System.Data.DataSet();
-            this.normDocsDataSet = new System.Data.DataSet();
             this.closeBut = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.buildLength = new System.Windows.Forms.TextBox();
@@ -50,9 +48,7 @@
             this.maxPleasure = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.codeOKP = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.codeKCh = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.factElNumb = new System.Windows.Forms.NumericUpDown();
@@ -83,36 +79,65 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.groupCapacityCheckBox = new System.Windows.Forms.CheckBox();
-            this.structTypesDataSet = new System.Data.DataSet();
-            this.leadMaterDataSet = new System.Data.DataSet();
-            this.leadsDiameterDataSet = new System.Data.DataSet();
-            this.izolMaterialsDataSet = new System.Data.DataSet();
-            this.waveResistanceDataSet = new System.Data.DataSet();
-            this.drFormulsDataSet = new System.Data.DataSet();
-            this.drPrivFormulsDataSet = new System.Data.DataSet();
-            ((System.ComponentModel.ISupportInitialize)(this.cableMarksDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.normDocsDataSet)).BeginInit();
+            this.cableDS = new System.Data.DataSet();
+            this.cable_marks = new System.Data.DataTable();
+            this.documents = new System.Data.DataTable();
+            this.cable_structure_types = new System.Data.DataTable();
+            this.lead_materials = new System.Data.DataTable();
+            this.lead_diameters = new System.Data.DataTable();
+            this.isolation_materials = new System.Data.DataTable();
+            this.dataTable1 = new System.Data.DataTable();
+            this.dr_formuls = new System.Data.DataTable();
+            this.dr_bringing_formuls = new System.Data.DataTable();
+            this.cable = new System.Data.DataTable();
+            this.cable_structures = new System.Data.DataTable();
+            this.name = new System.Data.DataColumn();
+            this.id = new System.Data.DataColumn();
+            this.short_name = new System.Data.DataColumn();
+            this.full_name = new System.Data.DataColumn();
+            this.dataColumn1 = new System.Data.DataColumn();
+            this.dataColumn2 = new System.Data.DataColumn();
+            this.dataColumn3 = new System.Data.DataColumn();
+            this.isolation_material_id = new System.Data.DataColumn();
+            this.isolation_material_name = new System.Data.DataColumn();
+            this.wave_resistance = new System.Data.DataColumn();
+            this.dr_formula_id = new System.Data.DataColumn();
+            this.dr_formula = new System.Data.DataColumn();
+            this.dr_bringing_formeula_id = new System.Data.DataColumn();
+            this.dr_bringing_formula = new System.Data.DataColumn();
+            this.structure_type_id = new System.Data.DataColumn();
+            this.structure_type_name = new System.Data.DataColumn();
+            this.code_okp = new System.Windows.Forms.MaskedTextBox();
+            this.code_kch = new System.Windows.Forms.MaskedTextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.factElNumb)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nomElNumb)).BeginInit();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.structTypesDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.leadMaterDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.leadsDiameterDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.izolMaterialsDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.waveResistanceDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.drFormulsDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.drPrivFormulsDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cableDS)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable_marks)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.documents)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable_structure_types)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lead_materials)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lead_diameters)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isolation_materials)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dr_formuls)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dr_bringing_formuls)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable_structures)).BeginInit();
             this.SuspendLayout();
             // 
             // cableMarkComboBox
             // 
+            this.cableMarkComboBox.DataSource = this.cableDS;
+            this.cableMarkComboBox.DisplayMember = "cable_marks.name";
             this.cableMarkComboBox.FormattingEnabled = true;
             this.cableMarkComboBox.Location = new System.Drawing.Point(12, 39);
             this.cableMarkComboBox.Name = "cableMarkComboBox";
             this.cableMarkComboBox.Size = new System.Drawing.Size(156, 21);
             this.cableMarkComboBox.TabIndex = 0;
+            this.cableMarkComboBox.ValueMember = "cable_marks.name";
             // 
             // label1
             // 
@@ -142,11 +167,14 @@
             // 
             // normDocComboBox
             // 
+            this.normDocComboBox.DataSource = this.cableDS;
+            this.normDocComboBox.DisplayMember = "documents.short_name";
             this.normDocComboBox.FormattingEnabled = true;
             this.normDocComboBox.Location = new System.Drawing.Point(12, 87);
             this.normDocComboBox.Name = "normDocComboBox";
             this.normDocComboBox.Size = new System.Drawing.Size(156, 21);
             this.normDocComboBox.TabIndex = 4;
+            this.normDocComboBox.ValueMember = "documents.id";
             this.normDocComboBox.SelectedIndexChanged += new System.EventHandler(this.normDocComboBox_SelectedIndexChanged);
             // 
             // label3
@@ -173,14 +201,6 @@
             this.label4.Size = new System.Drawing.Size(228, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Полное название нормативного документа";
-            // 
-            // cableMarksDataSet
-            // 
-            this.cableMarksDataSet.DataSetName = "NewDataSet";
-            // 
-            // normDocsDataSet
-            // 
-            this.normDocsDataSet.DataSetName = "NewDataSet";
             // 
             // closeBut
             // 
@@ -290,13 +310,6 @@
             this.label9.TabIndex = 19;
             this.label9.Text = "max";
             // 
-            // codeOKP
-            // 
-            this.codeOKP.Location = new System.Drawing.Point(691, 148);
-            this.codeOKP.Name = "codeOKP";
-            this.codeOKP.Size = new System.Drawing.Size(131, 20);
-            this.codeOKP.TabIndex = 21;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -306,17 +319,10 @@
             this.label11.TabIndex = 22;
             this.label11.Text = "Код ОКП";
             // 
-            // codeKCh
-            // 
-            this.codeKCh.Location = new System.Drawing.Point(839, 148);
-            this.codeKCh.Name = "codeKCh";
-            this.codeKCh.Size = new System.Drawing.Size(51, 20);
-            this.codeKCh.TabIndex = 23;
-            // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(836, 132);
+            this.label12.Location = new System.Drawing.Point(777, 132);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(22, 13);
             this.label12.TabIndex = 24;
@@ -384,12 +390,15 @@
             // 
             // structTypeComboBox
             // 
+            this.structTypeComboBox.DataSource = this.cableDS;
+            this.structTypeComboBox.DisplayMember = "cable_structure_types.name";
             this.structTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.structTypeComboBox.FormattingEnabled = true;
             this.structTypeComboBox.Location = new System.Drawing.Point(18, 352);
             this.structTypeComboBox.Name = "structTypeComboBox";
             this.structTypeComboBox.Size = new System.Drawing.Size(218, 21);
             this.structTypeComboBox.TabIndex = 28;
+            this.structTypeComboBox.ValueMember = "cable_structure_types.name";
             this.structTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.structTypeComboBox_SelectedIndexChanged);
             // 
             // label14
@@ -403,12 +412,15 @@
             // 
             // leadMaterialComboBox
             // 
+            this.leadMaterialComboBox.DataSource = this.cableDS;
+            this.leadMaterialComboBox.DisplayMember = "lead_materials.name";
             this.leadMaterialComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.leadMaterialComboBox.FormattingEnabled = true;
             this.leadMaterialComboBox.Location = new System.Drawing.Point(18, 399);
             this.leadMaterialComboBox.Name = "leadMaterialComboBox";
             this.leadMaterialComboBox.Size = new System.Drawing.Size(118, 21);
             this.leadMaterialComboBox.TabIndex = 30;
+            this.leadMaterialComboBox.ValueMember = "lead_materials.id";
             // 
             // label15
             // 
@@ -421,11 +433,14 @@
             // 
             // leadDiametersComboBox
             // 
+            this.leadDiametersComboBox.DataSource = this.cableDS;
+            this.leadDiametersComboBox.DisplayMember = "lead_diameters.lead_diameter";
             this.leadDiametersComboBox.FormattingEnabled = true;
             this.leadDiametersComboBox.Location = new System.Drawing.Point(142, 399);
             this.leadDiametersComboBox.Name = "leadDiametersComboBox";
             this.leadDiametersComboBox.Size = new System.Drawing.Size(94, 21);
             this.leadDiametersComboBox.TabIndex = 32;
+            this.leadDiametersComboBox.ValueMember = "lead_diameters.lead_diameter";
             // 
             // label16
             // 
@@ -438,12 +453,15 @@
             // 
             // izolMaterialComboBox
             // 
+            this.izolMaterialComboBox.DataSource = this.cableDS;
+            this.izolMaterialComboBox.DisplayMember = "isolation_materials.name";
             this.izolMaterialComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.izolMaterialComboBox.FormattingEnabled = true;
             this.izolMaterialComboBox.Location = new System.Drawing.Point(18, 449);
             this.izolMaterialComboBox.Name = "izolMaterialComboBox";
             this.izolMaterialComboBox.Size = new System.Drawing.Size(218, 21);
             this.izolMaterialComboBox.TabIndex = 34;
+            this.izolMaterialComboBox.ValueMember = "isolation_materials.id";
             // 
             // label17
             // 
@@ -521,11 +539,14 @@
             // 
             // waveResistance
             // 
+            this.waveResistance.DataSource = this.cableDS;
+            this.waveResistance.DisplayMember = "wave_resistance.wave_resistance";
             this.waveResistance.FormattingEnabled = true;
             this.waveResistance.Location = new System.Drawing.Point(18, 498);
             this.waveResistance.Name = "waveResistance";
             this.waveResistance.Size = new System.Drawing.Size(146, 21);
             this.waveResistance.TabIndex = 41;
+            this.waveResistance.ValueMember = "wave_resistance.wave_resistance";
             // 
             // label22
             // 
@@ -538,21 +559,27 @@
             // 
             // drFormulsComboBox
             // 
+            this.drFormulsComboBox.DataSource = this.cableDS;
+            this.drFormulsComboBox.DisplayMember = "dr_formuls.formula";
             this.drFormulsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.drFormulsComboBox.FormattingEnabled = true;
             this.drFormulsComboBox.Location = new System.Drawing.Point(18, 616);
             this.drFormulsComboBox.Name = "drFormulsComboBox";
             this.drFormulsComboBox.Size = new System.Drawing.Size(105, 21);
             this.drFormulsComboBox.TabIndex = 43;
+            this.drFormulsComboBox.ValueMember = "dr_formuls.id";
             // 
             // drPrivFormulsComboBox
             // 
+            this.drPrivFormulsComboBox.DataSource = this.cableDS;
+            this.drPrivFormulsComboBox.DisplayMember = "dr_bringing_formuls.formula";
             this.drPrivFormulsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.drPrivFormulsComboBox.FormattingEnabled = true;
             this.drPrivFormulsComboBox.Location = new System.Drawing.Point(129, 616);
             this.drPrivFormulsComboBox.Name = "drPrivFormulsComboBox";
             this.drPrivFormulsComboBox.Size = new System.Drawing.Size(107, 21);
             this.drPrivFormulsComboBox.TabIndex = 44;
+            this.drPrivFormulsComboBox.ValueMember = "dr_bringing_formuls.id";
             // 
             // label21
             // 
@@ -590,39 +617,228 @@
             this.groupCapacityCheckBox.Text = "Ср группы";
             this.groupCapacityCheckBox.UseVisualStyleBackColor = true;
             // 
-            // structTypesDataSet
+            // cableDS
             // 
-            this.structTypesDataSet.DataSetName = "NewDataSet";
+            this.cableDS.DataSetName = "NewDataSet";
+            this.cableDS.Tables.AddRange(new System.Data.DataTable[] {
+            this.cable_marks,
+            this.documents,
+            this.cable_structure_types,
+            this.lead_materials,
+            this.lead_diameters,
+            this.isolation_materials,
+            this.dataTable1,
+            this.dr_formuls,
+            this.dr_bringing_formuls,
+            this.cable,
+            this.cable_structures});
             // 
-            // leadMaterDataSet
+            // cable_marks
             // 
-            this.leadMaterDataSet.DataSetName = "NewDataSet";
+            this.cable_marks.Columns.AddRange(new System.Data.DataColumn[] {
+            this.name});
+            this.cable_marks.TableName = "cable_marks";
             // 
-            // leadsDiameterDataSet
+            // documents
             // 
-            this.leadsDiameterDataSet.DataSetName = "NewDataSet";
+            this.documents.Columns.AddRange(new System.Data.DataColumn[] {
+            this.id,
+            this.short_name,
+            this.full_name});
+            this.documents.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true)});
+            this.documents.PrimaryKey = new System.Data.DataColumn[] {
+        this.id};
+            this.documents.TableName = "documents";
             // 
-            // izolMaterialsDataSet
+            // cable_structure_types
             // 
-            this.izolMaterialsDataSet.DataSetName = "NewDataSet";
+            this.cable_structure_types.Columns.AddRange(new System.Data.DataColumn[] {
+            this.structure_type_id,
+            this.structure_type_name});
+            this.cable_structure_types.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "name"}, false)});
+            this.cable_structure_types.TableName = "cable_structure_types";
             // 
-            // waveResistanceDataSet
+            // lead_materials
             // 
-            this.waveResistanceDataSet.DataSetName = "NewDataSet";
+            this.lead_materials.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn1,
+            this.dataColumn2});
+            this.lead_materials.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true),
+            new System.Data.UniqueConstraint("Constraint2", new string[] {
+                        "name"}, false)});
+            this.lead_materials.PrimaryKey = new System.Data.DataColumn[] {
+        this.dataColumn1};
+            this.lead_materials.TableName = "lead_materials";
             // 
-            // drFormulsDataSet
+            // lead_diameters
             // 
-            this.drFormulsDataSet.DataSetName = "NewDataSet";
+            this.lead_diameters.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn3});
+            this.lead_diameters.TableName = "lead_diameters";
             // 
-            // drPrivFormulsDataSet
+            // isolation_materials
             // 
-            this.drPrivFormulsDataSet.DataSetName = "NewDataSet";
+            this.isolation_materials.Columns.AddRange(new System.Data.DataColumn[] {
+            this.isolation_material_id,
+            this.isolation_material_name});
+            this.isolation_materials.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true)});
+            this.isolation_materials.PrimaryKey = new System.Data.DataColumn[] {
+        this.isolation_material_id};
+            this.isolation_materials.TableName = "isolation_materials";
+            // 
+            // dataTable1
+            // 
+            this.dataTable1.Columns.AddRange(new System.Data.DataColumn[] {
+            this.wave_resistance});
+            this.dataTable1.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "wave_resistance"}, false)});
+            this.dataTable1.TableName = "wave_resistance";
+            // 
+            // dr_formuls
+            // 
+            this.dr_formuls.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dr_formula_id,
+            this.dr_formula});
+            this.dr_formuls.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true)});
+            this.dr_formuls.PrimaryKey = new System.Data.DataColumn[] {
+        this.dr_formula_id};
+            this.dr_formuls.TableName = "dr_formuls";
+            // 
+            // dr_bringing_formuls
+            // 
+            this.dr_bringing_formuls.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dr_bringing_formeula_id,
+            this.dr_bringing_formula});
+            this.dr_bringing_formuls.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true)});
+            this.dr_bringing_formuls.PrimaryKey = new System.Data.DataColumn[] {
+        this.dr_bringing_formeula_id};
+            this.dr_bringing_formuls.TableName = "dr_bringing_formuls";
+            // 
+            // cable
+            // 
+            this.cable.TableName = "cable";
+            // 
+            // cable_structures
+            // 
+            this.cable_structures.TableName = "cable_structures";
+            // 
+            // name
+            // 
+            this.name.ColumnName = "name";
+            // 
+            // id
+            // 
+            this.id.AllowDBNull = false;
+            this.id.ColumnName = "id";
+            this.id.DataType = typeof(short);
+            // 
+            // short_name
+            // 
+            this.short_name.ColumnName = "short_name";
+            // 
+            // full_name
+            // 
+            this.full_name.Caption = "full_name";
+            this.full_name.ColumnName = "full_name";
+            // 
+            // dataColumn1
+            // 
+            this.dataColumn1.AllowDBNull = false;
+            this.dataColumn1.Caption = "id";
+            this.dataColumn1.ColumnName = "id";
+            this.dataColumn1.DataType = typeof(short);
+            // 
+            // dataColumn2
+            // 
+            this.dataColumn2.AllowDBNull = false;
+            this.dataColumn2.ColumnName = "name";
+            // 
+            // dataColumn3
+            // 
+            this.dataColumn3.ColumnName = "lead_diameter";
+            this.dataColumn3.DataType = typeof(decimal);
+            // 
+            // isolation_material_id
+            // 
+            this.isolation_material_id.AllowDBNull = false;
+            this.isolation_material_id.ColumnName = "id";
+            this.isolation_material_id.DataType = typeof(short);
+            // 
+            // isolation_material_name
+            // 
+            this.isolation_material_name.ColumnName = "name";
+            // 
+            // wave_resistance
+            // 
+            this.wave_resistance.ColumnName = "wave_resistance";
+            // 
+            // dr_formula_id
+            // 
+            this.dr_formula_id.AllowDBNull = false;
+            this.dr_formula_id.ColumnName = "id";
+            this.dr_formula_id.DataType = typeof(short);
+            // 
+            // dr_formula
+            // 
+            this.dr_formula.ColumnName = "formula";
+            // 
+            // dr_bringing_formeula_id
+            // 
+            this.dr_bringing_formeula_id.AllowDBNull = false;
+            this.dr_bringing_formeula_id.ColumnName = "id";
+            this.dr_bringing_formeula_id.DataType = typeof(short);
+            // 
+            // dr_bringing_formula
+            // 
+            this.dr_bringing_formula.Caption = "formula";
+            this.dr_bringing_formula.ColumnName = "formula";
+            // 
+            // structure_type_id
+            // 
+            this.structure_type_id.Caption = "id";
+            this.structure_type_id.ColumnName = "id";
+            this.structure_type_id.DataType = typeof(short);
+            // 
+            // structure_type_name
+            // 
+            this.structure_type_name.ColumnName = "name";
+            // 
+            // code_okp
+            // 
+            this.code_okp.Location = new System.Drawing.Point(691, 148);
+            this.code_okp.Mask = "00 0000 0000";
+            this.code_okp.Name = "code_okp";
+            this.code_okp.Size = new System.Drawing.Size(83, 20);
+            this.code_okp.TabIndex = 49;
+            // 
+            // code_kch
+            // 
+            this.code_kch.Location = new System.Drawing.Point(780, 148);
+            this.code_kch.Mask = "00";
+            this.code_kch.Name = "code_kch";
+            this.code_kch.Size = new System.Drawing.Size(37, 20);
+            this.code_kch.TabIndex = 50;
             // 
             // addCableForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(902, 720);
+            this.Controls.Add(this.code_kch);
+            this.Controls.Add(this.code_okp);
             this.Controls.Add(this.groupCapacityCheckBox);
             this.Controls.Add(this.label23);
             this.Controls.Add(this.richTextBox1);
@@ -645,9 +861,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label12);
-            this.Controls.Add(this.codeKCh);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.codeOKP);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.testVoltageObol);
             this.Controls.Add(this.label6);
@@ -668,8 +882,6 @@
             this.Name = "addCableForm";
             this.Text = "Новый кабель";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.addCableForm_FormClosing);
-            ((System.ComponentModel.ISupportInitialize)(this.cableMarksDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.normDocsDataSet)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.factElNumb)).EndInit();
@@ -678,13 +890,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.nomElNumb)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.structTypesDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.leadMaterDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.leadsDiameterDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.izolMaterialsDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.waveResistanceDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.drFormulsDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.drPrivFormulsDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cableDS)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable_marks)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.documents)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable_structure_types)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lead_materials)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lead_diameters)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.isolation_materials)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dr_formuls)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dr_bringing_formuls)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cable_structures)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -700,8 +917,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox fullNameNormDoc;
         private System.Windows.Forms.Label label4;
-        private System.Data.DataSet cableMarksDataSet;
-        private System.Data.DataSet normDocsDataSet;
         private System.Windows.Forms.Button closeBut;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox buildLength;
@@ -714,9 +929,7 @@
         private System.Windows.Forms.TextBox maxPleasure;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox codeOKP;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox codeKCh;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.NumericUpDown factElNumb;
@@ -747,12 +960,35 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.CheckBox groupCapacityCheckBox;
-        private System.Data.DataSet structTypesDataSet;
-        private System.Data.DataSet leadMaterDataSet;
-        private System.Data.DataSet leadsDiameterDataSet;
-        private System.Data.DataSet izolMaterialsDataSet;
-        private System.Data.DataSet waveResistanceDataSet;
-        private System.Data.DataSet drFormulsDataSet;
-        private System.Data.DataSet drPrivFormulsDataSet;
+        private System.Data.DataSet cableDS;
+        private System.Data.DataTable cable_marks;
+        private System.Data.DataTable documents;
+        private System.Data.DataTable cable_structure_types;
+        private System.Data.DataTable lead_materials;
+        private System.Data.DataTable lead_diameters;
+        private System.Data.DataTable isolation_materials;
+        private System.Data.DataTable dataTable1;
+        private System.Data.DataTable dr_formuls;
+        private System.Data.DataTable dr_bringing_formuls;
+        private System.Data.DataTable cable;
+        private System.Data.DataTable cable_structures;
+        private System.Data.DataColumn name;
+        private System.Data.DataColumn id;
+        private System.Data.DataColumn short_name;
+        private System.Data.DataColumn full_name;
+        private System.Data.DataColumn dataColumn1;
+        private System.Data.DataColumn dataColumn2;
+        private System.Data.DataColumn dataColumn3;
+        private System.Data.DataColumn isolation_material_id;
+        private System.Data.DataColumn isolation_material_name;
+        private System.Data.DataColumn wave_resistance;
+        private System.Data.DataColumn structure_type_id;
+        private System.Data.DataColumn structure_type_name;
+        private System.Data.DataColumn dr_formula_id;
+        private System.Data.DataColumn dr_formula;
+        private System.Data.DataColumn dr_bringing_formeula_id;
+        private System.Data.DataColumn dr_bringing_formula;
+        private System.Windows.Forms.MaskedTextBox code_okp;
+        private System.Windows.Forms.MaskedTextBox code_kch;
     }
 }

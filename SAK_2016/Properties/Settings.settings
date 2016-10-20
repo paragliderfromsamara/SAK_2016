@@ -15,8 +15,5 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">UserId=root;Server=localhost;Password=;CharacterSet=cp1251;</Value>
     </Setting>
-    <Setting Name="dbName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">db_sak</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

@@ -153,7 +153,6 @@ namespace SAK_2016
                     if (or != null) ret = (long)or;
                     else ret = 0;
                     return ret;
-
                 }
                 catch (MySqlException ex)
                 {

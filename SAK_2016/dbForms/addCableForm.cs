@@ -13,20 +13,50 @@ namespace SAK_2016
 {
     public partial class addCableForm : Form
     {
-        private DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
+        private DBControl mysql = new DBControl(Properties.dbSakQueries.Default.dbName);
         public addCableForm()
         {
             InitializeComponent();
+            fillCableDS();
             
-            getCableMarksList(); //Загружаем марки кабелей
-            getNormaList(); //Загружаем нормативы
-            getStructTypeList(); //Загружаем типы структур
-            getLeadMaterialList(); //Загружаем материалы жил
-            getLeadsDiameters(); //Загружаем диаметры жил
-            getIzolMaterialList(); //Загружаем материалы изоляции
-            getWaveResistanceList(); //Загружаем список ранее введенных волновых сопротивлений
-            getDrFormuls(); //Загружаем список формул для вычисления омической ассиметрии
-            
+        }
+
+        /// <summary>
+        /// Заполняет cableDS, обновляет связанные с ним элементы
+        /// </summary>
+        private void fillCableDS()
+        {
+            try
+            {
+                MySqlDataAdapter da = new MySqlDataAdapter();
+                mysql.MyConn.Open();
+                da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectDocuments, mysql.MyConn);
+                da.Fill(cableDS.Tables["documents"]);
+                da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectCableMarks, mysql.MyConn);
+                da.Fill(cableDS.Tables["cable_marks"]);
+                da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectLeadMaterials, mysql.MyConn);
+                da.Fill(cableDS.Tables["lead_materials"]);
+                da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectLeadDiameters, mysql.MyConn);
+                da.Fill(cableDS.Tables["lead_diameters"]);
+                da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectDrFormuls, mysql.MyConn);
+                da.Fill(cableDS.Tables["dr_formuls"]);
+                da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectDrBringingFormuls, mysql.MyConn);
+                da.Fill(cableDS.Tables["dr_bringing_formuls"]);
+                da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectIsolationMaterials, mysql.MyConn);
+                da.Fill(cableDS.Tables["isolation_materials"]);
+                da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectWaveResistance, mysql.MyConn);
+                da.Fill(cableDS.Tables["wave_resistance"]);
+                da = new MySqlDataAdapter(Properties.dbSakQueries.Default.selectCableStructureTypes, mysql.MyConn);
+                da.Fill(cableDS.Tables["cable_structure_types"]);
+                mysql.MyConn.Close();
+
+                updDocFullNameField();
+            }
+            catch(Exception)
+            {
+                MessageBox.Show("Не удалось загрузить таблицы параметров кабеля", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void closeBut_Click(object sender, EventArgs e)
@@ -39,127 +69,25 @@ namespace SAK_2016
             this.Dispose();
         }
 
-    private void getCableMarksList() //Загружаем марки кабелей
-    {
-    mysql.MyConn.Open();
-    string com = mysql.GetSQLCommand("ShowCableMarks");
-    MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
-    da.Fill(cableMarksDataSet);
-    cableMarkComboBox.DataSource = cableMarksDataSet.Tables[0];
-    cableMarkComboBox.DisplayMember = "name";
-    cableMarkComboBox.ValueMember = "name";
-    mysql.MyConn.Close();
-    cableMarkComboBox.Update();
-    }
-
-    private void getNormaList() //Загружаем нормативы
-    {
-    mysql.MyConn.Open();
-    string com = mysql.GetSQLCommand("ShowNormaDocs");
-    MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
-    da.Fill(normDocsDataSet);
-    normDocComboBox.DataSource = normDocsDataSet.Tables[0];
-    normDocComboBox.DisplayMember = "short_name";
-    normDocComboBox.ValueMember = "id";
-    mysql.MyConn.Close();
-    normDocComboBox.Update();
-    }
-
-    private void getStructTypeList() //Загружаем типы структур
-    {
-    mysql.MyConn.Open();
-    string com = mysql.GetSQLCommand("ShowStructTypes");
-    MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
-    da.Fill(structTypesDataSet);
-    structTypeComboBox.DataSource = structTypesDataSet.Tables[0];
-    structTypeComboBox.DisplayMember = "name";
-    structTypeComboBox.ValueMember = "id";
-    mysql.MyConn.Close();
-    structTypeComboBox.Update();
-    }
-
-    private void getLeadMaterialList() //Загружаем материалы жил
-    {
-    mysql.MyConn.Open();
-    string com = mysql.GetSQLCommand("ShowLeadsMaterial");
-    MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
-    da.Fill(leadMaterDataSet);
-    leadMaterialComboBox.DataSource = leadMaterDataSet.Tables[0];
-    leadMaterialComboBox.DisplayMember = "name";
-    leadMaterialComboBox.ValueMember = "id";
-    mysql.MyConn.Close();
-    leadMaterialComboBox.Update();
-    }
-    private void getLeadsDiameters() //Загружаем диаметры жил
-    {
-    mysql.MyConn.Open();
-    string com = mysql.GetSQLCommand("ShowLeadsDiameters");
-    MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
-    da.Fill(leadsDiameterDataSet);
-    leadDiametersComboBox.DataSource = leadsDiameterDataSet.Tables[0];
-    leadDiametersComboBox.DisplayMember = "lead_diameter";
-    leadDiametersComboBox.ValueMember = "lead_diameter";
-    mysql.MyConn.Close();
-    leadDiametersComboBox.Update();
-    }
-    private void getIzolMaterialList() //Загружаем материалы изоляции
-    {
-    mysql.MyConn.Open();
-    string com = mysql.GetSQLCommand("ShowIsolationMaterial");
-    MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
-    da.Fill(izolMaterialsDataSet);
-    izolMaterialComboBox.DataSource = izolMaterialsDataSet.Tables[0];
-    izolMaterialComboBox.DisplayMember = "name";
-    izolMaterialComboBox.ValueMember = "id";
-    mysql.MyConn.Close();
-    izolMaterialComboBox.Update();
-    }
-    private void getWaveResistanceList() //Загружаем список ранее введенных волновых сопротивлений
-    {
-    mysql.MyConn.Open();
-    string com = mysql.GetSQLCommand("ShowWaveResistance");
-    MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
-    da.Fill(waveResistanceDataSet);
-    waveResistance.DataSource = waveResistanceDataSet.Tables[0];
-    waveResistance.DisplayMember = "wave_resistance";
-    waveResistance.ValueMember = "wave_resistance";
-    mysql.MyConn.Close();
-    waveResistance.Update();
-    }
-    private void getDrFormuls() //Загружаем список формул для вычисления омической ассиметрии
-    {
-    mysql.MyConn.Open();
-    string com_dr_formuls = mysql.GetSQLCommand("ShowDrFormuls");
-    string com_dr_priv_formuls = mysql.GetSQLCommand("ShowDrPrivFormuls");
-    MySqlDataAdapter da_formuls = new MySqlDataAdapter(com_dr_formuls, mysql.MyConn);
-    MySqlDataAdapter da_priv_formuls = new MySqlDataAdapter(com_dr_priv_formuls, mysql.MyConn);
-    da_formuls.Fill(drFormulsDataSet);
-    da_priv_formuls.Fill(drPrivFormulsDataSet);
-    drFormulsComboBox.DataSource = drFormulsDataSet.Tables[0];
-    drFormulsComboBox.DisplayMember = "formula";
-    drFormulsComboBox.ValueMember = "id";
-    drPrivFormulsComboBox.DataSource = drPrivFormulsDataSet.Tables[0];
-    drPrivFormulsComboBox.DisplayMember = "formula";
-    drPrivFormulsComboBox.ValueMember = "id";
-    mysql.MyConn.Close();
-    drPrivFormulsComboBox.Update();
-    drFormulsComboBox.Update();
-    }
-
-
     private void normDocComboBox_SelectedIndexChanged(object sender, EventArgs e) //Подгружаем полное название документа
     {
-    string sVal = normDocComboBox.SelectedValue.ToString();
-    for (int i = 0; i < normDocsDataSet.Tables[0].Rows.Count; i++)
-    {
-    string v = normDocsDataSet.Tables[0].Rows[i][0].ToString();
-    if (v == sVal)
-    {
-      fullNameNormDoc.Text = normDocsDataSet.Tables[0].Rows[i][2].ToString();
-      break;
+            updDocFullNameField();
     }
-    }
-    }
+        /// <summary>
+        /// Обновляет поле полного названия документа
+        /// </summary>
+        private void updDocFullNameField()
+        {
+            string sVal = normDocComboBox.SelectedValue.ToString();
+            foreach (DataRow r in cableDS.Tables["documents"].Rows)
+            {
+                if (sVal == r["id"].ToString())
+                {
+                    fullNameNormDoc.Text = r["full_name"].ToString();
+                    break;
+                }
+            }
+        }
 
 
 
@@ -209,17 +137,20 @@ namespace SAK_2016
 
     private void checkVoltageValue(TextBox t)
     {
-    try
-    {
-    int val = Convert.ToInt32(t.Text);
-    if (val < 500) val = 500;
-    else if (val > 3000) val = 3000;
-    t.Text = Convert.ToInt32(val).ToString();
-    }
-    catch (FormatException)
-    {
-    t.Text = "";
-    }
+        try
+        {
+            int val = Convert.ToInt32(t.Text);
+            if (val < 500 && val != 0)
+            {
+                val = 500;
+            }
+            else if (val > 3000) val = 3000;
+            t.Text = Convert.ToInt32(val).ToString();
+        }
+        catch (FormatException)
+        {
+        t.Text = "";
+        }
     }
 
     private void cableWeight_KeyPress(object sender, KeyPressEventArgs e)

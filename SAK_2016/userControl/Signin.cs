@@ -33,7 +33,7 @@ namespace SAK_2016
             else
             {
                 query = String.Format(query, lastName.Text, tabNum.Text, password.Text);
-                DBControl mysql = new DBControl(Properties.Settings.Default.dbName);
+                DBControl mysql = new DBControl(Properties.dbSakQueries.Default.dbName);
                 signedUser.Reset();
                 mysql.MyConn.Open();
                 MySqlDataAdapter da = new MySqlDataAdapter(query, mysql.MyConn);

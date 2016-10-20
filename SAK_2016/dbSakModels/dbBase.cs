@@ -38,7 +38,7 @@ namespace SAK_2016
             {
                 MySqlConnection dbCon = new MySqlConnection(Properties.Settings.Default.rootConnectionString);
                 MySqlCommand cmd = new MySqlCommand(query, dbCon);
-                MySqlCommand useDb = new MySqlCommand("USE " + Properties.Settings.Default.dbName, dbCon);
+                MySqlCommand useDb = new MySqlCommand("USE " + Properties.dbSakQueries.Default.dbName, dbCon);
                 dbCon.Open();
                 useDb.ExecuteNonQuery();
                 sts = cmd.ExecuteNonQuery();

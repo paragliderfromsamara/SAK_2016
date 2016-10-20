@@ -1,0 +1,45 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SAK_2016.Properties" GeneratedClassName="dbSakQueries">
+  <Profiles />
+  <Settings>
+    <Setting Name="dbName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">db_sak</Value>
+    </Setting>
+    <Setting Name="selectCables" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT Cables.id, Cables.name, Cables.struct_name,  Cables.notes, Cables.code_okp, Cables.code_kch, documents.short_name as document_name FROM Cables LEFT JOIN documents ON (Cables.document_id = documents.id)</Value>
+    </Setting>
+    <Setting Name="selectCableStructures" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT Cables.id, Cables.name, Cables.struct_name,  Cables.notes, Cables.code_okp, Cables.code_kch, documents.short_name as document_name FROM Cables LEFT JOIN documents ON (Cables.document_id = documents.id)</Value>
+    </Setting>
+    <Setting Name="selectCableMarks" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT Distinct Cables.name from Cables ORDER BY Cables.name ASC</Value>
+    </Setting>
+    <Setting Name="selectLeadMaterials" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT lead_materials.id, lead_materials.name from lead_materials ORDER BY lead_materials.id ASC</Value>
+    </Setting>
+    <Setting Name="selectLeadDiameters" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT DISTINCT cable_structures.lead_diameter FROM cable_structures ORDER BY cable_structures.lead_diameter ASC</Value>
+    </Setting>
+    <Setting Name="selectIsolationMaterials" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT isolation_materials.id, isolation_materials.name from isolation_materials ORDER BY isolation_materials.id ASC</Value>
+    </Setting>
+    <Setting Name="selectUsers" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="selectDocuments" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT Distinct documents.id, documents.short_name, documents.full_name  FROM documents </Value>
+    </Setting>
+    <Setting Name="selectDrFormuls" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT * FROM dr_formuls ORDER BY dr_formuls.id ASC</Value>
+    </Setting>
+    <Setting Name="selectDrBringingFormuls" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT * FROM dr_bringing_formuls ORDER BY dr_bringing_formuls.id ASC</Value>
+    </Setting>
+    <Setting Name="selectWaveResistance" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT Distinct cable_structures.wave_resistance from cable_structures ORDER BY cable_structures.wave_resistance ASC</Value>
+    </Setting>
+    <Setting Name="selectCableStructureTypes" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT * from cable_structure_types ORDER BY cable_structure_types.id ASC</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
