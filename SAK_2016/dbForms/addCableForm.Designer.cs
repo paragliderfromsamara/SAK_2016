@@ -29,6 +29,34 @@
         private void InitializeComponent()
         {
             this.cableMarkComboBox = new System.Windows.Forms.ComboBox();
+            this.cableDS = new System.Data.DataSet();
+            this.cable_marks = new System.Data.DataTable();
+            this.name = new System.Data.DataColumn();
+            this.documents = new System.Data.DataTable();
+            this.id = new System.Data.DataColumn();
+            this.short_name = new System.Data.DataColumn();
+            this.full_name = new System.Data.DataColumn();
+            this.cable_structure_types = new System.Data.DataTable();
+            this.structure_type_id = new System.Data.DataColumn();
+            this.structure_type_name = new System.Data.DataColumn();
+            this.lead_materials = new System.Data.DataTable();
+            this.dataColumn1 = new System.Data.DataColumn();
+            this.dataColumn2 = new System.Data.DataColumn();
+            this.lead_diameters = new System.Data.DataTable();
+            this.dataColumn3 = new System.Data.DataColumn();
+            this.isolation_materials = new System.Data.DataTable();
+            this.isolation_material_id = new System.Data.DataColumn();
+            this.isolation_material_name = new System.Data.DataColumn();
+            this.dataTable1 = new System.Data.DataTable();
+            this.wave_resistance = new System.Data.DataColumn();
+            this.dr_formuls = new System.Data.DataTable();
+            this.dr_formula_id = new System.Data.DataColumn();
+            this.dr_formula = new System.Data.DataColumn();
+            this.dr_bringing_formuls = new System.Data.DataTable();
+            this.dr_bringing_formeula_id = new System.Data.DataColumn();
+            this.dr_bringing_formula = new System.Data.DataColumn();
+            this.cable = new System.Data.DataTable();
+            this.cable_structures = new System.Data.DataTable();
             this.label1 = new System.Windows.Forms.Label();
             this.structDescTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -36,8 +64,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.fullNameNormDoc = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.closeBut = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.buildLength = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.cableWeight = new System.Windows.Forms.TextBox();
@@ -79,41 +105,14 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.groupCapacityCheckBox = new System.Windows.Forms.CheckBox();
-            this.cableDS = new System.Data.DataSet();
-            this.cable_marks = new System.Data.DataTable();
-            this.documents = new System.Data.DataTable();
-            this.cable_structure_types = new System.Data.DataTable();
-            this.lead_materials = new System.Data.DataTable();
-            this.lead_diameters = new System.Data.DataTable();
-            this.isolation_materials = new System.Data.DataTable();
-            this.dataTable1 = new System.Data.DataTable();
-            this.dr_formuls = new System.Data.DataTable();
-            this.dr_bringing_formuls = new System.Data.DataTable();
-            this.cable = new System.Data.DataTable();
-            this.cable_structures = new System.Data.DataTable();
-            this.name = new System.Data.DataColumn();
-            this.id = new System.Data.DataColumn();
-            this.short_name = new System.Data.DataColumn();
-            this.full_name = new System.Data.DataColumn();
-            this.dataColumn1 = new System.Data.DataColumn();
-            this.dataColumn2 = new System.Data.DataColumn();
-            this.dataColumn3 = new System.Data.DataColumn();
-            this.isolation_material_id = new System.Data.DataColumn();
-            this.isolation_material_name = new System.Data.DataColumn();
-            this.wave_resistance = new System.Data.DataColumn();
-            this.dr_formula_id = new System.Data.DataColumn();
-            this.dr_formula = new System.Data.DataColumn();
-            this.dr_bringing_formeula_id = new System.Data.DataColumn();
-            this.dr_bringing_formula = new System.Data.DataColumn();
-            this.structure_type_id = new System.Data.DataColumn();
-            this.structure_type_name = new System.Data.DataColumn();
             this.code_okp = new System.Windows.Forms.MaskedTextBox();
             this.code_kch = new System.Windows.Forms.MaskedTextBox();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.factElNumb)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nomElNumb)).BeginInit();
-            this.groupBox3.SuspendLayout();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.cableDS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cable_marks)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documents)).BeginInit();
@@ -126,6 +125,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.dr_bringing_formuls)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cable_structures)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.factElNumb)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nomElNumb)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // cableMarkComboBox
@@ -138,6 +146,205 @@
             this.cableMarkComboBox.Size = new System.Drawing.Size(156, 21);
             this.cableMarkComboBox.TabIndex = 0;
             this.cableMarkComboBox.ValueMember = "cable_marks.name";
+            // 
+            // cableDS
+            // 
+            this.cableDS.DataSetName = "NewDataSet";
+            this.cableDS.Tables.AddRange(new System.Data.DataTable[] {
+            this.cable_marks,
+            this.documents,
+            this.cable_structure_types,
+            this.lead_materials,
+            this.lead_diameters,
+            this.isolation_materials,
+            this.dataTable1,
+            this.dr_formuls,
+            this.dr_bringing_formuls,
+            this.cable,
+            this.cable_structures});
+            // 
+            // cable_marks
+            // 
+            this.cable_marks.Columns.AddRange(new System.Data.DataColumn[] {
+            this.name});
+            this.cable_marks.TableName = "cable_marks";
+            // 
+            // name
+            // 
+            this.name.ColumnName = "name";
+            // 
+            // documents
+            // 
+            this.documents.Columns.AddRange(new System.Data.DataColumn[] {
+            this.id,
+            this.short_name,
+            this.full_name});
+            this.documents.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true)});
+            this.documents.PrimaryKey = new System.Data.DataColumn[] {
+        this.id};
+            this.documents.TableName = "documents";
+            // 
+            // id
+            // 
+            this.id.AllowDBNull = false;
+            this.id.ColumnName = "id";
+            this.id.DataType = typeof(short);
+            // 
+            // short_name
+            // 
+            this.short_name.ColumnName = "short_name";
+            // 
+            // full_name
+            // 
+            this.full_name.Caption = "full_name";
+            this.full_name.ColumnName = "full_name";
+            // 
+            // cable_structure_types
+            // 
+            this.cable_structure_types.Columns.AddRange(new System.Data.DataColumn[] {
+            this.structure_type_id,
+            this.structure_type_name});
+            this.cable_structure_types.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "name"}, false)});
+            this.cable_structure_types.TableName = "cable_structure_types";
+            // 
+            // structure_type_id
+            // 
+            this.structure_type_id.Caption = "id";
+            this.structure_type_id.ColumnName = "id";
+            this.structure_type_id.DataType = typeof(short);
+            // 
+            // structure_type_name
+            // 
+            this.structure_type_name.ColumnName = "name";
+            // 
+            // lead_materials
+            // 
+            this.lead_materials.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn1,
+            this.dataColumn2});
+            this.lead_materials.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true),
+            new System.Data.UniqueConstraint("Constraint2", new string[] {
+                        "name"}, false)});
+            this.lead_materials.PrimaryKey = new System.Data.DataColumn[] {
+        this.dataColumn1};
+            this.lead_materials.TableName = "lead_materials";
+            // 
+            // dataColumn1
+            // 
+            this.dataColumn1.AllowDBNull = false;
+            this.dataColumn1.Caption = "id";
+            this.dataColumn1.ColumnName = "id";
+            this.dataColumn1.DataType = typeof(short);
+            // 
+            // dataColumn2
+            // 
+            this.dataColumn2.AllowDBNull = false;
+            this.dataColumn2.ColumnName = "name";
+            // 
+            // lead_diameters
+            // 
+            this.lead_diameters.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn3});
+            this.lead_diameters.TableName = "lead_diameters";
+            // 
+            // dataColumn3
+            // 
+            this.dataColumn3.ColumnName = "lead_diameter";
+            this.dataColumn3.DataType = typeof(decimal);
+            // 
+            // isolation_materials
+            // 
+            this.isolation_materials.Columns.AddRange(new System.Data.DataColumn[] {
+            this.isolation_material_id,
+            this.isolation_material_name});
+            this.isolation_materials.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true)});
+            this.isolation_materials.PrimaryKey = new System.Data.DataColumn[] {
+        this.isolation_material_id};
+            this.isolation_materials.TableName = "isolation_materials";
+            // 
+            // isolation_material_id
+            // 
+            this.isolation_material_id.AllowDBNull = false;
+            this.isolation_material_id.ColumnName = "id";
+            this.isolation_material_id.DataType = typeof(short);
+            // 
+            // isolation_material_name
+            // 
+            this.isolation_material_name.ColumnName = "name";
+            // 
+            // dataTable1
+            // 
+            this.dataTable1.Columns.AddRange(new System.Data.DataColumn[] {
+            this.wave_resistance});
+            this.dataTable1.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "wave_resistance"}, false)});
+            this.dataTable1.TableName = "wave_resistance";
+            // 
+            // wave_resistance
+            // 
+            this.wave_resistance.ColumnName = "wave_resistance";
+            // 
+            // dr_formuls
+            // 
+            this.dr_formuls.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dr_formula_id,
+            this.dr_formula});
+            this.dr_formuls.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true)});
+            this.dr_formuls.PrimaryKey = new System.Data.DataColumn[] {
+        this.dr_formula_id};
+            this.dr_formuls.TableName = "dr_formuls";
+            // 
+            // dr_formula_id
+            // 
+            this.dr_formula_id.AllowDBNull = false;
+            this.dr_formula_id.ColumnName = "id";
+            this.dr_formula_id.DataType = typeof(short);
+            // 
+            // dr_formula
+            // 
+            this.dr_formula.ColumnName = "formula";
+            // 
+            // dr_bringing_formuls
+            // 
+            this.dr_bringing_formuls.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dr_bringing_formeula_id,
+            this.dr_bringing_formula});
+            this.dr_bringing_formuls.Constraints.AddRange(new System.Data.Constraint[] {
+            new System.Data.UniqueConstraint("Constraint1", new string[] {
+                        "id"}, true)});
+            this.dr_bringing_formuls.PrimaryKey = new System.Data.DataColumn[] {
+        this.dr_bringing_formeula_id};
+            this.dr_bringing_formuls.TableName = "dr_bringing_formuls";
+            // 
+            // dr_bringing_formeula_id
+            // 
+            this.dr_bringing_formeula_id.AllowDBNull = false;
+            this.dr_bringing_formeula_id.ColumnName = "id";
+            this.dr_bringing_formeula_id.DataType = typeof(short);
+            // 
+            // dr_bringing_formula
+            // 
+            this.dr_bringing_formula.Caption = "formula";
+            this.dr_bringing_formula.ColumnName = "formula";
+            // 
+            // cable
+            // 
+            this.cable.TableName = "cable";
+            // 
+            // cable_structures
+            // 
+            this.cable_structures.TableName = "cable_structures";
             // 
             // label1
             // 
@@ -201,25 +408,6 @@
             this.label4.Size = new System.Drawing.Size(228, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Полное название нормативного документа";
-            // 
-            // closeBut
-            // 
-            this.closeBut.Location = new System.Drawing.Point(12, 680);
-            this.closeBut.Name = "closeBut";
-            this.closeBut.Size = new System.Drawing.Size(127, 28);
-            this.closeBut.TabIndex = 8;
-            this.closeBut.Text = "Закрыть";
-            this.closeBut.UseVisualStyleBackColor = true;
-            this.closeBut.Click += new System.EventHandler(this.closeBut_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(156, 680);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(127, 28);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "Добавить";
-            this.button2.UseVisualStyleBackColor = true;
             // 
             // buildLength
             // 
@@ -351,16 +539,17 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.tabControl1);
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.nomElNumb);
             this.groupBox2.Controls.Add(this.factElNumb);
-            this.groupBox2.Location = new System.Drawing.Point(12, 247);
+            this.groupBox2.Location = new System.Drawing.Point(19, 78);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(242, 80);
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Количество элементов данной структуры";
+            this.groupBox2.Text = "Количество элементов в кабеле";
             // 
             // label13
             // 
@@ -394,7 +583,7 @@
             this.structTypeComboBox.DisplayMember = "cable_structure_types.name";
             this.structTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.structTypeComboBox.FormattingEnabled = true;
-            this.structTypeComboBox.Location = new System.Drawing.Point(18, 352);
+            this.structTypeComboBox.Location = new System.Drawing.Point(25, 42);
             this.structTypeComboBox.Name = "structTypeComboBox";
             this.structTypeComboBox.Size = new System.Drawing.Size(218, 21);
             this.structTypeComboBox.TabIndex = 28;
@@ -404,11 +593,11 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(15, 336);
+            this.label14.Location = new System.Drawing.Point(22, 26);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(81, 13);
+            this.label14.Size = new System.Drawing.Size(26, 13);
             this.label14.TabIndex = 29;
-            this.label14.Text = "Тип структуры";
+            this.label14.Text = "Тип";
             // 
             // leadMaterialComboBox
             // 
@@ -416,16 +605,16 @@
             this.leadMaterialComboBox.DisplayMember = "lead_materials.name";
             this.leadMaterialComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.leadMaterialComboBox.FormattingEnabled = true;
-            this.leadMaterialComboBox.Location = new System.Drawing.Point(18, 399);
+            this.leadMaterialComboBox.Location = new System.Drawing.Point(25, 37);
             this.leadMaterialComboBox.Name = "leadMaterialComboBox";
-            this.leadMaterialComboBox.Size = new System.Drawing.Size(118, 21);
+            this.leadMaterialComboBox.Size = new System.Drawing.Size(130, 21);
             this.leadMaterialComboBox.TabIndex = 30;
             this.leadMaterialComboBox.ValueMember = "lead_materials.id";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(15, 383);
+            this.label15.Location = new System.Drawing.Point(22, 21);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(80, 13);
             this.label15.TabIndex = 31;
@@ -436,7 +625,7 @@
             this.leadDiametersComboBox.DataSource = this.cableDS;
             this.leadDiametersComboBox.DisplayMember = "lead_diameters.lead_diameter";
             this.leadDiametersComboBox.FormattingEnabled = true;
-            this.leadDiametersComboBox.Location = new System.Drawing.Point(142, 399);
+            this.leadDiametersComboBox.Location = new System.Drawing.Point(167, 37);
             this.leadDiametersComboBox.Name = "leadDiametersComboBox";
             this.leadDiametersComboBox.Size = new System.Drawing.Size(94, 21);
             this.leadDiametersComboBox.TabIndex = 32;
@@ -445,7 +634,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(139, 383);
+            this.label16.Location = new System.Drawing.Point(164, 21);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(98, 13);
             this.label16.TabIndex = 33;
@@ -457,16 +646,16 @@
             this.izolMaterialComboBox.DisplayMember = "isolation_materials.name";
             this.izolMaterialComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.izolMaterialComboBox.FormattingEnabled = true;
-            this.izolMaterialComboBox.Location = new System.Drawing.Point(18, 449);
+            this.izolMaterialComboBox.Location = new System.Drawing.Point(25, 87);
             this.izolMaterialComboBox.Name = "izolMaterialComboBox";
-            this.izolMaterialComboBox.Size = new System.Drawing.Size(218, 21);
+            this.izolMaterialComboBox.Size = new System.Drawing.Size(236, 21);
             this.izolMaterialComboBox.TabIndex = 34;
             this.izolMaterialComboBox.ValueMember = "isolation_materials.id";
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(15, 433);
+            this.label17.Location = new System.Drawing.Point(22, 71);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(108, 13);
             this.label17.TabIndex = 35;
@@ -478,7 +667,7 @@
             this.groupBox3.Controls.Add(this.textBox3);
             this.groupBox3.Controls.Add(this.label18);
             this.groupBox3.Controls.Add(this.textBox2);
-            this.groupBox3.Location = new System.Drawing.Point(12, 525);
+            this.groupBox3.Location = new System.Drawing.Point(27, 307);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(242, 74);
             this.groupBox3.TabIndex = 36;
@@ -524,7 +713,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(15, 482);
+            this.label20.Location = new System.Drawing.Point(30, 264);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(149, 13);
             this.label20.TabIndex = 38;
@@ -532,7 +721,7 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(174, 498);
+            this.textBox4.Location = new System.Drawing.Point(189, 280);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(62, 20);
             this.textBox4.TabIndex = 39;
@@ -542,7 +731,7 @@
             this.waveResistance.DataSource = this.cableDS;
             this.waveResistance.DisplayMember = "wave_resistance.wave_resistance";
             this.waveResistance.FormattingEnabled = true;
-            this.waveResistance.Location = new System.Drawing.Point(18, 498);
+            this.waveResistance.Location = new System.Drawing.Point(33, 280);
             this.waveResistance.Name = "waveResistance";
             this.waveResistance.Size = new System.Drawing.Size(146, 21);
             this.waveResistance.TabIndex = 41;
@@ -551,7 +740,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(170, 482);
+            this.label22.Location = new System.Drawing.Point(185, 264);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(45, 13);
             this.label22.TabIndex = 42;
@@ -563,7 +752,7 @@
             this.drFormulsComboBox.DisplayMember = "dr_formuls.formula";
             this.drFormulsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.drFormulsComboBox.FormattingEnabled = true;
-            this.drFormulsComboBox.Location = new System.Drawing.Point(18, 616);
+            this.drFormulsComboBox.Location = new System.Drawing.Point(33, 398);
             this.drFormulsComboBox.Name = "drFormulsComboBox";
             this.drFormulsComboBox.Size = new System.Drawing.Size(105, 21);
             this.drFormulsComboBox.TabIndex = 43;
@@ -575,7 +764,7 @@
             this.drPrivFormulsComboBox.DisplayMember = "dr_bringing_formuls.formula";
             this.drPrivFormulsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.drPrivFormulsComboBox.FormattingEnabled = true;
-            this.drPrivFormulsComboBox.Location = new System.Drawing.Point(129, 616);
+            this.drPrivFormulsComboBox.Location = new System.Drawing.Point(144, 398);
             this.drPrivFormulsComboBox.Name = "drPrivFormulsComboBox";
             this.drPrivFormulsComboBox.Size = new System.Drawing.Size(107, 21);
             this.drPrivFormulsComboBox.TabIndex = 44;
@@ -584,7 +773,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(64, 602);
+            this.label21.Location = new System.Drawing.Point(79, 384);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(128, 13);
             this.label21.TabIndex = 45;
@@ -610,211 +799,12 @@
             // groupCapacityCheckBox
             // 
             this.groupCapacityCheckBox.AutoSize = true;
-            this.groupCapacityCheckBox.Location = new System.Drawing.Point(18, 649);
+            this.groupCapacityCheckBox.Location = new System.Drawing.Point(33, 431);
             this.groupCapacityCheckBox.Name = "groupCapacityCheckBox";
             this.groupCapacityCheckBox.Size = new System.Drawing.Size(78, 17);
             this.groupCapacityCheckBox.TabIndex = 48;
             this.groupCapacityCheckBox.Text = "Ср группы";
             this.groupCapacityCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // cableDS
-            // 
-            this.cableDS.DataSetName = "NewDataSet";
-            this.cableDS.Tables.AddRange(new System.Data.DataTable[] {
-            this.cable_marks,
-            this.documents,
-            this.cable_structure_types,
-            this.lead_materials,
-            this.lead_diameters,
-            this.isolation_materials,
-            this.dataTable1,
-            this.dr_formuls,
-            this.dr_bringing_formuls,
-            this.cable,
-            this.cable_structures});
-            // 
-            // cable_marks
-            // 
-            this.cable_marks.Columns.AddRange(new System.Data.DataColumn[] {
-            this.name});
-            this.cable_marks.TableName = "cable_marks";
-            // 
-            // documents
-            // 
-            this.documents.Columns.AddRange(new System.Data.DataColumn[] {
-            this.id,
-            this.short_name,
-            this.full_name});
-            this.documents.Constraints.AddRange(new System.Data.Constraint[] {
-            new System.Data.UniqueConstraint("Constraint1", new string[] {
-                        "id"}, true)});
-            this.documents.PrimaryKey = new System.Data.DataColumn[] {
-        this.id};
-            this.documents.TableName = "documents";
-            // 
-            // cable_structure_types
-            // 
-            this.cable_structure_types.Columns.AddRange(new System.Data.DataColumn[] {
-            this.structure_type_id,
-            this.structure_type_name});
-            this.cable_structure_types.Constraints.AddRange(new System.Data.Constraint[] {
-            new System.Data.UniqueConstraint("Constraint1", new string[] {
-                        "name"}, false)});
-            this.cable_structure_types.TableName = "cable_structure_types";
-            // 
-            // lead_materials
-            // 
-            this.lead_materials.Columns.AddRange(new System.Data.DataColumn[] {
-            this.dataColumn1,
-            this.dataColumn2});
-            this.lead_materials.Constraints.AddRange(new System.Data.Constraint[] {
-            new System.Data.UniqueConstraint("Constraint1", new string[] {
-                        "id"}, true),
-            new System.Data.UniqueConstraint("Constraint2", new string[] {
-                        "name"}, false)});
-            this.lead_materials.PrimaryKey = new System.Data.DataColumn[] {
-        this.dataColumn1};
-            this.lead_materials.TableName = "lead_materials";
-            // 
-            // lead_diameters
-            // 
-            this.lead_diameters.Columns.AddRange(new System.Data.DataColumn[] {
-            this.dataColumn3});
-            this.lead_diameters.TableName = "lead_diameters";
-            // 
-            // isolation_materials
-            // 
-            this.isolation_materials.Columns.AddRange(new System.Data.DataColumn[] {
-            this.isolation_material_id,
-            this.isolation_material_name});
-            this.isolation_materials.Constraints.AddRange(new System.Data.Constraint[] {
-            new System.Data.UniqueConstraint("Constraint1", new string[] {
-                        "id"}, true)});
-            this.isolation_materials.PrimaryKey = new System.Data.DataColumn[] {
-        this.isolation_material_id};
-            this.isolation_materials.TableName = "isolation_materials";
-            // 
-            // dataTable1
-            // 
-            this.dataTable1.Columns.AddRange(new System.Data.DataColumn[] {
-            this.wave_resistance});
-            this.dataTable1.Constraints.AddRange(new System.Data.Constraint[] {
-            new System.Data.UniqueConstraint("Constraint1", new string[] {
-                        "wave_resistance"}, false)});
-            this.dataTable1.TableName = "wave_resistance";
-            // 
-            // dr_formuls
-            // 
-            this.dr_formuls.Columns.AddRange(new System.Data.DataColumn[] {
-            this.dr_formula_id,
-            this.dr_formula});
-            this.dr_formuls.Constraints.AddRange(new System.Data.Constraint[] {
-            new System.Data.UniqueConstraint("Constraint1", new string[] {
-                        "id"}, true)});
-            this.dr_formuls.PrimaryKey = new System.Data.DataColumn[] {
-        this.dr_formula_id};
-            this.dr_formuls.TableName = "dr_formuls";
-            // 
-            // dr_bringing_formuls
-            // 
-            this.dr_bringing_formuls.Columns.AddRange(new System.Data.DataColumn[] {
-            this.dr_bringing_formeula_id,
-            this.dr_bringing_formula});
-            this.dr_bringing_formuls.Constraints.AddRange(new System.Data.Constraint[] {
-            new System.Data.UniqueConstraint("Constraint1", new string[] {
-                        "id"}, true)});
-            this.dr_bringing_formuls.PrimaryKey = new System.Data.DataColumn[] {
-        this.dr_bringing_formeula_id};
-            this.dr_bringing_formuls.TableName = "dr_bringing_formuls";
-            // 
-            // cable
-            // 
-            this.cable.TableName = "cable";
-            // 
-            // cable_structures
-            // 
-            this.cable_structures.TableName = "cable_structures";
-            // 
-            // name
-            // 
-            this.name.ColumnName = "name";
-            // 
-            // id
-            // 
-            this.id.AllowDBNull = false;
-            this.id.ColumnName = "id";
-            this.id.DataType = typeof(short);
-            // 
-            // short_name
-            // 
-            this.short_name.ColumnName = "short_name";
-            // 
-            // full_name
-            // 
-            this.full_name.Caption = "full_name";
-            this.full_name.ColumnName = "full_name";
-            // 
-            // dataColumn1
-            // 
-            this.dataColumn1.AllowDBNull = false;
-            this.dataColumn1.Caption = "id";
-            this.dataColumn1.ColumnName = "id";
-            this.dataColumn1.DataType = typeof(short);
-            // 
-            // dataColumn2
-            // 
-            this.dataColumn2.AllowDBNull = false;
-            this.dataColumn2.ColumnName = "name";
-            // 
-            // dataColumn3
-            // 
-            this.dataColumn3.ColumnName = "lead_diameter";
-            this.dataColumn3.DataType = typeof(decimal);
-            // 
-            // isolation_material_id
-            // 
-            this.isolation_material_id.AllowDBNull = false;
-            this.isolation_material_id.ColumnName = "id";
-            this.isolation_material_id.DataType = typeof(short);
-            // 
-            // isolation_material_name
-            // 
-            this.isolation_material_name.ColumnName = "name";
-            // 
-            // wave_resistance
-            // 
-            this.wave_resistance.ColumnName = "wave_resistance";
-            // 
-            // dr_formula_id
-            // 
-            this.dr_formula_id.AllowDBNull = false;
-            this.dr_formula_id.ColumnName = "id";
-            this.dr_formula_id.DataType = typeof(short);
-            // 
-            // dr_formula
-            // 
-            this.dr_formula.ColumnName = "formula";
-            // 
-            // dr_bringing_formeula_id
-            // 
-            this.dr_bringing_formeula_id.AllowDBNull = false;
-            this.dr_bringing_formeula_id.ColumnName = "id";
-            this.dr_bringing_formeula_id.DataType = typeof(short);
-            // 
-            // dr_bringing_formula
-            // 
-            this.dr_bringing_formula.Caption = "formula";
-            this.dr_bringing_formula.ColumnName = "formula";
-            // 
-            // structure_type_id
-            // 
-            this.structure_type_id.Caption = "id";
-            this.structure_type_id.ColumnName = "id";
-            this.structure_type_id.DataType = typeof(short);
-            // 
-            // structure_type_name
-            // 
-            this.structure_type_name.ColumnName = "name";
             // 
             // code_okp
             // 
@@ -832,33 +822,91 @@
             this.code_kch.Size = new System.Drawing.Size(37, 20);
             this.code_kch.TabIndex = 50;
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.groupBox5);
+            this.panel1.Controls.Add(this.groupBox4);
+            this.panel1.Controls.Add(this.groupCapacityCheckBox);
+            this.panel1.Controls.Add(this.label21);
+            this.panel1.Controls.Add(this.drPrivFormulsComboBox);
+            this.panel1.Controls.Add(this.drFormulsComboBox);
+            this.panel1.Controls.Add(this.label22);
+            this.panel1.Controls.Add(this.groupBox3);
+            this.panel1.Controls.Add(this.waveResistance);
+            this.panel1.Controls.Add(this.label20);
+            this.panel1.Controls.Add(this.textBox4);
+            this.panel1.Location = new System.Drawing.Point(44, 264);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(806, 469);
+            this.panel1.TabIndex = 51;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(75, 42);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(8, 8);
+            this.tabControl1.TabIndex = 30;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(0, 0);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(0, 0);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.leadMaterialComboBox);
+            this.groupBox4.Controls.Add(this.label17);
+            this.groupBox4.Controls.Add(this.izolMaterialComboBox);
+            this.groupBox4.Controls.Add(this.label16);
+            this.groupBox4.Controls.Add(this.leadDiametersComboBox);
+            this.groupBox4.Controls.Add(this.label15);
+            this.groupBox4.Location = new System.Drawing.Point(331, 35);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(280, 125);
+            this.groupBox4.TabIndex = 49;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Материалы";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.groupBox2);
+            this.groupBox5.Controls.Add(this.structTypeComboBox);
+            this.groupBox5.Controls.Add(this.label14);
+            this.groupBox5.Location = new System.Drawing.Point(331, 174);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(280, 168);
+            this.groupBox5.TabIndex = 50;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Характеристики структуры";
+            // 
             // addCableForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(902, 720);
+            this.ClientSize = new System.Drawing.Size(902, 820);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.code_kch);
             this.Controls.Add(this.code_okp);
-            this.Controls.Add(this.groupCapacityCheckBox);
             this.Controls.Add(this.label23);
             this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.label21);
-            this.Controls.Add(this.drPrivFormulsComboBox);
-            this.Controls.Add(this.drFormulsComboBox);
-            this.Controls.Add(this.label22);
-            this.Controls.Add(this.waveResistance);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.label20);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.label17);
-            this.Controls.Add(this.izolMaterialComboBox);
-            this.Controls.Add(this.label16);
-            this.Controls.Add(this.leadDiametersComboBox);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.leadMaterialComboBox);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.structTypeComboBox);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
@@ -868,8 +916,6 @@
             this.Controls.Add(this.cableWeight);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.buildLength);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.closeBut);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.fullNameNormDoc);
             this.Controls.Add(this.label3);
@@ -882,14 +928,6 @@
             this.Name = "addCableForm";
             this.Text = "Новый кабель";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.addCableForm_FormClosing);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.factElNumb)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nomElNumb)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cableDS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cable_marks)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.documents)).EndInit();
@@ -902,6 +940,21 @@
             ((System.ComponentModel.ISupportInitialize)(this.dr_bringing_formuls)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cable_structures)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.factElNumb)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nomElNumb)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -917,8 +970,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox fullNameNormDoc;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button closeBut;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox buildLength;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox cableWeight;
@@ -990,5 +1041,11 @@
         private System.Data.DataColumn dr_bringing_formula;
         private System.Windows.Forms.MaskedTextBox code_okp;
         private System.Windows.Forms.MaskedTextBox code_kch;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox4;
     }
 }

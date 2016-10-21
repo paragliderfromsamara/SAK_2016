@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.closeBut = new System.Windows.Forms.Button();
             this.newBarabanType = new System.Windows.Forms.GroupBox();
             this.addBarabanType = new System.Windows.Forms.Button();
@@ -38,13 +38,18 @@
             this.label1 = new System.Windows.Forms.Label();
             this.barabanName = new System.Windows.Forms.TextBox();
             this.barabanTypeList = new System.Windows.Forms.DataGridView();
-            this.barabanTypeDataSet = new System.Data.DataSet();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.barabanTypesDS = new System.Data.DataSet();
+            this.baraban_types = new System.Data.DataTable();
+            this.baraban_type_id = new System.Data.DataColumn();
+            this.baraban_type_name = new System.Data.DataColumn();
+            this.baraban_weight = new System.Data.DataColumn();
             this.newBarabanType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barabanTypeList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barabanTypeDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barabanTypesDS)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baraban_types)).BeginInit();
             this.SuspendLayout();
             // 
             // closeBut
@@ -124,31 +129,27 @@
             this.id,
             this.name,
             this.Weight});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.NullValue = "-";
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.barabanTypeList.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.NullValue = "-";
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.barabanTypeList.DefaultCellStyle = dataGridViewCellStyle3;
             this.barabanTypeList.GridColor = System.Drawing.SystemColors.ButtonShadow;
             this.barabanTypeList.Location = new System.Drawing.Point(33, 136);
             this.barabanTypeList.Name = "barabanTypeList";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Teal;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.barabanTypeList.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.Teal;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.barabanTypeList.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.barabanTypeList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.barabanTypeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.barabanTypeList.Size = new System.Drawing.Size(605, 229);
             this.barabanTypeList.TabIndex = 0;
-            // 
-            // barabanTypeDataSet
-            // 
-            this.barabanTypeDataSet.DataSetName = "NewDataSet";
             // 
             // id
             // 
@@ -177,6 +178,37 @@
             this.Weight.Name = "Weight";
             this.Weight.ReadOnly = true;
             // 
+            // barabanTypesDS
+            // 
+            this.barabanTypesDS.DataSetName = "NewDataSet";
+            this.barabanTypesDS.Tables.AddRange(new System.Data.DataTable[] {
+            this.baraban_types});
+            // 
+            // baraban_types
+            // 
+            this.baraban_types.Columns.AddRange(new System.Data.DataColumn[] {
+            this.baraban_type_id,
+            this.baraban_type_name,
+            this.baraban_weight});
+            this.baraban_types.TableName = "baraban_types";
+            // 
+            // baraban_type_id
+            // 
+            this.baraban_type_id.AllowDBNull = false;
+            this.baraban_type_id.AutoIncrement = true;
+            this.baraban_type_id.ColumnName = "id";
+            this.baraban_type_id.DataType = typeof(short);
+            // 
+            // baraban_type_name
+            // 
+            this.baraban_type_name.AllowDBNull = false;
+            this.baraban_type_name.ColumnName = "name";
+            // 
+            // baraban_weight
+            // 
+            this.baraban_weight.ColumnName = "weight";
+            this.baraban_weight.DataType = typeof(decimal);
+            // 
             // dbBarabansForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -192,7 +224,8 @@
             this.newBarabanType.ResumeLayout(false);
             this.newBarabanType.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barabanTypeList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barabanTypeDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barabanTypesDS)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baraban_types)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -207,9 +240,13 @@
         private System.Windows.Forms.TextBox barabanWeight;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox barabanName;
-        private System.Data.DataSet barabanTypeDataSet;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn Weight;
+        private System.Data.DataSet barabanTypesDS;
+        private System.Data.DataTable baraban_types;
+        private System.Data.DataColumn baraban_type_id;
+        private System.Data.DataColumn baraban_type_name;
+        private System.Data.DataColumn baraban_weight;
     }
 }

@@ -22,13 +22,13 @@ namespace SAK_2016
         }
         private void initBarabansList()
         {
-            barabanTypeDataSet.Reset();
-            string com = mysql.GetSQLCommand("Barabans");
+            barabanTypesDS.Tables["baraban_types"].Rows.Clear();
+            string com = Properties.dbSakQueries.Default.selectBarabanTypes;
             mysql.MyConn.Open();
             MySqlDataAdapter da = new MySqlDataAdapter(com, mysql.MyConn);
-            da.Fill(barabanTypeDataSet);
+            da.Fill(barabanTypesDS.Tables["baraban_types"]);
             mysql.MyConn.Close();
-            barabanTypeList.DataSource = barabanTypeDataSet.Tables[0];
+            barabanTypeList.DataSource = barabanTypesDS.Tables["baraban_types"];
             barabanTypeList.Refresh();
         }
 
@@ -40,12 +40,8 @@ namespace SAK_2016
 
         private void addBarabanType_Click(object sender, EventArgs e)
         {
-            string com = mysql.GetSQLCommand("AddBaraban");
+            string com = Properties.dbSakQueries.Default.insertBarabanType;
             if (checkForm())
-            {
-                //to_do
-            }
-            else
             {
                 int[] arr = new int[barabanTypeList.Rows.Count - 1];
                 com = String.Format(com, barabanName.Text, barabanWeight.Text);
@@ -85,13 +81,21 @@ namespace SAK_2016
 
         private bool checkForm()
         {
+            bool f;
             if (String.IsNullOrWhiteSpace(barabanName.Text) || String.IsNullOrWhiteSpace(barabanWeight.Text))
             {
                 string msgText = "Все поля должны быть заполнены!";
                 MessageBox.Show(msgText, "Недопустимы пустые поля", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return true;
+                
+                f = false;
+            }else
+            {
+
+                f = true;
             }
-            else return false;
+            barabanName.BackColor = !f ? System.Drawing.Color.FromArgb(255, 193, 193) : System.Drawing.Color.Empty;
+            barabanWeight.BackColor = !f ? System.Drawing.Color.FromArgb(255, 193, 193) : System.Drawing.Color.Empty;
+            return f;
         }
 
         private void barabanWeight_KeyPress(object sender, KeyPressEventArgs e)

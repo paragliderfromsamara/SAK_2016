@@ -26,7 +26,7 @@ namespace SAK_2016.dbSakModels
             try
             {
                 dbCon = new MySqlConnection(connString); //Устанавливаем соединение
-                dropDBSak();                             //Удаляем бд (необходимо на стадии настройки)
+                //dropDBSak();                             //Удаляем бд (необходимо на стадии настройки)
                 checkAndCreateDBSak();                   //Создаем бд (если нет её)
 
             }

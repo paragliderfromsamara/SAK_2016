@@ -148,5 +148,27 @@ namespace SAK_2016.Properties {
                 return ((string)(this["selectCableStructureTypes"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SELECT * FROM baraban_types ORDER BY baraban_types.name ASC")]
+        public string selectBarabanTypes {
+            get {
+                return ((string)(this["selectBarabanTypes"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("INSERT INTO baraban_types (baraban_types.name, baraban_types.weight) VALUES (\"{0}" +
+            "\", {1})")]
+        public string insertBarabanType {
+            get {
+                return ((string)(this["insertBarabanType"]));
+            }
+            set {
+                this["insertBarabanType"] = value;
+            }
+        }
     }
 }

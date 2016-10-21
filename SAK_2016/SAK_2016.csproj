@@ -97,10 +97,11 @@
     <Compile Include="dbForms\oldDbDataMigration.Designer.cs">
       <DependentUpon>oldDbDataMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="dbSakModels\CableStructuresList.cs" />
     <Compile Include="dbSakModels\dataMigration.cs" />
     <Compile Include="dbSakModels\dbBaraban.cs" />
-    <Compile Include="dbSakModels\dbCable.cs" />
-    <Compile Include="dbSakModels\dbCableStructure.cs" />
+    <Compile Include="dbSakModels\Cable.cs" />
+    <Compile Include="dbSakModels\CableStructure.cs" />
     <Compile Include="dbSakModels\dbCableStructureType.cs" />
     <Compile Include="DBControl.cs" />
     <Compile Include="dbForms\addCableForm.cs">

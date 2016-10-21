@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.closeBut = new System.Windows.Forms.Button();
             this.dbCablesDataSet = new System.Data.DataSet();
             this.cablesList = new System.Windows.Forms.DataGridView();
-            this.openCableFormBut = new System.Windows.Forms.Button();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CabName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CabNameStruct = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -40,6 +40,8 @@
             this.TextPrim = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.KodOKP = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.KodOKP_KCH = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.openCableFormBut = new System.Windows.Forms.Button();
+            this.cableListContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dbCablesDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cablesList)).BeginInit();
             this.SuspendLayout();
@@ -79,16 +81,6 @@
             this.cablesList.Size = new System.Drawing.Size(943, 390);
             this.cablesList.StandardTab = true;
             this.cablesList.TabIndex = 1;
-            // 
-            // openCableFormBut
-            // 
-            this.openCableFormBut.Location = new System.Drawing.Point(93, 468);
-            this.openCableFormBut.Name = "openCableFormBut";
-            this.openCableFormBut.Size = new System.Drawing.Size(150, 23);
-            this.openCableFormBut.TabIndex = 2;
-            this.openCableFormBut.Text = "Добавить тип кабеля";
-            this.openCableFormBut.UseVisualStyleBackColor = true;
-            this.openCableFormBut.Click += new System.EventHandler(this.openCableFormBut_Click);
             // 
             // id
             // 
@@ -139,6 +131,21 @@
             this.KodOKP_KCH.Name = "KodOKP_KCH";
             this.KodOKP_KCH.ReadOnly = true;
             // 
+            // openCableFormBut
+            // 
+            this.openCableFormBut.Location = new System.Drawing.Point(93, 468);
+            this.openCableFormBut.Name = "openCableFormBut";
+            this.openCableFormBut.Size = new System.Drawing.Size(150, 23);
+            this.openCableFormBut.TabIndex = 2;
+            this.openCableFormBut.Text = "Добавить тип кабеля";
+            this.openCableFormBut.UseVisualStyleBackColor = true;
+            this.openCableFormBut.Click += new System.EventHandler(this.openCableFormBut_Click);
+            // 
+            // cableListContextMenuStrip
+            // 
+            this.cableListContextMenuStrip.Name = "cableListContextMenuStrip";
+            this.cableListContextMenuStrip.Size = new System.Drawing.Size(61, 4);
+            // 
             // dbCablesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -170,5 +177,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TextPrim;
         private System.Windows.Forms.DataGridViewTextBoxColumn KodOKP;
         private System.Windows.Forms.DataGridViewTextBoxColumn KodOKP_KCH;
+        private System.Windows.Forms.ContextMenuStrip cableListContextMenuStrip;
     }
 }

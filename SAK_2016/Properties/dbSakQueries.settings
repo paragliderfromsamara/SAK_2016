@@ -41,5 +41,11 @@
     <Setting Name="selectCableStructureTypes" Type="System.String" Scope="Application">
       <Value Profile="(Default)">SELECT * from cable_structure_types ORDER BY cable_structure_types.id ASC</Value>
     </Setting>
+    <Setting Name="selectBarabanTypes" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT * FROM baraban_types ORDER BY baraban_types.name ASC</Value>
+    </Setting>
+    <Setting Name="insertBarabanType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">INSERT INTO baraban_types (baraban_types.name, baraban_types.weight) VALUES ("{0}", {1})</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
