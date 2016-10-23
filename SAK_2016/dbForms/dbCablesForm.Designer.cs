@@ -40,10 +40,13 @@
             this.TextPrim = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.KodOKP = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.KodOKP_KCH = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.openCableFormBut = new System.Windows.Forms.Button();
             this.cableListContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.перейтиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editCableItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openCableFormBut = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dbCablesDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cablesList)).BeginInit();
+            this.cableListContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // closeBut
@@ -72,6 +75,7 @@
             this.TextPrim,
             this.KodOKP,
             this.KodOKP_KCH});
+            this.cablesList.ContextMenuStrip = this.cableListContextMenuStrip;
             this.cablesList.Location = new System.Drawing.Point(12, 56);
             this.cablesList.Name = "cablesList";
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Teal;
@@ -131,6 +135,27 @@
             this.KodOKP_KCH.Name = "KodOKP_KCH";
             this.KodOKP_KCH.ReadOnly = true;
             // 
+            // cableListContextMenuStrip
+            // 
+            this.cableListContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.перейтиToolStripMenuItem,
+            this.editCableItem});
+            this.cableListContextMenuStrip.Name = "cableListContextMenuStrip";
+            this.cableListContextMenuStrip.Size = new System.Drawing.Size(153, 70);
+            // 
+            // перейтиToolStripMenuItem
+            // 
+            this.перейтиToolStripMenuItem.Name = "перейтиToolStripMenuItem";
+            this.перейтиToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.перейтиToolStripMenuItem.Text = "Перейти";
+            // 
+            // editCableItem
+            // 
+            this.editCableItem.Name = "editCableItem";
+            this.editCableItem.Size = new System.Drawing.Size(152, 22);
+            this.editCableItem.Text = "Изменить";
+            this.editCableItem.Click += new System.EventHandler(this.editCableItem_Click);
+            // 
             // openCableFormBut
             // 
             this.openCableFormBut.Location = new System.Drawing.Point(93, 468);
@@ -140,11 +165,6 @@
             this.openCableFormBut.Text = "Добавить тип кабеля";
             this.openCableFormBut.UseVisualStyleBackColor = true;
             this.openCableFormBut.Click += new System.EventHandler(this.openCableFormBut_Click);
-            // 
-            // cableListContextMenuStrip
-            // 
-            this.cableListContextMenuStrip.Name = "cableListContextMenuStrip";
-            this.cableListContextMenuStrip.Size = new System.Drawing.Size(61, 4);
             // 
             // dbCablesForm
             // 
@@ -160,6 +180,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.dbCablesForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dbCablesDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cablesList)).EndInit();
+            this.cableListContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -178,5 +199,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn KodOKP;
         private System.Windows.Forms.DataGridViewTextBoxColumn KodOKP_KCH;
         private System.Windows.Forms.ContextMenuStrip cableListContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem перейтиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editCableItem;
     }
 }

@@ -10,7 +10,7 @@ namespace SAK_2016
     {
         private DBControl mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
         //Характеристики кабеля
-        public long documentId;
+        public uint documentId;
         public string name, structName, notes, codeOkp, codeKch;
         public decimal buildLength, linearMass, uCover, pMin, pMax;
         
@@ -26,11 +26,13 @@ namespace SAK_2016
         /// <param name="cableId"></param>
         public Cable(long cableId)
         {
+            this.tableName = "cables";
+            this.id = cableId;
             this.getFromDB();
             if (this.isExistsInDB)
             {
                 fillMainParameters();
-            }
+            }                
         }
 
         /// <summary>
@@ -43,12 +45,14 @@ namespace SAK_2016
             this.notes = dbParams["notes"].ToString();
             this.codeOkp = dbParams["code_okp"].ToString();
             this.codeKch = dbParams["code_kch"].ToString();
-            this.buildLength = (long)dbParams["build_length"];
-            this.linearMass = (long)dbParams["linear_mass"];
-            this.uCover = (long)dbParams["u_cover"];
-            this.pMin = (long)dbParams["p_min"];
-            this.pMax = (long)dbParams["p_max"];
+            this.buildLength = ServiceFunctions.convertToDecimal(dbParams["build_length"]);
+            this.linearMass = ServiceFunctions.convertToDecimal(dbParams["linear_mass"]);
+            this.uCover = ServiceFunctions.convertToDecimal(dbParams["u_cover"]); 
+            this.pMin = ServiceFunctions.convertToDecimal(dbParams["p_min"]); 
+            this.pMax = ServiceFunctions.convertToDecimal(dbParams["p_max"]);
+            this.documentId = ServiceFunctions.convertToUInt("document_id");
         }
+
 
     }
 }

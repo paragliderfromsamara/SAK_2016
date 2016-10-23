@@ -42,8 +42,12 @@
             this.cancelBut = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.oldDBMigrationPBar = new System.Windows.Forms.ProgressBar();
             this.pBarStatus = new System.Windows.Forms.Label();
+            this.oldDBMigrationPBar = new System.Windows.Forms.ProgressBar();
+            this.documents = new System.Data.DataTable();
+            this.dataColumn1 = new System.Data.DataColumn();
+            this.dataColumn2 = new System.Data.DataColumn();
+            this.dataColumn3 = new System.Data.DataColumn();
             ((System.ComponentModel.ISupportInitialize)(this.oldEntitiesDS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.users)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cables)).BeginInit();
@@ -52,6 +56,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.freq_ranges)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.measured_params)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.documents)).BeginInit();
             this.SuspendLayout();
             // 
             // migrateSelected
@@ -73,7 +78,8 @@
             this.baraban_types,
             this.cable_structures,
             this.freq_ranges,
-            this.measured_params});
+            this.measured_params,
+            this.documents});
             // 
             // users
             // 
@@ -165,13 +171,6 @@
             this.panel1.Size = new System.Drawing.Size(399, 77);
             this.panel1.TabIndex = 8;
             // 
-            // oldDBMigrationPBar
-            // 
-            this.oldDBMigrationPBar.Location = new System.Drawing.Point(32, 39);
-            this.oldDBMigrationPBar.Name = "oldDBMigrationPBar";
-            this.oldDBMigrationPBar.Size = new System.Drawing.Size(338, 23);
-            this.oldDBMigrationPBar.TabIndex = 6;
-            // 
             // pBarStatus
             // 
             this.pBarStatus.AutoSize = true;
@@ -181,6 +180,36 @@
             this.pBarStatus.Size = new System.Drawing.Size(70, 16);
             this.pBarStatus.TabIndex = 7;
             this.pBarStatus.Text = "pBarStatus";
+            // 
+            // oldDBMigrationPBar
+            // 
+            this.oldDBMigrationPBar.Location = new System.Drawing.Point(32, 39);
+            this.oldDBMigrationPBar.Name = "oldDBMigrationPBar";
+            this.oldDBMigrationPBar.Size = new System.Drawing.Size(338, 23);
+            this.oldDBMigrationPBar.TabIndex = 6;
+            // 
+            // documents
+            // 
+            this.documents.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dataColumn1,
+            this.dataColumn2,
+            this.dataColumn3});
+            this.documents.TableName = "documents";
+            // 
+            // dataColumn1
+            // 
+            this.dataColumn1.AllowDBNull = false;
+            this.dataColumn1.AutoIncrement = true;
+            this.dataColumn1.ColumnName = "id";
+            this.dataColumn1.DataType = typeof(int);
+            // 
+            // dataColumn2
+            // 
+            this.dataColumn2.ColumnName = "short_name";
+            // 
+            // dataColumn3
+            // 
+            this.dataColumn3.ColumnName = "full_name";
             // 
             // oldDbDataMigration
             // 
@@ -204,6 +233,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.measured_params)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.documents)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -226,5 +256,9 @@
         private System.Data.DataTable freq_ranges;
         private System.Data.DataTable measured_params;
         private System.Windows.Forms.Label pBarStatus;
+        private System.Data.DataTable documents;
+        private System.Data.DataColumn dataColumn1;
+        private System.Data.DataColumn dataColumn2;
+        private System.Data.DataColumn dataColumn3;
     }
 }

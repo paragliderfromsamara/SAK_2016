@@ -14,12 +14,36 @@ namespace SAK_2016
     public partial class addCableForm : Form
     {
         private DBControl mysql = new DBControl(Properties.dbSakQueries.Default.dbName);
+        private Cable dbCable;
         public addCableForm()
         {
             InitializeComponent();
-            fillCableDS();
-            
+            fillCableDS();   
         }
+
+        public addCableForm(long cable_id)
+        {
+            dbCable = new Cable(cable_id);
+            InitializeComponent();
+            fillCableDS();
+            fillFieldsFromCable();
+        }
+
+        private void fillFieldsFromCable()
+        {
+            cableMarkComboBox.SelectedValue = dbCable.name;
+            structDescTextBox.Text = dbCable.structName;
+            buildLength.Text = dbCable.buildLength.ToString();
+            linearMass.Text = dbCable.linearMass.ToString();
+            code_okp.Text = dbCable.codeOkp;
+            code_kch.Text = dbCable.codeKch;
+            uCoverVoltage.Text = dbCable.uCover.ToString();
+            minPleasure.Text = dbCable.pMin.ToString();
+            maxPleasure.Text = dbCable.pMax.ToString();
+            notes.Text = dbCable.notes;
+            normDocComboBox.SelectedValue = dbCable.documentId Разобраться с установкой значения
+        }
+
 
         /// <summary>
         /// Заполняет cableDS, обновляет связанные с ним элементы
@@ -160,7 +184,7 @@ namespace SAK_2016
 
     private void cableWeight_Leave(object sender, EventArgs e)
     {
-    checkDecimalValInTextBox(cableWeight);
+    checkDecimalValInTextBox(linearMass);
     }
 
     private void testVoltageObol_KeyPress(object sender, KeyPressEventArgs e)
@@ -170,7 +194,7 @@ namespace SAK_2016
 
     private void testVoltageObol_Leave(object sender, EventArgs e)
     {
-    checkDecimalValInTextBox(testVoltageObol);
+    checkDecimalValInTextBox(uCoverVoltage);
     }
 
     private void minPleasure_KeyPress(object sender, KeyPressEventArgs e)

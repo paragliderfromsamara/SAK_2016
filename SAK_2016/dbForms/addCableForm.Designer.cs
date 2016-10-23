@@ -66,9 +66,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.buildLength = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.cableWeight = new System.Windows.Forms.TextBox();
+            this.linearMass = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.testVoltageObol = new System.Windows.Forms.TextBox();
+            this.uCoverVoltage = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.minPleasure = new System.Windows.Forms.TextBox();
             this.maxPleasure = new System.Windows.Forms.TextBox();
@@ -79,6 +79,9 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.factElNumb = new System.Windows.Forms.NumericUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label13 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.nomElNumb = new System.Windows.Forms.NumericUpDown();
@@ -102,17 +105,14 @@
             this.drFormulsComboBox = new System.Windows.Forms.ComboBox();
             this.drPrivFormulsComboBox = new System.Windows.Forms.ComboBox();
             this.label21 = new System.Windows.Forms.Label();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.notes = new System.Windows.Forms.RichTextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.groupCapacityCheckBox = new System.Windows.Forms.CheckBox();
             this.code_okp = new System.Windows.Forms.MaskedTextBox();
             this.code_kch = new System.Windows.Forms.MaskedTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.cableDS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cable_marks)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documents)).BeginInit();
@@ -128,12 +128,12 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.factElNumb)).BeginInit();
             this.groupBox2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nomElNumb)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // cableMarkComboBox
@@ -189,8 +189,9 @@
             // id
             // 
             this.id.AllowDBNull = false;
+            this.id.AutoIncrement = true;
             this.id.ColumnName = "id";
-            this.id.DataType = typeof(short);
+            this.id.DataType = typeof(int);
             // 
             // short_name
             // 
@@ -427,13 +428,13 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "Строительная длина, м";
             // 
-            // cableWeight
+            // linearMass
             // 
-            this.cableWeight.Location = new System.Drawing.Point(174, 148);
-            this.cableWeight.Name = "cableWeight";
-            this.cableWeight.Size = new System.Drawing.Size(144, 20);
-            this.cableWeight.TabIndex = 12;
-            this.cableWeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cableWeight_KeyPress);
+            this.linearMass.Location = new System.Drawing.Point(174, 148);
+            this.linearMass.Name = "linearMass";
+            this.linearMass.Size = new System.Drawing.Size(144, 20);
+            this.linearMass.TabIndex = 12;
+            this.linearMass.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cableWeight_KeyPress);
             // 
             // label6
             // 
@@ -444,14 +445,14 @@
             this.label6.TabIndex = 13;
             this.label6.Text = "Погонная масса кабеля, кг/км";
             // 
-            // testVoltageObol
+            // uCoverVoltage
             // 
-            this.testVoltageObol.Location = new System.Drawing.Point(346, 148);
-            this.testVoltageObol.Name = "testVoltageObol";
-            this.testVoltageObol.Size = new System.Drawing.Size(138, 20);
-            this.testVoltageObol.TabIndex = 14;
-            this.testVoltageObol.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.testVoltageObol_KeyPress);
-            this.testVoltageObol.Leave += new System.EventHandler(this.testVoltageObol_Leave);
+            this.uCoverVoltage.Location = new System.Drawing.Point(346, 148);
+            this.uCoverVoltage.Name = "uCoverVoltage";
+            this.uCoverVoltage.Size = new System.Drawing.Size(138, 20);
+            this.uCoverVoltage.TabIndex = 14;
+            this.uCoverVoltage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.testVoltageObol_KeyPress);
+            this.uCoverVoltage.Leave += new System.EventHandler(this.testVoltageObol_Leave);
             // 
             // label7
             // 
@@ -550,6 +551,36 @@
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Количество элементов в кабеле";
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(75, 42);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(8, 8);
+            this.tabControl1.TabIndex = 30;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(0, 0);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(0, 0);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // label13
             // 
@@ -779,13 +810,13 @@
             this.label21.TabIndex = 45;
             this.label21.Text = "Омическая ассиметрия";
             // 
-            // richTextBox1
+            // notes
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(12, 189);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(878, 47);
-            this.richTextBox1.TabIndex = 46;
-            this.richTextBox1.Text = "";
+            this.notes.Location = new System.Drawing.Point(12, 189);
+            this.notes.Name = "notes";
+            this.notes.Size = new System.Drawing.Size(878, 47);
+            this.notes.TabIndex = 46;
+            this.notes.Text = "";
             // 
             // label23
             // 
@@ -840,35 +871,17 @@
             this.panel1.Size = new System.Drawing.Size(806, 469);
             this.panel1.TabIndex = 51;
             // 
-            // tabControl1
+            // groupBox5
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(75, 42);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(8, 8);
-            this.tabControl1.TabIndex = 30;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(0, 0);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(0, 0);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.groupBox5.Controls.Add(this.groupBox2);
+            this.groupBox5.Controls.Add(this.structTypeComboBox);
+            this.groupBox5.Controls.Add(this.label14);
+            this.groupBox5.Location = new System.Drawing.Point(331, 174);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(280, 168);
+            this.groupBox5.TabIndex = 50;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Характеристики структуры";
             // 
             // groupBox4
             // 
@@ -885,18 +898,6 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Материалы";
             // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.groupBox2);
-            this.groupBox5.Controls.Add(this.structTypeComboBox);
-            this.groupBox5.Controls.Add(this.label14);
-            this.groupBox5.Location = new System.Drawing.Point(331, 174);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(280, 168);
-            this.groupBox5.TabIndex = 50;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Характеристики структуры";
-            // 
             // addCableForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -906,14 +907,14 @@
             this.Controls.Add(this.code_kch);
             this.Controls.Add(this.code_okp);
             this.Controls.Add(this.label23);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.notes);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.testVoltageObol);
+            this.Controls.Add(this.uCoverVoltage);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.cableWeight);
+            this.Controls.Add(this.linearMass);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.buildLength);
             this.Controls.Add(this.label4);
@@ -945,16 +946,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.factElNumb)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nomElNumb)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -972,9 +973,9 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox buildLength;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox cableWeight;
+        private System.Windows.Forms.TextBox linearMass;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox testVoltageObol;
+        private System.Windows.Forms.TextBox uCoverVoltage;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox minPleasure;
         private System.Windows.Forms.TextBox maxPleasure;
@@ -1008,7 +1009,7 @@
         private System.Windows.Forms.ComboBox drFormulsComboBox;
         private System.Windows.Forms.ComboBox drPrivFormulsComboBox;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox notes;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.CheckBox groupCapacityCheckBox;
         private System.Data.DataSet cableDS;

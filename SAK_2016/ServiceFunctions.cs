@@ -57,5 +57,40 @@ namespace SAK_2016
         {
             return Encoding.UTF8.GetString(data);
         }
+
+        /// <summary>
+        /// Пытается конвертировать в десятичное число. Если получается возвращает число, если нет то 0
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static decimal convertToDecimal(object text)
+        {
+            try
+            {
+                string txt = text.ToString();
+                return Convert.ToDecimal(txt);
+            }
+            catch (FormatException)
+            {
+                return 0;
+            }
+        }
+        /// <summary>
+        /// Пытается конвертировать в целое число. Если получается возвращает число, если нет то 0
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static uint convertToUInt(object text)
+        {
+            try
+            {
+                string txt = text.ToString();
+                return Convert.ToUInt32(txt);
+            }
+            catch (FormatException)
+            {
+                return 0;
+            }
+        }
     }
 }

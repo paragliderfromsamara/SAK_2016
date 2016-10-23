@@ -14,7 +14,7 @@ namespace SAK_2016
     public class dbBase
     {
         private DBControl mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
-        protected string tableName { set; get; }
+        protected string tableName;
         public long id;
         protected DataRow dbParams;
         public bool isExistsInDB;
@@ -24,16 +24,16 @@ namespace SAK_2016
         protected void getFromDB()
         {
             DataSet ds = new DataSet();
-            string q = String.Format("SELECT * FROM {0} WHERE {1} LIMIT 1", tableName, id);
+            string q = String.Format("SELECT * FROM {0} WHERE id={1}", this.tableName, id);
             MySqlDataAdapter da = new MySqlDataAdapter(q, mySql.MyConn);
             mySql.MyConn.Open();
             da.Fill(ds);
             mySql.MyConn.Close();
             if (ds.Tables[0].Rows.Count > 0)
             {
-                dbParams = ds.Tables[0].Rows[0];
-                isExistsInDB = true;
-            } else isExistsInDB = true;
+                this.dbParams = ds.Tables[0].Rows[0];
+                this.isExistsInDB = true;
+            } else isExistsInDB = false;
         }
       
 

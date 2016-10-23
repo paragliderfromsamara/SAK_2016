@@ -67,7 +67,7 @@ namespace SAK_2016.dbForms
             {
                 oldUsersCheckBox.Enabled = true;
                 mySql = new DBControl("bd_system");
-                string selOldUsersQuery = mySql.GetSQLCommand("users_in_old_db");
+                string selOldUsersQuery = "SELECT familija_imja_ot.UserNum as id, familija_imja_ot.familija as last_name, familija_imja_ot.imja as name, familija_imja_ot.otchestvo as third_name, familija_imja_ot.tabnum as employee_number, familija_imja_ot.pass as password, dolshnosti.dolshnost as role_name, dolshnosti.dolshnum as role_id, familija_imja_ot.activ as is_active  FROM Familija_imja_ot LEFT JOIN Dolshnosti ON (Familija_imja_ot.Dolshnost = Dolshnosti.DolshNum)";
                 mySql.MyConn.Open();
                 MySqlDataAdapter sysAd = new MySqlDataAdapter(selOldUsersQuery, mySql.MyConn);
                 sysAd.Fill(oldEntitiesDS.Tables["users"]);
@@ -82,7 +82,7 @@ namespace SAK_2016.dbForms
             {
                 oldDbBarabansCheckBox.Enabled = true;
                 mySql = new DBControl("bd_baraban");
-                string selOldBarabanTypesQuery = mySql.GetSQLCommand("barabans_in_old_db");
+                string selOldBarabanTypesQuery = "SELECT Tipy_Baraban.TipInd as id, Tipy_Baraban.TipName as name, Tipy_Baraban.massa as weight  FROM Tipy_Baraban";
                 mySql.MyConn.Open();
                 MySqlDataAdapter brbAd = new MySqlDataAdapter(selOldBarabanTypesQuery, mySql.MyConn);
                 brbAd.Fill(oldEntitiesDS.Tables["baraban_types"]);
@@ -99,22 +99,25 @@ namespace SAK_2016.dbForms
             {
                 oldDbCablesCheckBox.Enabled = true;
                 mySql = new DBControl("bd_cable");
-                string selCables = mySql.GetSQLCommand("cables_in_old_db");
-                string selStructures = mySql.GetSQLCommand("structures_in_old_db");
-                string selMeasuredParams = mySql.GetSQLCommand("measured_parameters_in_old_db");
-                string selFreqRanges = mySql.GetSQLCommand("frequency_ranges_in_old_db");
+                string selCables = "SELECT cables.CabNum as id, cables.CabName as name, cables.CabNameStruct as struct_name, cables.StrLengt as build_length, cables.DocInd as document_id, cables.TextPrim as notes, cables.PogMass as linear_mass, cables.KodOKP as code_okp, cables.KodOKP_KCH as code_kch, cables.U_Obol as u_cover, cables.P_min as p_min, cables.P_max as p_max FROM cables ORDER BY cables.CabNum ASC";
+                string selStructures = "SELECT Struktury_Cab.StruktInd as id, Struktury_Cab.CabNum as cable_id, Struktury_Cab.PovivTip as structure_type_id, Struktury_Cab.Kolvo as fact_amount, Struktury_Cab.Kolvo_ind as nominal_amount, Struktury_Cab.MaterGil as lead_material_id, Struktury_Cab.DiamGil as lead_diameter, Struktury_Cab.MaterIsol as isolation_material_id, Struktury_Cab.ZWave as wave_resistance, Struktury_Cab.U_gil_gil as u_lead_lead, Struktury_Cab.U_gil_ekr as u_lead_shield, Struktury_Cab.Cr_grup as test_group_work_capacity, Struktury_Cab.Delta_R as dr_formula_id, Struktury_Cab.DRPrivInd as dr_bringing_formula_id FROM Struktury_Cab ORDER BY Struktury_Cab.StruktInd ASC";
+                string selMeasuredParams = "SELECT Param_Data.CabNum as cable_id, Param_Data.ParamInd as measured_parameter_type_id, Param_Data.StruktInd as cable_structure_id, Param_Data.Min as min_val, Param_Data.Max as max_val, Param_Data.Min as min_val, Param_Data.Lpriv as bringing_length, Param_Data.LprivInd as bringing_length_type_id, Param_Data.Percent as percent, Param_Data.Percent as percent, Param_Data.FreqDiap as frequency_range_id  FROM Param_Data ORDER BY Param_Data.CabNum  ASC";
+                string selFreqRanges = " SELECT Freq_Diap.FreqDiapInd as id, Freq_Diap.FreqMin as freq_min, Freq_Diap.FreqMax as freq_max, Freq_Diap.FreqStep as freq_step FROM Freq_Diap ORDER BY Freq_Diap.FreqDiapInd ASC";
+                string selDocuments = "SELECT DocInd as id, DocNum as short_name, DocName as full_name FROM norm_docum";
                 mySql.MyConn.Open();
                 MySqlDataAdapter cAd = new MySqlDataAdapter(selCables, mySql.MyConn);
                 MySqlDataAdapter sAd = new MySqlDataAdapter(selStructures, mySql.MyConn);
                 MySqlDataAdapter mpAd = new MySqlDataAdapter(selMeasuredParams, mySql.MyConn);
                 MySqlDataAdapter frAd = new MySqlDataAdapter(selFreqRanges, mySql.MyConn);
+                MySqlDataAdapter docAd = new MySqlDataAdapter(selDocuments, mySql.MyConn);
                 cAd.Fill(oldEntitiesDS.Tables["cables"]);
                 sAd.Fill(oldEntitiesDS.Tables["cable_structures"]);
                 mpAd.Fill(oldEntitiesDS.Tables["measured_params"]);
                 frAd.Fill(oldEntitiesDS.Tables["freq_ranges"]);
+                docAd.Fill(oldEntitiesDS.Tables["documents"]);
                 mySql.MyConn.Close();
                 mySql.Dispose();
-                oldCablesCount = oldEntitiesDS.Tables["cables"].Rows.Count + oldEntitiesDS.Tables["cable_structures"].Rows.Count + oldEntitiesDS.Tables["measured_params"].Rows.Count;//  +  oldEntitiesDS.Tables["cable_structures"].Rows.Count + oldEntitiesDS.Tables["freq_ranges"].Rows.Count;
+                oldCablesCount = oldEntitiesDS.Tables["cables"].Rows.Count + oldEntitiesDS.Tables["cable_structures"].Rows.Count + oldEntitiesDS.Tables["measured_params"].Rows.Count + oldEntitiesDS.Tables["documents"].Rows.Count;//  +  oldEntitiesDS.Tables["cable_structures"].Rows.Count + oldEntitiesDS.Tables["freq_ranges"].Rows.Count;
                 cAd.Dispose();
                 sAd.Dispose();
                 mpAd.Dispose();
@@ -176,21 +179,20 @@ namespace SAK_2016.dbForms
 
         private void migrateOldCables()
         {
-            string cQueryMask, sQueryMask, mQueryMask, fQueryMask, cQuery, sQuery, mQuery, fQuery;
-            DataRowCollection c, s, f, m;
+            string cQueryMask, sQueryMask, mQueryMask, fQueryMask, dQueryMask, cQuery, sQuery, mQuery, fQuery, dQuery;
+            DataRowCollection c, s, f, m, d;
             mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
             c = oldEntitiesDS.Tables["cables"].Rows;
             s = oldEntitiesDS.Tables["cable_structures"].Rows;
             f = oldEntitiesDS.Tables["freq_ranges"].Rows;
             m = oldEntitiesDS.Tables["measured_params"].Rows;
+            d = oldEntitiesDS.Tables["documents"].Rows;
             cQueryMask = "({0}, \"{1}\", \"{2}\", {3}, {4}, \"{5}\", {6}, \"{7}\", \"{8}\", {9}, {10}, {11})";
             sQueryMask = "({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13})";
             mQueryMask = "({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})";
             fQueryMask = "({0}, {1}, {2}, {3})";
-            cQuery = "";
-            sQuery = "";
-            mQuery = "";
-            fQuery = "";
+            dQueryMask = "({0}, '{1}', '{2}')";
+            cQuery = sQuery = mQuery = fQuery = dQuery = "";
             //Создаём список для добавления в БД кабелей
             changePBStatus("Формирование списка кабелей");
             foreach (DataRow r in c)
@@ -267,10 +269,24 @@ namespace SAK_2016.dbForms
                                         );
                 oldDBMigrationPBar.PerformStep();
             }
+            //Создаём список для добавления в БД нормативных документов
+            changePBStatus("Формирование списка нормативных документов");
+            foreach (DataRow r in d)
+            {
+                if (dQuery.Length > 0) dQuery += ", ";
+                dQuery += String.Format(dQueryMask,
+                                        r["id"],
+                                        r["short_name"],
+                                        r["full_name"]
+                                        );
+                oldDBMigrationPBar.PerformStep();
+            }
+
             cQuery = "INSERT IGNORE INTO cables VALUES " + cQuery;
             sQuery = "INSERT IGNORE INTO cable_structures VALUES " + sQuery;
             mQuery = "INSERT IGNORE INTO measured_parameter_values VALUES " + mQuery;
             fQuery = "INSERT IGNORE INTO frequency_ranges VALUES " + fQuery;
+            dQuery = "INSERT IGNORE INTO documents VALUES " + dQuery;
             changePBStatus("Подключение к " + Properties.dbSakQueries.Default.dbName);
             mySql.MyConn.Open();
             changePBStatus("Заполнение таблицы Кабелей");
@@ -281,8 +297,10 @@ namespace SAK_2016.dbForms
             mySql.RunNoQuery(mQuery);
             changePBStatus("Заполнение таблицы диапазонов частот");
             mySql.RunNoQuery(fQuery);
+            changePBStatus("Заполнение таблицы нормативных документов");
+            mySql.RunNoQuery(dQuery);
             mySql.MyConn.Close();
-            cQuery = sQuery = mQuery = fQuery = "";
+            cQuery = sQuery = mQuery = fQuery = dQuery = "";
 
         }
 

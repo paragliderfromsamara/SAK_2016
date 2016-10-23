@@ -55,7 +55,33 @@ private void initCablesList()
    cablesList.Refresh();
 }
 
-
-
+        private void editCableItem_Click(object sender, EventArgs e)
+        {
+            string sId;
+            long cableId;
+            if (cablesList.SelectedRows.Count > 0)
+            {
+                sId = cablesList.SelectedRows[0].Cells[0].Value.ToString();
+                //try
+                //{
+                    cableId = Convert.ToUInt32(cablesList.SelectedRows[0].Cells[0].Value);
+                    newCableForm = new addCableForm(cableId);
+                    newCableForm.Show();
+                //}
+                //catch(Exception)
+                //{
+               //     MessageBox.Show( "Выделите кабель, который хотите изменить", "Не был выбран кабель", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+               // }
+                
+                
+            }
+            else
+            {
+                MessageBox.Show("Выделите кабель, который хотите изменить", "Не был выбран кабель", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+            
+            
+            
+        }
     }
 }
