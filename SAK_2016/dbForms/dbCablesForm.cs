@@ -77,7 +77,7 @@ private void initCablesList()
             }
             else
             {
-                MessageBox.Show("Выделите кабель, который хотите изменить", "Не был выбран кабель", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                MessageBox.Show("Выберите кабель, который хотите изменить", "Не был выбран кабель", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
             
             

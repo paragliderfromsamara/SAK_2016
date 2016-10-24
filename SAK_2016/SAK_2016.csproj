@@ -110,6 +110,7 @@
     <Compile Include="dbForms\addCableForm.Designer.cs">
       <DependentUpon>addCableForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="dbSakModels\Document.cs" />
     <Compile Include="dbSakModels\User.cs" />
     <Compile Include="dbSakModels\dbBase.cs" />
     <Compile Include="Properties\dbSakQueries.cs" />

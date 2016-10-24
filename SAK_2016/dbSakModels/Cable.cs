@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using System.Windows.Forms;
 namespace SAK_2016
 {
 
     public class Cable : dbBase
     {
-        private DBControl mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
+
         //Характеристики кабеля
+        //Собственные атрибуты--------------------------------------------
+        public Document cableDocument;
+        public CableStructuresList structures;
         public uint documentId;
-        public string name, structName, notes, codeOkp, codeKch;
         public decimal buildLength, linearMass, uCover, pMin, pMax;
+        public string name, structName, notes, codeOkp, codeKch;
+        //----------------------------------------------------------------
+        //Атрибуты привязанного документа
+        public string document_short_name, document_full_name;   
+        //----------------------------------------------------------------
         
         //---------------------------------------------------------------------------------------------
 
@@ -28,29 +36,27 @@ namespace SAK_2016
         {
             this.tableName = "cables";
             this.id = cableId;
-            this.getFromDB();
-            if (this.isExistsInDB)
-            {
-                fillMainParameters();
-            }                
+            this.initFromDb();
+            
         }
 
-        /// <summary>
-        /// Собирает параметры кабеля
-        /// </summary>
-        public void fillMainParameters()
+
+        protected override void fillMainParameters()
         {
-            this.name = dbParams["name"].ToString();
-            this.structName = dbParams["struct_name"].ToString();
-            this.notes = dbParams["notes"].ToString();
-            this.codeOkp = dbParams["code_okp"].ToString();
-            this.codeKch = dbParams["code_kch"].ToString();
-            this.buildLength = ServiceFunctions.convertToDecimal(dbParams["build_length"]);
-            this.linearMass = ServiceFunctions.convertToDecimal(dbParams["linear_mass"]);
-            this.uCover = ServiceFunctions.convertToDecimal(dbParams["u_cover"]); 
-            this.pMin = ServiceFunctions.convertToDecimal(dbParams["p_min"]); 
-            this.pMax = ServiceFunctions.convertToDecimal(dbParams["p_max"]);
-            this.documentId = ServiceFunctions.convertToUInt("document_id");
+            DataRow dr = dbParams[0];
+            this.name = dr["name"].ToString();
+            this.structName = dr["struct_name"].ToString();
+            this.notes = dr["notes"].ToString();
+            this.codeOkp = dr["code_okp"].ToString();
+            this.codeKch = dr["code_kch"].ToString();
+            this.buildLength = ServiceFunctions.convertToDecimal(dr["build_length"]);
+            this.linearMass = ServiceFunctions.convertToDecimal(dr["linear_mass"]);
+            this.uCover = ServiceFunctions.convertToDecimal(dr["u_cover"]); 
+            this.pMin = ServiceFunctions.convertToDecimal(dr["p_min"]); 
+            this.pMax = ServiceFunctions.convertToDecimal(dr["p_max"]);
+            this.documentId = ServiceFunctions.convertToUInt(dr["document_id"]);
+            this.cableDocument = new Document(this.documentId); //Подгружаем документ
+            this.structures = new CableStructuresList(this.id);
         }
 
 

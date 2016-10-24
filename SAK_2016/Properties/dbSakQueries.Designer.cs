@@ -158,7 +158,7 @@ namespace SAK_2016.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("INSERT INTO baraban_types (baraban_types.name, baraban_types.weight) VALUES (\"{0}" +
             "\", {1})")]
@@ -166,8 +166,15 @@ namespace SAK_2016.Properties {
             get {
                 return ((string)(this["insertBarabanType"]));
             }
-            set {
-                this["insertBarabanType"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"SELECT cable_structures.id, cable_structures.structure_type_id, cable_structures.fact_amount, cable_structures.nominal_amount, cable_structures.lead_material_id, cable_structures.isolation_material_id, lead_materials.name as lead_material_name, lead_materials.tkc_1 as lead_material_tkc, isolation_materials.name as isolation_material_name, cable_structures.lead_diameter, cable_structures.wave_resistance, cable_structures.u_lead_lead, cable_structures.u_lead_shield, cable_structures.test_group_work_capacity, cable_structures.dr_formula_id, dr_formuls.formula as dr_formula_formula, cable_structures.dr_bringing_formula_id, dr_bringing_formuls.formula as dr_bringing_formula_formula FROM cable_structures LEFT JOIN lead_materials ON (cable_structures.lead_material_id = lead_materials.id) LEFT JOIN isolation_materials ON (cable_structures.isolation_material_id = isolation_materials.id) LEFT JOIN dr_formuls ON (cable_structures.dr_formula_id = dr_formuls.id) LEFT JOIN dr_bringing_formuls ON (cable_structures.dr_bringing_formula_id = dr_bringing_formuls.id)  WHERE cable_structures.cable_id IN ({0})
+")]
+        public string selectCableStructuresListByCableId {
+            get {
+                return ((string)(this["selectCableStructuresListByCableId"]));
             }
         }
     }

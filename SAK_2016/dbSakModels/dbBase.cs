@@ -16,7 +16,7 @@ namespace SAK_2016
         private DBControl mySql = new DBControl(Properties.dbSakQueries.Default.dbName);
         protected string tableName;
         public long id;
-        protected DataRow dbParams;
+        protected DataRowCollection dbParams;
         public bool isExistsInDB;
         /// <summary>
         /// Проверяет наличие записи с данным id в БД и устанавливает значение атрибута isExists в true/false
@@ -31,10 +31,52 @@ namespace SAK_2016
             mySql.MyConn.Close();
             if (ds.Tables[0].Rows.Count > 0)
             {
-                this.dbParams = ds.Tables[0].Rows[0];
+                this.dbParams = ds.Tables[0].Rows;
                 this.isExistsInDB = true;
             } else isExistsInDB = false;
         }
+
+        /// <summary>
+        /// Ищет строку по запросу переданному параметром query
+        /// </summary>
+        /// <param name="query"></param>
+        protected void getFromDB(string query)
+        {
+            DataSet ds = new DataSet();
+            MySqlDataAdapter da = new MySqlDataAdapter(query, mySql.MyConn);
+            mySql.MyConn.Open();
+            da.Fill(ds);
+            mySql.MyConn.Close();
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                this.dbParams = ds.Tables[0].Rows;
+                this.isExistsInDB = true;
+            }
+            else isExistsInDB = false;
+        }
+
+        protected void initFromDb()
+        {
+            this.getFromDB();
+            if (this.isExistsInDB)
+            {
+                fillMainParameters();
+            }
+        }
+
+        protected void initFromDb(string query)
+        {
+            this.getFromDB(query);
+            if (this.isExistsInDB)
+            {
+                fillMainParameters();
+            }
+        }
+
+        /// <summary>
+        /// Собирает параметры cущностей, для каждого класса определяется отдельно
+        /// </summary>
+         protected virtual void fillMainParameters() { MessageBox.Show("Создай функцию в дочернем классе!!!"); }
       
 
     }

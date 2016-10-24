@@ -18,19 +18,22 @@ namespace SAK_2016
         public addCableForm()
         {
             InitializeComponent();
-            fillCableDS();   
+            fillCableDS();
+            this.Text = "Новый кабель";   
         }
 
         public addCableForm(long cable_id)
         {
             dbCable = new Cable(cable_id);
             InitializeComponent();
+            this.Text = "Редактирование кабеля";
             fillCableDS();
             fillFieldsFromCable();
         }
 
         private void fillFieldsFromCable()
         {
+            CableStructure s = dbCable.structures.list[0];
             cableMarkComboBox.SelectedValue = dbCable.name;
             structDescTextBox.Text = dbCable.structName;
             buildLength.Text = dbCable.buildLength.ToString();
@@ -41,7 +44,17 @@ namespace SAK_2016
             minPleasure.Text = dbCable.pMin.ToString();
             maxPleasure.Text = dbCable.pMax.ToString();
             notes.Text = dbCable.notes;
-            normDocComboBox.SelectedValue = dbCable.documentId Разобраться с установкой значения
+            normDocComboBox.SelectedValue = dbCable.documentId;
+
+            leadDiametersComboBox.SelectedValue = s.leadDiameter;
+            leadMaterialComboBox.SelectedValue = s.leadMaterialId;
+            structTypeComboBox.SelectedValue = s.structureTypeId;
+            
+            factElNumb.Value = s.factAmount;
+            nomElNumb.Value = s.nominalAmount;
+            //MessageBox.Show(s.structureTypeId.ToString());
+            waveResistance.SelectedValue = s.waveResistance;
+           // normDocComboBox.Update();
         }
 
 
@@ -270,6 +283,7 @@ namespace SAK_2016
 
     private void switchGroupCapacityMeasure() //Выключает или включает возможность измерения емкости группы
     {
+
     string val = structTypeComboBox.SelectedValue.ToString();
     if (val == "1" || val == "3")
     {

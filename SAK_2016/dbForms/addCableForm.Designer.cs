@@ -216,7 +216,7 @@
             // 
             this.structure_type_id.Caption = "id";
             this.structure_type_id.ColumnName = "id";
-            this.structure_type_id.DataType = typeof(short);
+            this.structure_type_id.DataType = typeof(int);
             // 
             // structure_type_name
             // 
@@ -533,6 +533,11 @@
             // factElNumb
             // 
             this.factElNumb.Location = new System.Drawing.Point(6, 42);
+            this.factElNumb.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.factElNumb.Name = "factElNumb";
             this.factElNumb.Size = new System.Drawing.Size(104, 20);
             this.factElNumb.TabIndex = 26;
@@ -603,6 +608,11 @@
             // nomElNumb
             // 
             this.nomElNumb.Location = new System.Drawing.Point(126, 42);
+            this.nomElNumb.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.nomElNumb.Name = "nomElNumb";
             this.nomElNumb.Size = new System.Drawing.Size(98, 20);
             this.nomElNumb.TabIndex = 28;
@@ -618,7 +628,7 @@
             this.structTypeComboBox.Name = "structTypeComboBox";
             this.structTypeComboBox.Size = new System.Drawing.Size(218, 21);
             this.structTypeComboBox.TabIndex = 28;
-            this.structTypeComboBox.ValueMember = "cable_structure_types.name";
+            this.structTypeComboBox.ValueMember = "cable_structure_types.id";
             this.structTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.structTypeComboBox_SelectedIndexChanged);
             // 
             // label14
