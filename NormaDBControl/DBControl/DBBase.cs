@@ -1,0 +1,176 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
+
+namespace NormaDB
+{
+    public abstract class DBBase
+    {
+        protected uint _id = 0;
+        public string getAllQuery;
+        protected string getByIdQuery;
+        static protected string dbName = "default_db_name_ass";
+        static protected string tableName = "default_table_name";
+        protected string[] colsList = new string[] { };
+        protected DataRow _dataRow = null;
+
+        public uint id
+        {
+            get { return _id; }
+        }
+
+
+        //protected abstract void fillParametersFromRow(DataRow row);
+
+        protected abstract void setDefaultParameters();
+
+        protected bool NeedLoadFromDB(DataRow row)
+        {
+            bool f = false;
+            foreach (string colName in colsList)
+            {
+                f = row.IsNull(colName);
+                if (f) break;
+            }
+            return f;
+        }
+
+        protected DataTable getFromDB(string query)
+        {
+            DataSet ds = makeDataSet();
+            DBControl mySql = new DBControl(dbName);
+            mySql.MyConn.Open();
+            MySqlDataAdapter da = new MySqlDataAdapter(query, mySql.MyConn);
+            ds.Tables[tableName].Rows.Clear();
+            da.Fill(ds.Tables[tableName]);
+            mySql.MyConn.Close();
+            return ds.Tables[tableName];
+        }
+
+        protected long UpdateField(string tableName, string updVals, string condition)
+        {
+            DBControl mySql = new DBControl(dbName);
+            string query = BuildUpdQuery(tableName, updVals, condition);
+            long v;
+            mySql.MyConn.Open();
+            v = mySql.RunNoQuery(query);
+            mySql.MyConn.Close();
+            return v;
+        }
+
+        /// <summary>
+        /// Отправляет список запросов в базу данных
+        /// </summary>
+        /// <param name="fields"></param>
+        public static void SendQueriesList(string[] fields)
+        {
+            if (fields.Length == 0) return;
+            DBControl mySql = new DBControl(dbName);
+            mySql.MyConn.Open();
+            foreach (string f in fields) mySql.RunNoQuery(f);
+            mySql.MyConn.Close();
+        }
+
+        /// <summary>
+        /// Отправляет одиночный запрос в базу данных
+        /// </summary>
+        /// <param name="query"></param>
+        public static void SendQuery(string query)
+        {
+            DBControl mySql = new DBControl(dbName);
+            mySql.MyConn.Open();
+            mySql.RunNoQuery(query);
+            mySql.MyConn.Close();
+        }
+
+        protected static string BuildDestroyQueryWithCriteria(string tableName, string condition)
+        {
+            return String.Format("DELETE FROM {0} WHERE {1}", tableName, condition);
+        }
+
+
+        protected static string BuildUpdQuery(string tableName, string updVals, string condition)
+        {
+            return String.Format("UPDATE {0} SET {1} WHERE {2}", tableName, updVals, condition);
+        }
+
+        protected DataSet makeDataSet()
+        {
+            DataSet ds = new DataSet();
+            ds.Tables.Add(tableName);
+            foreach (string colName in colsList) ds.Tables[tableName].Columns.Add(colName);
+            return ds;
+        }
+
+        protected bool GetById()
+        {
+            DataTable tab = getFromDB(getByIdQuery);
+            DataRow val = tab.Rows.Count > 0 ? tab.Rows[0] : null;
+            if (val != null) this._dataRow = val;
+            return val != null;
+        }
+
+        protected object getValueFromDataRowByKey(string key)
+        {
+            if (_dataRow == null) return null;
+            else
+            {
+                return _dataRow[key]; 
+            }
+        }
+
+        protected string getStringValueFromDataRow(string key)
+        {
+            object val = getValueFromDataRowByKey(key);
+
+            if (val == null)
+            {
+                return String.Empty;
+            }
+            else
+            {
+                return val.ToString();
+            }
+        }
+
+
+        protected int getIntValueFromDataRow(string key)
+        {
+            object val = getValueFromDataRowByKey(key);
+
+            if (val == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return ServiceFunctions.convertToInt16(val);
+            }
+        }
+
+        protected decimal getDecimalValueFromDataRow(string key)
+        {
+            object val = getValueFromDataRowByKey(key);
+            if (val == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return ServiceFunctions.convertToDecimal(val);
+            }
+        }
+
+        protected DataTable GetAllFromDB()
+        {
+            return getFromDB(getAllQuery);
+        }
+
+
+
+    }
+}

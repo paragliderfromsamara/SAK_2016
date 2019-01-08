@@ -192,7 +192,7 @@ namespace SAK_2016.dbSakModels
        /// </summary>
        private static void createCablesTable()
         {
-            string tableName = "Cables";
+            string tableName = "cables";
             string[] colsArray = {
                                     "id INT UNSIGNED AUTO_INCREMENT NOT NULL",
                                     "name TINYTEXT",
@@ -343,7 +343,7 @@ namespace SAK_2016.dbSakModels
         /// </summary>
         private static void createDocumentsTable()
         {
-            string tableName = "Documents";
+            string tableName = "documents";
             string[] colsArray = {
                                     "id INT UNSIGNED AUTO_INCREMENT NOT NULL",
                                     "short_name TINYTEXT",

@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
+using NormaDB.SAC;
+
 
 namespace SAK_2016
 {
@@ -18,11 +20,12 @@ namespace SAK_2016
         public addCableForm()
         {
             InitializeComponent();
+            dbCable = new Cable();
             fillCableDS();
             this.Text = "Новый кабель";   
         }
 
-        public addCableForm(long cable_id)
+        public addCableForm(uint cable_id)
         {
             dbCable = new Cable(cable_id);
             InitializeComponent();
@@ -33,27 +36,27 @@ namespace SAK_2016
 
         private void fillFieldsFromCable()
         {
-            CableStructure s = dbCable.structures.list[0];
-            cableMarkComboBox.SelectedValue = dbCable.name;
-            structDescTextBox.Text = dbCable.structName;
-            buildLength.Text = dbCable.buildLength.ToString();
-            linearMass.Text = dbCable.linearMass.ToString();
-            code_okp.Text = dbCable.codeOkp;
-            code_kch.Text = dbCable.codeKch;
-            uCoverVoltage.Text = dbCable.uCover.ToString();
-            minPleasure.Text = dbCable.pMin.ToString();
-            maxPleasure.Text = dbCable.pMax.ToString();
-            notes.Text = dbCable.notes;
-            normDocComboBox.SelectedValue = dbCable.documentId;
+            //CableStructure s = dbCable.structures.list[0];
+            cableMarkComboBox.SelectedValue = dbCable.Name;
+            structDescTextBox.Text = dbCable.StructName;
+            buildLength.Text = dbCable.BuildLength.ToString();
+            linearMass.Text = dbCable.LinearMass.ToString();
+            code_okp.Text = dbCable.CodeOKP;
+            code_kch.Text = dbCable.CodeKCH;
+            uCoverVoltage.Text = dbCable.UCover.ToString();
+            minPleasure.Text = dbCable.PMin.ToString();
+            maxPleasure.Text = dbCable.PMax.ToString();
+            notes.Text = dbCable.Notes;
+            //normDocComboBox.SelectedValue = dbCable.DocumentId;
 
-            leadDiametersComboBox.SelectedValue = s.leadDiameter;
-            leadMaterialComboBox.SelectedValue = s.leadMaterialId;
-            structTypeComboBox.SelectedValue = s.structureTypeId;
+            //leadDiametersComboBox.SelectedValue = s.leadDiameter;
+            //leadMaterialComboBox.SelectedValue = s.leadMaterialId;
+            //structTypeComboBox.SelectedValue = s.structureTypeId;
             
-            factElNumb.Value = s.factAmount;
-            nomElNumb.Value = s.nominalAmount;
+            //factElNumb.Value = s.factAmount;
+            //nomElNumb.Value = s.nominalAmount;
             //MessageBox.Show(s.structureTypeId.ToString());
-            waveResistance.SelectedValue = s.waveResistance;
+            //waveResistance.SelectedValue = s.waveResistance;
            // normDocComboBox.Update();
         }
 

@@ -58,7 +58,7 @@ private void initCablesList()
         private void editCableItem_Click(object sender, EventArgs e)
         {
             string sId;
-            long cableId;
+            uint cableId;
             if (cablesList.SelectedRows.Count > 0)
             {
                 sId = cablesList.SelectedRows[0].Cells[0].Value.ToString();

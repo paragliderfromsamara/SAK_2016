@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace SAK_2016
 {
 
-    public class Cable : dbBase
+    public class CableOld : dbBase
     {
 
         //Характеристики кабеля
@@ -24,7 +24,7 @@ namespace SAK_2016
         
         //---------------------------------------------------------------------------------------------
 
-        public Cable()
+        public CableOld()
         {
             this.tableName = "cables";
         }
@@ -32,7 +32,7 @@ namespace SAK_2016
         /// Ищет кабель по id
         /// </summary>
         /// <param name="cableId"></param>
-        public Cable(long cableId)
+        public CableOld(long cableId)
         {
             this.tableName = "cables";
             this.id = cableId;
