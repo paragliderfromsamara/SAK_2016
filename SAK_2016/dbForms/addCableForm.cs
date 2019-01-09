@@ -20,14 +20,15 @@ namespace SAK_2016
         public addCableForm()
         {
             InitializeComponent();
-            dbCable = new Cable();
+            dbCable = new Cable { BuildLength = 1000, CodeKCH = "", CodeOKP = "" };
             fillCableDS();
-            this.Text = "Новый кабель";   
+            this.Text = "Новый кабель";
+            fillFieldsFromCable();
         }
 
         public addCableForm(uint cable_id)
         {
-            dbCable = new Cable(cable_id);
+            dbCable = Cable.find(cable_id);// new Cable(cable_id);
             InitializeComponent();
             this.Text = "Редактирование кабеля";
             fillCableDS();

@@ -18,7 +18,7 @@ namespace NormaDB.SAC
             }
         }
 
-        protected override void setDefaultParameters()
+        protected void setDefaultParameters()
         {
             throw new NotImplementedException();
         }

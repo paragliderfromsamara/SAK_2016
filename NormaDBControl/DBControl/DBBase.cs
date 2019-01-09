@@ -8,15 +8,18 @@ using MySql.Data.MySqlClient;
 
 namespace NormaDB
 {
-    public abstract class DBBase
+    public class DBBase
     {
         protected uint _id = 0;
         public string getAllQuery;
         protected string getByIdQuery;
-        static protected string dbName = "default_db_name_ass";
+        protected string createQuery;
+        static protected string dbName = "default_db_name";
         static protected string tableName = "default_table_name";
+        static protected string selectQuery = "*"; 
         protected string[] colsList = new string[] { };
         protected DataRow _dataRow = null;
+        
 
         public uint id
         {
@@ -26,7 +29,28 @@ namespace NormaDB
 
         //protected abstract void fillParametersFromRow(DataRow row);
 
-        protected abstract void setDefaultParameters();
+       // protected abstract void setDefaultParameters();
+
+        public bool Save()
+        {
+
+            return true;
+        }
+
+        protected bool _create()
+        {
+            return true;
+        }
+
+        protected bool _update()
+        {
+            return true;
+        }
+
+
+        public static void find(uint id)
+        {
+        }
 
         protected bool NeedLoadFromDB(DataRow row)
         {

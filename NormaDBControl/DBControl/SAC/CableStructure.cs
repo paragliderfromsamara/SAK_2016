@@ -57,7 +57,10 @@ namespace NormaDB.SAC
         }
 
 
-
+        static CableStructure()
+        {
+            tableName = "cable_structures";
+        }
         public CableStructure(Cable cable)
         {
             this.Cable = cable;
@@ -108,7 +111,7 @@ namespace NormaDB.SAC
             return trs;
         }
         */
-        protected override void setDefaultParameters()
+        protected void setDefaultParameters()
         {
             string selectQuery =
                 "struktury_cab.StruktInd AS cable_structure_id," +

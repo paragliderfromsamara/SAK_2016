@@ -13,7 +13,7 @@ namespace NormaDB.SAC
         {
             dbName = "db_sak";
         }
-        protected override void setDefaultParameters()
+        protected void setDefaultParameters()
         {
             throw new NotImplementedException();
         }
