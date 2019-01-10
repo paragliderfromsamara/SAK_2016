@@ -76,7 +76,7 @@ namespace NormaDB.SAC
                 {
                     this._structName_was = this._structName = getStringValueFromDataRow("struct_name");
                 }
-                return selectQuery;//this._structName;
+                return selectString;//this._structName;
             }
             set
             {
@@ -225,6 +225,12 @@ namespace NormaDB.SAC
             }
         }
 
+        public static new Cable find(uint cable_id)
+        {
+            Cable cable = new Cable(cable_id);
+            return cable;
+        }
+
         public List<CableStructure> Structures
         {
             get
@@ -237,7 +243,19 @@ namespace NormaDB.SAC
         static Cable()
         {
             tableName = "cables";
-            selectQuery = "cables.id AS id, CONCAT(cables.name,' ', cables.struct_name) AS full_name, cables.name AS name, cables.notes AS notes, cables.struct_name AS struct_name, cables.build_length AS build_length, cables.document_id AS document_id, cables.linear_mass AS linear_mass, cables.code_okp AS code_okp, cables.code_kch AS code_kch, cables.u_cover AS u_cover, cables.p_min AS p_min, cables.p_max AS p_max, documents.full_name AS document_full_name, documents.short_name AS document_name";
+            columnsList = new string[][] {
+                                            new string[] { makeTblColTitle("id"), "id" },
+                                            new string[] { String.Format("CONCAT({0},' ', {1})", makeTblColTitle("name"), makeTblColTitle("struct_name")), "full_name" },
+                                            new string[] { makeTblColTitle("name"), "name" },
+                                            new string[] { makeTblColTitle("notes"), "notes" },
+                                            new string[] { makeTblColTitle("struct_name"), "struct_name" },
+                                            new string[] { "cables.id", "id" },
+                                            new string[] { "cables.id", "id" },
+                                            new string[] { "cables.id", "id" },
+
+                                         };
+            selectString = "cables.id AS id, CONCAT(cables.name,' ', cables.struct_name) AS full_name, cables.name AS name, cables.notes AS notes, cables.struct_name AS struct_name, cables.build_length AS build_length, cables.document_id AS document_id, cables.linear_mass AS linear_mass, cables.code_okp AS code_okp, cables.code_kch AS code_kch, cables.u_cover AS u_cover, cables.p_min AS p_min, cables.p_max AS p_max, documents.full_name AS document_full_name, documents.short_name AS document_name";
+
         }
 
         public Cable()

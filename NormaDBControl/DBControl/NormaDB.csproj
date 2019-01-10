@@ -44,11 +44,13 @@
   <ItemGroup>
     <Compile Include="DBBase.cs" />
     <Compile Include="DBControlFunctions.cs" />
+    <Compile Include="DBTablesMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SAC\Cable.cs" />
     <Compile Include="SAC\CableStructure.cs" />
     <Compile Include="SAC\CableTest.cs" />
     <Compile Include="SAC\DBSACBase.cs" />
+    <Compile Include="SAC\DBSACTablesMigration.cs" />
     <Compile Include="SAC\QADocument.cs" />
     <Compile Include="ServiceFunctions.cs" />
   </ItemGroup>

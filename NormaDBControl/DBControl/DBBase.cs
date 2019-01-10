@@ -14,9 +14,25 @@ namespace NormaDB
         public string getAllQuery;
         protected string getByIdQuery;
         protected string createQuery;
+        protected string _byIdQuery;
+
         static protected string dbName = "default_db_name";
         static protected string tableName = "default_table_name";
-        static protected string selectQuery = "*"; 
+        static protected string selectString = "*";
+        static protected string joinString = "";
+        static protected string[][] columnsList; 
+        protected string ByIdQuery
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_byIdQuery))
+                {
+                    this._byIdQuery = String.Format("SELECT {0} FROM {1} {2} WHERE {1}.id = {3}", selectString, tableName, joinString, id);
+                }
+                return this._byIdQuery;
+            }
+        }
+
         protected string[] colsList = new string[] { };
         protected DataRow _dataRow = null;
         
@@ -47,6 +63,10 @@ namespace NormaDB
             return true;
         }
 
+        public static string makeTblColTitle(string colName)
+        {
+            return String.Format("{0}.{1}", tableName, colName);
+        }
 
         public static void find(uint id)
         {
