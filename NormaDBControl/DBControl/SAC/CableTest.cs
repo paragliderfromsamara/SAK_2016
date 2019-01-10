@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NormaDB;
 
-namespace NormaDB.SAC
+
+namespace NormaMeasure.DBControl
 {
     public class CableTest : DBBase
     {

@@ -9,7 +9,7 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Data;
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
     public class dbBase
     {

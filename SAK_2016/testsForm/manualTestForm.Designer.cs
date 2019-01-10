@@ -1,4 +1,4 @@
-﻿namespace SAK_2016
+﻿namespace NormaMeasure.SAC_APP
 {
     partial class manualTestForm
     {

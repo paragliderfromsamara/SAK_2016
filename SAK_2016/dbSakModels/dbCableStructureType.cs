@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
     public class dbCableStructureType : dbBase
     {

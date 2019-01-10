@@ -1,4 +1,4 @@
-﻿namespace SAK_2016.dbForms
+﻿namespace NormaMeasure.SAC_APP.dbForms
 {
     partial class oldDbDataMigration
     {

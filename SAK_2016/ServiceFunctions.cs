@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
     class ServiceFunctions
     {

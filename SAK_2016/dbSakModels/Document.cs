@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
     public class Document : dbBase
     {

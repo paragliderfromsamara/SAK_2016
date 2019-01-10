@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
     public partial class dbUsersForm : Form
     {

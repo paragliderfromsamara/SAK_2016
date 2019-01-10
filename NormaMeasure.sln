@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAK_2016", "SAK_2016\SAK_2016.csproj", "{1FB918A7-A0B7-4DD2-81CB-FD61CD5689DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAC_APP", "SAK_2016\SAC_APP.csproj", "{1FB918A7-A0B7-4DD2-81CB-FD61CD5689DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaDB", "NormaDBControl\DBControl\NormaDB.csproj", "{6828DD40-1488-46D6-8F70-DB5EF38C463F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaDBControl", "NormaDBControl\DBControl\NormaDBControl.csproj", "{6828DD40-1488-46D6-8F70-DB5EF38C463F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

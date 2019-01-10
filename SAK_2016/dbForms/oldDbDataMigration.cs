@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using SAK_2016.dbSakModels;
+using NormaMeasure.SAC_APP.dbSakModels;
 using System.Threading;
 
-namespace SAK_2016.dbForms
+namespace NormaMeasure.SAC_APP.dbForms
 {
     public partial class oldDbDataMigration : Form
     {

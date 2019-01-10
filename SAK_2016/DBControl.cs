@@ -8,7 +8,7 @@ using System.Xml;
 using System.Threading;
 using MySql.Data.MySqlClient;
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
         class DBControl : IDisposable
         {

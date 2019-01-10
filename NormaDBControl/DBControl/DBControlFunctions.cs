@@ -8,7 +8,7 @@ using System.Xml;
 using System.Threading;
 using MySql.Data.MySqlClient;
 
-namespace NormaDB
+namespace NormaMeasure.DBControl
 {
     class DBControl : IDisposable
     {

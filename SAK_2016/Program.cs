@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
 
     static class Program

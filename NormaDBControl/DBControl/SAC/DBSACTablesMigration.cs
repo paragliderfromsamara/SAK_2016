@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NormaDB.SAC
+namespace NormaMeasure.DBControl.SAC
 {
     class DBSACTablesMigration : DBTablesMigration
     {

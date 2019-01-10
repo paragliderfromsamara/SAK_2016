@@ -8,8 +8,8 @@
     <ProjectGuid>{1FB918A7-A0B7-4DD2-81CB-FD61CD5689DD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAK_2016</RootNamespace>
-    <AssemblyName>SAK_2016</AssemblyName>
+    <RootNamespace>NormaMeasure.SAC_APP</RootNamespace>
+    <AssemblyName>SAC_APP</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -269,9 +269,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NormaDBControl\DBControl\NormaDB.csproj">
+    <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">
       <Project>{6828dd40-1488-46d6-8f70-db5ef38c463f}</Project>
-      <Name>NormaDB</Name>
+      <Name>NormaDBControl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

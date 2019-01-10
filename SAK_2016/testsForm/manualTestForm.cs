@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
     public partial class manualTestForm : Form
     {

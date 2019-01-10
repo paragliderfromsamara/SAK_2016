@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 // Change this to match your program's normal namespace
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
     class IniFile   // revision 10
     {

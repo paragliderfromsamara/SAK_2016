@@ -9,7 +9,7 @@ using MySql.Data.MySqlClient;
  * 15-10-2016 Здесь добавляются команды для создания базы данных и ее редактирования, а также миграция данных из старой БД
  */
 
-namespace SAK_2016.dbSakModels
+namespace NormaMeasure.SAC_APP.dbSakModels
 {
     
     class dataMigration

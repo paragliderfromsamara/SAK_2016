@@ -7,8 +7,8 @@
     <ProjectGuid>{6828DD40-1488-46D6-8F70-DB5EF38C463F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DBControl</RootNamespace>
-    <AssemblyName>DBControl</AssemblyName>
+    <RootNamespace>NormaMeasure.DBControl</RootNamespace>
+    <AssemblyName>NormaDBControl</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

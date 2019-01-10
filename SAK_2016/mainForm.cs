@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
 
     public partial class mainForm : Form

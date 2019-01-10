@@ -1,4 +1,4 @@
-﻿namespace SAK_2016.Properties {
+﻿namespace NormaMeasure.SAC_APP.Properties {
     
     
     // This class allows you to handle specific events on the settings class:

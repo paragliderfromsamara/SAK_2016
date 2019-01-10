@@ -8,10 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
-using NormaDB.SAC;
+using NormaMeasure.DBControl.SAC;
 
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
     public partial class addCableForm : Form
     {

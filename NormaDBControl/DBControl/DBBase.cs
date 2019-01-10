@@ -6,7 +6,7 @@ using System.Data;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
-namespace NormaDB
+namespace NormaMeasure.DBControl
 {
     public class DBBase
     {

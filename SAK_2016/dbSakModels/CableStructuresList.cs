@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SAK_2016
+namespace NormaMeasure.SAC_APP
 {
     public class CableStructuresList:dbBase
     {
