@@ -10,7 +10,7 @@ using MySql.Data.MySqlClient;
 
 namespace NormaMeasure.DBControl
 {
-    class DBControl : IDisposable
+    class DBControlFunctions : IDisposable
     {
         #region Данные класса DBControl
         public MySqlConnection MyConn;
@@ -65,7 +65,7 @@ namespace NormaMeasure.DBControl
         }
         #endregion
         //------------------------------------------------------------------------------------------------------------------------
-        public DBControl(string cb)
+        public DBControlFunctions(string cb)
         {
             cur_base = cb;
             try

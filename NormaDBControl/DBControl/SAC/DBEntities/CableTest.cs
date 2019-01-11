@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace NormaMeasure.DBControl
+namespace NormaMeasure.DBControl.SAC.DBEntities
 {
-    public class CableTest : DBBase
+    public class CableTest : DBEntityBase
     {
         private uint _cableId = 0;
         public uint CableId

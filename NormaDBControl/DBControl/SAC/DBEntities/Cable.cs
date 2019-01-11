@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Data;
 
 
-namespace NormaMeasure.DBControl.SAC
+namespace NormaMeasure.DBControl.SAC.DBEntities
 {
     public class Cable : DBSACBase
     {

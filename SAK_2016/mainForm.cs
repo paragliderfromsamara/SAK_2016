@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
+using NormaMeasure.DBControl.SAC.DBEntities;
 
 namespace NormaMeasure.SAC_APP
 {
@@ -72,8 +73,10 @@ namespace NormaMeasure.SAC_APP
 
         private void mainForm_Load(object sender, EventArgs e)
         {
-            dbSakModels.dataMigration dm = new dbSakModels.dataMigration();
-            dm.createTables();
+            //dbSakModels.dataMigration dm = new dbSakModels.dataMigration();
+            //dm.createTables();
+            DBSACTablesMigration dbMigartion = new DBSACTablesMigration();
+            dbMigartion.InitDataBase();
             Signin signForm = new Signin();
             DialogResult result = signForm.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.Cancel) this.Close();

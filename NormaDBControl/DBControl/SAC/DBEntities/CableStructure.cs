@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Data;
 
 
-namespace NormaMeasure.DBControl.SAC
+namespace NormaMeasure.DBControl.SAC.DBEntities
 {
-    public class CableStructure : DBBase
+    public class CableStructure : DBEntityBase
     {
         //public LeadMaterial LeadMaterial = null;
         //public IsolationMaterial IsolationMaterial = null;

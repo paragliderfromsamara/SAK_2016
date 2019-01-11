@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
-using NormaMeasure.DBControl.SAC;
+using NormaMeasure.DBControl.SAC.DBEntities;
 
 
 namespace NormaMeasure.SAC_APP

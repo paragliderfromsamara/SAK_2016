@@ -653,7 +653,6 @@ namespace NormaMeasure.SAC_APP.dbSakModels
             }
 
             return cols;
-
         }
 
         /// <summary>

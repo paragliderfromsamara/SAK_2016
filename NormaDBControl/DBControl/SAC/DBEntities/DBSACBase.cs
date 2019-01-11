@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace NormaMeasure.DBControl.SAC
+namespace NormaMeasure.DBControl.SAC.DBEntities
 {
-    public abstract class DBSACBase : DBBase
+    public abstract class DBSACBase : DBEntityBase
     {
         static DBSACBase()
         {

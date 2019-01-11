@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NormaMeasure.DBControl.SAC
+namespace NormaMeasure.DBControl.SAC.DBEntities
 {
     public class QADocument
     {
