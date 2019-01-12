@@ -86,7 +86,7 @@ namespace NormaMeasure.DBControl
         protected DataTable getFromDB(string query)
         {
             DataSet ds = makeDataSet();
-            DBControlFunctions mySql = new DBControlFunctions(dbName);
+            MySQLDBControl mySql = new MySQLDBControl(dbName);
             mySql.MyConn.Open();
             MySqlDataAdapter da = new MySqlDataAdapter(query, mySql.MyConn);
             ds.Tables[tableName].Rows.Clear();
@@ -97,7 +97,7 @@ namespace NormaMeasure.DBControl
 
         protected long UpdateField(string tableName, string updVals, string condition)
         {
-            DBControlFunctions mySql = new DBControlFunctions(dbName);
+            MySQLDBControl mySql = new MySQLDBControl(dbName);
             string query = BuildUpdQuery(tableName, updVals, condition);
             long v;
             mySql.MyConn.Open();
@@ -113,7 +113,7 @@ namespace NormaMeasure.DBControl
         public static void SendQueriesList(string[] fields)
         {
             if (fields.Length == 0) return;
-            DBControlFunctions mySql = new DBControlFunctions(dbName);
+            MySQLDBControl mySql = new MySQLDBControl(dbName);
             mySql.MyConn.Open();
             foreach (string f in fields) mySql.RunNoQuery(f);
             mySql.MyConn.Close();
@@ -125,7 +125,7 @@ namespace NormaMeasure.DBControl
         /// <param name="query"></param>
         public static void SendQuery(string query)
         {
-            DBControlFunctions mySql = new DBControlFunctions(dbName);
+            MySQLDBControl mySql = new MySQLDBControl(dbName);
             mySql.MyConn.Open();
             mySql.RunNoQuery(query);
             mySql.MyConn.Close();

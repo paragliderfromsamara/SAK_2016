@@ -286,7 +286,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         }
 
 
-        protected  void setDefaultParameters()
+        protected void setDefaultParameters()
         {
             string selectQuery = "cables.id AS id, CONCAT(cables.name,' ', cables.struct_name) AS full_name, cables.name AS name, cables.notes AS notes, cables.struct_name AS struct_name, cables.build_length AS build_length, cables.document_id AS document_id, cables.linear_mass AS linear_mass, cables.code_okp AS code_okp, cables.code_kch AS code_kch, cables.u_cover AS u_cover, cables.p_min AS p_min, cables.p_max AS p_max, documents.full_name AS document_full_name, documents.short_name AS document_name";
             this.getAllQuery = String.Format("SELECT {0} FROM cables LEFT JOIN documents ON cables.document_id = documents.id", selectQuery);

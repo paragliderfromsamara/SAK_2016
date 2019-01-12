@@ -66,10 +66,17 @@
       <FileName>SAC\DBEntities\QADocument.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="NormaMeasure.DBControl.DBTablesMigration" Collapsed="true">
+    <Position X="2.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAgBIAAAAYAgQCQoAAEAAAAAACAAAA=</HashCode>
+      <FileName>DBTablesMigration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Struct Name="NormaMeasure.DBControl.DBTable" Collapsed="true">
     <Position X="10" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAgAAAAgBCCCAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAIQAAAAAAAAAAAAAAAAgAAAAgBCCCAAAAAAAA=</HashCode>
       <FileName>DBTablesMigration.cs</FileName>
     </TypeIdentifier>
   </Struct>

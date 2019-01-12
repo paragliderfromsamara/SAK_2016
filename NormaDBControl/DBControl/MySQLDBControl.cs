@@ -10,20 +10,28 @@ using MySql.Data.MySqlClient;
 
 namespace NormaMeasure.DBControl
 {
-    class DBControlFunctions : IDisposable
+    class MySQLDBControl : IDisposable
     {
         #region Данные класса DBControl
         public MySqlConnection MyConn;
         MySqlCommand MC;
-        private string _userName = null;
-        private string _userPassword = null;
-        private string _connectionString = null;
+        private string _db_name = "";
+        private string _userName = "root";
+        private string _userPassword = "";
+        private string _server = "localhost";
+
+        public string DBName
+        {
+            get
+            {
+                return _db_name;
+            }
+        }
         public string UserName
         {  
             get
             {
-                if (this._userName == null) return "root";
-                else return _userName;
+                return _userName;
             }
             set
             {
@@ -31,12 +39,23 @@ namespace NormaMeasure.DBControl
             }
 
         }
+
+        public string Server
+        {
+            get
+            {
+                return _server;
+            }
+            set
+            {
+                _server = value;
+            }
+        }
         public string UserPassword
         {
             get
             {
-                if (this._userPassword == null) return "";
-                else return _userPassword;
+                return _userPassword;
             }
             set
             {
@@ -47,34 +66,30 @@ namespace NormaMeasure.DBControl
         {
             get
             {
-                if (_connectionString == null)
-                {
-                    this._connectionString = makeConnectionString();
-                }
-                return this._connectionString;
-            }
-            set
-            {
-                this._connectionString = value;
+                return String.Format("UserId={0};Server={1};Password={2}; CharacterSet=cp1251;", UserName, Server, UserPassword);
             }
         }
-        private string cur_base;
-        private string makeConnectionString()
-        {
-           return String.Format("UserId={0};Server=localhost;Password={1}; CharacterSet=cp1251;", UserName, UserPassword);
-        }
+
+
         #endregion
         //------------------------------------------------------------------------------------------------------------------------
-        public DBControlFunctions(string cb)
+
+        public MySQLDBControl()
         {
-            cur_base = cb;
+            setSQLServerConnection();
+        }
+
+        public MySQLDBControl(string cb) : this()
+        {
+            connectToDB(cb);
+        }
+
+        private void setSQLServerConnection()
+        {
             try
-            {
-                MyConn = new MySqlConnection(ConnectionString);
-                MyConn.Open();
-                MC = new MySqlCommand("USE " + cur_base, MyConn);
-                if (cur_base != "") MC.ExecuteScalar();
-                MyConn.Close();
+            { 
+               MyConn = new MySqlConnection(ConnectionString);
+               MC = new MySqlCommand() { Connection = MyConn };
             }
             catch (MySqlException ex)
             {
@@ -86,8 +101,45 @@ namespace NormaMeasure.DBControl
                 MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 //throw new DBException(0, "MySQL сервер не доступен!  ");
             }
+        }
 
+        public bool ConnectToDB(string db_name)
+        {
+            bool flag = false;
+            if (!string.IsNullOrWhiteSpace(db_name))
+            {
+                if (db_name == _db_name) flag = true;
+                else
+                {
+                    if (IsDBExists(db_name)) flag = connectToDB(db_name);
+                }
+            }
+            return flag;
+        }
 
+        private bool connectToDB(string db_name)
+        {
+            bool flag = false;
+            try
+            {
+                MyConn.Open();
+                MC.CommandText = "USE " + db_name;
+                MC.ExecuteScalar();
+                MyConn.Close();
+                _db_name = db_name;
+                flag = true;
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //throw new DBException(ex.ErrorCode, "MySQL сервер не доступен!  ");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //throw new DBException(0, "MySQL сервер не доступен!  ");
+            }
+            return flag;
         }
         //------------------------------------------------------------------------------------------------------------------------
         //KRA Functions  
@@ -109,31 +161,35 @@ namespace NormaMeasure.DBControl
             return RunNoQuery(GetSQLCommand(tableName + "_count"));
         }
 
-
-        /// <summary>
-        /// Проверяет наличие БД путем попытки соединения к ней
-        /// </summary>
-        /// <param name="db_name"></param>
-        /// <returns></returns>
-        public bool checkDBExists(string db_name)
+        public string[] GetDBList()
         {
-            string query = "USE " + db_name;
-            try
+            string query = "SHOW DATABASES";
+            System.Collections.Generic.List<string> list = new List<string>();
+            bool flag;
+            MySqlDataReader r;
+            MyConn.Open();
+            r = GetReader(query);
+            flag = r.HasRows;
+            while(flag)
             {
-                MySqlConnection con = new MySqlConnection(ConnectionString);
-                MySqlCommand com = new MySqlCommand(query, con);
-                con.Open();
-                com.ExecuteNonQuery();
-                con.Close();
-                con.Dispose();
-                com.Dispose();
-                return true;
+                flag = r.Read();
+                if (flag) list.Add(r.GetString("database"));
+            }
+            r.Close();
+            MyConn.Close();
 
-            }
-            catch (MySqlException)
+            return list.ToArray();
+        }
+
+        public bool IsDBExists(string db_name)
+        {
+            string[] dbList = GetDBList();
+            bool flag = false;
+            foreach(string s in dbList)
             {
-                return false;
+                if (flag = (s == db_name)) break;
             }
+            return flag;
         }
 
         //------------------------------------------------------------------------------------------------------------------------
@@ -176,6 +232,7 @@ namespace NormaMeasure.DBControl
             string sc = GetSQLCommand(comtp);
             return GetReader(sc);
         }
+
         //------------------------------------------------------------------------------------------------------------------------
         public MySqlDataReader GetReader(string comm)
         {

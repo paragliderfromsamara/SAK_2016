@@ -29,10 +29,9 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         }
 
 
-        public DBSACTablesMigration()
+        public DBSACTablesMigration() : base()
         {
             _dbName = "db_norma_sac";
-            _dbConnection = new MySqlConnection("UserId=root;Server=localhost;Password=;CharacterSet=cp1251;");
             _tablesList = new DBTable[] 
             {
                 _documentsTable,

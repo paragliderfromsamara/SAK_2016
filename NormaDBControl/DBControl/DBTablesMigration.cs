@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 
@@ -12,8 +13,17 @@ namespace NormaMeasure.DBControl
     {
         protected DBTable[] _tablesList;
         protected string _dbName;
+        protected string _dbUserName="root";
+        protected string _dbServer="localhost";
+        protected string _dbPassword="";
         protected string _query;
         protected MySqlConnection _dbConnection;
+        private MySQLDBControl _dbControl;
+
+        public DBTablesMigration()
+        {
+            _dbControl = new MySQLDBControl() { UserName = _dbUserName, UserPassword = _dbPassword, Server = _dbServer };
+        }
 
         /// <summary>
         /// Список таблиц содержащийся в текущей БД
@@ -32,6 +42,19 @@ namespace NormaMeasure.DBControl
             checkAndCreateDB();
             CreateTables();
             FillSeeds();
+            MigrateData();
+        }
+
+        public void MigrateData()
+        {
+            string txt = "";
+            string[] listNames = _dbControl.GetDBList(); 
+            foreach(string s in listNames) txt += s + "; \n";            
+            MessageBox.Show(txt);
+            //foreach(DBTable table in tablesList)
+            //{
+                //if table.oldTableName 
+            //}
         }
 
         public void CreateTables()
@@ -50,23 +73,35 @@ namespace NormaMeasure.DBControl
             }
         }
 
-        private int sendQuery()
+        private long sendQueryToCurrentDB()
         {
-            int sts = 0;
-            try
-            {
-                MySqlCommand cmd = new MySqlCommand(_query, _dbConnection);
-                _dbConnection.Open();
-                sts = cmd.ExecuteNonQuery();
-                _dbConnection.Close();
-                return sts;
-            }
-            catch (MySqlException ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка SQL запроса", MessageBoxButtons.OK);
-                return sts;
-            }
+            return sendQueryToDB(_dbName, _query);
         }
+
+        private MySqlDataReader getDataFromCurrentDB()
+        {
+            return getDataFromDB(_dbName, _query);
+        }
+
+        public long sendQueryToDB(string db_name, string query)
+        {
+            long status = 0;
+            _dbControl.ConnectToDB(db_name);
+            _dbControl.MyConn.Open();
+            status = _dbControl.RunNoQuery(query);
+            _dbControl.MyConn.Close();
+            return status;
+        }
+
+        public MySqlDataReader getDataFromDB(string db_name, string query)
+        {
+            _dbControl.ConnectToDB(db_name);
+            _dbControl.MyConn.Open();
+            MySqlDataReader data = _dbControl.GetReader(query);
+            _dbControl.MyConn.Close();
+            return data;
+        }
+
 
         /// <summary>
         /// Удаление БД. Функция необходимая на момент отладки программы.
@@ -74,7 +109,7 @@ namespace NormaMeasure.DBControl
         private void dropDB()
         {
             _query = "DROP DATABASE IF EXISTS " + _dbName;
-            sendQuery();
+            sendQueryToCurrentDB();
         }
 
 
@@ -84,12 +119,12 @@ namespace NormaMeasure.DBControl
             if (!string.IsNullOrWhiteSpace(seedsStr))
             {
                 _query = "select * from " + table.tableName;
-                int sts = sendQuery();
+                long sts = sendQueryToCurrentDB();
                 if (sts <= 0)
                 {
                     _query = seedsStr;
                     _query = String.Format("INSERT IGNORE INTO {0} VALUES {1}", table.tableName, _query);
-                    sendQuery();
+                    sendQueryToCurrentDB();
                 }
             }
         }
@@ -100,23 +135,13 @@ namespace NormaMeasure.DBControl
         /// <returns></returns>
         private string checkAndCreateDB()
         {
-            try
-            {
-                string message = "Создаём базу данных испытаний с кодовой страницей cp1251, если она не создана";
-                _query = "CREATE DATABASE IF NOT EXISTS " + _dbName + " DEFAULT CHARACTER SET cp1251";
-                sendQuery();
-                _query = "USE " + _dbName;
-                sendQuery();
-                return message;
-            }
-            catch (MySqlException ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка SQL запроса", MessageBoxButtons.OK);
-                return ex.Message;
-            }
-
+            string message = "Создаём базу данных испытаний с кодовой страницей cp1251, если она не создана";
+            _query = "CREATE DATABASE IF NOT EXISTS " + _dbName + " DEFAULT CHARACTER SET cp1251";
+            sendQueryToCurrentDB();
+            _query = "USE " + _dbName;
+            sendQueryToCurrentDB();
+            return message;
         }
-
 
         /// <summary>
         /// Универсальный метод для проверки и добавления таблиц в БД
@@ -126,11 +151,14 @@ namespace NormaMeasure.DBControl
         private void checkAndAddTable(DBTable table)
         {
             _query = table.AddTableString;
-            sendQuery();
+            sendQueryToCurrentDB();
         }
 
-
-        private void 
+        private void procMySqlException(MySqlException ex)
+        {
+            MessageBox.Show(ex.Message, "Ошибка SQL запроса", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        
     }
 
     public struct DBTable
@@ -177,6 +205,27 @@ namespace NormaMeasure.DBControl
                     colsTxt += "PRIMARY KEY ("+primaryKey+")";
                 }
                 return String.Format("CREATE TABLE IF NOT EXISTS {0} ({1})", tableName, colsTxt);
+            }
+        }
+
+        public string GetDataFromOldTableString
+        {
+            get
+            {
+                string str = "";
+                for(int i=0; i<columns.Length; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(columns[i].OldName))
+                    {
+                        if (!string.IsNullOrWhiteSpace(str)) str += ", ";
+                        str += string.Format("{0}.{1} AS {2}", oldTableName, columns[i].OldName, columns[i].Name);
+                    } 
+                }
+                if (!string.IsNullOrWhiteSpace(str))
+                {
+                    str = string.Format("SELECT {0} FROM {1}", str, oldTableName);
+                }
+                return str;
             }
         }
 
