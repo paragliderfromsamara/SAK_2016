@@ -47,10 +47,10 @@ namespace NormaMeasure.DBControl
 
         public void MigrateData()
         {
-            string txt = "";
-            string[] listNames = _dbControl.GetDBList(); 
-            foreach(string s in listNames) txt += s + "; \n";            
-            MessageBox.Show(txt);
+            //string txt = "";
+            //string[] listNames = _dbControl.GetDBList(); 
+            //foreach(string s in listNames) txt += s + "; \n";            
+            //MessageBox.Show(txt);
             //foreach(DBTable table in tablesList)
             //{
                 //if table.oldTableName 
@@ -115,7 +115,7 @@ namespace NormaMeasure.DBControl
 
         private void fillTableSeeds(DBTable table)
         {
-            string seedsStr = table.FillSeedsString;
+            string seedsStr = table.FillSeedsQuery;
             if (!string.IsNullOrWhiteSpace(seedsStr))
             {
                 _query = "select * from " + table.tableName;
@@ -150,7 +150,7 @@ namespace NormaMeasure.DBControl
         /// <param name="columns"></param>
         private void checkAndAddTable(DBTable table)
         {
-            _query = table.AddTableString;
+            _query = table.AddTableQuery;
             sendQueryToCurrentDB();
         }
 
@@ -161,12 +161,23 @@ namespace NormaMeasure.DBControl
         
     }
 
+
     public struct DBTable
     {
+        private DataSet _dataSet;
+
+        private string _selectQuery;
+
         /// <summary>
         /// Имя таблицы в БД текущей версии
         /// </summary>
         public string tableName;
+
+        /// <summary>
+        /// Название сущности преставленной в текущей таблице в единственном числе
+        /// </summary>
+        public string entityName;
+
         /// <summary>
         /// Имя таблицы в БД старой версии
         /// </summary>
@@ -191,7 +202,15 @@ namespace NormaMeasure.DBControl
         /// </summary>
         public string primaryKey;
 
-        public string AddTableString
+        public string selectString;
+
+        public string joinString;
+
+        public string selectAllQuery;
+
+        public string selectByIdQuery;
+
+        public string AddTableQuery
         {
             get
             {
@@ -208,7 +227,70 @@ namespace NormaMeasure.DBControl
             }
         }
 
-        public string GetDataFromOldTableString
+        private DBTableColumn[] getJoinedTableColumns()
+        {
+            List<DBTableColumn> jTableCols = new List<DBTableColumn>();
+            foreach(DBTableColumn col in columns)
+            {
+                if (col.JoinedTable.HasValue) jTableCols.Add(col);
+            }
+            return jTableCols.ToArray();
+        }
+
+
+        private string buildSelectString()
+        {
+            string selStr = "";
+            string[] colsArr = GetColumnTitlesIncludeJoined(false);
+            for(int i=0; i<colsArr.Length; i++)
+            {
+                if (i > 0 && i < colsArr.Length) selStr += ", ";
+                selStr += colsArr[i];
+            }
+            return selStr;
+        }
+        private string buildJoinString()
+        {
+            string joinStr = "";
+            DBTableColumn[] joined = getJoinedTableColumns();
+            if (joined.Length > 0)
+            {
+                joinStr = " ";
+                foreach (DBTableColumn col in joined)
+                {
+                    joinStr += string.Format("LEFT OUTER JOIN {0} ON {1}.{2} = {0}.{3} ", col.JoinedTable.Value.tableName, tableName, col.Name, col.JoinedTable.Value.primaryKey);
+                }
+            }
+            return joinStr;
+        }
+
+        public bool HasJoinedTable
+        {
+            get
+            {
+                foreach (DBTableColumn col in columns) if (col.JoinedTable.HasValue) return true;
+                return false;
+            }
+        }
+
+        public string SelectQuery
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_selectQuery))
+                {
+                    string select = buildSelectString();
+                    string join = buildJoinString();
+                    _selectQuery = string.Format("SELECT {0} FROM {1} {2}", select, tableName, join);
+                }
+                return _selectQuery;
+            }
+        }
+
+        /// <summary>
+        /// Создаёт запрос для импорта данных из старой БД
+        /// </summary>
+        public string GetDataFromOldTableQuery
         {
             get
             {
@@ -229,7 +311,49 @@ namespace NormaMeasure.DBControl
             }
         }
 
-        public string FillSeedsString
+        /// <summary>
+        /// Формирует DataSet соответствующий данной таблице
+        /// </summary>
+        public DataSet TableDS
+        {
+            get
+            {
+                DataSet ds = new DataSet();
+                MySqlCommandBuilder cb = new MySqlCommandBuilder();
+                string[] columnsArr = GetColumnTitlesIncludeJoined(true);
+                ds.Tables.Add(tableName);
+                foreach (string colName in columnsArr)
+                {
+                    ds.Tables[tableName].Columns.Add(colName); 
+                }
+                return ds;
+            }
+        }
+        public string ClearTableQuery
+        {
+            get
+            {
+                return String.Format("DELETE FROM {0}", tableName);
+            }
+        }
+
+        public string DeleteByCriteriaQuery
+        {
+            get
+            {
+                return String.Format("DELETE FROM {0} WHERE ", tableName);
+            }
+        }
+
+        public string BuildDeleteByCriteriaQuery(string criteria)
+        {
+            return string.Format("{0} WHERE {2}", DeleteByCriteriaQuery, criteria);
+        }
+
+        /// <summary>
+        /// Создает запрос для заполнения исходных данных
+        /// </summary>
+        public string FillSeedsQuery
         {
             get
             {
@@ -253,6 +377,48 @@ namespace NormaMeasure.DBControl
                 return str;
             }
         }
+
+        public string[] GetColumnTitlesIncludeJoined(bool isForDataSet)
+        {
+            List<string> cols = new List<string>();
+            if (isForDataSet)
+            {
+                foreach (DBTableColumn tCol in columns)
+                {
+                    cols.Add(tCol.Name);
+                    if (tCol.JoinedTable.HasValue)
+                    {
+                        foreach (DBTableColumn jtCol in tCol.JoinedTable.Value.columns)
+                        {
+                            if(jtCol.Name != tCol.JoinedTable.Value.primaryKey) //Выключаем основной ключ соединительной таблицы из выборки
+                            {
+                                cols.Add(string.Format("{0}_{1}", tCol.JoinedTable.Value.entityName, jtCol.Name));
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (DBTableColumn tCol in columns)
+                {
+                    cols.Add(string.Format("{0}.{1} AS {1}", tableName, tCol.Name));
+                    if (tCol.JoinedTable.HasValue)
+                    {
+                        foreach (DBTableColumn jtCol in tCol.JoinedTable.Value.columns)
+                        {
+                            if (jtCol.Name != tCol.JoinedTable.Value.primaryKey) //Выключаем основной ключ соединительной таблицы из выборки
+                            {
+                                cols.Add(string.Format("{0}.{1} AS {2}_{1}", tCol.JoinedTable.Value.tableName, jtCol.Name, tCol.JoinedTable.Value.entityName));
+                            }
+                        }
+                    }
+                }
+            }
+
+            return cols.ToArray();
+        }
+
     }
 
     public struct DBTableColumn
@@ -261,7 +427,7 @@ namespace NormaMeasure.DBControl
         private string _oldName;
         private string _columnType;
         private string _defaultValue;
-
+        private DBTable? _joinedTable;
         public string Name
         {
             get { return _name; }
@@ -299,8 +465,16 @@ namespace NormaMeasure.DBControl
                 return txt;
             }
         }
+
+        public DBTable? JoinedTable
+        {
+            get { return _joinedTable; }
+            set { _joinedTable = value; }
+        }
         private bool hasDefaultValue { get { return !String.IsNullOrEmpty(_defaultValue); } }
 
     }
+
+
 
 }

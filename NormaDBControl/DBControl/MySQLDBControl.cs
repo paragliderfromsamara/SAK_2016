@@ -165,19 +165,15 @@ namespace NormaMeasure.DBControl
         {
             string query = "SHOW DATABASES";
             System.Collections.Generic.List<string> list = new List<string>();
-            bool flag;
             MySqlDataReader r;
             MyConn.Open();
             r = GetReader(query);
-            flag = r.HasRows;
-            while(flag)
-            {
-                flag = r.Read();
-                if (flag) list.Add(r.GetString("database"));
-            }
+            while (r.Read()) list.Add(r.GetString("database"));
             r.Close();
             MyConn.Close();
 
+            
+            
             return list.ToArray();
         }
 

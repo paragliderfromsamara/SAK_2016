@@ -8,32 +8,18 @@ using MySql.Data.MySqlClient;
 
 namespace NormaMeasure.DBControl
 {
-    public class DBEntityBase
+    public abstract class DBEntityBase
     {
         protected uint _id = 0;
+        protected DBTable _dbTable;
         public string getAllQuery;
         protected string getByIdQuery;
         protected string createQuery;
         protected string _byIdQuery;
 
         static protected string dbName = "default_db_name";
-        static protected string tableName = "default_table_name";
         static protected string selectString = "*";
-        static protected string joinString = "";
-        static protected string[][] columnsList; 
-        protected string ByIdQuery
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(_byIdQuery))
-                {
-                    this._byIdQuery = String.Format("SELECT {0} FROM {1} {2} WHERE {1}.id = {3}", selectString, tableName, joinString, id);
-                }
-                return this._byIdQuery;
-            }
-        }
 
-        protected string[] colsList = new string[] { };
         protected DataRow _dataRow = null;
         
 
@@ -63,11 +49,6 @@ namespace NormaMeasure.DBControl
             return true;
         }
 
-        public static string makeTblColTitle(string colName)
-        {
-            return String.Format("{0}.{1}", tableName, colName);
-        }
-
         public static void find(uint id)
         {
         }
@@ -75,9 +56,9 @@ namespace NormaMeasure.DBControl
         protected bool NeedLoadFromDB(DataRow row)
         {
             bool f = false;
-            foreach (string colName in colsList)
+            foreach (DBTableColumn col in _dbTable.columns)
             {
-                f = row.IsNull(colName);
+                f = row.IsNull(col.Name);
                 if (f) break;
             }
             return f;
@@ -85,14 +66,14 @@ namespace NormaMeasure.DBControl
 
         protected DataTable getFromDB(string query)
         {
-            DataSet ds = makeDataSet();
+            DataSet ds = _dbTable.TableDS;
             MySQLDBControl mySql = new MySQLDBControl(dbName);
             mySql.MyConn.Open();
             MySqlDataAdapter da = new MySqlDataAdapter(query, mySql.MyConn);
-            ds.Tables[tableName].Rows.Clear();
-            da.Fill(ds.Tables[tableName]);
+            ds.Tables[_dbTable.tableName].Rows.Clear();
+            da.Fill(ds.Tables[_dbTable.tableName]);
             mySql.MyConn.Close();
-            return ds.Tables[tableName];
+            return ds.Tables[_dbTable.tableName];
         }
 
         protected long UpdateField(string tableName, string updVals, string condition)
@@ -142,13 +123,6 @@ namespace NormaMeasure.DBControl
             return String.Format("UPDATE {0} SET {1} WHERE {2}", tableName, updVals, condition);
         }
 
-        protected DataSet makeDataSet()
-        {
-            DataSet ds = new DataSet();
-            ds.Tables.Add(tableName);
-            foreach (string colName in colsList) ds.Tables[tableName].Columns.Add(colName);
-            return ds;
-        }
 
         protected bool GetById()
         {
@@ -214,7 +188,7 @@ namespace NormaMeasure.DBControl
             return getFromDB(getAllQuery);
         }
 
-
+        protected abstract void fillEntityFromReader(MySqlDataReader r);
 
     }
 }

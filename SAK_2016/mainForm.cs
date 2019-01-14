@@ -77,6 +77,10 @@ namespace NormaMeasure.SAC_APP
             //dm.createTables();
             DBSACTablesMigration dbMigartion = new DBSACTablesMigration();
             dbMigartion.InitDataBase();
+            Cable c = new Cable();
+            string cols = DBSACTablesMigration.DocumentsTable.SelectQuery;
+
+            //MessageBox.Show(cols);
             Signin signForm = new Signin();
             DialogResult result = signForm.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.Cancel) this.Close();

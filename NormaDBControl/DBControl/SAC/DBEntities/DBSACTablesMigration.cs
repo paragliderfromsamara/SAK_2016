@@ -9,37 +9,33 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 {
     public class DBSACTablesMigration : DBTablesMigration
     {
-        private static DBTable _cablesTable = buildCablesTableMigration();
-        private static DBTable _documentsTable = buildDocumentsTableMigration();
-        
-        public static DBTable CablesTable
-        {
-            get
-            {
-                return _cablesTable;
-            }
-        }
-
         public static DBTable DocumentsTable
         {
             get
             {
-                return _documentsTable;
+                return buildDocumentsTableMigration();
             }
         }
 
+        public static DBTable CablesTable
+        {
+            get
+            {
+                return buildCablesTableMigration();
+            }
+        }
 
         public DBSACTablesMigration() : base()
         {
             _dbName = "db_norma_sac";
             _tablesList = new DBTable[] 
             {
-                _documentsTable,
-                _cablesTable
+                DocumentsTable,
+                CablesTable
             };
         }
 
-
+        #region объявление структур таблиц базы данных
         /// <summary>
         /// Заполняем миграцию таблицы кабелей
         /// </summary>
@@ -48,6 +44,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             DBTable table = new DBTable();
             table.tableName = "cables";
+            table.entityName = "cable";
             table.oldTableName = "cables";
             table.oldDbName = "bd_cable";
             table.primaryKey = "id";
@@ -57,7 +54,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
                 new DBTableColumn { Name = "name", Type = "TINYTEXT", OldName = "CabName" },
                 new DBTableColumn { Name = "struct_name", Type = "TINYTEXT", OldName = "CabNameStruct" },
                 new DBTableColumn { Name = "build_length", Type = "float", OldName = "StrLengt" },
-                new DBTableColumn { Name = "document_id", Type = "INT UNSIGNED NOT NULL", OldName = "DocInd" },
+                new DBTableColumn { Name = "document_id", Type = "INT UNSIGNED NOT NULL", OldName = "DocInd", JoinedTable = DocumentsTable },
                 new DBTableColumn { Name = "notes", Type = "TINYTEXT", OldName = "TextPrim" },
                 new DBTableColumn { Name = "linear_mass", Type = "float", OldName = "PogMass" },
                 new DBTableColumn { Name = "code_okp", Type = "CHAR(12)", OldName = "KodOKP" },
@@ -80,9 +77,11 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             DBTable table = new DBTable();
 
             table.tableName = "documents";
+            table.entityName = "document";
             table.oldTableName = "norm_docum";
             table.oldDbName = "bd_cable";
             table.primaryKey = "id";
+            table.selectString = "documents.id AS id";
             table.columns = new DBTableColumn[]
             {
                 new DBTableColumn {Name = "id", Type = "INT UNSIGNED AUTO_INCREMENT NOT NULL", OldName = "DocInd"},
@@ -97,5 +96,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 
             return table;
         }
+        #endregion
     }
 }
