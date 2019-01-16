@@ -336,10 +336,12 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
                 case "p_max":
                     return true;
                 case "is_draft":
-                    _isDraft = _isDraft_was = ServiceFunctions.convertToInt16(value) > 0;
+                    bool pdr = false;
+                    _isDraft = _isDraft_was = bool.TryParse(value.ToString(), out pdr);
                     return true;
                 case "is_deleted":
-                    _isDeleted = _isDeleted_was = ServiceFunctions.convertToInt16(value) > 0;
+                    bool pdel = false;
+                    _isDeleted = _isDeleted_was = bool.TryParse(value.ToString(), out pdel);
                     return true;
                 case "document_short_name":
                     return true;
@@ -394,9 +396,9 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
                 case "p_max":
                     return $"'{PMax}'";
                 case "is_draft":
-                    return $"{(IsDraft ? 1 : 0)}";
+                    return $"{IsDraft}";
                 case "is_deleted":
-                    return $"{(IsDeleted ? 1 : 0)}";
+                    return $"{IsDeleted}";
                 default:
                     return value;
             }
