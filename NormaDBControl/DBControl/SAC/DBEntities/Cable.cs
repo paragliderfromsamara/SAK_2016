@@ -17,21 +17,19 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         private string _notes, _notes_was;
         private string _codeOKP, _codeOKP_was;
         private string _codeKCH, _codeKCH_was;
-        private string _qaDocumentName, _qaDocumentNumber;
+        private string _documentName, _documentNumber;
         private decimal _linearMass = -1,_linearMass_was = -1;
         private decimal _buildLength = -1, _buildLength_was= -1;
         private int _uCover = -1, _uCover_was = -1;
         private int _pMin = -1, _pMin_was = -1;
         private int _pMax = -1, _pMax_was = -1;
+        private bool _isDraft, _isDeleted, _isDraft_was, _isDeleted_was;
+        private uint _documentId, _documentId_was;
 
         public string Notes
         {
             get
             {
-                if (this._notes == null)
-                {
-                    this._notes_was = this._notes = getStringValueFromDataRow("notes");
-                }
                 return this._notes;
             }
             set
@@ -40,13 +38,8 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
                 this._notes = value;
             }
         }
-        public string FullName
-        {
-            get
-            {
-                return String.Format("{0} {1}", this.Name, this.StructName);
-            }
-        }
+        public string FullName => $"{this.Name} {this.StructName}";
+
 
         /// <summary>
         /// Название кабеля
@@ -55,10 +48,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             get
             {
-                if (this._name == null)
-                {
-                    this._name_was = this._name = getStringValueFromDataRow("name");
-                }
                 return this._name;
             }
             set
@@ -72,11 +61,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             get
             {
-                if (this._structName == null)
-                {
-                    this._structName_was = this._structName = getStringValueFromDataRow("struct_name");
-                }
-                return selectString;//this._structName;
+                return _structName;//this._structName;
             }
             set
             {
@@ -92,10 +77,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             get
             {
-                if (this._codeOKP == null)
-                {
-                    this._codeOKP_was = this._codeOKP = getStringValueFromDataRow("code_okp");
-                }
                 return this._codeOKP;
             }
             set
@@ -112,10 +93,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             get
             {
-                if (this._codeKCH == null)
-                {
-                    this._codeKCH_was = this._codeKCH = getStringValueFromDataRow("code_kch");
-                }
                 return this._codeKCH;
             }
             set
@@ -132,10 +109,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             get
             {
-                if (this._linearMass == -1)
-                {
-                    this._linearMass_was = this._linearMass = getDecimalValueFromDataRow("linear_weight");
-                }
                 return this._linearMass;
             }
             set
@@ -152,10 +125,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             get
             {
-                if (this._buildLength == -1)
-                {
-                    this._buildLength_was = this._buildLength = getDecimalValueFromDataRow("build_length");
-                }
                 return this._buildLength;
             }
             set
@@ -172,10 +141,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             get
             {
-                if (this._uCover == -1)
-                {
-                    this._uCover_was = this._uCover = getIntValueFromDataRow("u_obol");
-                }
                 return this._uCover;
             }
             set
@@ -192,10 +157,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             get
             {
-                if (this._pMin == -1)
-                {
-                    this._pMin_was = this._pMin = getIntValueFromDataRow("p_min");
-                }
                 return this._pMin;
             }
             set
@@ -212,10 +173,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             get
             {
-                if (this._pMax == -1)
-                {
-                    this._pMax_was = this._pMax = getIntValueFromDataRow("p_max");
-                }
                 return this._pMax;
             }
             set
@@ -225,7 +182,73 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             }
         }
 
+        public bool IsDraft
+        {
+            get
+            {
+               return _isDraft;
+            }
+            set
+            {
+                _isDraft_was = _isDraft;
+                _isDraft = value;
+            }
+        }
 
+        public bool IsDeleted => _isDeleted;
+
+        public uint DocumentId
+        {
+            get
+            {
+                return _documentId;
+            }
+            set
+            {
+                _documentId_was = _documentId;
+                _documentId = value;
+            }
+        }
+
+        static Cable()
+        {
+            dbTable = DBSACTablesMigration.CablesTable;
+        }
+
+        /// <summary>
+        /// Достаёт черновик 
+        /// Если его нет, то добавляет
+        /// </summary>
+        /// <returns></returns>
+        public static Cable GetDraft()
+        {
+            try
+            {
+                Cable draft = findDraft();
+                if (draft == null) draft = createDraft();
+                return draft;
+            }catch(DBEntityException ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+                return null;
+            }
+
+        }
+
+        private static Cable findDraft()
+        {
+            string query = $"{dbTable.SelectQuery} WHERE is_draft = 1";
+            DataTable dt = getFromDB(query);
+            if (dt.Rows.Count != 0) return new Cable(dt.Rows[0]);
+            else return null;
+        }
+
+        private static Cable createDraft()
+        {
+            Cable c = new Cable() { IsDraft = true };
+            if (c.Save()) return findDraft();
+            else throw new DBEntityException("Не удалось создать черновик кабеля!");
+        }
 
         public static new Cable find(uint cable_id)
         {
@@ -242,19 +265,10 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             }
         }
 
-        static Cable()
-        {
 
-        }
-
-        public string SelectCommand()
-        {
-
-            return "";
-        }
         public Cable()
         {
-            _dbTable = DBSACTablesMigration.CablesTable;
+            setDefaultProperties();
         }
 
         public Cable(CableTest test)
@@ -268,25 +282,19 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         public Cable(uint id)
         {
             this._id = id;
-            setDefaultParameters();
+            //setDefaultParameters();
             GetById();
         }
 
         public Cable(DataRow row)
         {
-            this._dataRow = row;
-            setDefaultParameters();
+            fillEntityFromDataRow(row);
+            //this._dataRow = row;
+            //setDefaultParameters();
         }
 
 
-        protected new void setDefaultParameters()
-        {
-            string selectQuery = "cables.id AS id, CONCAT(cables.name,' ', cables.struct_name) AS full_name, cables.name AS name, cables.notes AS notes, cables.struct_name AS struct_name, cables.build_length AS build_length, cables.document_id AS document_id, cables.linear_mass AS linear_mass, cables.code_okp AS code_okp, cables.code_kch AS code_kch, cables.u_cover AS u_cover, cables.p_min AS p_min, cables.p_max AS p_max, documents.full_name AS document_full_name, documents.short_name AS document_name";
-            this.getAllQuery = String.Format("SELECT {0} FROM cables LEFT JOIN documents ON cables.document_id = documents.id", selectQuery);
-            this.getByIdQuery = String.Format("SELECT {0} FROM cables LEFT JOIN documents ON cables.document_id = documents.id WHERE cables.id = {1}", selectQuery, this.id);
-        }
-
-        public Cable[] GetAll()
+        public static Cable[] GetAll()
         {
             Cable[] els = new Cable[] { };
             DataTable dt = GetAllFromDB();
@@ -300,12 +308,101 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 
 
 
-        protected override void fillEntityFromReader(MySqlDataReader r)
+        protected override bool setPropertyByColumnName(object value, string colName)
         {
-            // this.
-
-
+            switch (colName)
+            {
+                case "name":
+                    _name = _name_was = value.ToString();
+                    return true;
+                case "struct_name":
+                    return true;
+                case "build_length":
+                    return true;
+                case "document_id":
+                    return true;
+                case "notes":
+                    return true;
+                case "u_cover":
+                    return true;
+                case "linear_mass":
+                    return true;
+                case "code_okp":
+                    return true;
+                case "code_kch":
+                    return true;
+                case "p_min":
+                    return true;
+                case "p_max":
+                    return true;
+                case "is_draft":
+                    _isDraft = _isDraft_was = ServiceFunctions.convertToInt16(value) > 0;
+                    return true;
+                case "is_deleted":
+                    _isDeleted = _isDeleted_was = ServiceFunctions.convertToInt16(value) > 0;
+                    return true;
+                case "document_short_name":
+                    return true;
+                case "document_full_name":
+                    return true;
+                default:
+                    return false;
+            }
         }
+
+        protected override void setDefaultProperties()
+        {
+            _name = _name_was = string.Empty;
+            _structName = _structName_was = string.Empty;
+            _notes = _notes_was = "";
+            _uCover = _uCover_was = 0;
+            _linearMass = _linearMass_was = 0;
+            _isDeleted = _isDeleted_was = false;
+            _isDraft = _isDraft_was = false;
+            _pMax = _pMax_was = 0;
+            _pMin = _pMin_was = 0;
+            _buildLength = _buildLength_was = 1000;
+            _codeKCH = _codeKCH_was = "";
+            _codeOKP = _codeOKP_was = "";
+        }
+
+        protected override string getPropertyValueByColumnName(string colName)
+        {
+            string value = null;
+            switch(colName)
+            {
+                case "name":
+                    return $"'{Name}'";
+                case "struct_name":
+                    return $"'{StructName}'";
+                case "build_length":
+                    return $"{BuildLength}";
+                case "document_id":
+                    return $"{DocumentId}";
+                case "notes":
+                    return $"'{Notes}'";
+                case "u_cover":
+                    return $"{UCover}";
+                case "linear_mass":
+                    return $"{LinearMass}";
+                case "code_okp":
+                    return $"'{CodeOKP}'";
+                case "code_kch":
+                    return $"'{CodeKCH}'";
+                case "p_min":
+                    return $"'{PMin}'";
+                case "p_max":
+                    return $"'{PMax}'";
+                case "is_draft":
+                    return $"{(IsDraft ? 1 : 0)}";
+                case "is_deleted":
+                    return $"{(IsDeleted ? 1 : 0)}";
+                default:
+                    return value;
+            }
+        }
+        
+
         /*
 private void loadStructures()
 {
@@ -324,16 +421,16 @@ foreach (CableStructure cs in this.Structures)
 {
 if (cs.AffectedElements.Count() > 0)
 {
-  failedStructs.Add(cs);
-  break;
+failedStructs.Add(cs);
+break;
 }
 foreach (MeasureParameterType pt in cs.MeasuredParameters)
 {
-  if (pt.OutOfNormaCount() > 0)
-  {
-      failedStructs.Add(cs);
-      break;
-  }
+if (pt.OutOfNormaCount() > 0)
+{
+failedStructs.Add(cs);
+break;
+}
 }
 }
 return failedStructs.ToArray();

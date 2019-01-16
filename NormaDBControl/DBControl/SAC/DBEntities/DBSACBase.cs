@@ -11,7 +11,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
     {
         static DBSACBase()
         {
-            dbName = "db_sak";
+            //dbName = "db_sak";
         }
         protected void setDefaultParameters()
         {

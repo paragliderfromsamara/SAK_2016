@@ -25,9 +25,13 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             }
         }
 
+        static DBSACTablesMigration()
+        {
+            dbName = "db_norma_sac";
+        }
+
         public DBSACTablesMigration() : base()
         {
-            _dbName = "db_norma_sac";
             _tablesList = new DBTable[] 
             {
                 DocumentsTable,
@@ -48,14 +52,15 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             table.oldTableName = "cables";
             table.oldDbName = "bd_cable";
             table.primaryKey = "id";
+            table.dbName = dbName;
             table.columns = new DBTableColumn[]
             {
                 new DBTableColumn { Name = "id", Type = "INT UNSIGNED AUTO_INCREMENT NOT NULL", OldName = "CabNum" },
-                new DBTableColumn { Name = "name", Type = "TINYTEXT", OldName = "CabName" },
-                new DBTableColumn { Name = "struct_name", Type = "TINYTEXT", OldName = "CabNameStruct" },
-                new DBTableColumn { Name = "build_length", Type = "float", OldName = "StrLengt" },
-                new DBTableColumn { Name = "document_id", Type = "INT UNSIGNED NOT NULL", OldName = "DocInd", JoinedTable = DocumentsTable },
-                new DBTableColumn { Name = "notes", Type = "TINYTEXT", OldName = "TextPrim" },
+                new DBTableColumn { Name = "name", Type = "TINYTEXT", OldName = "CabName", DefaultValue = "''" },
+                new DBTableColumn { Name = "struct_name", Type = "TINYTEXT", OldName = "CabNameStruct", DefaultValue = "''" },
+                new DBTableColumn { Name = "build_length", Type = "float", OldName = "StrLengt", DefaultValue = "0" },
+                new DBTableColumn { Name = "document_id", Type = "INT UNSIGNED NOT NULL", OldName = "DocInd", JoinedTable = DocumentsTable, DefaultValue = "0" },
+                new DBTableColumn { Name = "notes", Type = "TINYTEXT", OldName = "TextPrim", DefaultValue = "''" },
                 new DBTableColumn { Name = "linear_mass", Type = "float", OldName = "PogMass" },
                 new DBTableColumn { Name = "code_okp", Type = "CHAR(12)", OldName = "KodOKP" },
                 new DBTableColumn { Name = "code_kch", Type = "CHAR(2)", OldName = "KodOKP_KCH" },
@@ -82,6 +87,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             table.oldDbName = "bd_cable";
             table.primaryKey = "id";
             table.selectString = "documents.id AS id";
+            table.dbName = dbName;
             table.columns = new DBTableColumn[]
             {
                 new DBTableColumn {Name = "id", Type = "INT UNSIGNED AUTO_INCREMENT NOT NULL", OldName = "DocInd"},

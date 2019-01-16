@@ -12,7 +12,7 @@ namespace NormaMeasure.DBControl
     public class DBTablesMigration
     {
         protected DBTable[] _tablesList;
-        protected string _dbName;
+        protected static string dbName;
         protected string _dbUserName="root";
         protected string _dbServer="localhost";
         protected string _dbPassword="";
@@ -75,12 +75,12 @@ namespace NormaMeasure.DBControl
 
         private long sendQueryToCurrentDB()
         {
-            return sendQueryToDB(_dbName, _query);
+            return sendQueryToDB(dbName, _query);
         }
 
         private MySqlDataReader getDataFromCurrentDB()
         {
-            return getDataFromDB(_dbName, _query);
+            return getDataFromDB(dbName, _query);
         }
 
         public long sendQueryToDB(string db_name, string query)
@@ -108,7 +108,7 @@ namespace NormaMeasure.DBControl
         /// </summary>
         private void dropDB()
         {
-            _query = "DROP DATABASE IF EXISTS " + _dbName;
+            _query = "DROP DATABASE IF EXISTS " + dbName;
             sendQueryToCurrentDB();
         }
 
@@ -136,9 +136,9 @@ namespace NormaMeasure.DBControl
         private string checkAndCreateDB()
         {
             string message = "Создаём базу данных испытаний с кодовой страницей cp1251, если она не создана";
-            _query = "CREATE DATABASE IF NOT EXISTS " + _dbName + " DEFAULT CHARACTER SET cp1251";
+            _query = "CREATE DATABASE IF NOT EXISTS " + dbName + " DEFAULT CHARACTER SET cp1251";
             sendQueryToCurrentDB();
-            _query = "USE " + _dbName;
+            _query = "USE " + dbName;
             sendQueryToCurrentDB();
             return message;
         }
@@ -164,7 +164,7 @@ namespace NormaMeasure.DBControl
 
     public struct DBTable
     {
-        private DataSet _dataSet;
+        public string dbName;
 
         private string _selectQuery;
 
@@ -209,6 +209,44 @@ namespace NormaMeasure.DBControl
         public string selectAllQuery;
 
         public string selectByIdQuery;
+
+        public string UpdateQuery(Dictionary<string, string> colVals)
+        {
+            string setVals = string.Empty;
+            int wasAdded = 0;
+            foreach (DBTableColumn col in columns)
+            {
+                if (colVals.ContainsKey(col.Name))
+                {
+                    if (wasAdded > 0) setVals += ", ";
+                    setVals += $"{col.Name} = {colVals[col.Name]}";
+                    wasAdded++;
+                }
+            }
+            return $"UPDATE {tableName} SET {setVals}";
+        }
+        public string InsertQuery(Dictionary<string, string> colVals)
+        {
+            string cols = string.Empty;
+            string vals = string.Empty;
+            int wasAdded = 0;
+            foreach (DBTableColumn col in columns)
+            {
+                if (colVals.ContainsKey(col.Name))
+                {
+                    if (wasAdded > 0)
+                    {
+                        cols += ", ";
+                        vals += ", ";
+                    }
+                    cols += col.Name;
+                    vals += colVals[col.Name];
+                    wasAdded++;
+                }
+            }
+            return $"INSERT INTO {tableName} ({cols}) VALUES ({vals})";
+        }
+
 
         public string AddTableQuery
         {
@@ -314,19 +352,18 @@ namespace NormaMeasure.DBControl
         /// <summary>
         /// Формирует DataSet соответствующий данной таблице
         /// </summary>
-        public DataSet TableDS
+        public DataTable TableDS
         {
             get
             {
-                DataSet ds = new DataSet();
+                DataTable dt = new DataTable(tableName);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder();
                 string[] columnsArr = GetColumnTitlesIncludeJoined(true);
-                ds.Tables.Add(tableName);
                 foreach (string colName in columnsArr)
                 {
-                    ds.Tables[tableName].Columns.Add(colName); 
+                    dt.Columns.Add(colName); 
                 }
-                return ds;
+                return dt;
             }
         }
         public string ClearTableQuery

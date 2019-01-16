@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
 using NormaMeasure.DBControl.SAC.DBEntities;
+using NormaMeasure.DBControl.SAC.Forms;
 
 namespace NormaMeasure.SAC_APP
 {
@@ -24,6 +25,10 @@ namespace NormaMeasure.SAC_APP
         public dbTestsForm dbTestForm = null;
         public dbUsersForm dbUsersForm = null;
         public dbBarabansForm dbBarabansForm = null;
+
+        private CablesListForm cablesListForm;
+
+
         public dbForms.oldDbDataMigration oldDbDataMigrationForm = null;
 
         public mainForm()
@@ -117,11 +122,30 @@ namespace NormaMeasure.SAC_APP
 
         private void dbCableToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dbCablesForm = new dbCablesForm(this);
-            dbCablesForm.MdiParent = this;
-            switchMenuStripItems(false);
-            dbCablesForm.Show();
+            cablesListForm = new CablesListForm();
+            cablesListForm.MdiParent = this;
+            cablesListForm.Shown += new EventHandler(ChildForm_Shown);
+            cablesListForm.FormClosed += new FormClosedEventHandler(ChildForm_Closed);
+            cablesListForm.Show();
+
+            //dbCablesForm = new dbCablesForm(this);
+            //dbCablesForm.MdiParent = this;
+            //switchMenuStripItems(false);
+            //dbCablesForm.Show();
         }
+
+
+
+        private void ChildForm_Shown(object sender, EventArgs e)
+        {
+            switchMenuStripItems(false);
+        }
+        private void ChildForm_Closed(object sender, EventArgs e)
+        {
+            switchMenuStripItems(true);
+        }
+
+
 
         private void oldDbMigrationStripMenuItem_Click(object sender, EventArgs e)
         {

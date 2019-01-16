@@ -11,23 +11,34 @@ namespace NormaMeasure.DBControl
     public abstract class DBEntityBase
     {
         protected uint _id = 0;
-        protected DBTable _dbTable;
-        public string getAllQuery;
-        protected string getByIdQuery;
-        protected string createQuery;
-        protected string _byIdQuery;
+        protected DataRow _dataRow;
+        protected static DBTable dbTable;
 
-        static protected string dbName = "default_db_name";
-        static protected string selectString = "*";
-
-        protected DataRow _dataRow = null;
-        
-
-        public uint id
+        protected Dictionary<string, string> colValuesToDB
         {
-            get { return _id; }
+            get
+            {
+                Dictionary<string, string> val = new Dictionary<string, string>();
+                foreach(DBTableColumn col in dbTable.columns)
+                {
+                    string v = getPropertyValueByColumnName(col.Name);
+                    if (v != null)val[col.Name] = v;
+                }
+                return val;
+            }
         }
 
+
+
+        /// <summary>
+        /// Достаёт свойства для заливки в БД
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        protected abstract string getPropertyValueByColumnName(string name);
+        
+
+        public uint id => _id; 
 
         //protected abstract void fillParametersFromRow(DataRow row);
 
@@ -35,18 +46,21 @@ namespace NormaMeasure.DBControl
 
         public bool Save()
         {
-
-            return true;
+            if (_id == 0) return _create();
+            else return _update();
         }
 
         protected bool _create()
         {
-            return true;
+            string query = dbTable.InsertQuery(colValuesToDB);
+            return SendQuery(query) == 0;
         }
 
         protected bool _update()
         {
-            return true;
+            string query = dbTable.UpdateQuery(colValuesToDB);
+            query = $"{query} WHERE {dbTable.tableName}.{dbTable.primaryKey} = {_id} LIMIT 1";
+            return SendQuery(query) == 0;
         }
 
         public static void find(uint id)
@@ -56,7 +70,7 @@ namespace NormaMeasure.DBControl
         protected bool NeedLoadFromDB(DataRow row)
         {
             bool f = false;
-            foreach (DBTableColumn col in _dbTable.columns)
+            foreach (DBTableColumn col in dbTable.columns)
             {
                 f = row.IsNull(col.Name);
                 if (f) break;
@@ -64,28 +78,18 @@ namespace NormaMeasure.DBControl
             return f;
         }
 
-        protected DataTable getFromDB(string query)
+        protected static DataTable getFromDB(string query)
         {
-            DataSet ds = _dbTable.TableDS;
-            MySQLDBControl mySql = new MySQLDBControl(dbName);
+            DataTable dt = dbTable.TableDS;
+            MySQLDBControl mySql = new MySQLDBControl(dbTable.dbName);
             mySql.MyConn.Open();
             MySqlDataAdapter da = new MySqlDataAdapter(query, mySql.MyConn);
-            ds.Tables[_dbTable.tableName].Rows.Clear();
-            da.Fill(ds.Tables[_dbTable.tableName]);
+            dt.Rows.Clear();
+            da.Fill(dt);
             mySql.MyConn.Close();
-            return ds.Tables[_dbTable.tableName];
+            return dt;
         }
 
-        protected long UpdateField(string tableName, string updVals, string condition)
-        {
-            MySQLDBControl mySql = new MySQLDBControl(dbName);
-            string query = BuildUpdQuery(tableName, updVals, condition);
-            long v;
-            mySql.MyConn.Open();
-            v = mySql.RunNoQuery(query);
-            mySql.MyConn.Close();
-            return v;
-        }
 
         /// <summary>
         /// Отправляет список запросов в базу данных
@@ -94,7 +98,7 @@ namespace NormaMeasure.DBControl
         public static void SendQueriesList(string[] fields)
         {
             if (fields.Length == 0) return;
-            MySQLDBControl mySql = new MySQLDBControl(dbName);
+            MySQLDBControl mySql = new MySQLDBControl();
             mySql.MyConn.Open();
             foreach (string f in fields) mySql.RunNoQuery(f);
             mySql.MyConn.Close();
@@ -104,91 +108,68 @@ namespace NormaMeasure.DBControl
         /// Отправляет одиночный запрос в базу данных
         /// </summary>
         /// <param name="query"></param>
-        public static void SendQuery(string query)
+        public static long SendQuery(string query)
         {
-            MySQLDBControl mySql = new MySQLDBControl(dbName);
+            MySQLDBControl mySql = new MySQLDBControl();
+            long v;
             mySql.MyConn.Open();
-            mySql.RunNoQuery(query);
+            v = mySql.RunNoQuery(query);
             mySql.MyConn.Close();
+            return v;
         }
 
-        protected static string BuildDestroyQueryWithCriteria(string tableName, string condition)
-        {
-            return String.Format("DELETE FROM {0} WHERE {1}", tableName, condition);
-        }
-
-
-        protected static string BuildUpdQuery(string tableName, string updVals, string condition)
-        {
-            return String.Format("UPDATE {0} SET {1} WHERE {2}", tableName, updVals, condition);
-        }
 
 
         protected bool GetById()
         {
-            DataTable tab = getFromDB(getByIdQuery);
+            DataTable tab = getFromDB(dbTable.selectByIdQuery);
             DataRow val = tab.Rows.Count > 0 ? tab.Rows[0] : null;
-            if (val != null) this._dataRow = val;
+            if (val != null) fillEntityFromDataRow(val);
             return val != null;
         }
 
-        protected object getValueFromDataRowByKey(string key)
+        
+        protected static DataTable GetAllFromDB()
         {
-            if (_dataRow == null) return null;
-            else
-            {
-                return _dataRow[key]; 
-            }
-        }
-
-        protected string getStringValueFromDataRow(string key)
-        {
-            object val = getValueFromDataRowByKey(key);
-
-            if (val == null)
-            {
-                return String.Empty;
-            }
-            else
-            {
-                return val.ToString();
-            }
+            return getFromDB(dbTable.selectAllQuery);
         }
 
 
-        protected int getIntValueFromDataRow(string key)
-        {
-            object val = getValueFromDataRowByKey(key);
 
-            if (val == null)
+        protected void fillEntityFromDataRow(DataRow r)
+        {
+            try
             {
-                return 0;
-            }
-            else
+                foreach (string colName in dbTable.GetColumnTitlesIncludeJoined(true))
+                {
+                    if (colName == dbTable.primaryKey)
+                    {
+                        _id = ServiceFunctions.convertToUInt(r[colName]);
+                    }
+                    else
+                    {
+                        if (!setPropertyByColumnName(r[colName], colName)) throw new DBEntityException($"В setPropertyByColumnName класса {this.GetType().Name} отсутствует поле {colName}");
+                    }
+                }
+            }catch(DBEntityException ex)
             {
-                return ServiceFunctions.convertToInt16(val);
+                System.Windows.Forms.MessageBox.Show(ex.Message);
             }
+
         }
 
-        protected decimal getDecimalValueFromDataRow(string key)
+        protected abstract bool setPropertyByColumnName(object value, string colName);
+
+        protected abstract void setDefaultProperties();
+
+        
+
+    }
+
+    public class DBEntityException : Exception
+    {
+        public DBEntityException(string err_text) : base(err_text)
         {
-            object val = getValueFromDataRowByKey(key);
-            if (val == null)
-            {
-                return 0;
-            }
-            else
-            {
-                return ServiceFunctions.convertToDecimal(val);
-            }
         }
-
-        protected DataTable GetAllFromDB()
-        {
-            return getFromDB(getAllQuery);
-        }
-
-        protected abstract void fillEntityFromReader(MySqlDataReader r);
-
     }
 }

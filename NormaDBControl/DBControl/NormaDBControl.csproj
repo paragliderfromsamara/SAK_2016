@@ -33,6 +33,7 @@
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,10 +53,33 @@
     <Compile Include="SAC\DBEntities\DBSACBase.cs" />
     <Compile Include="SAC\DBEntities\DBSACTablesMigration.cs" />
     <Compile Include="SAC\DBEntities\QADocument.cs" />
+    <Compile Include="SAC\Forms\CableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SAC\Forms\CableForm.Designer.cs">
+      <DependentUpon>CableForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SAC\Forms\CablesListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SAC\Forms\CablesListForm.Designer.cs">
+      <DependentUpon>CablesListForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ServiceFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NormaDBControlClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SAC\Forms\CableForm.resx">
+      <DependentUpon>CableForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SAC\Forms\CablesListForm.resx">
+      <DependentUpon>CablesListForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SAC\Cables\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -132,9 +132,9 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
                 "struktury_cab.DRPrivInd AS dr_bringing_formula_id, " +
                 "struktury_cab.Delta_R AS dr_formula_id, " +
                 "dr_formuls.ResEd AS dr_formula_measure";
-            this.getAllQuery = String.Format("SELECT {0} FROM struktury_cab LEFT JOIN tipy_poviv ON struktury_cab.PovivTip = tipy_poviv.StruktNum LEFT JOIN dr_formuls ON struktury_cab.Delta_R = dr_formuls.DRInd", selectQuery);
-            this.getByIdQuery = String.Format("{0} WHERE struktury_cab.StruktInd = {1}", this.getAllQuery, this.id);
-            this.getByCableIdQuery = String.Format("{0} WHERE struktury_cab.CabNum = {1}", this.getAllQuery, this.Cable.id);
+           // this.getAllQuery = String.Format("SELECT {0} FROM struktury_cab LEFT JOIN tipy_poviv ON struktury_cab.PovivTip = tipy_poviv.StruktNum LEFT JOIN dr_formuls ON struktury_cab.Delta_R = dr_formuls.DRInd", selectQuery);
+           // this.getByIdQuery = String.Format("{0} WHERE struktury_cab.StruktInd = {1}", this.getAllQuery, this.id);
+           // this.getByCableIdQuery = String.Format("{0} WHERE struktury_cab.CabNum = {1}", this.getAllQuery, this.Cable.id);
             /*
             this.colsList = new string[]
             {
@@ -159,18 +159,29 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             */
         }
 
-        protected override void fillEntityFromReader(MySqlDataReader r)
+
+        protected override string getPropertyValueByColumnName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void setDefaultProperties()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override bool setPropertyByColumnName(object value, string colName)
         {
             throw new NotImplementedException();
         }
         /*
 private void GetDependencies()
 {
-   MeasureParameterType mParameter = new MeasureParameterType(this);
-   this.IsolationMaterial = new IsolationMaterial(this.IsolationMaterialId);
-   this.LeadMaterial = new LeadMaterial(this.LeadMaterialId);
-   this.MeasuredParameters = mParameter.GetAll();
-   if (this.Cable.Test != null) filterTested(); // Если кабель вызван через испытание то фильтруем типы испытаний по наличию результата измерения
+MeasureParameterType mParameter = new MeasureParameterType(this);
+this.IsolationMaterial = new IsolationMaterial(this.IsolationMaterialId);
+this.LeadMaterial = new LeadMaterial(this.LeadMaterialId);
+this.MeasuredParameters = mParameter.GetAll();
+if (this.Cable.Test != null) filterTested(); // Если кабель вызван через испытание то фильтруем типы испытаний по наличию результата измерения
 }
 
 /// <summary>
@@ -178,44 +189,44 @@ private void GetDependencies()
 /// </summary>
 private void filterTested()
 {
-   List<MeasureParameterType> pTypes = new List<MeasureParameterType>();
-   foreach (MeasureParameterType pt in this.MeasuredParameters) if (pt.TestResults.Length > 0) pTypes.Add(pt);
-   this.MeasuredParameters = pTypes.ToArray();
+List<MeasureParameterType> pTypes = new List<MeasureParameterType>();
+foreach (MeasureParameterType pt in this.MeasuredParameters) if (pt.TestResults.Length > 0) pTypes.Add(pt);
+this.MeasuredParameters = pTypes.ToArray();
 }
 
 
 protected override void fillParametersFromRow(DataRow row)
 {
-   this.Id = row["cable_structure_id"].ToString();
-   this.NumberInCable = ServiceFunctions.convertToInt16(row["cable_structure_number_in_cable"]);
-   this.RealNumberInCable = ServiceFunctions.convertToInt16(row["cable_structure_real_number_in_cable"]);
-   this.LeadDiameter = ServiceFunctions.convertToDecimal(row["cable_structure_lead_diameter"]);
-   this.WaveResistance = ServiceFunctions.convertToUInt(row["cable_structure_wave_resistance"]);
-   this.Puchek = ServiceFunctions.convertToUInt(row["cable_structure_puchek"]);
-   this.LeadLeadTestVoltage = ServiceFunctions.convertToUInt(row["cable_structure_lead_lead_voltage"]);
-   this.LeadShieldTestVoltage = ServiceFunctions.convertToUInt(row["cable_structure_lead_shield_voltage"]);
-   this.IsolationMaterialId = row["isolation_material_id"].ToString();
-   this.LeadMaterialId = row["lead_material_id"].ToString();
-   this.BendimgTypeId = row["bending_type_id"].ToString();
-   this.BendingTypeName = row["bending_type_name"].ToString();
-   this.BendingTypeLeadsNumber = ServiceFunctions.convertToInt16(row["bending_type_leads_number"]);
-   this.Name = String.Format("{0}x{1}x{2}", this.NumberInCable, this.BendingTypeLeadsNumber, this.LeadDiameter);
-   this.dRBringingFormulaId = row["dr_bringing_formula_id"].ToString();
-   this.dRFormulaId = row["dr_formula_id"].ToString();
-   this.dRFormulaMeasure = row["dr_formula_measure"].ToString();
+this.Id = row["cable_structure_id"].ToString();
+this.NumberInCable = ServiceFunctions.convertToInt16(row["cable_structure_number_in_cable"]);
+this.RealNumberInCable = ServiceFunctions.convertToInt16(row["cable_structure_real_number_in_cable"]);
+this.LeadDiameter = ServiceFunctions.convertToDecimal(row["cable_structure_lead_diameter"]);
+this.WaveResistance = ServiceFunctions.convertToUInt(row["cable_structure_wave_resistance"]);
+this.Puchek = ServiceFunctions.convertToUInt(row["cable_structure_puchek"]);
+this.LeadLeadTestVoltage = ServiceFunctions.convertToUInt(row["cable_structure_lead_lead_voltage"]);
+this.LeadShieldTestVoltage = ServiceFunctions.convertToUInt(row["cable_structure_lead_shield_voltage"]);
+this.IsolationMaterialId = row["isolation_material_id"].ToString();
+this.LeadMaterialId = row["lead_material_id"].ToString();
+this.BendimgTypeId = row["bending_type_id"].ToString();
+this.BendingTypeName = row["bending_type_name"].ToString();
+this.BendingTypeLeadsNumber = ServiceFunctions.convertToInt16(row["bending_type_leads_number"]);
+this.Name = String.Format("{0}x{1}x{2}", this.NumberInCable, this.BendingTypeLeadsNumber, this.LeadDiameter);
+this.dRBringingFormulaId = row["dr_bringing_formula_id"].ToString();
+this.dRFormulaId = row["dr_formula_id"].ToString();
+this.dRFormulaMeasure = row["dr_formula_measure"].ToString();
 }
 
 public CableStructure[] GetCableStructures()
 {
-   CableStructure[] ents = new CableStructure[] { };
-   setDefaultParameters();
-   DataTable dt = getFromDB(this.getByCableIdQuery);
-   if (dt.Rows.Count > 0)
-   {
-       ents = new CableStructure[dt.Rows.Count];
-       for (int i = 0; i < dt.Rows.Count; i++) ents[i] = new CableStructure(dt.Rows[i], this.Cable);
-   }
-   return ents;
+CableStructure[] ents = new CableStructure[] { };
+setDefaultParameters();
+DataTable dt = getFromDB(this.getByCableIdQuery);
+if (dt.Rows.Count > 0)
+{
+ents = new CableStructure[dt.Rows.Count];
+for (int i = 0; i < dt.Rows.Count; i++) ents[i] = new CableStructure(dt.Rows[i], this.Cable);
+}
+return ents;
 }
 */
     }
