@@ -251,7 +251,7 @@ namespace NormaMeasure.DBControl
                 MC.CommandText = comm;
                 object or = MC.ExecuteScalar();
                 long ret;
-                if (or != null) ret = (long)or;
+                if (or != null) long.TryParse(or.ToString(), out ret);
                 else ret = 0;
                 return ret;
             }

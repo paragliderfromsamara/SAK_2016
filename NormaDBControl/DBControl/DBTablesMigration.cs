@@ -136,10 +136,15 @@ namespace NormaMeasure.DBControl
         private string checkAndCreateDB()
         {
             string message = "Создаём базу данных испытаний с кодовой страницей cp1251, если она не создана";
-            _query = "CREATE DATABASE IF NOT EXISTS " + dbName + " DEFAULT CHARACTER SET cp1251";
-            sendQueryToCurrentDB();
-            _query = "USE " + dbName;
-            sendQueryToCurrentDB();
+
+            if (!_dbControl.IsDBExists(dbName))
+            {
+                _query = "CREATE DATABASE IF NOT EXISTS " + dbName + " DEFAULT CHARACTER SET cp1251";
+                sendQueryToCurrentDB();
+                _query = "USE " + dbName;
+                sendQueryToCurrentDB();
+                
+            }
             return message;
         }
 

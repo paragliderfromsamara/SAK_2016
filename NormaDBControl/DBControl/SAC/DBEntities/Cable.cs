@@ -17,7 +17,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         private string _notes, _notes_was;
         private string _codeOKP, _codeOKP_was;
         private string _codeKCH, _codeKCH_was;
-        private string _documentName, _documentNumber;
+        private string _documentName, _documentName_was, _documentNumber, _documentNumber_was;
         private decimal _linearMass = -1,_linearMass_was = -1;
         private decimal _buildLength = -1, _buildLength_was= -1;
         private int _uCover = -1, _uCover_was = -1;
@@ -26,6 +26,32 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         private bool _isDraft, _isDeleted, _isDraft_was, _isDeleted_was;
         private uint _documentId, _documentId_was;
 
+
+        public string DocumentName
+        {
+            get
+            {
+                return _documentName;
+            }
+            set
+            {
+                _documentName_was = _documentName;
+                _documentName = value;
+            }
+        }
+
+        public string DocumentNumber
+        {
+            get
+            {
+                return _documentNumber;
+            }
+            set
+            {
+                _documentNumber_was = _documentNumber;
+                _documentNumber = value;
+            }
+        }
         public string Notes
         {
             get
@@ -316,36 +342,50 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
                     _name = _name_was = value.ToString();
                     return true;
                 case "struct_name":
+                    _structName = _structName_was = value.ToString();
                     return true;
                 case "build_length":
+                    _buildLength = _buildLength_was = ServiceFunctions.convertToDecimal(value);
                     return true;
                 case "document_id":
+                    _documentId = _documentId_was = ServiceFunctions.convertToUInt(value);
                     return true;
                 case "notes":
+                    _notes = _notes_was = value.ToString();
                     return true;
                 case "u_cover":
+                    _uCover = _uCover_was = ServiceFunctions.convertToInt16(value);
                     return true;
                 case "linear_mass":
+                    _linearMass = _linearMass_was = ServiceFunctions.convertToDecimal(value);
                     return true;
                 case "code_okp":
+                    _codeOKP = _codeOKP_was = value.ToString();
                     return true;
                 case "code_kch":
+                    _codeKCH = _codeKCH_was = value.ToString();
                     return true;
                 case "p_min":
+                    _pMin = _pMin_was = ServiceFunctions.convertToInt16(value);
                     return true;
                 case "p_max":
+                    _pMax = _pMax_was = ServiceFunctions.convertToInt16(value);
                     return true;
                 case "is_draft":
                     bool pdr = false;
-                    _isDraft = _isDraft_was = bool.TryParse(value.ToString(), out pdr);
+                    bool.TryParse(value.ToString(), out pdr);
+                    _isDraft = _isDraft_was = pdr;
                     return true;
                 case "is_deleted":
                     bool pdel = false;
-                    _isDeleted = _isDeleted_was = bool.TryParse(value.ToString(), out pdel);
+                    bool.TryParse(value.ToString(), out pdel);
+                    _isDeleted = _isDeleted_was = pdel;
                     return true;
                 case "document_short_name":
+                    _documentNumber = value.ToString();
                     return true;
                 case "document_full_name":
+                    _documentName = value.ToString();
                     return true;
                 default:
                     return false;
