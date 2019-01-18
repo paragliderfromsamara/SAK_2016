@@ -38,7 +38,7 @@ namespace NormaMeasure.DBControl
 
         public void InitDataBase()
         {
-            dropDB();
+            //dropDB();
             checkAndCreateDB();
             CreateTables();
             FillSeeds();
@@ -171,6 +171,8 @@ namespace NormaMeasure.DBControl
     {
         public string dbName;
 
+        private string _selectAllQuery;
+
         private string _selectQuery;
 
         /// <summary>
@@ -211,7 +213,18 @@ namespace NormaMeasure.DBControl
 
         public string joinString;
 
-        public string selectAllQuery;
+        public string SelectAllQuery
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_selectAllQuery)) return SelectQuery;
+                else return _selectAllQuery;
+            }
+            set
+            {
+                _selectAllQuery = value;
+            }
+        }
 
         public string selectByIdQuery;
 
@@ -315,6 +328,8 @@ namespace NormaMeasure.DBControl
                 return false;
             }
         }
+
+        public string SelectLastAddedQuery => $"{SelectQuery} ORDER BY {tableName}.{primaryKey} DESC LIMIT 1";
 
         public string SelectQuery
         {

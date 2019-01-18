@@ -10,6 +10,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 {
     public class Cable : DBSACBase
     {
+        private static Cable _cable;
         private List<CableStructure> _structures = null;
         private CableTest _test = null;
         private string _name, _name_was;
@@ -27,6 +28,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         private uint _documentId, _documentId_was;
 
 
+        #region Свойства кабеля
         public string DocumentName
         {
             get
@@ -236,10 +238,48 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             }
         }
 
+        #endregion
+
+
+        #region Конструкторы
+
         static Cable()
         {
-            dbTable = DBSACTablesMigration.CablesTable;
+            _cable = new Cable();
         }
+
+
+        public Cable()
+        {
+            initEntity();
+            setDefaultProperties();
+        }
+
+        public Cable(CableTest test) : this()
+        {
+            this._test = test;
+            this._id = test.CableId;
+            GetById();
+
+        }
+
+        public Cable(uint id) : this()
+        {
+            this._id = id;
+            GetById();
+        }
+
+        public Cable(DataRow row) : this()
+        {
+            FillFromDataRow(row);
+            //this._dataRow = row;
+            //setDefaultParameters();
+        }
+
+
+
+        #endregion
+
 
         /// <summary>
         /// Достаёт черновик 
@@ -263,8 +303,8 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 
         private static Cable findDraft()
         {
-            string query = $"{dbTable.SelectQuery} WHERE is_draft = 1";
-            DataTable dt = getFromDB(query);
+            string query = $"{_cable.DBTable.SelectQuery} WHERE is_draft = 1";
+            DataTable dt = _cable.getFromDB(query);
             if (dt.Rows.Count != 0) return new Cable(dt.Rows[0]);
             else return null;
         }
@@ -272,7 +312,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         private static Cable createDraft()
         {
             Cable c = new Cable() { IsDraft = true };
-            if (c.Save()) return findDraft();
+            if (c.Save()) return c;
             else throw new DBEntityException("Не удалось создать черновик кабеля!");
         }
 
@@ -292,38 +332,17 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         }
 
 
-        public Cable()
+        public static DataTable GetCableMarks()
         {
-            setDefaultProperties();
+            string query = $"SELECT DISTINCT {_cable.TableName}.name FROM {_cable.TableName} WHERE {_cable.TableName}.is_draft = 0 AND {_cable.TableName}.is_deleted = 0";
+            return _cable.getFromDB(query);
         }
-
-        public Cable(CableTest test)
-        {
-            this._test = test;
-            this._id = test.CableId;
-            GetById();
-           
-        }
-
-        public Cable(uint id)
-        {
-            this._id = id;
-            //setDefaultParameters();
-            GetById();
-        }
-
-        public Cable(DataRow row)
-        {
-            fillEntityFromDataRow(row);
-            //this._dataRow = row;
-            //setDefaultParameters();
-        }
-
 
         public static Cable[] GetAll()
         {
             Cable[] els = new Cable[] { };
-            DataTable dt = GetAllFromDB();
+
+            DataTable dt = _cable.GetAllFromDB();
             if (dt.Rows.Count > 0)
             {
                 els = new Cable[dt.Rows.Count];
@@ -443,7 +462,12 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
                     return value;
             }
         }
-        
+
+        protected override void initEntity()
+        {
+            _dbTable = DBSACTablesMigration.CablesTable;
+        }
+
 
         /*
 private void loadStructures()

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using NormaMeasure.DBControl.SAC.DBEntities;
 
 
@@ -14,9 +15,32 @@ namespace NormaMeasure.DBControl.SAC.Forms
             InitializeComponent();
             cable = Cable.GetDraft();
             if (cable == null) return;
-            initForm();
-            fillCableInputs();
+            fillDBData();
+            fillFormByCable();
+        }
 
+        private void fillDBData()
+        {
+            fillCableMarks();
+            fillDocuments();
+        }
+
+        private void fillDocuments()
+        {
+            QADocument doc = new QADocument();
+            cableFormDataSet.Tables.Add(doc.GetAllFromDB());
+            DocumentNumber_input.ValueMember = $"{doc.TableName}.{doc.PrimaryKey}";
+            DocumentNumber_input.DisplayMember = $"{doc.TableName}.short_name";
+            DocumentNumber_input.Refresh();
+            //DocumentNumber_input.SelectedIndexChanged += DocumentNumberInput_Changed;
+            DocumentNumber_input.TextChanged += DocumentNumberInput_Changed;
+        }
+
+        private void fillCableMarks()
+        {
+            cableFormDataSet.Tables.Add(Cable.GetCableMarks());
+            CableMark_input.DisplayMember = CableMark_input.ValueMember = $"{cable.TableName}.name";
+            CableMark_input.Refresh();
         }
 
         public CableForm(uint cable_id)
@@ -27,7 +51,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void saveCableButton_Click(object sender, System.EventArgs e)
         {
-            cable.Save();
+            cable.IsDraft = false;
+            if (cable.Save())
+            {
+                fillFormByCable();
+                MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
 
         }
 
@@ -35,10 +64,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             TextBox txt = sender as TextBox;
             cable.Name = txt.Text;
+            
         }
 
-        private void fillCableInputs()
+        private void fillFormByCable()
         {
+            this.Text = (cable.IsDraft) ? "Новый кабель" : cable.FullName;
             CableMark_input.Text = cable.Name;
             CableStructures_input.Text = cable.StructName;
             DocumentName_input.Text = cable.DocumentName;
@@ -81,15 +112,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
             cable.PMax = (int)(sender as NumericUpDown).Value;
         }
 
-        private void CodeOKP_input_TextChanged(object sender, System.EventArgs e)
-        {
-            cable.CodeOKP = (sender as TextBox).Text;
-        }
-
-        private void CodeKCH_input_TextChanged(object sender, System.EventArgs e)
-        {
-            cable.CodeKCH = (sender as TextBox).Text;
-        }
 
         private void CableMark_input_SelectedIndexChanged(object sender, System.EventArgs e)
         {
@@ -107,9 +129,36 @@ namespace NormaMeasure.DBControl.SAC.Forms
             cable.StructName = (sender as TextBox).Text;
         }
 
-        private void initForm()
+
+
+        private void CodeOKP_input_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
         {
-            this.Text = (cable.IsDraft) ? "Новый кабель" : cable.FullName;
+            cable.CodeOKP = (sender as MaskedTextBox).Text;
         }
+
+        private void CodeKCH_input_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
+            cable.CodeKCH = (sender as MaskedTextBox).Text;
+        }
+
+        private void DocumentNumberInput_Changed(object sender, EventArgs e)
+        {
+            QADocument doc = new QADocument();
+            ComboBox cp = sender as ComboBox;
+            string txt = cp.Text;
+            MessageBox.Show(txt);
+            foreach (System.Data.DataRow r in cableFormDataSet.Tables[doc.TableName].Rows)
+            {
+                QADocument _d = new QADocument(r);
+                if (_d.ShortName == txt)
+                {
+                    doc = _d;
+                    break;
+                }
+            }
+            DocumentName_input.Text = doc.FullName;
+            Cable.DocumentId = doc.id;
+        }
+
     }
 }

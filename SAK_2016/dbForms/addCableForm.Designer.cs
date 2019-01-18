@@ -854,6 +854,7 @@
             this.code_okp.Name = "code_okp";
             this.code_okp.Size = new System.Drawing.Size(83, 20);
             this.code_okp.TabIndex = 49;
+            this.code_okp.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.code_okp_MaskInputRejected);
             // 
             // code_kch
             // 

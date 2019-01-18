@@ -27,6 +27,11 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             throw new NotImplementedException();
         }
 
+        protected override void initEntity()
+        {
+            throw new NotImplementedException();
+        }
+
         protected void setDefaultParameters()
         {
             throw new NotImplementedException();

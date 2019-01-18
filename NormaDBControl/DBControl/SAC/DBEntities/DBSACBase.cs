@@ -13,9 +13,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             //dbName = "db_sak";
         }
-        protected void setDefaultParameters()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

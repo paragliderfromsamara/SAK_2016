@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DBBase.cs" />
+    <Compile Include="DBEntityBase.cs" />
     <Compile Include="MySQLDBControl.cs" />
     <Compile Include="DBTablesMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

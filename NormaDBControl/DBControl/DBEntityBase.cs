@@ -12,14 +12,17 @@ namespace NormaMeasure.DBControl
     {
         protected uint _id = 0;
         protected DataRow _dataRow;
-        protected static DBTable dbTable;
+        protected DBTable _dbTable;
+        public string TableName => _dbTable.tableName;
+        public string PrimaryKey => _dbTable.primaryKey;
+        public DBTable DBTable => _dbTable;
 
         protected Dictionary<string, string> colValuesToDB
         {
             get
             {
                 Dictionary<string, string> val = new Dictionary<string, string>();
-                foreach(DBTableColumn col in dbTable.columns)
+                foreach(DBTableColumn col in _dbTable.columns)
                 {
                     string v = getPropertyValueByColumnName(col.Name);
                     if (v != null)val[col.Name] = v;
@@ -46,20 +49,37 @@ namespace NormaMeasure.DBControl
 
         public bool Save()
         {
-            if (_id == 0) return _create();
-            else return _update();
+            bool status;
+            beforeSaveAction();
+            if (_id == 0) status =  _create();
+            else status = _update();
+            afterSaveAction();
+            return status;
         }
 
         protected bool _create()
         {
-            string query = dbTable.InsertQuery(colValuesToDB);
-            return SendQuery(query) == 0;
+            MySQLDBControl mySql = new MySQLDBControl(_dbTable.dbName);
+            string insertQuery = _dbTable.InsertQuery(colValuesToDB);
+            string getLastQuery = _dbTable.SelectLastAddedQuery;
+            DataTable dt = _dbTable.TableDS;
+            bool wasLoaded = false;
+            mySql.MyConn.Open();
+            if (wasLoaded = mySql.RunNoQuery(insertQuery) == 0)
+            {
+                MySqlDataAdapter da = new MySqlDataAdapter(getLastQuery, mySql.MyConn);
+                dt.Rows.Clear();
+                da.Fill(dt);
+            }
+            mySql.MyConn.Close();
+            if (dt.Rows.Count > 0 && wasLoaded) FillFromDataRow(dt.Rows[0]);
+            return wasLoaded;
         }
 
         protected bool _update()
         {
-            string query = dbTable.UpdateQuery(colValuesToDB);
-            query = $"{query} WHERE {dbTable.tableName}.{dbTable.primaryKey} = {_id} LIMIT 1";
+            string query = _dbTable.UpdateQuery(colValuesToDB);
+            query = $"{query} WHERE {_dbTable.tableName}.{_dbTable.primaryKey} = {_id} LIMIT 1";
             return SendQuery(query) == 0;
         }
 
@@ -70,7 +90,7 @@ namespace NormaMeasure.DBControl
         protected bool NeedLoadFromDB(DataRow row)
         {
             bool f = false;
-            foreach (DBTableColumn col in dbTable.columns)
+            foreach (DBTableColumn col in _dbTable.columns)
             {
                 f = row.IsNull(col.Name);
                 if (f) break;
@@ -78,10 +98,10 @@ namespace NormaMeasure.DBControl
             return f;
         }
 
-        protected static DataTable getFromDB(string query)
+        protected DataTable getFromDB(string query)
         {
-            DataTable dt = dbTable.TableDS;
-            MySQLDBControl mySql = new MySQLDBControl(dbTable.dbName);
+            DataTable dt = _dbTable.TableDS;
+            MySQLDBControl mySql = new MySQLDBControl(_dbTable.dbName);
             mySql.MyConn.Open();
             MySqlDataAdapter da = new MySqlDataAdapter(query, mySql.MyConn);
             dt.Rows.Clear();
@@ -90,15 +110,29 @@ namespace NormaMeasure.DBControl
             return dt;
         }
 
+        protected void beforeSaveAction()
+        {
+
+        }
+
+        protected void afterSaveAction()
+        {
+
+        }
+
+        protected bool doValidation()
+        {
+            return true;
+        }
 
         /// <summary>
         /// Отправляет список запросов в базу данных
         /// </summary>
         /// <param name="fields"></param>
-        public static void SendQueriesList(string[] fields)
+        public  void SendQueriesList(string[] fields)
         {
             if (fields.Length == 0) return;
-            MySQLDBControl mySql = new MySQLDBControl();
+            MySQLDBControl mySql = new MySQLDBControl(_dbTable.dbName);
             mySql.MyConn.Open();
             foreach (string f in fields) mySql.RunNoQuery(f);
             mySql.MyConn.Close();
@@ -108,9 +142,9 @@ namespace NormaMeasure.DBControl
         /// Отправляет одиночный запрос в базу данных
         /// </summary>
         /// <param name="query"></param>
-        public static long SendQuery(string query)
+        public long SendQuery(string query)
         {
-            MySQLDBControl mySql = new MySQLDBControl();
+            MySQLDBControl mySql = new MySQLDBControl(_dbTable.dbName);
             long v;
             mySql.MyConn.Open();
             v = mySql.RunNoQuery(query);
@@ -122,27 +156,26 @@ namespace NormaMeasure.DBControl
 
         protected bool GetById()
         {
-            DataTable tab = getFromDB(dbTable.selectByIdQuery);
+            DataTable tab = getFromDB(_dbTable.selectByIdQuery);
             DataRow val = tab.Rows.Count > 0 ? tab.Rows[0] : null;
-            if (val != null) fillEntityFromDataRow(val);
+            if (val != null) FillFromDataRow(val);
             return val != null;
         }
 
         
-        protected static DataTable GetAllFromDB()
+        public DataTable GetAllFromDB()
         {
-            return getFromDB(dbTable.selectAllQuery);
+            return getFromDB(_dbTable.SelectAllQuery);
         }
 
 
-
-        protected void fillEntityFromDataRow(DataRow r)
+        internal void FillFromDataRow(DataRow r)
         {
             try
             {
-                foreach (string colName in dbTable.GetColumnTitlesIncludeJoined(true))
+                foreach (string colName in _dbTable.GetColumnTitlesIncludeJoined(true))
                 {
-                    if (colName == dbTable.primaryKey)
+                    if (colName == _dbTable.primaryKey)
                     {
                         _id = ServiceFunctions.convertToUInt(r[colName]);
                     }
@@ -162,7 +195,7 @@ namespace NormaMeasure.DBControl
 
         protected abstract void setDefaultProperties();
 
-        
+        protected abstract void initEntity();
 
     }
 

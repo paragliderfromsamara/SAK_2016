@@ -70,6 +70,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
                 new DBTableColumn { Name = "is_draft", Type = "TINYINT(1)", DefaultValue = "0"},
                 new DBTableColumn { Name = "is_deleted", Type = "TINYINT(1)", DefaultValue = "0"}
             };
+            table.SelectAllQuery = $"{table.SelectQuery} WHERE {table.tableName}.is_draft = 0 AND {table.tableName}.is_deleted = 0";
             return table;
         }
 
@@ -86,7 +87,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             table.oldTableName = "norm_docum";
             table.oldDbName = "bd_cable";
             table.primaryKey = "id";
-            table.selectString = "documents.id AS id";
             table.dbName = dbName;
             table.columns = new DBTableColumn[]
             {

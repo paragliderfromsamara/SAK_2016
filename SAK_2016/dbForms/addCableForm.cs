@@ -329,6 +329,9 @@ namespace NormaMeasure.SAC_APP
     structNameGenerator();
     }
 
+        private void code_okp_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
 
+        }
     }
 }

@@ -48,18 +48,20 @@
             this.label8 = new System.Windows.Forms.Label();
             this.Pmin_input = new System.Windows.Forms.NumericUpDown();
             this.Pmax_input = new System.Windows.Forms.NumericUpDown();
-            this.CodeOKP_input = new System.Windows.Forms.TextBox();
-            this.CodeKCH_input = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.Notes_input = new System.Windows.Forms.RichTextBox();
             this.label13 = new System.Windows.Forms.Label();
+            this.CodeOKP_input = new System.Windows.Forms.MaskedTextBox();
+            this.CodeKCH_input = new System.Windows.Forms.MaskedTextBox();
+            this.cableFormDataSet = new System.Data.DataSet();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Pmin_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pmax_input)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // saveCableButton
@@ -74,6 +76,7 @@
             // 
             // CableMark_input
             // 
+            this.CableMark_input.DataSource = this.cableFormDataSet;
             this.CableMark_input.FormattingEnabled = true;
             this.CableMark_input.Location = new System.Drawing.Point(12, 41);
             this.CableMark_input.Name = "CableMark_input";
@@ -110,6 +113,7 @@
             // 
             // DocumentNumber_input
             // 
+            this.DocumentNumber_input.DataSource = this.cableFormDataSet;
             this.DocumentNumber_input.FormattingEnabled = true;
             this.DocumentNumber_input.Location = new System.Drawing.Point(12, 94);
             this.DocumentNumber_input.Name = "DocumentNumber_input";
@@ -275,22 +279,6 @@
             this.Pmax_input.TabIndex = 17;
             this.Pmax_input.ValueChanged += new System.EventHandler(this.Pmax_input_ValueChanged);
             // 
-            // CodeOKP_input
-            // 
-            this.CodeOKP_input.Location = new System.Drawing.Point(635, 150);
-            this.CodeOKP_input.Name = "CodeOKP_input";
-            this.CodeOKP_input.Size = new System.Drawing.Size(103, 20);
-            this.CodeOKP_input.TabIndex = 17;
-            this.CodeOKP_input.TextChanged += new System.EventHandler(this.CodeOKP_input_TextChanged);
-            // 
-            // CodeKCH_input
-            // 
-            this.CodeKCH_input.Location = new System.Drawing.Point(744, 150);
-            this.CodeKCH_input.Name = "CodeKCH_input";
-            this.CodeKCH_input.Size = new System.Drawing.Size(56, 20);
-            this.CodeKCH_input.TabIndex = 18;
-            this.CodeKCH_input.TextChanged += new System.EventHandler(this.CodeKCH_input_TextChanged);
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -327,17 +315,39 @@
             this.label13.TabIndex = 23;
             this.label13.Text = "Примечание";
             // 
+            // CodeOKP_input
+            // 
+            this.CodeOKP_input.Location = new System.Drawing.Point(635, 150);
+            this.CodeOKP_input.Mask = "00 0000 0000";
+            this.CodeOKP_input.Name = "CodeOKP_input";
+            this.CodeOKP_input.Size = new System.Drawing.Size(100, 20);
+            this.CodeOKP_input.TabIndex = 24;
+            this.CodeOKP_input.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.CodeOKP_input_MaskInputRejected);
+            // 
+            // CodeKCH_input
+            // 
+            this.CodeKCH_input.Location = new System.Drawing.Point(744, 150);
+            this.CodeKCH_input.Mask = "00";
+            this.CodeKCH_input.Name = "CodeKCH_input";
+            this.CodeKCH_input.Size = new System.Drawing.Size(51, 20);
+            this.CodeKCH_input.TabIndex = 25;
+            this.CodeKCH_input.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.CodeKCH_input_MaskInputRejected);
+            // 
+            // cableFormDataSet
+            // 
+            this.cableFormDataSet.DataSetName = "NewDataSet";
+            // 
             // CableForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(809, 620);
+            this.Controls.Add(this.CodeKCH_input);
+            this.Controls.Add(this.CodeOKP_input);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.Notes_input);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.CodeKCH_input);
-            this.Controls.Add(this.CodeOKP_input);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.Ucover_input);
@@ -364,6 +374,7 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Pmin_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pmax_input)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -391,11 +402,12 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown Pmin_input;
         private System.Windows.Forms.NumericUpDown Pmax_input;
-        private System.Windows.Forms.TextBox CodeOKP_input;
-        private System.Windows.Forms.TextBox CodeKCH_input;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.RichTextBox Notes_input;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.MaskedTextBox CodeOKP_input;
+        private System.Windows.Forms.MaskedTextBox CodeKCH_input;
+        private System.Data.DataSet cableFormDataSet;
     }
 }
