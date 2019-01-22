@@ -44,6 +44,8 @@ namespace NormaMeasure.DBControl
         public bool Nullable = false;
         public int Size;
         public int Order;
+        public bool IsPrimaryKey = false;
+        public object DefaultValue;
     }
 
     public enum ColumnDomain

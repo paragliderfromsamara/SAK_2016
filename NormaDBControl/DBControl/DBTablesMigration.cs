@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace NormaMeasure.DBControl
 {
     public class DBTablesMigration
     {
         protected DBTable[] _tablesList;
+        protected System.Type[] tables;
+
+
         protected static string dbName;
         protected string _dbUserName="root";
         protected string _dbServer="localhost";
@@ -19,6 +23,83 @@ namespace NormaMeasure.DBControl
         protected string _query;
         protected MySqlConnection _dbConnection;
         private MySQLDBControl _dbControl;
+
+
+        public static Dictionary<string, SortedList<int, string>> OutputTable(System.Type t)
+        {
+            string tableName = string.Empty;
+            Dictionary<string, SortedList<int, string>> d = new Dictionary<string, SortedList<int, string>>();
+            object[] tableAttrs = t.GetCustomAttributes(typeof(DBTableAttribute), true);
+            if (tableAttrs.Length == 1)
+            {
+                DBTableAttribute a = (DBTableAttribute)tableAttrs[0];
+                SortedList<int, string> columns = new SortedList<int, string>();
+
+                foreach(PropertyInfo prop in t.GetProperties())
+                {
+                    object[] columnAttributes = prop.GetCustomAttributes(typeof(DBColumnAttribute), true);
+                    if (columnAttributes.Length == 1)
+                    {
+  
+                        DBColumnAttribute dca = columnAttributes[0] as DBColumnAttribute;
+                        string dataType = convertDataType(dca);
+                        string row = $"{dca.ColumnName} {dataType}";
+                        columns.Add(dca.Order, row);
+                    }
+                }
+                d[a.TableName] = columns;
+            }
+            return d;
+        }
+
+        private static string convertDataType(DBColumnAttribute a)
+        {
+            string type = "undefined";
+            switch(a.DataType)
+            {
+                case ColumnDomain.Boolean:
+                    {
+                        type = "TINYINT(1)";
+                        break;
+                    }
+                case ColumnDomain.Float:
+                    {
+                        type = "FLOAT";
+                        break;
+                    }
+                case ColumnDomain.Int:
+                    {
+                        if (a.Size > 0) type = $"TINYINT({a.Size})";
+                        else type = "INT";
+                        break;
+                    }
+                case ColumnDomain.String:
+                    {
+                        if (a.Size > 0) type = $"TINYTEXT({a.Size})";
+                        else type = "TINYTEXT"; 
+                        break;
+                    }
+                case ColumnDomain.UInt:
+                    {
+                        if (a.IsPrimaryKey)
+                        {
+                            type = "INT UNSIGNED AUTO_INCREMENT NOT NULL";
+                        }else
+                        {
+                            type = "INT UNSIGNED";
+                        }
+                        break;
+                    }
+                case ColumnDomain.DateTime:
+                    {
+                        type = "DATETIME";
+                        break;
+                    }
+            }
+            if (!a.Nullable) type += " NOT NULL";
+            if (a.DefaultValue != null) type += $" DEFAULT={a.DefaultValue.ToString()}";
+            return type;
+        }
 
         public DBTablesMigration()
         {
@@ -38,7 +119,7 @@ namespace NormaMeasure.DBControl
 
         public void InitDataBase()
         {
-            //dropDB();
+            dropDB();
             checkAndCreateDB();
             CreateTables();
             FillSeeds();

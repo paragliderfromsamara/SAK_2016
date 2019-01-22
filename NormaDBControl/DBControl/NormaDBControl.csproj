@@ -50,9 +50,6 @@
     <Compile Include="BaseRow.cs" />
     <Compile Include="DBAttributes.cs" />
     <Compile Include="DBEntityBase.cs" />
-    <Compile Include="DatabaseTable.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="MySQLDBControl.cs" />
     <Compile Include="DBTablesMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

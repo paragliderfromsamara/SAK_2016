@@ -39,6 +39,10 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             };
         }
 
+
+
+
+
         #region объявление структур таблиц базы данных
         /// <summary>
         /// Заполняем миграцию таблицы кабелей
