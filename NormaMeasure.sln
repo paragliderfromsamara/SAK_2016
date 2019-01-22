@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAC_APP", "SAK_2016\SAC_APP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaDBControl", "NormaDBControl\DBControl\NormaDBControl.csproj", "{6828DD40-1488-46D6-8F70-DB5EF38C463F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppTest", "AppTest\AppTest.csproj", "{8B6C462D-FDEF-469B-A603-5B25BC9CA316}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,18 @@ Global
 		{6828DD40-1488-46D6-8F70-DB5EF38C463F}.Release|x64.Build.0 = Release|Any CPU
 		{6828DD40-1488-46D6-8F70-DB5EF38C463F}.Release|x86.ActiveCfg = Release|Any CPU
 		{6828DD40-1488-46D6-8F70-DB5EF38C463F}.Release|x86.Build.0 = Release|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Debug|x64.Build.0 = Debug|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Debug|x86.Build.0 = Debug|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Release|x64.ActiveCfg = Release|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Release|x64.Build.0 = Release|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Release|x86.ActiveCfg = Release|Any CPU
+		{8B6C462D-FDEF-469B-A603-5B25BC9CA316}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
