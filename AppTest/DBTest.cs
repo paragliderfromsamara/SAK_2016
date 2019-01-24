@@ -12,26 +12,27 @@ namespace AppTest
     {
         public static void Start()
         {
+            DBSACTablesMigration stm = new DBSACTablesMigration();
+            stm.InitDataBase();
             Program.PrintTitle("Список таблиц базы данных");
             Console.WriteLine();
-            outputTable(typeof (CableRow));
-            Console.WriteLine();
+            for(int i=0; i< stm.TablesList.Length; i++)
+            {
+                outputTable(stm.TablesList[i]);
+            }
             Program.PrintTitle("Конец");
         }
 
-        private static void outputTable(System.Type t)
+        private static void outputTable(DBTable d)
         {
-            Dictionary<string, SortedList<int, string>> d = DBTablesMigration.OutputTable(t);
-            if (d.Keys.Count == 1)
+            Console.WriteLine(d.tableName);
+            Console.WriteLine();
+            foreach (DBTableColumn c in d.columns)
             {
-                SortedList<int, string> s = d[d.Keys.First()];
-                Console.WriteLine(d.Keys.First());
-                foreach(int k in s.Keys)
-                {
-                    Console.WriteLine($"{k-10} {s[k]}");
-                }
+                //Console.WriteLine($"{c.Name} {c.Type}");
+                Console.WriteLine(c.AddColumnText);
             }
-
+            Console.WriteLine();
         }
 
     }

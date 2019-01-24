@@ -16,11 +16,11 @@ namespace NormaMeasure.SAC_APP
     public partial class addCableForm : Form
     {
         private DBControl mysql = new DBControl(Properties.dbSakQueries.Default.dbName);
-        private Cable dbCable;
+        private NormaMeasure.DBControl.SAC.DBEntities.CableOld dbCable;
         public addCableForm()
         {
             InitializeComponent();
-            dbCable = new Cable { BuildLength = 1000, CodeKCH = "", CodeOKP = "" };
+            dbCable = new NormaMeasure.DBControl.SAC.DBEntities.CableOld { BuildLength = 1000, CodeKCH = "", CodeOKP = "" };
             fillCableDS();
             this.Text = "Новый кабель";
             fillFieldsFromCable();
@@ -28,7 +28,7 @@ namespace NormaMeasure.SAC_APP
 
         public addCableForm(uint cable_id)
         {
-            dbCable = Cable.find(cable_id);// new Cable(cable_id);
+            dbCable = NormaMeasure.DBControl.SAC.DBEntities.CableOld.find(cable_id);// new Cable(cable_id);
             InitializeComponent();
             this.Text = "Редактирование кабеля";
             fillCableDS();

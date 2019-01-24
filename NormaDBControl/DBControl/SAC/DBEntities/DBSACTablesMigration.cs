@@ -4,44 +4,53 @@ using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
 using System.Threading.Tasks;
+using NormaMeasure.DBControl.Tables;
 
-namespace NormaMeasure.DBControl.SAC.DBEntities
+namespace NormaMeasure.DBControl.SAC
 {
     public class DBSACTablesMigration : DBTablesMigration
     {
-        public static DBTable DocumentsTable
-        {
-            get
-            {
-                return buildDocumentsTableMigration();
-            }
-        }
+       // public static DBTable DocumentsTable
+       // {
+       //     get
+       //     {
+       //         return buildDocumentsTableMigration();
+       //     }
+       // }
 
-        public static DBTable CablesTable
-        {
-            get
-            {
-                return buildCablesTableMigration();
-            }
-        }
+        //public static DBTable CablesTable
+        //{
+        //    get
+        //    {
+        //        return buildCablesTableMigration();
+        //    }
+        //}
 
         static DBSACTablesMigration()
         {
-            dbName = "db_norma_sac";
+            //dbName = "db_norma_sac";
         }
 
         public DBSACTablesMigration() : base()
         {
+            dbName = "db_norma_sac";
+            tableTypes = new Type[]
+            {
+               typeof(Cable),
+               typeof(Document)
+            };
+            /*
             _tablesList = new DBTable[] 
             {
                 DocumentsTable,
                 CablesTable
             };
+            */
         }
 
 
 
-
+        /*
 
         #region объявление структур таблиц базы данных
         /// <summary>
@@ -107,5 +116,6 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             return table;
         }
         #endregion
+        */
     }
 }

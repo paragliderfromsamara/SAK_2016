@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl;
 
-namespace NormaMeasure.DBControl.SAC
+namespace NormaMeasure.DBControl.Tables
 {
-    [DBTable("cables", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "cable")]
-    public class CableRow : BaseRow
+    [DBTable("cables", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "cables")]
+    public class Cable : BaseEntity
     {
-        public CableRow(DataRowBuilder builder) : base(builder)
+        public Cable(DataRowBuilder builder) : base(builder)
         {
         }
 
@@ -30,7 +30,7 @@ namespace NormaMeasure.DBControl.SAC
         }
 
 
-        [DBColumn("name", ColumnDomain.String, OldDBColumnName ="name", Order = 11)]
+        [DBColumn("name", ColumnDomain.Tinytext, OldDBColumnName ="name", Order = 11)]
         public string Name
         {
             get
@@ -43,7 +43,7 @@ namespace NormaMeasure.DBControl.SAC
             }
         }
 
-        [DBColumn("struct_name", ColumnDomain.String, OldDBColumnName = "CabNameStruct", Order = 12)]
+        [DBColumn("struct_name", ColumnDomain.Tinytext, OldDBColumnName = "CabNameStruct", Order = 12)]
         public string StructName
         {
             get
@@ -56,7 +56,7 @@ namespace NormaMeasure.DBControl.SAC
             }
         }
 
-        [DBColumn("notes", ColumnDomain.String, OldDBColumnName = "TextPrim", Order = 13)]
+        [DBColumn("notes", ColumnDomain.Tinytext, OldDBColumnName = "TextPrim", Order = 13)]
 
         public string Notes
         {
@@ -70,7 +70,7 @@ namespace NormaMeasure.DBControl.SAC
             }
         }
 
-        [DBColumn("code_okp", ColumnDomain.String, OldDBColumnName = "KodOKP", Size = 12, Order = 14)]
+        [DBColumn("code_okp", ColumnDomain.Char, OldDBColumnName = "KodOKP", Size = 12, Order = 14)]
         public string CodeOKP
         {
             get
@@ -82,7 +82,7 @@ namespace NormaMeasure.DBControl.SAC
             }
         }
 
-        [DBColumn("code_kch", ColumnDomain.String, OldDBColumnName = "KodOKP_KCH", Size = 2, Order = 15)]
+        [DBColumn("code_kch", ColumnDomain.Char, OldDBColumnName = "KodOKP_KCH", Size = 2, Order = 15)]
 
         public string CodeKCH
         {

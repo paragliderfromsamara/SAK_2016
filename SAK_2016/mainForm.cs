@@ -80,10 +80,10 @@ namespace NormaMeasure.SAC_APP
         {
             //dbSakModels.dataMigration dm = new dbSakModels.dataMigration();
             //dm.createTables();
-            DBSACTablesMigration dbMigartion = new DBSACTablesMigration();
-            dbMigartion.InitDataBase();
-            Cable c = new Cable();
-            string cols = DBSACTablesMigration.DocumentsTable.SelectQuery;
+            //DBSACTablesMigration dbMigartion = new DBSACTablesMigration();
+           // dbMigartion.InitDataBase();
+            NormaMeasure.DBControl.SAC.DBEntities.CableOld c = new NormaMeasure.DBControl.SAC.DBEntities.CableOld();
+            //string cols = DBSACTablesMigration.DocumentsTable.SelectQuery;
 
             //MessageBox.Show(cols);
             Signin signForm = new Signin();

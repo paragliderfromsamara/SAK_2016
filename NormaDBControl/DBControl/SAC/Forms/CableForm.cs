@@ -8,12 +8,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
 {
     public partial class CableForm : Form
     {
-        private Cable cable;
-        public Cable Cable => cable;
+        private CableOld cable;
+        public CableOld Cable => cable;
         public CableForm()
         {
             InitializeComponent();
-            cable = Cable.GetDraft();
+            cable = CableOld.GetDraft();
             if (cable == null) return;
             fillDBData();
             fillFormByCable();
@@ -38,7 +38,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillCableMarks()
         {
-            cableFormDataSet.Tables.Add(Cable.GetCableMarks());
+            cableFormDataSet.Tables.Add(CableOld.GetCableMarks());
             CableMark_input.DisplayMember = CableMark_input.ValueMember = $"{cable.TableName}.name";
             CableMark_input.Refresh();
         }
@@ -46,7 +46,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         public CableForm(uint cable_id)
         {
             InitializeComponent();
-            cable = new Cable(cable_id);
+            cable = new CableOld(cable_id);
         }
 
         private void saveCableButton_Click(object sender, System.EventArgs e)

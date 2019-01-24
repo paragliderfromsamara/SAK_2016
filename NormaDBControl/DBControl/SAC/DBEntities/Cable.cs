@@ -8,9 +8,9 @@ using MySql.Data.MySqlClient;
 
 namespace NormaMeasure.DBControl.SAC.DBEntities
 {
-    public class Cable : DBSACBase
+    public class CableOld : DBSACBase
     {
-        private static Cable _cable;
+        private static CableOld _cable;
         private List<CableStructure> _structures = null;
         private CableTest _test = null;
         private string _name, _name_was;
@@ -243,19 +243,19 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 
         #region Конструкторы
 
-        static Cable()
+        static CableOld()
         {
-            _cable = new Cable();
+            _cable = new CableOld();
         }
 
 
-        public Cable()
+        public CableOld()
         {
             initEntity();
             setDefaultProperties();
         }
 
-        public Cable(CableTest test) : this()
+        public CableOld(CableTest test) : this()
         {
             this._test = test;
             this._id = test.CableId;
@@ -263,13 +263,13 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 
         }
 
-        public Cable(uint id) : this()
+        public CableOld(uint id) : this()
         {
             this._id = id;
             GetById();
         }
 
-        public Cable(DataRow row) : this()
+        public CableOld(DataRow row) : this()
         {
             FillFromDataRow(row);
             //this._dataRow = row;
@@ -286,11 +286,11 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         /// Если его нет, то добавляет
         /// </summary>
         /// <returns></returns>
-        public static Cable GetDraft()
+        public static CableOld GetDraft()
         {
             try
             {
-                Cable draft = findDraft();
+                CableOld draft = findDraft();
                 if (draft == null) draft = createDraft();
                 return draft;
             }catch(DBEntityException ex)
@@ -301,24 +301,24 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 
         }
 
-        private static Cable findDraft()
+        private static CableOld findDraft()
         {
             string query = $"{_cable.DBTable.SelectQuery} WHERE is_draft = 1";
             DataTable dt = _cable.getFromDB(query);
-            if (dt.Rows.Count != 0) return new Cable(dt.Rows[0]);
+            if (dt.Rows.Count != 0) return new CableOld(dt.Rows[0]);
             else return null;
         }
 
-        private static Cable createDraft()
+        private static CableOld createDraft()
         {
-            Cable c = new Cable() { IsDraft = true };
+            CableOld c = new CableOld() { IsDraft = true };
             if (c.Save()) return c;
             else throw new DBEntityException("Не удалось создать черновик кабеля!");
         }
 
-        public static new Cable find(uint cable_id)
+        public static new CableOld find(uint cable_id)
         {
-            Cable cable = new Cable(cable_id);
+            CableOld cable = new CableOld(cable_id);
             return cable;
         }
 
@@ -338,15 +338,15 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
             return _cable.getFromDB(query);
         }
 
-        public static Cable[] GetAll()
+        public static CableOld[] GetAll()
         {
-            Cable[] els = new Cable[] { };
+            CableOld[] els = new CableOld[] { };
 
             DataTable dt = _cable.GetAllFromDB();
             if (dt.Rows.Count > 0)
             {
-                els = new Cable[dt.Rows.Count];
-                for (int i = 0; i < dt.Rows.Count; i++) els[i] = new Cable(dt.Rows[i]);
+                els = new CableOld[dt.Rows.Count];
+                for (int i = 0; i < dt.Rows.Count; i++) els[i] = new CableOld(dt.Rows[i]);
             }
             return els;
         }
@@ -465,7 +465,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 
         protected override void initEntity()
         {
-            _dbTable = DBSACTablesMigration.CablesTable;
+            //_dbTable = DBSACTablesMigration.CablesTable;
         }
 
 

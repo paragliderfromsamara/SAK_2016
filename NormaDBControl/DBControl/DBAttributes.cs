@@ -10,8 +10,10 @@ namespace NormaMeasure.DBControl
     [AttributeUsage (AttributeTargets.Class, Inherited =false, AllowMultiple =false)]
     public class DBTableAttribute : Attribute
     {
+        
         public DBTableAttribute(string tableName, string dbName)
         {
+
             TableName = tableName;
             DBName = dbName;
         }
@@ -20,6 +22,15 @@ namespace NormaMeasure.DBControl
         public readonly string DBName;
         public string OldTableName;
         public string OldDBName;
+        public DBTable TableStruct
+        {
+            get
+            {
+                DBTable t = new DBTable() { tableName = TableName, dbName = DBName, oldTableName = OldTableName, oldDbName = OldDBName };
+                return t;
+            }
+        }
+        
     }
 
     public class DBColumnAttribute : Attribute
@@ -45,16 +56,18 @@ namespace NormaMeasure.DBControl
         public int Size;
         public int Order;
         public bool IsPrimaryKey = false;
-        public object DefaultValue;
+        public object DefaultValue = null;
+
+        public DBTableColumn ColumnStruct
+        {
+            get
+            {
+                DBTableColumn c = new DBTableColumn() { DefaultValue = DefaultValue, ColumnType = DataType, Name = ColumnName, OldName = OldDBColumnName, IsPrimaryKey = IsPrimaryKey};
+                return c;
+            }
+        }
+
     }
 
-    public enum ColumnDomain
-    {
-        UInt,
-        Int,
-        Float,
-        String,
-        Boolean,
-        DateTime
-    }
+
 }

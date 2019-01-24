@@ -3,7 +3,7 @@
   <Class Name="NormaMeasure.DBControl.DBEntityBase">
     <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAIwIAYQAAAAAVAAADAAAgIAEQAQAIACAAAAQAEgoA=</HashCode>
+      <HashCode>AAAIwIAYQAAAAAFAAgDAAAgIAAwAQAIBCAAAAQAEgoA=</HashCode>
       <FileName>DBEntityBase.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -17,7 +17,7 @@
   <Class Name="NormaMeasure.DBControl.SAC.DBEntities.CableTest" Collapsed="true">
     <Position X="5.25" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAIAAACAAAAAABAAAAAAAAgAAABQAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAIAAACAAAAAABAAAAAAAAgAAABQAABAAAAAAAAAAA=</HashCode>
       <FileName>SAC\DBEntities\CableTest.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -31,7 +31,7 @@
   <Class Name="NormaMeasure.DBControl.SAC.DBEntities.CableStructure" Collapsed="true">
     <Position X="3" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACIAEoBAgAAAABAAEAAIkQACQYBQBAAQAAABAAAAAA=</HashCode>
+      <HashCode>AACIAEoBAgAAAABAAEAAIkQACQYBQBABQAAABAAAAAA=</HashCode>
       <FileName>SAC\DBEntities\CableStructure.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -42,35 +42,25 @@
       <FileName>SAC\DBEntities\DBSACBase.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NormaMeasure.DBControl.SAC.DBEntities.DBSACTablesMigration" Collapsed="true">
+  <Class Name="NormaMeasure.DBControl.SAC.DBSACTablesMigration" Collapsed="true">
     <Position X="2.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAAAAACAAAAAgAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>SAC\DBEntities\DBSACTablesMigration.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NormaMeasure.DBControl.SAC.DBEntities.QADocument">
     <Position X="10" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAMAAAAAAAAAIBAAAAAAAAAAAAAQIAAAgAAAAgAAAA=</HashCode>
+      <HashCode>AAAMAAAAAAAAAIBABAAAAAAAAAAAQIABAgAAAAgAAAA=</HashCode>
       <FileName>SAC\DBEntities\QADocument.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NormaMeasure.DBControl.DBTablesMigration" Collapsed="true">
     <Position X="2.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAEBAAAAQAwBKAIIAYAgQCQoAAQAAAIAAAAAAA=</HashCode>
+      <HashCode>AQAgAAAEBAAAAQBwBKAIIAYAgQCQoAAQAAAIAAAAAAI=</HashCode>
       <FileName>DBTablesMigration.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="NormaMeasure.DBControl.SAC.DBEntities.Cable">
-    <Position X="7.5" Y="3.25" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>4Cg5IAyQSAAAMZRAEAkgQDxIICRAUACCDiIARQYAAwQ=</HashCode>
-      <FileName>SAC\DBEntities\Cable.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="NormaMeasure.DBControl.DBTable" Collapsed="true">

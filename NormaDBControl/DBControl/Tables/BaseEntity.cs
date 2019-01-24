@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 
-namespace NormaMeasure.DBControl
+namespace NormaMeasure.DBControl.Tables
 {
     
-    public abstract class BaseRow : DataRow
+    public abstract class BaseEntity : DataRow
     {
-        public BaseRow(DataRowBuilder builder) : base(builder)
+        public BaseEntity(DataRowBuilder builder) : base(builder)
         {
 
 

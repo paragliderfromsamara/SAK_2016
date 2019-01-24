@@ -113,7 +113,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 
         protected override void initEntity()
         {
-            _dbTable = DBSACTablesMigration.DocumentsTable;
+           // _dbTable = DBSACTablesMigration.DocumentsTable;
         }
     }
 }

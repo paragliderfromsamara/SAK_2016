@@ -13,10 +13,10 @@ namespace NormaMeasure.DBControl
     public class DBTablesMigration
     {
         protected DBTable[] _tablesList;
-        protected System.Type[] tables;
+        protected System.Type[] tableTypes;
 
 
-        protected static string dbName;
+        protected string dbName;
         protected string _dbUserName="root";
         protected string _dbServer="localhost";
         protected string _dbPassword="";
@@ -25,81 +25,31 @@ namespace NormaMeasure.DBControl
         private MySQLDBControl _dbControl;
 
 
-        public static Dictionary<string, SortedList<int, string>> OutputTable(System.Type t)
+
+        public static DBTable OutputTable(System.Type t)
         {
-            string tableName = string.Empty;
-            Dictionary<string, SortedList<int, string>> d = new Dictionary<string, SortedList<int, string>>();
+            DBTable _table = new DBTable();
             object[] tableAttrs = t.GetCustomAttributes(typeof(DBTableAttribute), true);
             if (tableAttrs.Length == 1)
             {
                 DBTableAttribute a = (DBTableAttribute)tableAttrs[0];
-                SortedList<int, string> columns = new SortedList<int, string>();
-
-                foreach(PropertyInfo prop in t.GetProperties())
+                _table = a.TableStruct;
+                SortedList<int, DBTableColumn> cols = new SortedList<int, DBTableColumn>();
+                foreach (PropertyInfo prop in t.GetProperties())
                 {
                     object[] columnAttributes = prop.GetCustomAttributes(typeof(DBColumnAttribute), true);
                     if (columnAttributes.Length == 1)
                     {
-  
                         DBColumnAttribute dca = columnAttributes[0] as DBColumnAttribute;
-                        string dataType = convertDataType(dca);
-                        string row = $"{dca.ColumnName} {dataType}";
-                        columns.Add(dca.Order, row);
+                        DBTableColumn col = dca.ColumnStruct;
+                        cols.Add(dca.Order, col);
                     }
                 }
-                d[a.TableName] = columns;
+                _table.columns = cols.Values.ToArray();
             }
-            return d;
+            return _table;
         }
 
-        private static string convertDataType(DBColumnAttribute a)
-        {
-            string type = "undefined";
-            switch(a.DataType)
-            {
-                case ColumnDomain.Boolean:
-                    {
-                        type = "TINYINT(1)";
-                        break;
-                    }
-                case ColumnDomain.Float:
-                    {
-                        type = "FLOAT";
-                        break;
-                    }
-                case ColumnDomain.Int:
-                    {
-                        if (a.Size > 0) type = $"TINYINT({a.Size})";
-                        else type = "INT";
-                        break;
-                    }
-                case ColumnDomain.String:
-                    {
-                        if (a.Size > 0) type = $"TINYTEXT({a.Size})";
-                        else type = "TINYTEXT"; 
-                        break;
-                    }
-                case ColumnDomain.UInt:
-                    {
-                        if (a.IsPrimaryKey)
-                        {
-                            type = "INT UNSIGNED AUTO_INCREMENT NOT NULL";
-                        }else
-                        {
-                            type = "INT UNSIGNED";
-                        }
-                        break;
-                    }
-                case ColumnDomain.DateTime:
-                    {
-                        type = "DATETIME";
-                        break;
-                    }
-            }
-            if (!a.Nullable) type += " NOT NULL";
-            if (a.DefaultValue != null) type += $" DEFAULT={a.DefaultValue.ToString()}";
-            return type;
-        }
 
         public DBTablesMigration()
         {
@@ -109,10 +59,14 @@ namespace NormaMeasure.DBControl
         /// <summary>
         /// Список таблиц содержащийся в текущей БД
         /// </summary>
-        public DBTable[] tablesList
+        public DBTable[] TablesList
         {
             get
             {
+                if (_tablesList == null)
+                {
+                    _tablesList = GetTableSchemes();
+                }
                 return _tablesList;
             }
         }
@@ -120,10 +74,10 @@ namespace NormaMeasure.DBControl
         public void InitDataBase()
         {
             dropDB();
-            checkAndCreateDB();
+            //checkAndCreateDB();
             CreateTables();
-            FillSeeds();
-            MigrateData();
+            //FillSeeds();
+            //MigrateData();
         }
 
         public void MigrateData()
@@ -138,9 +92,18 @@ namespace NormaMeasure.DBControl
             //}
         }
 
+        private DBTable[] GetTableSchemes()
+        {
+            List<DBTable> tabs = new List<DBTable>();
+            foreach(Type t in tableTypes)
+            {
+                tabs.Add(OutputTable(t));
+            }
+            return tabs.ToArray();
+        }
         public void CreateTables()
         {
-            foreach(DBTable table in tablesList)
+            foreach(DBTable table in TablesList)
             {
                 checkAndAddTable(table);
             }
@@ -148,7 +111,7 @@ namespace NormaMeasure.DBControl
 
         public void FillSeeds()
         {
-            foreach (DBTable table in tablesList)
+            foreach (DBTable table in TablesList)
             {
                 fillTableSeeds(table);
             }
@@ -236,6 +199,8 @@ namespace NormaMeasure.DBControl
         /// <param name="columns"></param>
         private void checkAndAddTable(DBTable table)
         {
+            dbName = table.dbName;
+            checkAndCreateDB();
             _query = table.AddTableQuery;
             sendQueryToCurrentDB();
         }
@@ -288,7 +253,21 @@ namespace NormaMeasure.DBControl
         /// <summary>
         /// Заголовок первичного ключа таблицы в текущей БД
         /// </summary>
-        public string primaryKey;
+        public string primaryKey
+        {
+            get
+            {
+                if (columns == null) return "";
+                if (columns.Length > 0)
+                {
+                    foreach(DBTableColumn c in columns)
+                    {
+                        if (c.IsPrimaryKey) return c.Name;
+                    }
+                }
+                return "";
+            }
+        }
 
         public string selectString;
 
@@ -564,8 +543,12 @@ namespace NormaMeasure.DBControl
         private string _name;
         private string _oldName;
         private string _columnType;
-        private string _defaultValue;
+        private object _defaultValue;
         private DBTable? _joinedTable;
+        public ColumnDomain ColumnType;
+        public readonly int Size;
+        public bool IsPrimaryKey;
+        public readonly bool Nullable;
         public string Name
         {
             get { return _name; }
@@ -578,13 +561,9 @@ namespace NormaMeasure.DBControl
             set { _oldName = value; }
         }
 
-        public string Type
-        {
-            get { return _columnType; }
-            set { _columnType = value; }
-        }
+        public string Type => convertColumnType();
 
-        public string DefaultValue
+        public object DefaultValue
         {
             get
             {
@@ -599,8 +578,29 @@ namespace NormaMeasure.DBControl
             {
                 string txt;
                 txt = String.Format("{0} {1}", Name, Type);
-                if (hasDefaultValue) txt = String.Format("{0} DEFAULT {1}", txt, DefaultValue);
+                if (DefaultValue != null) txt = String.Format("{0} DEFAULT {1}", txt, makeDBDefaultValue());
                 return txt;
+            }
+        }
+
+        private string makeDBDefaultValue()
+        {
+            switch(ColumnType)
+            {
+                case ColumnDomain.Char:
+                case ColumnDomain.Tinytext:
+                case ColumnDomain.Varchar:
+                    {
+                        return $"'{DefaultValue.ToString()}'";
+                    }
+                case ColumnDomain.Boolean:
+                    {
+                        return (bool)DefaultValue ? "1" : "0";
+                    }
+                default:
+                    {
+                        return DefaultValue.ToString();
+                    }
             }
         }
 
@@ -609,10 +609,80 @@ namespace NormaMeasure.DBControl
             get { return _joinedTable; }
             set { _joinedTable = value; }
         }
-        private bool hasDefaultValue { get { return !String.IsNullOrEmpty(_defaultValue); } }
+        private string convertColumnType()
+        {
+            string type = "undefined";
+            switch (ColumnType)
+            {
+                case ColumnDomain.Boolean:
+                    {
+                        type = "TINYINT(1)";
+                        break;
+                    }
+                case ColumnDomain.Float:
+                    {
+                        type = "FLOAT";
+                        break;
+                    }
+                case ColumnDomain.Int:
+                    {
+                        if (Size > 0) type = $"TINYINT({Size})";
+                        else type = "INT";
+                        break;
+                    }
+                case ColumnDomain.Tinytext:
+                    {
+                        if (Size > 0) type = $"TINYTEXT({Size})";
+                        else type = "TINYTEXT";
+                        break;
+                    }
+                case ColumnDomain.Char:
+                    {
+                        if (Size > 0) type = $"CHAR({Size})";
+                        else type = "CHAR";
+                        break;
+                    }
+                case ColumnDomain.Varchar:
+                    {
+                        if (Size > 0) type = $"VARCHAR({Size})";
+                        else type = "VARCHAR";
+                        break;
+                    }
 
+                case ColumnDomain.UInt:
+                    {
+                        if (IsPrimaryKey)
+                        {
+                            type = "INT UNSIGNED AUTO_INCREMENT NOT NULL";
+                        }
+                        else
+                        {
+                            type = "INT UNSIGNED";
+                        }
+                        break;
+                    }
+                case ColumnDomain.DateTime:
+                    {
+                        type = "DATETIME";
+                        break;
+                    }
+            }
+            if (!Nullable && !IsPrimaryKey) type += " NOT NULL";
+            return type;
+        }
     }
 
+    public enum ColumnDomain
+    {
+        UInt,
+        Int,
+        Float,
+        Tinytext,
+        Varchar,
+        Char,
+        Boolean,
+        DateTime
+    }
 
 
 }

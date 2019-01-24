@@ -18,7 +18,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         //public ProzvonTestResult[] AffectedElements = new ProzvonTestResult[] { };
 
         private string getByCableIdQuery;
-        public Cable Cable = null;
+        public CableOld Cable = null;
         public string LeadMaterialId = String.Empty;
         public string IsolationMaterialId = String.Empty;
         public string BendimgTypeId = String.Empty;
@@ -62,7 +62,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
         {
             
         }
-        public CableStructure(Cable cable)
+        public CableStructure(CableOld cable)
         {
             this.Cable = cable;
             setDefaultParameters();
@@ -70,7 +70,7 @@ namespace NormaMeasure.DBControl.SAC.DBEntities
 
 
 
-        public CableStructure(DataRow row, Cable cable)
+        public CableStructure(DataRow row, CableOld cable)
         {
             this.Cable = cable;
             //fillParametersFromRow(row);
