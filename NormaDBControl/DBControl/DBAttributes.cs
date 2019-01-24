@@ -62,7 +62,7 @@ namespace NormaMeasure.DBControl
         {
             get
             {
-                DBTableColumn c = new DBTableColumn() { DefaultValue = DefaultValue, ColumnType = DataType, Name = ColumnName, OldName = OldDBColumnName, IsPrimaryKey = IsPrimaryKey};
+                DBTableColumn c = new DBTableColumn() { DefaultValue = DefaultValue, ColumnType = DataType, Size = Size, Name = ColumnName, OldName = OldDBColumnName, IsPrimaryKey = IsPrimaryKey, Nullable = Nullable};
                 return c;
             }
         }

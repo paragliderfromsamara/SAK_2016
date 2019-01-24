@@ -546,9 +546,9 @@ namespace NormaMeasure.DBControl
         private object _defaultValue;
         private DBTable? _joinedTable;
         public ColumnDomain ColumnType;
-        public readonly int Size;
+        public int Size;
         public bool IsPrimaryKey;
-        public readonly bool Nullable;
+        public bool Nullable;
         public string Name
         {
             get { return _name; }
@@ -578,18 +578,22 @@ namespace NormaMeasure.DBControl
             {
                 string txt;
                 txt = String.Format("{0} {1}", Name, Type);
-                if (DefaultValue != null) txt = String.Format("{0} DEFAULT {1}", txt, makeDBDefaultValue());
+                //if (DefaultValueDB != null) txt = String.Format("{0} DEFAULT {1}", txt, DefaultValueDB);
                 return txt;
             }
         }
 
-        private string makeDBDefaultValue()
+        public string DefaultValueDB => makeDBDefaultValueDB();
+
+
+        private string makeDBDefaultValueDB()
         {
+            //if (DefaultValue == null) return null;
             switch(ColumnType)
             {
                 case ColumnDomain.Char:
-                case ColumnDomain.Tinytext:
                 case ColumnDomain.Varchar:
+                case ColumnDomain.Tinytext:
                     {
                         return $"'{DefaultValue.ToString()}'";
                     }
@@ -653,7 +657,7 @@ namespace NormaMeasure.DBControl
                     {
                         if (IsPrimaryKey)
                         {
-                            type = "INT UNSIGNED AUTO_INCREMENT NOT NULL";
+                            type = "INT UNSIGNED AUTO_INCREMENT";
                         }
                         else
                         {
@@ -667,7 +671,14 @@ namespace NormaMeasure.DBControl
                         break;
                     }
             }
-            if (!Nullable && !IsPrimaryKey) type += " NOT NULL";
+            if (!Nullable)
+            {
+                type += " NOT NULL";
+                if (DefaultValue != null) type += $" DEFAULT {DefaultValueDB}";
+            }
+            else type += " NULL";
+
+            
             return type;
         }
     }

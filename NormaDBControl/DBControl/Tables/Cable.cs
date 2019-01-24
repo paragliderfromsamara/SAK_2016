@@ -30,7 +30,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        [DBColumn("name", ColumnDomain.Tinytext, OldDBColumnName ="name", Order = 11)]
+        [DBColumn("name", ColumnDomain.Tinytext, OldDBColumnName ="name", Order = 11, Nullable = true)]
         public string Name
         {
             get
@@ -43,7 +43,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("struct_name", ColumnDomain.Tinytext, OldDBColumnName = "CabNameStruct", Order = 12)]
+        [DBColumn("struct_name", ColumnDomain.Tinytext, OldDBColumnName = "CabNameStruct", Order = 12, DefaultValue = "", Nullable = true)]
         public string StructName
         {
             get
@@ -56,7 +56,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("notes", ColumnDomain.Tinytext, OldDBColumnName = "TextPrim", Order = 13)]
+        [DBColumn("notes", ColumnDomain.Tinytext, OldDBColumnName = "TextPrim", Order = 13, DefaultValue = "", Nullable = true)]
 
         public string Notes
         {
@@ -70,7 +70,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("code_okp", ColumnDomain.Char, OldDBColumnName = "KodOKP", Size = 12, Order = 14)]
+        [DBColumn("code_okp", ColumnDomain.Char, OldDBColumnName = "KodOKP", Nullable =true,Size = 12, Order = 14, DefaultValue = "")]
         public string CodeOKP
         {
             get
@@ -82,7 +82,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("code_kch", ColumnDomain.Char, OldDBColumnName = "KodOKP_KCH", Size = 2, Order = 15)]
+        [DBColumn("code_kch", ColumnDomain.Char, OldDBColumnName = "KodOKP_KCH", Size = 2, Order = 15, DefaultValue = "", Nullable = true)]
 
         public string CodeKCH
         {
@@ -96,7 +96,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("linear_mass", ColumnDomain.Float, OldDBColumnName = "PogMass", Order = 16)]
+        [DBColumn("linear_mass", ColumnDomain.Float, OldDBColumnName = "PogMass", Order = 16, DefaultValue = 0, Nullable = true)]
         public float LinearMass
         {
             get
@@ -109,7 +109,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("build_length", ColumnDomain.Float, OldDBColumnName = "StrLengt", Order = 17)]
+        [DBColumn("build_length", ColumnDomain.Float, OldDBColumnName = "StrLengt", Order = 17, DefaultValue = 1000, Nullable = true)]
         public float BuilLength
         {
             get
@@ -122,7 +122,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("document_id", ColumnDomain.UInt, OldDBColumnName = "DocInd", Order = 18)]
+        [DBColumn("document_id", ColumnDomain.UInt, OldDBColumnName = "DocInd", Order = 18, DefaultValue = 0, Nullable = true)]
         public uint DocumentId
         {
             get
@@ -135,7 +135,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("u_cover", ColumnDomain.UInt, OldDBColumnName = "U_Obol", Order = 19)]
+        [DBColumn("u_cover", ColumnDomain.UInt, OldDBColumnName = "U_Obol", Order = 19, DefaultValue = 0, Nullable = true)]
         public float UCover
         {
             get
@@ -148,7 +148,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("p_min", ColumnDomain.UInt, OldDBColumnName = "P_min", Order =20)]
+        [DBColumn("p_min", ColumnDomain.UInt, OldDBColumnName = "P_min", Order =20, DefaultValue = 2400, Nullable = true)]
         public float PMin
         {
             get
@@ -161,7 +161,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("p_max", ColumnDomain.UInt, OldDBColumnName = "P_max", Order = 21)]
+        [DBColumn("p_max", ColumnDomain.UInt, OldDBColumnName = "P_max", Order = 21, DefaultValue =0, Nullable =true)]
         public float PMax
         {
             get

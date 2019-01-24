@@ -25,13 +25,13 @@ namespace AppTest
 
         private static void outputTable(DBTable d)
         {
-            Console.WriteLine(d.tableName);
+            Console.WriteLine(d.AddTableQuery);
             Console.WriteLine();
-            foreach (DBTableColumn c in d.columns)
-            {
+            //foreach (DBTableColumn c in d.columns)
+            //{
                 //Console.WriteLine($"{c.Name} {c.Type}");
-                Console.WriteLine(c.AddColumnText);
-            }
+            //    Console.WriteLine(c.AddColumnText);
+            //}
             Console.WriteLine();
         }
 
