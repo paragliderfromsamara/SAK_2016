@@ -12,11 +12,34 @@ namespace NormaMeasure.DBControl.Tables
     [DBTable("cables", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "cables")]
     public class Cable : BaseEntity
     {
+        public static Cable New()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
+            Cable cable = (Cable)t.NewRow();
+            return cable;
+        }
+
+        public static Cable GetDraft()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
+
+        }
+
+
+        private static Cable findDraft()
+        {
+            string query = $"{_cable.DBTable.SelectQuery} WHERE is_draft = 1";
+            DataTable dt = _cable.getFromDB(query);
+            if (dt.Rows.Count != 0) return new CableOld(dt.Rows[0]);
+            else return null;
+        }
+
+
         public Cable(DataRowBuilder builder) : base(builder)
         {
         }
 
-        [DBColumn("cable_id", ColumnDomain.UInt, Order = 10, OldDBColumnName ="CabNum", IsPrimaryKey = true)]
+        [DBColumn("cable_id", ColumnDomain.UInt, Order = 10, OldDBColumnName ="CabNum", Nullable =true, IsPrimaryKey = true)]
         public uint CableId
         {
             get

@@ -10,11 +10,88 @@ namespace NormaMeasure.DBControl.Tables
     
     public abstract class BaseEntity : DataRow
     {
+
         public BaseEntity(DataRowBuilder builder) : base(builder)
         {
 
-
         }
+
+        /// <summary>
+        /// Добавляет новый объект в БД
+        /// </summary>
+        /// <returns></returns>
+        public bool Create()
+        {
+            string insertQuery = makeInsertQuery();
+            DBEntityTable t = (DBEntityTable)this.Table;
+            MySQLDBControl mySql = new MySQLDBControl(t.DBName);
+            bool wasLoaded = false;
+            mySql.MyConn.Open();
+            wasLoaded = mySql.RunNoQuery(insertQuery) == 0;
+            mySql.MyConn.Close();
+            return wasLoaded;
+        }
+
+
+        /// <summary>
+        /// Обновляет объект в БД 
+        /// </summary>
+        /// <returns></returns>
+        public bool Update()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Удаляет объект из БД
+        /// </summary>
+        /// <returns></returns>
+        public bool Destroy()
+        {
+            return true;
+        }
+
+
+        protected string makeInsertQuery()
+        {
+            string q = String.Empty;
+            string vals = String.Empty;
+            string keys = String.Empty;
+            int wasAdded = 0;
+            foreach (DataColumn col in this.Table.Columns)
+            {
+                if (col.Table.PrimaryKey.Contains(col)) continue;
+                if (wasAdded > 0)
+                {
+                    keys += ", ";
+                    vals += ", ";
+                }
+                keys += col.ColumnName;
+                if (col.DataType == typeof(string))
+                {
+                    vals += $"'{this[col.ColumnName].ToString()}'";
+                }else vals += $"{this[col.ColumnName].ToString()}";
+
+
+                wasAdded++;
+            }
+            return $"INSERT INTO {this.Table} ({keys}) VALUES ({vals})";
+        }
+
+
+        protected string makeSelectQueryWhere(string where)
+        {
+            return $"{makeSelectQuery()} WHERE {where}";
+        }
+
+        protected string makeSelectQuery()
+        {
+            return $"SELECT * FROM {Table.TableName}";
+        }
+
+
+        
+
 
         protected uint tryParseUInt(string column_name)
         {

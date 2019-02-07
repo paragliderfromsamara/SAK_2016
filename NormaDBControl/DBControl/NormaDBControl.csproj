@@ -47,6 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBEntityTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Tables\BaseEntity.cs" />
     <Compile Include="DBAttributes.cs" />
     <Compile Include="DBEntityBase.cs" />

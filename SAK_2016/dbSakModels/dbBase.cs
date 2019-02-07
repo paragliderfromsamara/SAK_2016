@@ -18,6 +18,8 @@ namespace NormaMeasure.SAC_APP
         public long id;
         protected DataRowCollection dbParams;
         public bool isExistsInDB;
+
+
         /// <summary>
         /// Проверяет наличие записи с данным id в БД и устанавливает значение атрибута isExists в true/false
         /// </summary>
