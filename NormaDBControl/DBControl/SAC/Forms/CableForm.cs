@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using NormaMeasure.DBControl.SAC.DBEntities;
+using NormaMeasure.DBControl.Tables;
+using System.Data;
 
 
 
@@ -8,12 +9,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
 {
     public partial class CableForm : Form
     {
-        private CableOld cable;
-        public CableOld Cable => cable;
+        private Cable cable;
+        public Cable Cable => cable;
         public CableForm()
         {
             InitializeComponent();
-            cable = CableOld.GetDraft();
+            cable = Cable.GetDraft();
             if (cable == null) return;
             fillDBData();
             fillFormByCable();
@@ -27,36 +28,36 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillDocuments()
         {
-            QADocument doc = new QADocument();
-            cableFormDataSet.Tables.Add(doc.GetAllFromDB());
-            DocumentNumber_input.ValueMember = $"{doc.TableName}.{doc.PrimaryKey}";
-            DocumentNumber_input.DisplayMember = $"{doc.TableName}.short_name";
+            DataTable docs = Document.get_all_as_table();
+            cableFormDataSet.Tables.Add(docs);
+            DocumentNumber_input.ValueMember = $"{docs.TableName}.document_id";
+            DocumentNumber_input.DisplayMember = $"{docs.TableName}.short_name";
             DocumentNumber_input.Refresh();
-            //DocumentNumber_input.SelectedIndexChanged += DocumentNumberInput_Changed;
+            DocumentNumber_input.SelectedIndexChanged += DocumentNumberInput_Changed;
             DocumentNumber_input.TextChanged += DocumentNumberInput_Changed;
         }
 
         private void fillCableMarks()
         {
-            cableFormDataSet.Tables.Add(CableOld.GetCableMarks());
-            CableMark_input.DisplayMember = CableMark_input.ValueMember = $"{cable.TableName}.name";
-            CableMark_input.Refresh();
+            //cableFormDataSet.Tables.Add(CableOld.GetCableMarks());
+            //CableMark_input.DisplayMember = CableMark_input.ValueMember = $"{cable.TableName}.name";
+            //CableMark_input.Refresh();
         }
 
         public CableForm(uint cable_id)
         {
             InitializeComponent();
-            cable = new CableOld(cable_id);
+           // cable = new CableOld(cable_id);
         }
 
         private void saveCableButton_Click(object sender, System.EventArgs e)
         {
-            cable.IsDraft = false;
-            if (cable.Save())
-            {
-                fillFormByCable();
-                MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-            }
+           // cable.IsDraft = false;
+            //if (cable.Save())
+           // {
+           //     fillFormByCable();
+           //     MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+           // }
 
         }
 
@@ -69,16 +70,16 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillFormByCable()
         {
-            this.Text = (cable.IsDraft) ? "Новый кабель" : cable.FullName;
+            this.Text = (cable.IsDraft) ? "Новый кабель" : cable.Name ;
             CableMark_input.Text = cable.Name;
             CableStructures_input.Text = cable.StructName;
-            DocumentName_input.Text = cable.DocumentName;
-            DocumentNumber_input.Text = cable.DocumentNumber;
-            BuildLength_input.Value = cable.BuildLength;
-            linearMass_input.Value = cable.LinearMass;
-            Ucover_input.Value = cable.UCover;
-            Pmin_input.Value = cable.PMin;
-            Pmax_input.Value = cable.PMax;
+            //DocumentName_input.Text = cable.DocumentName;
+            //DocumentNumber_input.Text = cable.DocumentNumber;
+            BuildLength_input.Value = (decimal)cable.BuildLength;
+            linearMass_input.Value = (decimal)cable.LinearMass;
+            Ucover_input.Value = (decimal)cable.UCover;
+            Pmin_input.Value = (decimal)cable.PMin;
+            Pmax_input.Value = (decimal)cable.PMax;
             CodeOKP_input.Text = cable.CodeOKP;
             CodeKCH_input.Text = cable.CodeKCH;
             Notes_input.Text = cable.Notes;
@@ -88,12 +89,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void BuildLength_input_ValueChanged(object sender, System.EventArgs e)
         {
-            cable.BuildLength = (sender as NumericUpDown).Value;
+           // cable.BuildLength = (sender as NumericUpDown).Value;
         }
 
         private void linearMass_input_ValueChanged(object sender, System.EventArgs e)
         {
-            cable.LinearMass = (sender as NumericUpDown).Value;
+            //cable.LinearMass = (sender as NumericUpDown).Value;
         }
 
         private void Ucover_input_ValueChanged(object sender, System.EventArgs e)
@@ -143,21 +144,21 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void DocumentNumberInput_Changed(object sender, EventArgs e)
         {
-            QADocument doc = new QADocument();
+            Document doc = Document.build();
             ComboBox cp = sender as ComboBox;
             string txt = cp.Text;
-            MessageBox.Show(txt);
-            foreach (System.Data.DataRow r in cableFormDataSet.Tables[doc.TableName].Rows)
+
+          //  MessageBox.Show(txt);
+            foreach (DataRow r in cableFormDataSet.Tables[doc.Table.TableName].Rows)
             {
-                QADocument _d = new QADocument(r);
-                if (_d.ShortName == txt)
+                doc = (Document)r;
+                if (doc.ShortName == txt)
                 {
-                    doc = _d;
+                    DocumentName_input.Text = doc.FullName;
+                    Cable.DocumentId = doc.DocumentId;
                     break;
                 }
             }
-            DocumentName_input.Text = doc.FullName;
-            Cable.DocumentId = doc.id;
         }
 
     }

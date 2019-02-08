@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
-using NormaMeasure.DBControl.SAC.DBEntities;
+using NormaMeasure.DBControl.Tables;
 
 
 namespace NormaMeasure.SAC_APP
@@ -16,11 +16,11 @@ namespace NormaMeasure.SAC_APP
     public partial class addCableForm : Form
     {
         private DBControl mysql = new DBControl(Properties.dbSakQueries.Default.dbName);
-        private NormaMeasure.DBControl.SAC.DBEntities.CableOld dbCable;
+        private Cable dbCable;
         public addCableForm()
         {
             InitializeComponent();
-            dbCable = new NormaMeasure.DBControl.SAC.DBEntities.CableOld { BuildLength = 1000, CodeKCH = "", CodeOKP = "" };
+            dbCable = Cable.GetDraft();
             fillCableDS();
             this.Text = "Новый кабель";
             fillFieldsFromCable();
@@ -28,11 +28,19 @@ namespace NormaMeasure.SAC_APP
 
         public addCableForm(uint cable_id)
         {
-            dbCable = NormaMeasure.DBControl.SAC.DBEntities.CableOld.find(cable_id);// new Cable(cable_id);
+            dbCable = Cable.find_by_cable_id(cable_id);// new Cable(cable_id);
             InitializeComponent();
-            this.Text = "Редактирование кабеля";
-            fillCableDS();
-            fillFieldsFromCable();
+            if (dbCable == null)
+            {
+                MessageBox.Show("Кабель не найден", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Close();
+            }else
+            {
+                this.Text = "Редактирование кабеля";
+                fillCableDS();
+                fillFieldsFromCable();
+            }
+
         }
 
         private void fillFieldsFromCable()

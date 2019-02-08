@@ -53,7 +53,7 @@ namespace AppTest
 
             ds.Tables.Add(t);
 
-            Cable cable = Cable.New();
+            Cable cable = Cable.build();
 
             cable.CableId = 0;
             cable.Name = "Cable 1";
@@ -63,6 +63,8 @@ namespace AppTest
             cable.PMin = 10;
             cable.Notes = "Notes";
             cable.Create();
+
+            Cable.GetDraft();
             Console.WriteLine(cable.makeInsertQuery());
             //t.Rows.Add(cable);
 

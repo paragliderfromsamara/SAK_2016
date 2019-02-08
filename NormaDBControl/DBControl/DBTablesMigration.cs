@@ -76,7 +76,7 @@ namespace NormaMeasure.DBControl
             dropDB();
             //checkAndCreateDB();
             CreateTables();
-            //FillSeeds();
+            FillSeeds();
             //MigrateData();
         }
 
@@ -111,9 +111,9 @@ namespace NormaMeasure.DBControl
 
         public void FillSeeds()
         {
-            foreach (DBTable table in TablesList)
+            foreach (Type type in tableTypes)
             {
-                fillTableSeeds(table);
+                fillTableSeeds(type);
             }
         }
 
@@ -157,21 +157,13 @@ namespace NormaMeasure.DBControl
         }
 
 
-        private void fillTableSeeds(DBTable table)
+        private void fillTableSeeds(Type type)
         {
-            string seedsStr = table.FillSeedsQuery;
-            if (!string.IsNullOrWhiteSpace(seedsStr))
-            {
-                _query = "select * from " + table.tableName;
-                long sts = sendQueryToCurrentDB();
-                if (sts <= 0)
-                {
-                    _query = seedsStr;
-                    _query = String.Format("INSERT IGNORE INTO {0} VALUES {1}", table.tableName, _query);
-                    sendQueryToCurrentDB();
-                }
-            }
+            DBEntityTable seedsTable = getSeeds(type);
+            if (seedsTable.Rows.Count > 0) seedsTable.CreateRowsToDB(false);
         }
+
+        protected virtual DBEntityTable getSeeds(Type type) { return new DBEntityTable(type); }
 
         /// <summary>
         /// Проверяет наличие БД на данном компьютере, если нет то создает ее и выбирает её
@@ -187,7 +179,6 @@ namespace NormaMeasure.DBControl
                 sendQueryToCurrentDB();
                 _query = "USE " + dbName;
                 sendQueryToCurrentDB();
-                
             }
             return message;
         }

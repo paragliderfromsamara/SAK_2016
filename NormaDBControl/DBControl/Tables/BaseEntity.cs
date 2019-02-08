@@ -23,13 +23,7 @@ namespace NormaMeasure.DBControl.Tables
         public bool Create()
         {
             string insertQuery = makeInsertQuery();
-            DBEntityTable t = (DBEntityTable)this.Table;
-            MySQLDBControl mySql = new MySQLDBControl(t.DBName);
-            bool wasLoaded = false;
-            mySql.MyConn.Open();
-            wasLoaded = mySql.RunNoQuery(insertQuery) == 0;
-            mySql.MyConn.Close();
-            return wasLoaded;
+            return ((DBEntityTable)this.Table).WriteSingleQuery(insertQuery);
         }
 
 
@@ -50,6 +44,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             return true;
         }
+
 
 
         public string makeInsertQuery()
@@ -74,7 +69,7 @@ namespace NormaMeasure.DBControl.Tables
                 wasAdded++;
             }
 
-            return String.Format(q, keys, vals); // $"INSERT INTO {this.Table} ({keys}) VALUES ({vals})";
+            return String.Format(q, keys, $"({vals})"); // $"INSERT INTO {this.Table} ({keys}) VALUES ({vals})";
         }
 
 

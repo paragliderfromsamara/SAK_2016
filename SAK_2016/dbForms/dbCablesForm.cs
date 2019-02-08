@@ -10,8 +10,13 @@ using MySql.Data.MySqlClient;
 
 namespace NormaMeasure.SAC_APP
 {
+
+    /// <summary>
+    /// Форма просмотра и изменения списка кабелей
+    /// </summary>
     public partial class dbCablesForm : Form
     {
+
         public mainForm mForm = null;
         private addCableForm newCableForm = null;
 

@@ -22,6 +22,7 @@ namespace NormaMeasure.DBControl
         public readonly string DBName;
         public string OldTableName;
         public string OldDBName;
+        public string Seeds;
         public DBTable TableStruct
         {
             get

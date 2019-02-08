@@ -49,7 +49,29 @@ namespace NormaMeasure.DBControl.SAC
         }
 
 
+        protected override DBEntityTable getSeeds(Type type)
+        {
+            DBEntityTable t = base.getSeeds(type);
+            if (type == typeof(Document)) makeDocumentTableSeeds(ref t);
 
+            return t;
+        }
+
+        private void makeDocumentTableSeeds(ref DBEntityTable t)
+        {
+            string[][] data = { new string[] { "1", "ГОСТ Р 51311-99", "КАБЕЛИ ТЕЛЕФОННЫЕ С ПОЛИЭТИЛЕНОВОЙ ИЗОЛЯЦИЕЙ В ПЛАСТМАССОВОЙ ОБОЛОЧКЕ Технические условия" },
+                                new string[] { "2", "ГОСТ Р 51312-99", "КАБЕЛИ ДЛЯ СИГНАЛИЗАЦИИ И БЛОКИРОВКИ С ПОЛИЭТИЛЕНОВОЙ ИЗОЛЯЦИЕЙ В ПЛАСТМАССОВОЙ ОБОЛОЧКЕ Технические условия" },
+                                new string[] { "3", "ГОСТ 15125-92", "КАБЕЛИ СВЯЗИ СИММЕТРИЧНЫЕ ВЫСОКОЧАСТОТНЫЕ С КОРДЕЛЬНО-ПОЛИСТИРОЛЬНОЙ ИЗОЛЯЦИЕЙ Технические условия"} };
+            foreach(string[] rData in data)
+            {
+                Document d = (Document)t.NewRow();
+                d.DocumentId = Convert.ToUInt16(rData[0]);
+                d.ShortName = rData[1];
+                d.FullName = rData[2];
+                t.Rows.Add(d);
+            }
+
+        }
         /*
 
         #region объявление структур таблиц базы данных

@@ -27,20 +27,76 @@ namespace NormaMeasure.DBControl
                 this.TableName = a.TableName;
                 this.DBName = a.DBName;
                 this.SelectQuery = $"SELECT * FROM {a.TableName}";
-                this.InsertQuery = $"INSERT INTO {a.TableName} " + "({0}) VALUES ({1})";
+                this.InsertQuery = $"INSERT INTO {a.TableName} " + "({0}) VALUES {1}";
             }
         }
 
-        internal bool SaveRowsToDB()
+        internal bool CreateRowsToDB(bool ignorePrimaryKeys)
         {
-            if (this.Rows.Count > 0)
+            string query = fillInsertQueryForAllRows(ignorePrimaryKeys);
+            return WriteSingleQuery(query);
+        }
+
+
+        private string fillInsertQueryForAllRows(bool ignorePrimaryKeys)
+        {
+            string vals = String.Empty;
+            string keys = String.Empty;
+
+            foreach (DataColumn col in this.Columns)
             {
-                foreach(DataRow r in this.Rows)
+                if (ignorePrimaryKeys && this.PrimaryKey.Contains(col)) continue;
+                if (!String.IsNullOrEmpty(keys))
                 {
-                    
+                    keys += ", ";
                 }
+                keys += col.ColumnName;
             }
-            return true;
+            foreach(DataRow row in this.Rows)
+            {
+                string rowVals = "";
+                foreach (DataColumn col in this.Columns)
+                {
+                    if (ignorePrimaryKeys && this.PrimaryKey.Contains(col)) continue;
+                    if (!String.IsNullOrEmpty(rowVals)) rowVals += ", ";
+                    if (col.DataType == typeof(string))
+                    {
+                        rowVals += $"'{row[col.ColumnName].ToString()}'";
+                    }
+                    else rowVals += $"{row[col.ColumnName].ToString()}";
+                }
+                if (!String.IsNullOrEmpty(vals)) vals += ", ";
+                vals += $"({rowVals})";
+            }
+            return String.Format(InsertQuery, keys, vals); // $"INSERT INTO {this.Table} ({keys}) VALUES ({vals})";
+        }
+
+        public void FillByQuery(string select_query)
+        {
+            MySQLDBControl mySql = new MySQLDBControl(this.DBName);
+            MySqlDataAdapter a = new MySqlDataAdapter(select_query, mySql.MyConn);
+            mySql.MyConn.Open();
+            a.Fill(this);
+            mySql.MyConn.Close();
+        }
+
+        public bool WriteSingleQuery(string query)
+        {
+            int c = writeQueries(new string[] { query });
+            return c == 1;
+        }
+
+        private int writeQueries(string[] queries)
+        {
+            int counter = 0;
+            MySQLDBControl mySql = new MySQLDBControl(this.DBName);
+            mySql.MyConn.Open();
+            foreach(string q in queries)
+            {
+                if (mySql.RunNoQuery(q) == 0) counter++;
+            }
+            mySql.MyConn.Close();
+            return counter;
         }
 
         private void ConstructColumns()

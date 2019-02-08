@@ -14,6 +14,21 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+
+        public static Document build()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Document));
+            return (Document)t.NewRow();
+        }
+
+        public static DBEntityTable get_all_as_table()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Document));
+            string select_cmd = $"{t.SelectQuery}";
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
         [DBColumn("document_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "DocInd", IsPrimaryKey = true)]
         public uint DocumentId
         {

@@ -12,27 +12,77 @@ namespace NormaMeasure.DBControl.Tables
     [DBTable("cables", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "cables")]
     public class Cable : BaseEntity
     {
-        public static Cable New()
+        public static Cable find_by_cable_id(uint id)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
+            string select_cmd = $"{t.SelectQuery} WHERE cable_id = {id}";
+            t.FillByQuery(select_cmd);
+            if (t.Rows.Count > 0) return (Cable)t.Rows[0];
+            else
+            {
+                return null;
+            }
+        }
+        public static Cable build()
         {
             DBEntityTable t = new DBEntityTable(typeof(Cable));
             Cable cable = (Cable)t.NewRow();
             return cable;
         }
 
-        public static Cable GetDraft()
+        public static Cable[] get_all_as_array()
+        {
+            DBEntityTable t = get_all_as_table();
+            List<Cable> cables = new List<Cable>();
+            if (t.Rows.Count > 0)
+            {
+                foreach (DataRow r in t.Rows) cables.Add((Cable)r);
+            }
+            return cables.ToArray();
+        }
+
+        public static DBEntityTable get_all_as_table()
         {
             DBEntityTable t = new DBEntityTable(typeof(Cable));
-            string query = t.SelectQuery + " WHERE is_draft = 1";
-            
+            string select_cmd = $"{t.SelectQuery} WHERE is_draft = 0 AND is_deleted = 0";
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
+        /// <summary>
+        /// Выдает черновик кабеля
+        /// </summary>
+        /// <returns></returns>
+        public static Cable GetDraft()
+        {
+            Cable draft = findDraft();
+            if (draft == null) draft = createDraft();
+            return draft;
         }
 
 
+        /// <summary>
+        /// Ищет черновик кабеля
+        /// </summary>
+        /// <returns></returns>
         private static Cable findDraft()
         {
             DBEntityTable t = new DBEntityTable(typeof(Cable));
-            string query = $"{_cable.DBTable.SelectQuery} WHERE is_draft = 1";
-            DataTable dt = _cable.getFromDB(query);
-            if (dt.Rows.Count != 0) return new CableOld(dt.Rows[0]);
+            string query = $"{t.SelectQuery} WHERE is_draft = 1";
+            t.FillByQuery(query);
+            if (t.Rows.Count != 0) return (Cable)t.Rows[0];
+            else return null;
+        }
+
+        /// <summary>
+        /// Создаёт черновик кабеля
+        /// </summary>
+        /// <returns></returns>
+        private static Cable createDraft()
+        {
+            Cable draft = build();
+            draft.IsDraft = true;
+            if (draft.Create()) return draft;
             else return null;
         }
 
@@ -135,7 +185,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         [DBColumn("build_length", ColumnDomain.Float, OldDBColumnName = "StrLengt", Order = 17, DefaultValue = 1000, Nullable = true)]
-        public float BuilLength
+        public float BuildLength
         {
             get
             {
