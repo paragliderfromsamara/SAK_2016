@@ -22,12 +22,14 @@ namespace NormaMeasure.DBControl.Tables
         public static Cable GetDraft()
         {
             DBEntityTable t = new DBEntityTable(typeof(Cable));
-
+            string query = t.SelectQuery + " WHERE is_draft = 1";
+            
         }
 
 
         private static Cable findDraft()
         {
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
             string query = $"{_cable.DBTable.SelectQuery} WHERE is_draft = 1";
             DataTable dt = _cable.getFromDB(query);
             if (dt.Rows.Count != 0) return new CableOld(dt.Rows[0]);

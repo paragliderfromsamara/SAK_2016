@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using System.Reflection;
+using MySql.Data.MySqlClient;
 
 namespace NormaMeasure.DBControl
 {
@@ -25,7 +26,21 @@ namespace NormaMeasure.DBControl
                 DBTableAttribute a = (DBTableAttribute)tableAttrs[0];
                 this.TableName = a.TableName;
                 this.DBName = a.DBName;
+                this.SelectQuery = $"SELECT * FROM {a.TableName}";
+                this.InsertQuery = $"INSERT INTO {a.TableName} " + "({0}) VALUES ({1})";
             }
+        }
+
+        internal bool SaveRowsToDB()
+        {
+            if (this.Rows.Count > 0)
+            {
+                foreach(DataRow r in this.Rows)
+                {
+                    
+                }
+            }
+            return true;
         }
 
         private void ConstructColumns()
@@ -71,5 +86,7 @@ namespace NormaMeasure.DBControl
 
         private Type entity_type;
         public string DBName;
+        public string SelectQuery;
+        public string InsertQuery;
     }
 }

@@ -52,9 +52,9 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        protected string makeInsertQuery()
+        public string makeInsertQuery()
         {
-            string q = String.Empty;
+            string q = ((DBEntityTable)this.Table).InsertQuery;
             string vals = String.Empty;
             string keys = String.Empty;
             int wasAdded = 0;
@@ -71,11 +71,10 @@ namespace NormaMeasure.DBControl.Tables
                 {
                     vals += $"'{this[col.ColumnName].ToString()}'";
                 }else vals += $"{this[col.ColumnName].ToString()}";
-
-
                 wasAdded++;
             }
-            return $"INSERT INTO {this.Table} ({keys}) VALUES ({vals})";
+
+            return String.Format(q, keys, vals); // $"INSERT INTO {this.Table} ({keys}) VALUES ({vals})";
         }
 
 
