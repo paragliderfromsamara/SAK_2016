@@ -14,6 +14,17 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static Document find_by_document_id(uint id)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Document));
+            string select_cmd = $"{t.SelectQuery} WHERE document_id = {id}";
+            t.FillByQuery(select_cmd);
+            if (t.Rows.Count > 0) return (Document)t.Rows[0];
+            else
+            {
+                return null;
+            }
+        }
 
         public static Document build()
         {

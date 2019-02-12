@@ -140,6 +140,7 @@
             this.DocumentName_input.Name = "DocumentName_input";
             this.DocumentName_input.Size = new System.Drawing.Size(609, 20);
             this.DocumentName_input.TabIndex = 7;
+            this.DocumentName_input.TextChanged += new System.EventHandler(this.DocumentName_input_TextChanged);
             // 
             // label4
             // 

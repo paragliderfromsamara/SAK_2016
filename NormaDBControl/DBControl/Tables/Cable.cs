@@ -102,6 +102,12 @@ namespace NormaMeasure.DBControl.Tables
             else return null;
         }
 
+        public bool Save()
+        {
+            
+            return base.Save();
+        }
+
 
         public Cable(DataRowBuilder builder) : base(builder)
         {
@@ -288,6 +294,65 @@ namespace NormaMeasure.DBControl.Tables
                 this["is_delete"] = value;
             }
         }
+
+        /// <summary>
+        /// Выдает нормативный документ по данному кабелю
+        /// </summary>
+        public Document QADocument
+        {
+            get
+            {
+                if (cableNormDocument == null)
+                {
+                    loadDocument();
+                }
+                return cableNormDocument;
+            }
+            set
+            {
+                cableNormDocument = value;
+            }
+        }
+
+        /// <summary>
+        /// Подгружаем документ по качеству
+        /// </summary>
+        /// <returns></returns>
+        private Document loadDocument()
+        {
+            if (DocumentId == 0) return null;
+            else
+            {
+                return Document.find_by_document_id(DocumentId);
+            }
+        }
+
+        private bool SaveDocumentIfItNeccessary()
+        {
+            if (this.documentIsValid())
+        }
+
+        private bool documentWasAssigned()
+        {
+            if (DocumentId == 0 && this.QADocument == null)
+            {
+                NoDocumentException();
+                return false;
+            }
+            else return true;
+            
+        }
+
+        private void NoDocumentException()
+        {
+            throw new DBEntityException("Не был выбран норматив для кабеля");
+        }
+
+
+        protected Document cableNormDocument;
+
+        
+
 
     }
 }
