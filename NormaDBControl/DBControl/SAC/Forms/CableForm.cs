@@ -39,9 +39,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillCableMarks()
         {
-            //cableFormDataSet.Tables.Add(CableOld.GetCableMarks());
-            //CableMark_input.DisplayMember = CableMark_input.ValueMember = $"{cable.TableName}.name";
-            //CableMark_input.Refresh();
+            cableFormDataSet.Tables.Add(Cable.get_cable_marks());
+            CableMark_input.DisplayMember = CableMark_input.ValueMember = "cable_marks.cable_mark";
+            CableMark_input.Refresh();
         }
 
         public CableForm(uint cable_id)
@@ -52,12 +52,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void saveCableButton_Click(object sender, System.EventArgs e)
         {
-           // cable.IsDraft = false;
-            //if (cable.Save())
-           // {
-           //     fillFormByCable();
-           //     MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-           // }
+            cable.IsDraft = false;
+            if (cable.Save())
+            {
+                fillFormByCable();
+                MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
 
         }
 
@@ -89,12 +89,16 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void BuildLength_input_ValueChanged(object sender, System.EventArgs e)
         {
-           // cable.BuildLength = (sender as NumericUpDown).Value;
+            float v = 0f;
+           float.TryParse((sender as NumericUpDown).Value.ToString(), out v);
+            cable.BuildLength = v;
         }
 
         private void linearMass_input_ValueChanged(object sender, System.EventArgs e)
         {
-            //cable.LinearMass = (sender as NumericUpDown).Value;
+            float v = 0f;
+            float.TryParse((sender as NumericUpDown).Value.ToString(), out v);
+            cable.LinearMass = v;
         }
 
         private void Ucover_input_ValueChanged(object sender, System.EventArgs e)
@@ -132,16 +136,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
 
 
-        private void CodeOKP_input_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
-        {
-            cable.CodeOKP = (sender as MaskedTextBox).Text;
-        }
-
-        private void CodeKCH_input_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
-        {
-            cable.CodeKCH = (sender as MaskedTextBox).Text;
-        }
-
         private void DocumentNumberInput_Changed(object sender, EventArgs e)
         {
             Document doc = Document.build();
@@ -161,5 +155,19 @@ namespace NormaMeasure.DBControl.SAC.Forms
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            fillFormByCable();
+        }
+
+        private void CodeKCH_input_TextChanged(object sender, EventArgs e)
+        {
+            cable.CodeKCH = (sender as MaskedTextBox).Text;
+        }
+
+        private void CodeOKP_input_TextChanged(object sender, EventArgs e)
+        {
+            cable.CodeOKP = (sender as MaskedTextBox).Text;
+        }
     }
 }

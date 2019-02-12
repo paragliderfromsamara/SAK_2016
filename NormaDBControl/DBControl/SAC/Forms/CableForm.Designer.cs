@@ -30,6 +30,7 @@
         {
             this.saveCableButton = new System.Windows.Forms.Button();
             this.CableMark_input = new System.Windows.Forms.ComboBox();
+            this.cableFormDataSet = new System.Data.DataSet();
             this.label1 = new System.Windows.Forms.Label();
             this.CableStructures_input = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -54,14 +55,14 @@
             this.label13 = new System.Windows.Forms.Label();
             this.CodeOKP_input = new System.Windows.Forms.MaskedTextBox();
             this.CodeKCH_input = new System.Windows.Forms.MaskedTextBox();
-            this.cableFormDataSet = new System.Data.DataSet();
+            this.button1 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Pmin_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pmax_input)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // saveCableButton
@@ -84,6 +85,10 @@
             this.CableMark_input.TabIndex = 1;
             this.CableMark_input.SelectedIndexChanged += new System.EventHandler(this.CableMark_input_SelectedIndexChanged);
             this.CableMark_input.TextUpdate += new System.EventHandler(this.CableMark_input_SelectedIndexChanged);
+            // 
+            // cableFormDataSet
+            // 
+            this.cableFormDataSet.DataSetName = "NewDataSet";
             // 
             // label1
             // 
@@ -179,6 +184,7 @@
             // 
             // linearMass_input
             // 
+            this.linearMass_input.DecimalPlaces = 2;
             this.linearMass_input.Location = new System.Drawing.Point(191, 150);
             this.linearMass_input.Maximum = new decimal(new int[] {
             10000,
@@ -322,7 +328,7 @@
             this.CodeOKP_input.Name = "CodeOKP_input";
             this.CodeOKP_input.Size = new System.Drawing.Size(100, 20);
             this.CodeOKP_input.TabIndex = 24;
-            this.CodeOKP_input.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.CodeOKP_input_MaskInputRejected);
+            this.CodeOKP_input.TextChanged += new System.EventHandler(this.CodeOKP_input_TextChanged);
             // 
             // CodeKCH_input
             // 
@@ -331,17 +337,24 @@
             this.CodeKCH_input.Name = "CodeKCH_input";
             this.CodeKCH_input.Size = new System.Drawing.Size(51, 20);
             this.CodeKCH_input.TabIndex = 25;
-            this.CodeKCH_input.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.CodeKCH_input_MaskInputRejected);
+            this.CodeKCH_input.TextChanged += new System.EventHandler(this.CodeKCH_input_TextChanged);
             // 
-            // cableFormDataSet
+            // button1
             // 
-            this.cableFormDataSet.DataSetName = "NewDataSet";
+            this.button1.Location = new System.Drawing.Point(171, 496);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(129, 31);
+            this.button1.TabIndex = 26;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // CableForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(809, 620);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.CodeKCH_input);
             this.Controls.Add(this.CodeOKP_input);
             this.Controls.Add(this.label13);
@@ -367,6 +380,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "CableForm";
             this.Text = "CableForm";
+            ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).EndInit();
@@ -374,7 +388,6 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Pmin_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pmax_input)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -409,5 +422,6 @@
         private System.Windows.Forms.MaskedTextBox CodeOKP_input;
         private System.Windows.Forms.MaskedTextBox CodeKCH_input;
         private System.Data.DataSet cableFormDataSet;
+        private System.Windows.Forms.Button button1;
     }
 }

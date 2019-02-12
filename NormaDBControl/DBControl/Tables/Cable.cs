@@ -30,6 +30,22 @@ namespace NormaMeasure.DBControl.Tables
             return cable;
         }
 
+        /// <summary>
+        /// Выдаёт таблицу марок кабеля
+        /// </summary>
+        /// <returns></returns>
+        public static DBEntityTable get_cable_marks()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable), false);
+            t.TableName = "cable_marks";
+            t.Columns.Add("cable_mark");
+            string q = $"{t.SelectQuery} WHERE is_draft = 0 AND is_deleted = 0 ORDER BY name ASC";
+            string selectString = " DISTINCT name AS cable_mark ";
+            q = q.Replace("*", selectString);
+            t.FillByQuery(q);
+            return t;    
+        }
+
         public static Cable[] get_all_as_array()
         {
             DBEntityTable t = get_all_as_table();
@@ -82,7 +98,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             Cable draft = build();
             draft.IsDraft = true;
-            if (draft.Create()) return draft;
+            if (draft.Create()) return findDraft();
             else return null;
         }
 
@@ -110,7 +126,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
-                return (string)this["name"];
+                return this["name"].ToString();
             }
             set
             {
@@ -123,7 +139,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
-                return (string)this["struct_name"];
+                return  this["struct_name"].ToString();
             }
             set
             {
@@ -132,12 +148,11 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         [DBColumn("notes", ColumnDomain.Tinytext, OldDBColumnName = "TextPrim", Order = 13, DefaultValue = "", Nullable = true)]
-
         public string Notes
         {
             get
             {
-                return (string)this["notes"];
+                return this["notes"].ToString();
             }
             set
             {
@@ -150,7 +165,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
-                return (string)this["code_okp"];
+                return this["code_okp"].ToString();
             }set
             {
                 this["code_okp"] = value;
@@ -158,12 +173,11 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         [DBColumn("code_kch", ColumnDomain.Char, OldDBColumnName = "KodOKP_KCH", Size = 2, Order = 15, DefaultValue = "", Nullable = true)]
-
         public string CodeKCH
         {
             get
             {
-                return (string)this["code_kch"];
+                return this["code_kch"].ToString();
             }
             set
             {

@@ -11,12 +11,20 @@ namespace NormaMeasure.DBControl
 {
     public class DBEntityTable : DataTable
     {
+
+        public DBEntityTable(Type entityType, bool build_columns) : base()
+        {
+            entity_type = entityType;
+            SetTableName();
+            if (build_columns) ConstructColumns();
+        }
         public DBEntityTable(Type entityType) : base()
         {
             entity_type = entityType;
             SetTableName();
             ConstructColumns();
         }
+
 
         private void SetTableName()
         {
@@ -28,15 +36,17 @@ namespace NormaMeasure.DBControl
                 this.DBName = a.DBName;
                 this.SelectQuery = $"SELECT * FROM {a.TableName}";
                 this.InsertQuery = $"INSERT INTO {a.TableName} " + "({0}) VALUES {1}";
+                this.UpdateQuery = $"UPDATE {a.TableName}" + " SET {0} WHERE {1}";
             }
         }
-
+        
         internal bool CreateRowsToDB(bool ignorePrimaryKeys)
         {
             string query = fillInsertQueryForAllRows(ignorePrimaryKeys);
             return WriteSingleQuery(query);
         }
 
+        
 
         private string fillInsertQueryForAllRows(bool ignorePrimaryKeys)
         {
@@ -99,6 +109,7 @@ namespace NormaMeasure.DBControl
             return counter;
         }
 
+
         private void ConstructColumns()
         {
             SortedList<int, DataColumn> columns = new SortedList<int, DataColumn>();
@@ -144,5 +155,6 @@ namespace NormaMeasure.DBControl
         public string DBName;
         public string SelectQuery;
         public string InsertQuery;
+        public string UpdateQuery;
     }
 }
