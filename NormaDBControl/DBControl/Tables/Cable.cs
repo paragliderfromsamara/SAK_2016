@@ -102,7 +102,7 @@ namespace NormaMeasure.DBControl.Tables
             else return null;
         }
 
-        public bool Save()
+        public new bool Save()
         {
             
             return base.Save();
@@ -311,6 +311,7 @@ namespace NormaMeasure.DBControl.Tables
             set
             {
                 cableNormDocument = value;
+                this.DocumentId = value.DocumentId;
             }
         }
 
@@ -327,10 +328,10 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        private bool SaveDocumentIfItNeccessary()
-        {
-            if (this.documentIsValid())
-        }
+       // private bool SaveDocumentIfItNeccessary()
+       // {
+       //     if (this.documentIsValid())
+       // }
 
         private bool documentWasAssigned()
         {

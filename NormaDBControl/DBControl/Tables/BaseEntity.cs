@@ -26,7 +26,7 @@ namespace NormaMeasure.DBControl.Tables
             {
                 isCompleted = Update();
             }
-            if (isCompleted) this.AcceptChanges();
+            if (isCompleted) this.AcceptChanges(); //Меняем обновляем RowState
             return isCompleted;
         }
 
@@ -190,6 +190,8 @@ namespace NormaMeasure.DBControl.Tables
             float.TryParse(this[column_name].ToString(), out v);
             return v;
         }
+
+        protected virtual bool IsValid() { return true; }
 
 
     }

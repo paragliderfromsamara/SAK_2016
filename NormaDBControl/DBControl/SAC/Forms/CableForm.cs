@@ -28,6 +28,17 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillDocuments()
         {
+            string docsTableName = reloadDocumentsDS();
+            DocumentNumber_input.ValueMember = $"{docsTableName}.document_id";
+            DocumentNumber_input.DisplayMember = $"{docsTableName}.short_name";
+            DocumentNumber_input.Refresh();
+            //DocumentNumber_input.SelectedIndexChanged += DocumentNumberInput_Changed;
+            DocumentNumber_input.TextChanged += DocumentNumberInput_Changed;
+            DocumentNumber_input.SelectedValue = cable.DocumentId;
+        }
+
+        private string reloadDocumentsDS()
+        {
             DataTable docs = Document.get_all_as_table();
             //Добавляем новый документ в таблицу
             Document newDoc = (Document)docs.NewRow();
@@ -35,14 +46,15 @@ namespace NormaMeasure.DBControl.SAC.Forms
             newDoc.FullName = String.Empty;
             newDoc.ShortName = String.Empty;
             docs.Rows.Add(newDoc);
-            //
-            cableFormDataSet.Tables.Add(docs);
-            DocumentNumber_input.ValueMember = $"{docs.TableName}.document_id";
-            DocumentNumber_input.DisplayMember = $"{docs.TableName}.short_name";
-            DocumentNumber_input.Refresh();
-            //DocumentNumber_input.SelectedIndexChanged += DocumentNumberInput_Changed;
-            DocumentNumber_input.TextChanged += DocumentNumberInput_Changed;
-            DocumentNumber_input.SelectedValue = cable.DocumentId;
+            if (cableFormDataSet.Tables.Contains(docs.TableName))
+            {
+                cableFormDataSet.Tables[docs.TableName].Merge(docs);
+            }
+            else
+            {
+                cableFormDataSet.Tables.Add(docs);
+            }
+            return docs.TableName;
         }
 
         private void fillCableMarks()
@@ -61,6 +73,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private void saveCableButton_Click(object sender, System.EventArgs e)
         {
             cable.IsDraft = false;
+            checkSelectedDocument();
             if (cable.Save())
             {
                 fillFormByCable();
@@ -74,6 +87,32 @@ namespace NormaMeasure.DBControl.SAC.Forms
             TextBox txt = sender as TextBox;
             cable.Name = txt.Text;
             
+        }
+
+        private bool checkSelectedDocument()
+        {
+            bool f = true;
+            string docName = cable.QADocument.ShortName;
+            if (cable.QADocument.RowState == DataRowState.Added)
+            {
+                string tableName = string.Empty;
+                f = cable.QADocument.Save();
+                if (f)
+                {
+                    tableName = reloadDocumentsDS();
+                    DocumentNumber_input.Refresh();
+                    foreach (DataRow r in cableFormDataSet.Tables[tableName].Rows)
+                    {
+                        Document d = (Document)r;
+                        if (d.ShortName == docName)
+                        {
+                            DocumentNumber_input.SelectedValue = d.DocumentId;
+                            break;
+                        }
+                    }
+                }
+            }
+            return f;
         }
 
         private void fillFormByCable()
