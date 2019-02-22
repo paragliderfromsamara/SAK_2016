@@ -191,7 +191,32 @@ namespace NormaMeasure.DBControl.Tables
             return v;
         }
 
-        protected virtual bool IsValid() { return true; }
+
+        public new bool HasErrors()
+        {
+            return ErrorsList.Count > 0;
+        }
+        
+        public new void ClearErrors()
+        {
+            ErrorsList.Clear();
+        }
+
+        public void ValidationException()
+        {
+            string s = String.Empty;
+            int i = 0;
+            foreach(string msg in ErrorsList)
+            {
+                i++;
+                s += $"{i}) {msg}; \n";
+            }
+            throw new DBEntityException(s);
+        }
+
+        protected List<string> ErrorsList = new List<string>();
+        public string EntityRuName => entityRuName;
+        protected string entityRuName; 
 
 
     }
@@ -199,7 +224,7 @@ namespace NormaMeasure.DBControl.Tables
     public class DBEntityException : Exception
     {
         int errorcode;
-        public int ErrorCode { get { return errorcode; } }
+        public int ErrorCode => errorcode;
         public DBEntityException(string mess)
             : base(mess)
         {

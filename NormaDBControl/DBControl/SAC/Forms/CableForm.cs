@@ -136,9 +136,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void BuildLength_input_ValueChanged(object sender, System.EventArgs e)
         {
-            float v = 0f;
+           float v = 0f;
            float.TryParse((sender as NumericUpDown).Value.ToString(), out v);
-            cable.BuildLength = v;
+           cable.BuildLength = v;
         }
 
         private void linearMass_input_ValueChanged(object sender, System.EventArgs e)
