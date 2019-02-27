@@ -72,8 +72,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void saveCableButton_Click(object sender, System.EventArgs e)
         {
+            if (!checkSelectedDocument()) return;
             cable.IsDraft = false;
-            checkSelectedDocument();
             if (cable.Save())
             {
                 fillFormByCable();
