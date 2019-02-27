@@ -67,7 +67,7 @@
             // 
             // saveCableButton
             // 
-            this.saveCableButton.Location = new System.Drawing.Point(12, 496);
+            this.saveCableButton.Location = new System.Drawing.Point(3, 563);
             this.saveCableButton.Name = "saveCableButton";
             this.saveCableButton.Size = new System.Drawing.Size(112, 32);
             this.saveCableButton.TabIndex = 0;
@@ -342,7 +342,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(171, 496);
+            this.button1.Location = new System.Drawing.Point(191, 550);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(129, 31);
             this.button1.TabIndex = 26;

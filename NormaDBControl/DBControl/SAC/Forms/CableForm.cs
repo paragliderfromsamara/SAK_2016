@@ -248,4 +248,13 @@ namespace NormaMeasure.DBControl.SAC.Forms
             return doc;
         }
     }
+
+    class CableStructureTabPage : TabPage
+    {
+        public CableStructureTabPage()
+        {
+            
+        }
+    }
+
 }

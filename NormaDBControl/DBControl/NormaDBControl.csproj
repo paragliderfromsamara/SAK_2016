@@ -63,6 +63,7 @@
     <Compile Include="SAC\DBEntities\DBSACBase.cs" />
     <Compile Include="SAC\DBEntities\DBSACTablesMigration.cs" />
     <Compile Include="SAC\DBEntities\QADocument.cs" />
+    <Compile Include="Tables\CableStructure.cs" />
     <Compile Include="Tables\Document.cs" />
     <Compile Include="SAC\Forms\CableForm.cs">
       <SubType>Form</SubType>
