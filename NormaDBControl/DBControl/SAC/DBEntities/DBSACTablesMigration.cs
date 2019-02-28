@@ -37,7 +37,8 @@ namespace NormaMeasure.DBControl.SAC
             tableTypes = new Type[]
             {
                typeof(Cable),
-               typeof(Document)
+               typeof(Document),
+               typeof(CableStructure)
             };
             /*
             _tablesList = new DBTable[] 
