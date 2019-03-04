@@ -38,7 +38,12 @@ namespace NormaMeasure.DBControl.SAC
             {
                typeof(Cable),
                typeof(Document),
-               typeof(CableStructure)
+               typeof(CableStructure),
+               typeof(LeadMaterial),
+               typeof(IsolationMaterial),
+               typeof(MeasuredParameterType),
+               typeof(dRBringingFormula),
+               typeof(dRFormula)
             };
             /*
             _tablesList = new DBTable[] 
@@ -54,7 +59,11 @@ namespace NormaMeasure.DBControl.SAC
         {
             DBEntityTable t = base.getSeeds(type);
             if (type == typeof(Document)) makeDocumentTableSeeds(ref t);
-
+            else if (type == typeof(LeadMaterial)) makeLeadMaterialsTableSeeds(ref t);
+            else if (type == typeof(IsolationMaterial)) makeIsolationMaterialsTableSeeds(ref t);
+            else if (type == typeof(MeasuredParameterType)) makeMeasuredParameterTypesTableSeeds(ref t);
+            else if (type == typeof(dRBringingFormula)) make_dRBringingFormulsTableSeeds(ref t);
+            else if (type == typeof(dRFormula)) make_dRFormulsTableSeeds(ref t);
             return t;
         }
 
@@ -74,6 +83,123 @@ namespace NormaMeasure.DBControl.SAC
             }
 
         }
+
+        private void makeLeadMaterialsTableSeeds(ref DBEntityTable t)
+        {
+            string[][] data =
+            {
+                new string[] {"1", "Медь марки ММ"},
+                new string[] {"2", "Медь марки МТ"},
+                new string[] {"3", "Алюминий"}
+            };
+
+            foreach (string[] rData in data)
+            {
+                LeadMaterial d = (LeadMaterial)t.NewRow();
+                d.MaterialId = Convert.ToUInt16(rData[0]);
+                d.MaterialName = rData[1];
+                t.Rows.Add(d);
+            }
+        }
+
+        private void makeIsolationMaterialsTableSeeds(ref DBEntityTable t)
+        {
+            string[][] data =
+{
+                new string[] {"1", "Полиэтилен"},
+                new string[] {"2", "Резина"},
+                new string[] {"3", "Пропитанная бумага"}
+            };
+
+            foreach (string[] rData in data)
+            {
+                IsolationMaterial d = (IsolationMaterial)t.NewRow();
+                d.MaterialId = Convert.ToUInt16(rData[0]);
+                d.MaterialName = rData[1];
+                t.Rows.Add(d);
+            }
+        }
+
+        private void makeMeasuredParameterTypesTableSeeds(ref DBEntityTable t)
+        {
+            string[][] data =
+{
+                new string[] {"1", "Prozvon", "NULL", "Прозвонка"},
+                new string[] {"2", "Rж", "Ом","Сопротивление жил"},
+                new string[] {"3", "dR", "NULL","Оммическая ассиметрия"},
+                new string[] {"4", "Rиз1", "МОм", "Сопротивление изоляции жилы" },
+                new string[] {"5", "Rиз2", "сек", "Время установления измеряемого значения до нормы" },
+                new string[] {"6", "Rиз3", "МОм", "Сопротивление изоляции комбинации жил" },
+                new string[] {"7", "Rиз4", "сек", "Время установления измеряемого значения до нормы для комбинаци жил" },
+                new string[] {"8", "Cр", "нФ","Рабочая ёмкость"},
+                new string[] {"9", "dCр", "нФ","Разность рабочей емкости"},
+                new string[] {"10", "Co", "нФ","Емкость жилы"},
+                new string[] {"11", "Ea", "нФ","Ёмкостная ассиметрия в паре"},
+                new string[] {"12", "K1", "пФ","Ёмкостная связь К_1"},
+                new string[] {"13", "K2,K3", "пФ","Емкостная связь К_2-3"},
+                new string[] {"14", "K9-12", "пФ","Емкостная связь К_9-12"},
+                new string[] {"15", "al", "дБ","Рабочее затухание"},
+                new string[] {"16", "Ao", "дБ","Переходное затухание на ближнем конце"},
+                new string[] {"17", "Az", "дБ","Защищённость на дальнем конце"},
+                new string[] {"18", "K2", "пФ","Ёмкостная связь К_2"},
+                new string[] {"19", "K3", "пФ","Ёмкостная связь К_3"},
+                new string[] {"20", "K9", "пФ","Ёмкостная связь К_9"},
+                new string[] {"21", "K10", "пФ","Ёмкостная связь К_10"},
+                new string[] {"22", "K11", "пФ","Ёмкостная связь К_11"},
+                new string[] {"23", "K12", "пФ","Ёмкостная связь К_12"}
+            };
+
+            foreach (string[] rData in data)
+            {
+                MeasuredParameterType d = (MeasuredParameterType)t.NewRow();
+                d.ParameterTypeId = Convert.ToUInt16(rData[0]);
+                d.ParameterName = rData[1];
+                d.Measure = rData[2];
+                d.Description = rData[3];
+                t.Rows.Add(d);
+            }
+        }
+
+        private void make_dRBringingFormulsTableSeeds(ref DBEntityTable t)
+        {
+            string[][] data =
+            {
+                new string[] {"1", "Priv1", "Без приведения"},
+                new string[] {"2", "Priv2", "DR*Lпр/Lф"},
+                new string[] {"3", "Priv3", "DR*sqrt(Lпр/Lф)"}
+            };
+
+            foreach (string[] rData in data)
+            {
+                dRBringingFormula d = (dRBringingFormula)t.NewRow();
+                d.FormulaId = Convert.ToUInt16(rData[0]);
+                d.FormulaName = rData[1];
+                d.Formula = rData[2];
+                t.Rows.Add(d);
+            }
+        }
+
+        private void make_dRFormulsTableSeeds(ref DBEntityTable t)
+        {
+            string[][] data =
+            {
+                new string[] {"1", "DR1", "Ом", "Ra-Rb"},
+                new string[] {"2", "DR2", "Ом", "(Ra-Rb)/2"},
+                new string[] {"3", "DR3", "%", "(Ra-Rb)/(Ra-Rb)*100%"},
+                new string[] {"4", "DR4", "%", "(Ra-Rb)/(Ra-Rb)*200%"}
+            };
+
+            foreach (string[] rData in data)
+            {
+                dRFormula d = (dRFormula)t.NewRow();
+                d.FormulaId = Convert.ToUInt16(rData[0]);
+                d.FormulaName = rData[1];
+                d.ResultMeasure = rData[2];
+                d.Formula = rData[3];
+                t.Rows.Add(d);
+            }
+        }
+
         /*
 
         #region объявление структур таблиц базы данных

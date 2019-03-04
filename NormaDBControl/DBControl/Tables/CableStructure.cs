@@ -92,16 +92,16 @@ namespace NormaMeasure.DBControl.Tables
         /// <summary>
         /// ID типа материала токопроводящей жилы
         /// </summary>
-        [DBColumn("lead_material_type_id", ColumnDomain.UInt, Order = 15, OldDBColumnName = "MaterGil", Nullable = false)]
+        [DBColumn("lead_material_id", ColumnDomain.UInt, Order = 15, OldDBColumnName = "MaterGil", Nullable = false)]
         public uint LeadMaterialTypeId
         {
             get
             {
-                return tryParseUInt("lead_material_type_id");
+                return tryParseUInt("lead_material_id");
             }
             set
             {
-                this["lead_material_type_id"] = value;
+                this["lead_material_id"] = value;
             }
         }
 
@@ -124,16 +124,16 @@ namespace NormaMeasure.DBControl.Tables
         /// <summary>
         /// ID типа материала изоляции жил структуры
         /// </summary>
-        [DBColumn("isolation_material_type_id", ColumnDomain.UInt, Order = 17, OldDBColumnName = "MaterIsol", Nullable = false)]
-        public uint IsolationMaterialTypeId
+        [DBColumn("isolation_material_id", ColumnDomain.UInt, Order = 17, OldDBColumnName = "MaterIsol", Nullable = false)]
+        public uint IsolationMaterialId
         {
             get
             {
-                return tryParseUInt("isolation_material_type_id");
+                return tryParseUInt("isolation_material_id");
             }
             set
             {
-                this["isolation_material_type_id"] = value;
+                this["isolation_material_id"] = value;
             }
         }
 

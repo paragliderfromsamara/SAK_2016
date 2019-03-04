@@ -78,6 +78,11 @@
       <DependentUpon>CablesListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ServiceFunctions.cs" />
+    <Compile Include="Tables\dRBringingFormula.cs" />
+    <Compile Include="Tables\dRFormula.cs" />
+    <Compile Include="Tables\IsolationMaterial.cs" />
+    <Compile Include="Tables\LeadMaterial.cs" />
+    <Compile Include="Tables\MeasuredParameterType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NormaDBControlClassDiagram.cd" />
