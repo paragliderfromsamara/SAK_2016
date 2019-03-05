@@ -540,6 +540,7 @@ namespace NormaMeasure.DBControl
         public int Size;
         public bool IsPrimaryKey;
         public bool Nullable;
+        public string SetTypeValue;
         public string Name
         {
             get { return _name; }
@@ -661,6 +662,16 @@ namespace NormaMeasure.DBControl
                         type = "DATETIME";
                         break;
                     }
+                case ColumnDomain.Set:
+                    {
+                        type = $"SET({SetTypeValue})";
+                        break;
+                    }
+                case ColumnDomain.Blob:
+                    {
+                        type = "TINYBLOB";
+                        break;
+                    }
             }
             if (!Nullable)
             {
@@ -683,7 +694,9 @@ namespace NormaMeasure.DBControl
         Varchar,
         Char,
         Boolean,
-        DateTime
+        DateTime,
+        Set,
+        Blob
     }
 
 

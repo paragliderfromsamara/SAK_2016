@@ -64,6 +64,7 @@
     <Compile Include="SAC\DBEntities\DBSACTablesMigration.cs" />
     <Compile Include="SAC\DBEntities\QADocument.cs" />
     <Compile Include="Tables\CableStructure.cs" />
+    <Compile Include="Tables\CableStructureType.cs" />
     <Compile Include="Tables\Document.cs" />
     <Compile Include="SAC\Forms\CableForm.cs">
       <SubType>Form</SubType>
@@ -83,6 +84,8 @@
     <Compile Include="Tables\IsolationMaterial.cs" />
     <Compile Include="Tables\LeadMaterial.cs" />
     <Compile Include="Tables\MeasuredParameterType.cs" />
+    <Compile Include="Tables\User.cs" />
+    <Compile Include="Tables\UserRole.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NormaDBControlClassDiagram.cd" />

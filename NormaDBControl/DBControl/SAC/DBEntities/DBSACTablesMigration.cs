@@ -43,7 +43,10 @@ namespace NormaMeasure.DBControl.SAC
                typeof(IsolationMaterial),
                typeof(MeasuredParameterType),
                typeof(dRBringingFormula),
-               typeof(dRFormula)
+               typeof(dRFormula),
+               typeof(CableStructureType),
+               typeof(UserRole),
+               typeof(User)
             };
             /*
             _tablesList = new DBTable[] 
@@ -64,7 +67,52 @@ namespace NormaMeasure.DBControl.SAC
             else if (type == typeof(MeasuredParameterType)) makeMeasuredParameterTypesTableSeeds(ref t);
             else if (type == typeof(dRBringingFormula)) make_dRBringingFormulsTableSeeds(ref t);
             else if (type == typeof(dRFormula)) make_dRFormulsTableSeeds(ref t);
+            else if (type == typeof(CableStructureType)) make_CableStructureTypesTableSeeds(ref t);
+            else if (type == typeof(UserRole)) make_UserGroupsTableSeeds(ref t);
+            else if (type == typeof(User)) make_UsersTablesSeeds(ref t);
+           
             return t;
+        }
+
+        private void make_UsersTablesSeeds(ref DBEntityTable t)
+        {
+            string[][] data = {
+                 new string[] { "1", "Sysadmin", "Sysadmin", "Sysadmin", "0", "1", "123456", "true"}
+            };
+            foreach (string[] rData in data)
+            {
+                User d = (User)t.NewRow();
+                bool isActive = false;
+                d.UserId = Convert.ToUInt16(rData[0]);
+                d.LastName = rData[1];
+                d.FirstName = rData[2];
+                d.ThirdName = rData[3];
+                d.EmployeeNumber = rData[4];
+                d.RoleId = Convert.ToUInt16(rData[5]);
+                d.Password = rData[6];
+                Boolean.TryParse(rData[7], out isActive);
+                d.IsActive = isActive;
+                t.Rows.Add(d);
+            }
+        }
+
+        private void make_UserGroupsTableSeeds(ref DBEntityTable t)
+        {
+            string[][] data = {
+                new string[] { "1", "Администратор БД" },
+                new string[] { "2", "Метролог" },
+                new string[] { "3", "Мастер" },
+                new string[] { "4", "Оператор" },
+                new string[] { "5", "Опрессовщик"  },
+                new string[] { "6", "Перемотчик"}
+            };
+            foreach (string[] rData in data)
+            {
+                UserRole d = (UserRole)t.NewRow();
+                d.UserRoleId = Convert.ToUInt16(rData[0]);
+                d.UserRoleName = rData[1];
+                t.Rows.Add(d);
+            }
         }
 
         private void makeDocumentTableSeeds(ref DBEntityTable t)
@@ -197,6 +245,29 @@ namespace NormaMeasure.DBControl.SAC
                 d.FormulaName = rData[1];
                 d.ResultMeasure = rData[2];
                 d.Formula = rData[3];
+                t.Rows.Add(d);
+            }
+        }
+
+        private void make_CableStructureTypesTableSeeds(ref DBEntityTable t)
+        {
+            string[][] data =
+{
+                new string[] {"1", "Жила", "1", "1,2,4,5,6,7,10"},
+                new string[] {"2", "Пара", "2","1,2,3,4,5,6,7,8,9,10,11,15,16,17"},
+                new string[] {"3", "Тройка", "3","1,2,4,5,6,7,10"},
+                new string[] {"4", "Четвёрка", "4", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17" },
+                new string[] {"5", "Высокочастотная четвёрка", "4", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17" }
+            };
+
+            foreach (string[] rData in data)
+            {
+                CableStructureType d = (CableStructureType)t.NewRow();
+                d.StructureTypeId = Convert.ToUInt16(rData[0]);
+                d.StructureTypeName = rData[1];
+                d.StructureLeadsAmount = Convert.ToInt16(rData[2]);
+                d.StructureLeadsAmountAsString = rData[3];
+
                 t.Rows.Add(d);
             }
         }

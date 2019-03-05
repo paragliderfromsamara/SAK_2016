@@ -58,12 +58,13 @@ namespace NormaMeasure.DBControl
         public int Order;
         public bool IsPrimaryKey = false;
         public object DefaultValue = null;
+        public string SetTypeValue = null;
 
         public DBTableColumn ColumnStruct
         {
             get
             {
-                DBTableColumn c = new DBTableColumn() { DefaultValue = DefaultValue, ColumnType = DataType, Size = Size, Name = ColumnName, OldName = OldDBColumnName, IsPrimaryKey = IsPrimaryKey, Nullable = Nullable};
+                DBTableColumn c = new DBTableColumn() { DefaultValue = DefaultValue, SetTypeValue = SetTypeValue,ColumnType = DataType, Size = Size, Name = ColumnName, OldName = OldDBColumnName, IsPrimaryKey = IsPrimaryKey, Nullable = Nullable};
                 return c;
             }
         }
