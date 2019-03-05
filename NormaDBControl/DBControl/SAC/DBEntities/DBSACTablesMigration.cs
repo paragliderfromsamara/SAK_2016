@@ -88,9 +88,9 @@ namespace NormaMeasure.DBControl.SAC
         {
             string[][] data =
             {
-                new string[] {"1", "Медь марки ММ"},
-                new string[] {"2", "Медь марки МТ"},
-                new string[] {"3", "Алюминий"}
+                new string[] {"1", "Медь марки ММ", "0.00393"},
+                new string[] {"2", "Медь марки МТ", "0.00381"},
+                new string[] {"3", "Алюминий", "0.00403" }
             };
 
             foreach (string[] rData in data)
@@ -98,6 +98,7 @@ namespace NormaMeasure.DBControl.SAC
                 LeadMaterial d = (LeadMaterial)t.NewRow();
                 d.MaterialId = Convert.ToUInt16(rData[0]);
                 d.MaterialName = rData[1];
+                d.MaterialTKC = Convert.ToSingle(rData[2]);
                 t.Rows.Add(d);
             }
         }

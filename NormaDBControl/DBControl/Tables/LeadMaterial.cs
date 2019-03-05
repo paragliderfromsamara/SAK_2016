@@ -39,5 +39,18 @@ namespace NormaMeasure.DBControl.Tables
                 this["lead_material_name"] = value;
             }
         }
+
+        [DBColumn("lead_material_tkc", ColumnDomain.Float, Order = 13, OldDBColumnName = "TKC_1", Nullable = true)]
+        public float MaterialTKC
+        {
+            get
+            {
+                return tryParseFloat("lead_material_tkc");
+            }
+            set
+            {
+                this["lead_material_tkc"] = value;
+            }
+        }
     }
 }
