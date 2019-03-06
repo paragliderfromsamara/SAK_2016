@@ -14,6 +14,40 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static User build()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(User));
+            User u = (User)t.NewRow();
+            u.RoleId = 4;
+            return u;
+        }
+
+        public static DBEntityTable get_all_as_table()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(User));
+            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN user_roles USING(user_role_id) WHERE is_active = 1 AND NOT user_id = 1"; // 
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
+        public string FullNameShort
+        {
+            get
+            {
+                string _nameFull = LastName;
+                if (!String.IsNullOrWhiteSpace(FirstName)) _nameFull += $"{FirstName.ToUpper()[0]}.";
+                if (!String.IsNullOrWhiteSpace(ThirdName)) _nameFull += $"{ThirdName.ToUpper()[0]}.";
+                return _nameFull;
+            }
+        }
+
+        public bool DeleteUser()
+        {
+            this.IsActive = false;
+            return this.Save();
+        }
+
+
         [DBColumn("user_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "UserNum", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint UserId
         {

@@ -11,12 +11,13 @@ using NormaMeasure.DBControl.Tables;
 
 namespace NormaMeasure.DBControl.SAC.Forms
 {
-    public partial class BarabanTypesControlForm : Form
+    public partial class BarabanTypesControlForm : DBEntityControlForm
     {
         private BarabanType barabanType;
         public BarabanTypesControlForm()
         {
             InitializeComponent();
+            formDataSet = barabanTypesDS;
             InitNewBaraban();
             loadBarabanTypes();
         }
@@ -31,14 +32,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private void loadBarabanTypes()
         {
             DataTable bTypesTable = BarabanType.get_all_as_table();
-            if (barabanTypesDS.Tables.Contains(bTypesTable.TableName))
-            {
-                barabanTypesDS.Tables[bTypesTable.TableName].Merge(bTypesTable);
-            }
-            else
-            {
-                barabanTypesDS.Tables.Add(bTypesTable);
-            }
+            AddOrMergeTableToFormDataSet(bTypesTable);
             barabanTypeList.DataSource = bTypesTable;
             barabanTypeList.Refresh();
         }

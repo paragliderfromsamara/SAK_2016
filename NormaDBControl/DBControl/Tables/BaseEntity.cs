@@ -101,9 +101,11 @@ namespace NormaMeasure.DBControl.Tables
         {
             string q = ((DBEntityTable)this.Table).UpdateQuery;
             string keyAndVals = String.Empty;
+            string[] selfColumns = ((DBEntityTable)this.Table).getColumnNames();
             if (String.IsNullOrWhiteSpace(upd_criteria)) throw new DBEntityException($"Отсутствует критерий для Update() объекта {this.GetType().Name}");
             foreach(DataColumn dc in this.Table.Columns)
             {
+                if (!selfColumns.Contains(dc.ColumnName)) continue; //Проверяем принадлежит ли данная колонка данному типу
                 if (!String.IsNullOrEmpty(keyAndVals)) keyAndVals += ", ";
                 keyAndVals += $"{dc.ColumnName} = {dbColumnValue(dc)}"; 
             }

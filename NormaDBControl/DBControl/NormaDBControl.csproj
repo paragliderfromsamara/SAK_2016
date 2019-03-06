@@ -56,6 +56,9 @@
     <Compile Include="SAC\Forms\BarabanTypesControlForm.Designer.cs">
       <DependentUpon>BarabanTypesControlForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SAC\Forms\DBEntityControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SAC\Forms\UsersForm.cs">
       <SubType>Form</SubType>
     </Compile>

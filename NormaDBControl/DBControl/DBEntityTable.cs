@@ -52,7 +52,6 @@ namespace NormaMeasure.DBControl
         {
             string vals = String.Empty;
             string keys = String.Empty;
-
             foreach (DataColumn col in this.Columns)
             {
                 if (ignorePrimaryKeys && this.PrimaryKey.Contains(col)) continue;
@@ -109,6 +108,20 @@ namespace NormaMeasure.DBControl
             return counter;
         }
 
+        public string[] getColumnNames()
+        {
+            List<string> cols = new List<string>();
+            foreach (PropertyInfo prop in entity_type.GetProperties())
+            {
+                object[] columnAttributes = prop.GetCustomAttributes(typeof(DBColumnAttribute), true);
+                if (columnAttributes.Length == 1)
+                {
+                    DBColumnAttribute dca = columnAttributes[0] as DBColumnAttribute;
+                    cols.Add(dca.ColumnName);
+                }
+            }
+            return cols.ToArray();
+        }
 
         private void ConstructColumns()
         {

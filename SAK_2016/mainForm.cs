@@ -23,7 +23,6 @@ namespace NormaMeasure.SAC_APP
         public autoTestForm autoTestForm = null;
         public dbCablesForm dbCablesForm = null;
         public dbTestsForm dbTestForm = null;
-        public dbUsersForm dbUsersForm = null;
 
         private UsersForm usersForm;
         private CablesListForm cablesListForm;

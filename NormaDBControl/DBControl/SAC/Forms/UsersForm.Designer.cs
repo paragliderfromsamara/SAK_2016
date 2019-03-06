@@ -28,15 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.usersList = new System.Windows.Forms.DataGridView();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.user_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.last_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.third_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.employee_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.role_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.password = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.user_role_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.is_active = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RowContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.initEditUserMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.delUserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userFormField = new System.Windows.Forms.GroupBox();
             this.cancelEditUser = new System.Windows.Forms.Button();
             this.saveUserData = new System.Windows.Forms.Button();
@@ -53,24 +59,32 @@
             this.userLastName = new System.Windows.Forms.TextBox();
             this.userLastNameLabel = new System.Windows.Forms.Label();
             this.userThirdName = new System.Windows.Forms.TextBox();
+            this.userFormDataSet = new System.Data.DataSet();
             ((System.ComponentModel.ISupportInitialize)(this.usersList)).BeginInit();
+            this.RowContextMenuStrip.SuspendLayout();
             this.userFormField.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.userFormDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // usersList
             // 
+            this.usersList.AllowUserToAddRows = false;
+            this.usersList.AllowUserToDeleteRows = false;
             this.usersList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.usersList.BackgroundColor = System.Drawing.Color.LightGray;
             this.usersList.ColumnHeadersHeight = 30;
             this.usersList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id,
+            this.user_id,
             this.last_name,
             this.name,
             this.third_name,
             this.employee_number,
             this.role_name,
-            this.password});
+            this.password,
+            this.user_role_id,
+            this.is_active});
             this.usersList.Location = new System.Drawing.Point(12, 145);
+            this.usersList.MultiSelect = false;
             this.usersList.Name = "usersList";
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.NullValue = "-";
@@ -78,6 +92,7 @@
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Teal;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.usersList.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.usersList.RowTemplate.ContextMenuStrip = this.RowContextMenuStrip;
             this.usersList.RowTemplate.Height = 30;
             this.usersList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.usersList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -85,13 +100,13 @@
             this.usersList.StandardTab = true;
             this.usersList.TabIndex = 13;
             // 
-            // id
+            // user_id
             // 
-            this.id.DataPropertyName = "id";
-            this.id.FillWeight = 101.7259F;
-            this.id.HeaderText = "id";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
+            this.user_id.DataPropertyName = "user_id";
+            this.user_id.FillWeight = 101.7259F;
+            this.user_id.HeaderText = "id";
+            this.user_id.Name = "user_id";
+            this.user_id.ReadOnly = true;
             // 
             // last_name
             // 
@@ -103,7 +118,7 @@
             // 
             // name
             // 
-            this.name.DataPropertyName = "name";
+            this.name.DataPropertyName = "first_name";
             this.name.FillWeight = 101.7259F;
             this.name.HeaderText = "Имя";
             this.name.Name = "name";
@@ -128,7 +143,7 @@
             // 
             // role_name
             // 
-            this.role_name.DataPropertyName = "role_name";
+            this.role_name.DataPropertyName = "user_role_name";
             this.role_name.FillWeight = 101.7259F;
             this.role_name.HeaderText = "Должность";
             this.role_name.Name = "role_name";
@@ -141,6 +156,42 @@
             this.password.Name = "password";
             this.password.ReadOnly = true;
             this.password.Visible = false;
+            // 
+            // user_role_id
+            // 
+            this.user_role_id.DataPropertyName = "user_role_id";
+            this.user_role_id.HeaderText = "user_role_id";
+            this.user_role_id.Name = "user_role_id";
+            this.user_role_id.Visible = false;
+            // 
+            // is_active
+            // 
+            this.is_active.DataPropertyName = "is_active";
+            this.is_active.HeaderText = "is_active";
+            this.is_active.Name = "is_active";
+            this.is_active.Visible = false;
+            // 
+            // RowContextMenuStrip
+            // 
+            this.RowContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.initEditUserMode,
+            this.delUserMenuItem});
+            this.RowContextMenuStrip.Name = "RowContextMenuStrip";
+            this.RowContextMenuStrip.Size = new System.Drawing.Size(153, 70);
+            // 
+            // initEditUserMode
+            // 
+            this.initEditUserMode.Name = "initEditUserMode";
+            this.initEditUserMode.Size = new System.Drawing.Size(152, 22);
+            this.initEditUserMode.Text = "Изменить";
+            this.initEditUserMode.Click += new System.EventHandler(this.initEditUserMode_Click);
+            // 
+            // delUserMenuItem
+            // 
+            this.delUserMenuItem.Name = "delUserMenuItem";
+            this.delUserMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.delUserMenuItem.Text = "Удалить";
+            this.delUserMenuItem.Click += new System.EventHandler(this.delUserMenuItem_Click);
             // 
             // userFormField
             // 
@@ -174,6 +225,7 @@
             this.cancelEditUser.TabIndex = 15;
             this.cancelEditUser.Text = "Отменить";
             this.cancelEditUser.UseVisualStyleBackColor = true;
+            this.cancelEditUser.Click += new System.EventHandler(this.cancelEditUser_Click);
             // 
             // saveUserData
             // 
@@ -183,6 +235,7 @@
             this.saveUserData.TabIndex = 14;
             this.saveUserData.Text = "Сохранить";
             this.saveUserData.UseVisualStyleBackColor = true;
+            this.saveUserData.Click += new System.EventHandler(this.saveUserData_Click);
             // 
             // label1
             // 
@@ -213,6 +266,7 @@
             // 
             this.userPassword.Location = new System.Drawing.Point(651, 47);
             this.userPassword.Name = "userPassword";
+            this.userPassword.PasswordChar = '*';
             this.userPassword.Size = new System.Drawing.Size(106, 20);
             this.userPassword.TabIndex = 5;
             // 
@@ -233,6 +287,7 @@
             this.addUserButton.TabIndex = 6;
             this.addUserButton.Text = "Добавить";
             this.addUserButton.UseVisualStyleBackColor = true;
+            this.addUserButton.Click += new System.EventHandler(this.addUserButton_Click);
             // 
             // userRoleLabel
             // 
@@ -293,6 +348,10 @@
             this.userThirdName.Size = new System.Drawing.Size(123, 20);
             this.userThirdName.TabIndex = 2;
             // 
+            // userFormDataSet
+            // 
+            this.userFormDataSet.DataSetName = "NewDataSet";
+            // 
             // UsersForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -304,8 +363,10 @@
             this.Name = "UsersForm";
             this.Text = "Управление пользователями";
             ((System.ComponentModel.ISupportInitialize)(this.usersList)).EndInit();
+            this.RowContextMenuStrip.ResumeLayout(false);
             this.userFormField.ResumeLayout(false);
             this.userFormField.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.userFormDataSet)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -313,22 +374,12 @@
         #endregion
 
         private System.Windows.Forms.DataGridView usersList;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn last_name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn third_name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn employee_number;
-        private System.Windows.Forms.DataGridViewTextBoxColumn role_name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn password;
         private System.Windows.Forms.GroupBox userFormField;
-        private System.Windows.Forms.Button cancelEditUser;
-        private System.Windows.Forms.Button saveUserData;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox userTabNum;
         private System.Windows.Forms.Label userPasswordLabel;
         private System.Windows.Forms.TextBox userPassword;
         private System.Windows.Forms.ComboBox userRole;
-        private System.Windows.Forms.Button addUserButton;
         private System.Windows.Forms.Label userRoleLabel;
         private System.Windows.Forms.TextBox userFirstName;
         private System.Windows.Forms.Label userFirstNameLabel;
@@ -336,5 +387,21 @@
         private System.Windows.Forms.TextBox userLastName;
         private System.Windows.Forms.Label userLastNameLabel;
         private System.Windows.Forms.TextBox userThirdName;
+        private System.Windows.Forms.Button cancelEditUser;
+        private System.Windows.Forms.Button saveUserData;
+        private System.Windows.Forms.Button addUserButton;
+        private System.Data.DataSet userFormDataSet;
+        private System.Windows.Forms.ContextMenuStrip RowContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem initEditUserMode;
+        private System.Windows.Forms.ToolStripMenuItem delUserMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn user_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn last_name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn third_name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn employee_number;
+        private System.Windows.Forms.DataGridViewTextBoxColumn role_name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn password;
+        private System.Windows.Forms.DataGridViewTextBoxColumn user_role_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn is_active;
     }
 }

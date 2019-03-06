@@ -138,12 +138,6 @@
     <Compile Include="dbForms\dbTestsForm.Designer.cs">
       <DependentUpon>dbTestsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="dbForms\dbUsersForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="dbForms\dbUsersForm.Designer.cs">
-      <DependentUpon>dbUsersForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="IniFile.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
@@ -186,9 +180,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="dbForms\dbCablesForm.resx">
       <DependentUpon>dbCablesForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="dbForms\dbUsersForm.resx">
-      <DependentUpon>dbUsersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>

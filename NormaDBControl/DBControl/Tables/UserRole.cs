@@ -14,6 +14,15 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static DBEntityTable get_all_as_table()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(UserRole));
+            string select_cmd = $"{t.SelectQuery}";
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
+
         [DBColumn("user_role_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "DolshNum", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint UserRoleId
         {
