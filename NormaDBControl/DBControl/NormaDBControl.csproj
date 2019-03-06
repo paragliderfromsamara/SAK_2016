@@ -82,6 +82,7 @@
     <Compile Include="ServiceFunctions.cs" />
     <Compile Include="Tables\dRBringingFormula.cs" />
     <Compile Include="Tables\dRFormula.cs" />
+    <Compile Include="Tables\FrequencyRange.cs" />
     <Compile Include="Tables\IsolationMaterial.cs" />
     <Compile Include="Tables\LeadMaterial.cs" />
     <Compile Include="Tables\LeadTestStatus.cs" />

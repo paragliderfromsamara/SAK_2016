@@ -50,7 +50,8 @@ namespace NormaMeasure.DBControl.SAC
                typeof(BarabanType),
                typeof(ReleasedBaraban),
                typeof(LengthBringingType),
-               typeof(LeadTestStatus)
+               typeof(LeadTestStatus),
+               typeof(FrequencyRange)
             };
             /*
             _tablesList = new DBTable[] 
@@ -76,8 +77,25 @@ namespace NormaMeasure.DBControl.SAC
             else if (type == typeof(User)) make_UsersTablesSeeds(ref t);
             else if (type == typeof(LengthBringingType)) make_LengthBringingTypesTablesSeeds(ref t);
             else if (type == typeof(LeadTestStatus)) make_LeadTestStatussTablesSeeds(ref t);
+            else if (type == typeof(FrequencyRange)) make_FrequencyRangesTablesSeeds(ref t);
 
             return t;
+        }
+
+        private void make_FrequencyRangesTablesSeeds(ref DBEntityTable t)
+        {
+            string[][] data = {
+                new string[] {"1", null, null, null}
+            };
+            foreach (string[] rData in data)
+            {
+                FrequencyRange d = (FrequencyRange)t.NewRow();
+                d.FrequencyRangeId = Convert.ToUInt16(rData[0]);
+                d.FrequencyMin = Convert.ToUInt16(rData[1]);
+                d.FrequencyMax = Convert.ToUInt16(rData[2]);
+                d.FrequencyStep= Convert.ToUInt16(rData[3]);
+                t.Rows.Add(d);
+            }
         }
 
         private void make_LeadTestStatussTablesSeeds(ref DBEntityTable t)
