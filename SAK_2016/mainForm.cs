@@ -25,6 +25,7 @@ namespace NormaMeasure.SAC_APP
         public dbTestsForm dbTestForm = null;
         public dbUsersForm dbUsersForm = null;
 
+        private UsersForm usersForm;
         private CablesListForm cablesListForm;
         private BarabanTypesControlForm barabanTypesControlForm;
 
@@ -70,10 +71,8 @@ namespace NormaMeasure.SAC_APP
 
         private void dbUsersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dbUsersForm = new dbUsersForm(this);
-            dbUsersForm.MdiParent = this;
-            switchMenuStripItems(false);
-            dbUsersForm.Show();
+            usersForm = new UsersForm();
+            initChildForm(usersForm);
         }
 
         private void mainForm_Load(object sender, EventArgs e)

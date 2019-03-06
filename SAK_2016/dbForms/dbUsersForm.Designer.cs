@@ -51,9 +51,6 @@
             this.rolesDataSet = new System.Data.DataSet();
             this.usersDataSet = new System.Data.DataSet();
             this.usersList = new System.Windows.Forms.DataGridView();
-            this.cellContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.editUserListRow = new System.Windows.Forms.ToolStripMenuItem();
-            this.delUserListRow = new System.Windows.Forms.ToolStripMenuItem();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.last_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -61,6 +58,9 @@
             this.employee_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.role_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.password = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cellContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editUserListRow = new System.Windows.Forms.ToolStripMenuItem();
+            this.delUserListRow = new System.Windows.Forms.ToolStripMenuItem();
             this.userFormField.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rolesDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.usersDataSet)).BeginInit();
@@ -284,28 +284,6 @@
             this.usersList.StandardTab = true;
             this.usersList.TabIndex = 12;
             // 
-            // cellContextMenu
-            // 
-            this.cellContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editUserListRow,
-            this.delUserListRow});
-            this.cellContextMenu.Name = "cellContextMenu";
-            this.cellContextMenu.Size = new System.Drawing.Size(127, 48);
-            // 
-            // editUserListRow
-            // 
-            this.editUserListRow.Name = "editUserListRow";
-            this.editUserListRow.Size = new System.Drawing.Size(126, 22);
-            this.editUserListRow.Text = "изменить";
-            this.editUserListRow.Click += new System.EventHandler(this.editUserListRow_Click);
-            // 
-            // delUserListRow
-            // 
-            this.delUserListRow.Name = "delUserListRow";
-            this.delUserListRow.Size = new System.Drawing.Size(126, 22);
-            this.delUserListRow.Text = "удалить";
-            this.delUserListRow.Click += new System.EventHandler(this.delUserToolStripMenuItem_Click);
-            // 
             // id
             // 
             this.id.DataPropertyName = "id";
@@ -362,6 +340,28 @@
             this.password.Name = "password";
             this.password.ReadOnly = true;
             this.password.Visible = false;
+            // 
+            // cellContextMenu
+            // 
+            this.cellContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editUserListRow,
+            this.delUserListRow});
+            this.cellContextMenu.Name = "cellContextMenu";
+            this.cellContextMenu.Size = new System.Drawing.Size(127, 48);
+            // 
+            // editUserListRow
+            // 
+            this.editUserListRow.Name = "editUserListRow";
+            this.editUserListRow.Size = new System.Drawing.Size(126, 22);
+            this.editUserListRow.Text = "изменить";
+            this.editUserListRow.Click += new System.EventHandler(this.editUserListRow_Click);
+            // 
+            // delUserListRow
+            // 
+            this.delUserListRow.Name = "delUserListRow";
+            this.delUserListRow.Size = new System.Drawing.Size(126, 22);
+            this.delUserListRow.Text = "удалить";
+            this.delUserListRow.Click += new System.EventHandler(this.delUserToolStripMenuItem_Click);
             // 
             // dbUsersForm
             // 

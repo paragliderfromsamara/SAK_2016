@@ -56,6 +56,12 @@
     <Compile Include="SAC\Forms\BarabanTypesControlForm.Designer.cs">
       <DependentUpon>BarabanTypesControlForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SAC\Forms\UsersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SAC\Forms\UsersForm.Designer.cs">
+      <DependentUpon>UsersForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tables\BarabanType.cs" />
     <Compile Include="Tables\BaseEntity.cs" />
     <Compile Include="DBAttributes.cs" />
@@ -111,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SAC\Forms\CablesListForm.resx">
       <DependentUpon>CablesListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SAC\Forms\UsersForm.resx">
+      <DependentUpon>UsersForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
