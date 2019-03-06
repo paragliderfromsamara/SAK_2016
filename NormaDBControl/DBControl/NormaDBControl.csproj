@@ -84,6 +84,8 @@
     <Compile Include="Tables\dRFormula.cs" />
     <Compile Include="Tables\IsolationMaterial.cs" />
     <Compile Include="Tables\LeadMaterial.cs" />
+    <Compile Include="Tables\LeadTestStatus.cs" />
+    <Compile Include="Tables\LengthBringingType.cs" />
     <Compile Include="Tables\MeasuredParameterType.cs" />
     <Compile Include="Tables\ReleasedBaraban.cs" />
     <Compile Include="Tables\User.cs" />

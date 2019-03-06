@@ -48,7 +48,9 @@ namespace NormaMeasure.DBControl.SAC
                typeof(UserRole),
                typeof(User),
                typeof(BarabanType),
-               typeof(ReleasedBaraban)
+               typeof(ReleasedBaraban),
+               typeof(LengthBringingType),
+               typeof(LeadTestStatus)
             };
             /*
             _tablesList = new DBTable[] 
@@ -72,8 +74,45 @@ namespace NormaMeasure.DBControl.SAC
             else if (type == typeof(CableStructureType)) make_CableStructureTypesTableSeeds(ref t);
             else if (type == typeof(UserRole)) make_UserGroupsTableSeeds(ref t);
             else if (type == typeof(User)) make_UsersTablesSeeds(ref t);
-           
+            else if (type == typeof(LengthBringingType)) make_LengthBringingTypesTablesSeeds(ref t);
+            else if (type == typeof(LeadTestStatus)) make_LeadTestStatussTablesSeeds(ref t);
+
             return t;
+        }
+
+        private void make_LeadTestStatussTablesSeeds(ref DBEntityTable t)
+        {
+            string[][] data = {
+                new string[] {"0", "Годна"},
+                new string[] {"1", "Оборвана"},
+                new string[] {"2", "Замкнута"},
+                new string[] {"3", "Пробита"}
+            };
+            foreach (string[] rData in data)
+            {
+                LeadTestStatus d = (LeadTestStatus)t.NewRow();
+                d.StatusId = Convert.ToUInt16(rData[0]);
+                d.StatusTitle = rData[1];
+                t.Rows.Add(d);
+            }
+        }
+
+        private void make_LengthBringingTypesTablesSeeds(ref DBEntityTable t)
+        {
+            string[][] data = {
+                new string[] {"0", "", "Не задана"},
+                new string[] {"1", "/Lстр", "к строительной длине"},
+                new string[] {"2", "/км", "к километру"},
+                new string[] {"3", "/({0}м)", "другая" }
+            };
+            foreach (string[] rData in data)
+            {
+                LengthBringingType d = (LengthBringingType)t.NewRow();
+                d.TypeId = Convert.ToUInt16(rData[0]);
+                d.MeasureTitle = rData[1];
+                d.BringingName = rData[2];
+                t.Rows.Add(d);
+            }
         }
 
         private void make_UsersTablesSeeds(ref DBEntityTable t)
