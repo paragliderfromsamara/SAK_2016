@@ -46,7 +46,9 @@ namespace NormaMeasure.DBControl.SAC
                typeof(dRFormula),
                typeof(CableStructureType),
                typeof(UserRole),
-               typeof(User)
+               typeof(User),
+               typeof(BarabanType),
+               typeof(ReleasedBaraban)
             };
             /*
             _tablesList = new DBTable[] 

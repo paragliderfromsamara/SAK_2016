@@ -50,6 +50,7 @@
     <Compile Include="DBEntityTable.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Tables\BarabanType.cs" />
     <Compile Include="Tables\BaseEntity.cs" />
     <Compile Include="DBAttributes.cs" />
     <Compile Include="DBEntityBase.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Tables\IsolationMaterial.cs" />
     <Compile Include="Tables\LeadMaterial.cs" />
     <Compile Include="Tables\MeasuredParameterType.cs" />
+    <Compile Include="Tables\ReleasedBaraban.cs" />
     <Compile Include="Tables\User.cs" />
     <Compile Include="Tables\UserRole.cs" />
   </ItemGroup>
