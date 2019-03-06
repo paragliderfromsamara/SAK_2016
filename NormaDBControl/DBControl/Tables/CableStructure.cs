@@ -14,7 +14,7 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktInd", Nullable = true, IsPrimaryKey = true)]
+        [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint CableStructureId
         {
             get

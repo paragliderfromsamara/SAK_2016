@@ -541,6 +541,7 @@ namespace NormaMeasure.DBControl
         public bool IsPrimaryKey;
         public bool Nullable;
         public string SetTypeValue;
+        public bool AutoIncrement;
         public string Name
         {
             get { return _name; }
@@ -647,14 +648,7 @@ namespace NormaMeasure.DBControl
 
                 case ColumnDomain.UInt:
                     {
-                        if (IsPrimaryKey)
-                        {
-                            type = "INT UNSIGNED AUTO_INCREMENT";
-                        }
-                        else
-                        {
-                            type = "INT UNSIGNED";
-                        }
+                        type = "INT UNSIGNED";
                         break;
                     }
                 case ColumnDomain.DateTime:
@@ -673,6 +667,7 @@ namespace NormaMeasure.DBControl
                         break;
                     }
             }
+            if (AutoIncrement) type += " AUTO_INCREMENT";
             if (!Nullable)
             {
                 type += " NOT NULL";

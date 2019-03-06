@@ -85,7 +85,7 @@ namespace NormaMeasure.DBControl.Tables
             return t;
         }
 
-        [DBColumn("document_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "DocInd", IsPrimaryKey = true)]
+        [DBColumn("document_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "DocInd", IsPrimaryKey = true, AutoIncrement = true)]
         public uint DocumentId
         {
             get
