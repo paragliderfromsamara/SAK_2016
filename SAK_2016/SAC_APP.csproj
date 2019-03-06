@@ -99,7 +99,6 @@
     </Compile>
     <Compile Include="dbSakModels\CableStructuresList.cs" />
     <Compile Include="dbSakModels\dataMigration.cs" />
-    <Compile Include="dbSakModels\dbBaraban.cs" />
     <Compile Include="dbSakModels\Cable.cs" />
     <Compile Include="dbSakModels\CableStructure.cs" />
     <Compile Include="dbSakModels\dbCableStructureType.cs" />
@@ -126,12 +125,6 @@
     </Compile>
     <Compile Include="testsForm\autoTestForm.Designer.cs">
       <DependentUpon>autoTestForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="dbForms\dbBarabansForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="dbForms\dbBarabansForm.Designer.cs">
-      <DependentUpon>dbBarabansForm.cs</DependentUpon>
     </Compile>
     <Compile Include="dbForms\dbCablesForm.cs">
       <SubType>Form</SubType>
@@ -190,9 +183,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="testsForm\autoTestForm.resx">
       <DependentUpon>autoTestForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="dbForms\dbBarabansForm.resx">
-      <DependentUpon>dbBarabansForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="dbForms\dbCablesForm.resx">
       <DependentUpon>dbCablesForm.cs</DependentUpon>

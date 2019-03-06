@@ -14,6 +14,78 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static BarabanType build()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(BarabanType));
+            BarabanType bt = (BarabanType)t.NewRow();
+            bt.BarabanWeight = 0;
+            bt.TypeName = "";
+            return (BarabanType)t.NewRow();
+        }
+
+        public new bool Save()
+        {
+            try
+            {
+                Validate();
+                return base.Save();
+            }
+            catch (DBEntityException ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Не удалось добавить тип барабана...", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                return false;
+            }
+        }
+
+        protected void Validate()
+        {
+            ErrorsList.Clear();
+            CheckNameUniquiness();
+            CheckNameNotBlank();
+            CheckWeight();
+            if (HasErrors()) ValidationException();
+        }
+
+        protected void CheckWeight()
+        {
+            if (BarabanWeight < 0)
+            {
+                this.ErrorsList.Add("Вес барабана не может быть отрицательным");
+            }else if (BarabanWeight > 5000)
+            {
+                this.ErrorsList.Add("Вес барабана не может быть больше 5000 кг");
+            }
+        }
+        protected void CheckNameNotBlank()
+        {
+            if (String.IsNullOrWhiteSpace(TypeName))
+            {
+                this.ErrorsList.Add("Наименование типа барабана не должно быть пустым");
+            }
+
+        }
+
+        protected void CheckNameUniquiness()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(BarabanType));
+            string select_cmd = $"{t.SelectQuery} WHERE (NOT baraban_type_id = {this.TypeId}) AND baraban_type_name = '{this.TypeName}'";
+            t.FillByQuery(select_cmd);
+            if (t.Rows.Count > 0)
+            {
+                this.ErrorsList.Add("Наименование типа барабана должно быть уникальным");
+            }
+        }
+
+
+        public static DBEntityTable get_all_as_table()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(BarabanType));
+            string select_cmd = $"{t.SelectQuery}";
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
+
         [DBColumn("baraban_type_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "TipInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint TypeId
         {

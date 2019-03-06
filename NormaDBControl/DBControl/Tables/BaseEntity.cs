@@ -26,7 +26,7 @@ namespace NormaMeasure.DBControl.Tables
             {
                 isCompleted = Update();
             }
-            if (isCompleted) this.AcceptChanges(); //Меняем обновляем RowState
+            if (isCompleted && this.RowState != DataRowState.Detached) this.AcceptChanges(); //Меняем обновляем RowState
             return isCompleted;
         }
 
@@ -63,7 +63,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public bool IsNewRecord()
         {
-            return this.RowState == DataRowState.Added;
+            return this.RowState == DataRowState.Added || this.RowState == DataRowState.Detached;
         }
 
         /// <summary>

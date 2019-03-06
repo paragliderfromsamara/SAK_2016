@@ -50,6 +50,12 @@
     <Compile Include="DBEntityTable.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SAC\Forms\BarabanTypesControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SAC\Forms\BarabanTypesControlForm.Designer.cs">
+      <DependentUpon>BarabanTypesControlForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tables\BarabanType.cs" />
     <Compile Include="Tables\BaseEntity.cs" />
     <Compile Include="DBAttributes.cs" />
@@ -87,6 +93,7 @@
     <Compile Include="Tables\LeadMaterial.cs" />
     <Compile Include="Tables\LeadTestStatus.cs" />
     <Compile Include="Tables\LengthBringingType.cs" />
+    <Compile Include="Tables\MeasuredParameterData.cs" />
     <Compile Include="Tables\MeasuredParameterType.cs" />
     <Compile Include="Tables\ReleasedBaraban.cs" />
     <Compile Include="Tables\User.cs" />
@@ -96,6 +103,9 @@
     <None Include="NormaDBControlClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SAC\Forms\BarabanTypesControlForm.resx">
+      <DependentUpon>BarabanTypesControlForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SAC\Forms\CableForm.resx">
       <DependentUpon>CableForm.cs</DependentUpon>
     </EmbeddedResource>

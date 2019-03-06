@@ -24,9 +24,9 @@ namespace NormaMeasure.SAC_APP
         public dbCablesForm dbCablesForm = null;
         public dbTestsForm dbTestForm = null;
         public dbUsersForm dbUsersForm = null;
-        public dbBarabansForm dbBarabansForm = null;
 
         private CablesListForm cablesListForm;
+        private BarabanTypesControlForm barabanTypesControlForm;
 
 
         public dbForms.oldDbDataMigration oldDbDataMigrationForm = null;
@@ -114,26 +114,23 @@ namespace NormaMeasure.SAC_APP
 
         private void dbBarabanToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dbBarabansForm = new dbBarabansForm(this);
-            dbBarabansForm.MdiParent = this;
-            switchMenuStripItems(false);
-            dbBarabansForm.Show();
+            barabanTypesControlForm = new BarabanTypesControlForm();
+            initChildForm(barabanTypesControlForm);
         }
 
         private void dbCableToolStripMenuItem_Click(object sender, EventArgs e)
         {
             cablesListForm = new CablesListForm();
-            cablesListForm.MdiParent = this;
-            cablesListForm.Shown += new EventHandler(ChildForm_Shown);
-            cablesListForm.FormClosed += new FormClosedEventHandler(ChildForm_Closed);
-            cablesListForm.Show();
-
-            //dbCablesForm = new dbCablesForm(this);
-            //dbCablesForm.MdiParent = this;
-            //switchMenuStripItems(false);
-            //dbCablesForm.Show();
+            initChildForm(cablesListForm);
         }
 
+        private void initChildForm(Form f)
+        {
+            f.MdiParent = this;
+            f.Shown += new EventHandler(ChildForm_Shown);
+            f.FormClosed += new FormClosedEventHandler(ChildForm_Closed);
+            f.Show();
+        }
 
 
         private void ChildForm_Shown(object sender, EventArgs e)
