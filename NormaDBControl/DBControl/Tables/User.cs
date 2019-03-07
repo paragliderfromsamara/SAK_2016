@@ -30,6 +30,25 @@ namespace NormaMeasure.DBControl.Tables
         {
             base.ValidateActions();
             CheckLastNamePrescence();
+            CheckEmployeeNumber();
+        }
+
+        private void CheckEmployeeNumber()
+        {
+            if (String.IsNullOrWhiteSpace(EmployeeNumber))
+            {
+                this.ErrorsList.Add("Не указан табельный номер пользователя");
+            }
+            else
+            {
+                DBEntityTable t = new DBEntityTable(typeof(User));
+                string query = $"{t.SelectQuery} WHERE employee_number = '{EmployeeNumber}' AND is_active = 1 AND NOT user_id = {this.UserId}"; // 
+                t.FillByQuery(query);
+                if (t.Rows.Count > 0)
+                {
+                    this.ErrorsList.Add("Указанный табельный номер принадлежит другому пользователю");
+                }
+            }
         }
 
         private void CheckLastNamePrescence()
