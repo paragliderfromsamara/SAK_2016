@@ -43,6 +43,9 @@ namespace NormaMeasure.DBControl.Tables
             AfterValidation();
         }
 
+        /// <summary>
+        /// В этом методе прописываются функции проверки вводимых данных
+        /// </summary>
         protected virtual void ValidateActions()
         {
 
@@ -78,7 +81,7 @@ namespace NormaMeasure.DBControl.Tables
         /// Удаляет объект из БД
         /// </summary>
         /// <returns></returns>
-        public bool Destroy()
+        public virtual bool Destroy()
         {
             return true;
         }
