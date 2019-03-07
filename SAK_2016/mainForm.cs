@@ -84,6 +84,12 @@ namespace NormaMeasure.SAC_APP
             //string cols = DBSACTablesMigration.DocumentsTable.SelectQuery;
 
             //MessageBox.Show(cols);
+
+            initLogin();
+        }
+
+        private void initLogin()
+        {
             Signin signForm = new Signin();
             DialogResult result = signForm.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.Cancel) this.Close();
@@ -97,7 +103,6 @@ namespace NormaMeasure.SAC_APP
                 signForm.Dispose();
                 checkTabsPermission();
             }
-            
         }
 
         private void checkTabsPermission()
