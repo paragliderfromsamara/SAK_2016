@@ -102,7 +102,7 @@ namespace NormaMeasure.DBControl.Tables
             else return null;
         }
 
-        public new bool Save()
+        public override bool Save()
         {
             
             return base.Save();

@@ -16,9 +16,10 @@ namespace NormaMeasure.DBControl.Tables
 
         }
 
-        public bool Save()
+        public virtual bool Save()
         {
             bool isCompleted;
+            Validate();
             if (IsNewRecord())
             {
                 isCompleted = Create();
@@ -30,6 +31,27 @@ namespace NormaMeasure.DBControl.Tables
             return isCompleted;
         }
 
+        protected virtual void BeforeValidation()
+        {
+            ErrorsList.Clear();
+        }
+        
+        private void Validate()
+        {
+            BeforeValidation();
+            ValidateActions();
+            AfterValidation();
+        }
+
+        protected virtual void ValidateActions()
+        {
+
+        }
+
+        protected virtual void AfterValidation()
+        {
+            if (HasErrors()) ValidationException();
+        }
         /// <summary>
         /// Добавляет новый объект в БД
         /// </summary>

@@ -23,11 +23,10 @@ namespace NormaMeasure.DBControl.Tables
             return (BarabanType)t.NewRow();
         }
 
-        public new bool Save()
+        public override bool Save()
         {
             try
             {
-                Validate();
                 return base.Save();
             }
             catch (DBEntityException ex)
@@ -37,13 +36,12 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        protected void Validate()
+        protected override void ValidateActions()
         {
-            ErrorsList.Clear();
+            base.ValidateActions();
             CheckNameUniquiness();
             CheckNameNotBlank();
             CheckWeight();
-            if (HasErrors()) ValidationException();
         }
 
         protected void CheckWeight()

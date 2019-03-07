@@ -14,11 +14,10 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        public new bool Save()
+        public override bool Save()
         {
             try
             {
-                Validate();
                 return base.Save();
             }
             catch(DBEntityException ex)
@@ -28,11 +27,11 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        protected void Validate()
+        protected override void ValidateActions()
         {
+            base.ValidateActions();
             CheckShortNameUniquiness();
             CheckShortNameNotBlank();
-            if (HasErrors()) ValidationException();
         }
 
         protected void CheckShortNameNotBlank()

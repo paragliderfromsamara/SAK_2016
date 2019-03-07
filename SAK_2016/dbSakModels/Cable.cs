@@ -12,7 +12,6 @@ namespace NormaMeasure.SAC_APP
 
         //Характеристики кабеля
         //Собственные атрибуты--------------------------------------------
-        public Document cableDocument;
         public CableStructuresList structures;
         public uint documentId;
         public decimal buildLength, linearMass, uCover, pMin, pMax;
@@ -55,7 +54,6 @@ namespace NormaMeasure.SAC_APP
             this.pMin = ServiceFunctions.convertToDecimal(dr["p_min"]); 
             this.pMax = ServiceFunctions.convertToDecimal(dr["p_max"]);
             this.documentId = ServiceFunctions.convertToUInt(dr["document_id"]);
-            this.cableDocument = new Document(this.documentId); //Подгружаем документ
             this.structures = new CableStructuresList(this.id);
         }
 

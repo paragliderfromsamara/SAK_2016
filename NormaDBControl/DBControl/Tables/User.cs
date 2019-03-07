@@ -14,11 +14,42 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public override bool Save()
+        {
+            try
+            {
+                return base.Save();
+            }catch(DBEntityException ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Не удалось сохранить пользователя...", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                return false;
+            }
+        }
+
+        protected override void ValidateActions()
+        {
+            base.ValidateActions();
+            CheckLastNamePrescence();
+        }
+
+        private void CheckLastNamePrescence()
+        {
+            if (String.IsNullOrWhiteSpace(LastName))
+            {
+                this.ErrorsList.Add("Невозможно сохранить пользователя без фамилии");
+            }
+        }
+
         public static User build()
         {
             DBEntityTable t = new DBEntityTable(typeof(User));
             User u = (User)t.NewRow();
             u.RoleId = 4;
+            u.LastName = String.Empty;
+            u.FirstName = String.Empty;
+            u.ThirdName = String.Empty;
+            u.EmployeeNumber = String.Empty;
+            u.Password = String.Empty;
             return u;
         }
 
