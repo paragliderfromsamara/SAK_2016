@@ -89,11 +89,11 @@ namespace NormaMeasure.SAC_APP
             if (result == System.Windows.Forms.DialogResult.Cancel) this.Close();
             else if (result == System.Windows.Forms.DialogResult.OK)
             {
-                sesUserName.Text = String.Format("{0} {1}.{2}.", signForm.userLastName, signForm.userFirstName[0], signForm.userThirdName[0]);
-                sesTabNum.Text = "Таб.номер: " + signForm.userTabNum;
-                sesRole.Text = "Должность: " + signForm.userRole;
-                user_type = signForm.userRole;
-                user_id = signForm.userId;
+                sesUserName.Text = signForm.sUser.FullNameShort;
+                sesTabNum.Text = "Таб.номер: " + signForm.sUser.EmployeeNumber;
+                sesRole.Text = "Должность: " + signForm.sUser.Role.UserRoleName;
+                user_type = signForm.sUser.Role.UserRoleName;
+                user_id = signForm.sUser.UserId.ToString();
                 signForm.Dispose();
                 checkTabsPermission();
             }

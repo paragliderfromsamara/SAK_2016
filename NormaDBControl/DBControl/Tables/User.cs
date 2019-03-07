@@ -10,8 +10,35 @@ namespace NormaMeasure.DBControl.Tables
     [DBTable("users", "db_norma_sac", OldDBName = "bd_system", OldTableName = "familija_imja_ot")]
     public class User : BaseEntity
     {
+        private UserRole _role;
+        
+        public UserRole Role
+        {
+            get
+            {
+                if (_role == null)
+                {
+                    _role = UserRole.find_by_role_id(this.RoleId);
+                }
+                return _role;
+            }
+        }
+         
         public User(DataRowBuilder builder) : base(builder)
         {
+        }
+
+        public static User SignIn(User u)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(User));
+            string query = $"{t.SelectQuery} WHERE last_name = '{u.LastName}' AND employee_number = '{u.EmployeeNumber}' AND password = '{u.Password}' AND is_active = 1 LIMIT 1";
+            t.FillByQuery(query);
+            if (t.Rows.Count > 0)
+            {
+                u = (User)t.Rows[0];
+                return u;
+            }
+            else return null;
         }
 
         public override bool Save()
