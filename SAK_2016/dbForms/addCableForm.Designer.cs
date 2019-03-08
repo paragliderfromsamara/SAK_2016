@@ -545,7 +545,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.tabControl1);
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.nomElNumb);
@@ -561,10 +560,10 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(75, 42);
+            this.tabControl1.Location = new System.Drawing.Point(606, 360);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(8, 8);
+            this.tabControl1.Size = new System.Drawing.Size(180, 59);
             this.tabControl1.TabIndex = 30;
             // 
             // tabPage1
@@ -572,7 +571,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(0, 0);
+            this.tabPage1.Size = new System.Drawing.Size(172, 33);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -866,6 +865,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Controls.Add(this.groupBox5);
             this.panel1.Controls.Add(this.groupBox4);
             this.panel1.Controls.Add(this.groupCapacityCheckBox);

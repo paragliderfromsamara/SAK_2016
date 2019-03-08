@@ -14,6 +14,14 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static CableStructure build_for_cable(uint cableId)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableStructure));
+            CableStructure s = (CableStructure)t.NewRow();
+            s.CableId = cableId;
+            return s;
+        }
+
         [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint CableStructureId
         {
@@ -217,6 +225,31 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        [DBColumn("dr_bringing_formula_id", ColumnDomain.UInt, Order = 23, OldDBColumnName = "Delta_R", Nullable = true, DefaultValue = 1)]
+        public uint DRBringingFormulaId
+        {
+            get
+            {
+                return tryParseUInt("dr_bringing_formula_id");
+            }
+            set
+            {
+                this["dr_bringing_formula_id"] = value;
+            }
+        }
+
+        [DBColumn("dr_formula_id", ColumnDomain.UInt, Order = 24, OldDBColumnName = "DRPrivInd", Nullable = true, DefaultValue = 1)]
+        public uint DRFormulaId
+        {
+            get
+            {
+                return tryParseUInt("dr_formula_id");
+            }
+            set
+            {
+                this["dr_formula_id"] = value;
+            }
+        }
 
     }
 
