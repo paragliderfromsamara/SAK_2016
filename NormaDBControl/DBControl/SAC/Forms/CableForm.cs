@@ -10,6 +10,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
     public partial class CableForm : Form
     {
         private Cable cable;
+
         public Cable Cable => cable;
         public CableForm()
         {
@@ -29,15 +30,52 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private void AddStructureDraftTab()
         {
             CableStructure draft = CableStructure.build_for_cable(cable.CableId);
-            CableStructureTabPage tp = new CableStructureTabPage(draft);
-            CableStructureTabs.TabPages.Add(tp);
+            AddCableStructureTabPage(draft);
             //CableStructureTabs.Refresh();
+        }
+
+        private void AddCableStructureTabPage(CableStructure structure)
+        {
+            CableStructureTabPage tp = new CableStructureTabPage(structure);
+            tp.FillFromDataSet(cableFormDataSet);
+            CableStructureTabs.TabPages.Add(tp);
         }
 
         private void fillDBData()
         {
             fillCableMarks();
             fillDocuments();
+            fillStructureTypes();
+            fillLeadMaterials();
+            fillIsolationMaterials();
+            fillDRBringingFormuls();
+            fillDRFormuls();
+        }
+
+        #region Заполнение cableFormDataSet необходимыми таблицами
+        private void fillDRFormuls()
+        {
+            cableFormDataSet.Tables.Add(dRFormula.get_all_as_table());
+        }
+
+        private void fillDRBringingFormuls()
+        {
+            cableFormDataSet.Tables.Add(dRBringingFormula.get_all_as_table());
+        }
+
+        private void fillIsolationMaterials()
+        {
+            cableFormDataSet.Tables.Add(IsolationMaterial.get_all_as_table());
+        }
+
+        private void fillLeadMaterials()
+        {
+            cableFormDataSet.Tables.Add(LeadMaterial.get_all_as_table());
+        }
+
+        private void fillStructureTypes()
+        {
+            cableFormDataSet.Tables.Add(CableStructureType.get_all_as_table());
         }
 
         private void fillDocuments()
@@ -50,6 +88,14 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DocumentNumber_input.TextChanged += DocumentNumberInput_Changed;
             DocumentNumber_input.SelectedValue = cable.DocumentId;
         }
+
+        private void fillCableMarks()
+        {
+            cableFormDataSet.Tables.Add(Cable.get_cable_marks());
+            CableMark_input.DisplayMember = CableMark_input.ValueMember = "cable_marks.cable_mark";
+            CableMark_input.Refresh();
+        }
+        #endregion
 
         private string reloadDocumentsDS()
         {
@@ -71,12 +117,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             return docs.TableName;
         }
 
-        private void fillCableMarks()
-        {
-            cableFormDataSet.Tables.Add(Cable.get_cable_marks());
-            CableMark_input.DisplayMember = CableMark_input.ValueMember = "cable_marks.cable_mark";
-            CableMark_input.Refresh();
-        }
+
 
         public CableForm(uint cable_id)
         {
@@ -273,6 +314,61 @@ namespace NormaMeasure.DBControl.SAC.Forms
             InitTabPage();
         }
 
+        public void FillFromDataSet(DataSet ds)
+        {
+            DBEntityTable structureTypesTable = new DBEntityTable(typeof(CableStructureType));
+            DBEntityTable leadMaterialsTable = new DBEntityTable(typeof(LeadMaterial));
+            DBEntityTable isolationMaterialsTable = new DBEntityTable(typeof(IsolationMaterial));
+            DBEntityTable drBringingFormulsTable = new DBEntityTable(typeof(dRBringingFormula));
+            DBEntityTable drFormulsTable = new DBEntityTable(typeof(dRFormula));
+
+            if (ds.Tables.Contains(structureTypesTable.TableName)) fillStructureTypeComboBox(ds.Tables[structureTypesTable.TableName]);
+            if (ds.Tables.Contains(leadMaterialsTable.TableName)) fillLeadMaterialsComboBox(ds.Tables[leadMaterialsTable.TableName]);
+            if (ds.Tables.Contains(isolationMaterialsTable.TableName)) fillIsolationMaterialsComboBox(ds.Tables[isolationMaterialsTable.TableName]);
+            if (ds.Tables.Contains(drFormulsTable.TableName)) fill_dRFormulsComboBox(ds.Tables[drFormulsTable.TableName]);
+            if (ds.Tables.Contains(drBringingFormulsTable.TableName)) fill_drBringingFormulsComboBox(ds.Tables[drBringingFormulsTable.TableName]);
+        }
+
+        private void fill_drBringingFormulsComboBox(DataTable dt)
+        {
+            DRBringingFormulaComboBox.DataSource = dt;
+            DRBringingFormulaComboBox.ValueMember = "dr_bringing_formula_id";
+            DRBringingFormulaComboBox.DisplayMember = "dr_bringing_formula_description";
+            DRBringingFormulaComboBox.Refresh();
+        }
+
+        private void fill_dRFormulsComboBox(DataTable dt)
+        {
+            DRFormulaComboBox.DataSource = dt;
+            DRFormulaComboBox.ValueMember = "dr_formula_id";
+            DRFormulaComboBox.DisplayMember = "dr_formula_description";
+            DRFormulaComboBox.Refresh();
+        }
+
+        private void fillIsolationMaterialsComboBox(DataTable dt)
+        {
+            IsolationMaterialComboBox.DataSource = dt;
+            IsolationMaterialComboBox.ValueMember = "isolation_material_id";
+            IsolationMaterialComboBox.DisplayMember = "isolation_material_name";
+            IsolationMaterialComboBox.Refresh();
+        }
+
+        private void fillLeadMaterialsComboBox(DataTable dt)
+        {
+            LeadMaterialComboBox.DataSource = dt;
+            LeadMaterialComboBox.ValueMember = "lead_material_id";
+            LeadMaterialComboBox.DisplayMember = "lead_material_name";
+            LeadMaterialComboBox.Refresh();
+        }
+
+        private void fillStructureTypeComboBox(DataTable dt)
+        {
+            structureTypeComboBox.DataSource = dt;
+            structureTypeComboBox.ValueMember = "structure_type_id";
+            structureTypeComboBox.DisplayMember = "structure_type_name";
+            structureTypeComboBox.Refresh();
+        }
+
         private void InitTabPage()
         {
             this.Text = "Новая структура";
@@ -299,6 +395,11 @@ namespace NormaMeasure.DBControl.SAC.Forms
             GroupCapacityCheckBox.Parent = this;
             GroupCapacityCheckBox.Text = "Cр группы";
             GroupCapacityCheckBox.Checked = false;
+            //GroupCapacityCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            GroupCapacityCheckBox.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
+            //GroupCapacityCheckBox.Width = 40;
+            //GroupCapacityCheckBox.Height = 50;
+            GroupCapacityCheckBox.AutoSize = true;
         }
 
         private void DrawDRFormulsElements()
@@ -306,17 +407,17 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DRFormulsGroupBox = new GroupBox();
             DRFormulsGroupBox.Parent = this;
             DRFormulsGroupBox.Text = "Омическая ассиметрия";
-            DRFormulsGroupBox.Width = 210;
-            DRFormulsGroupBox.Height = 70;
+            DRFormulsGroupBox.Width = 155;
+            DRFormulsGroupBox.Height = 110;
 
             DRFormulaComboBox = new ComboBox();
             DRFormulaComboBox.Parent = DRFormulsGroupBox;
-            DRFormulaComboBox.Width = 90;
+            DRFormulaComboBox.Width = 135;
             DRFormulaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
             DRBringingFormulaComboBox = new ComboBox();
             DRBringingFormulaComboBox.Parent = DRFormulsGroupBox;
-            DRBringingFormulaComboBox.Width = 90;
+            DRBringingFormulaComboBox.Width = 135;
             DRBringingFormulaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
             DRFormulaLabel = new Label();
@@ -328,9 +429,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DRBringingFormulaLabel.Text = "приведение";
 
             DRFormulaLabel.Location = new System.Drawing.Point(7, 20);
-            DRBringingFormulaLabel.Location = new System.Drawing.Point(107, 20);
+            DRBringingFormulaLabel.Location = new System.Drawing.Point(7, 60);
             DRFormulaComboBox.Location = new System.Drawing.Point(10, 35);
-            DRBringingFormulaComboBox.Location = new System.Drawing.Point(110, 35);
+            DRBringingFormulaComboBox.Location = new System.Drawing.Point(10, 75);
 
         }
 
@@ -413,12 +514,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             LeadMaterialComboBox = new ComboBox();
             LeadMaterialComboBox.Parent = this;
-            LeadMaterialComboBox.Width = 100;
+            LeadMaterialComboBox.Width = 110;
             LeadMaterialComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
             LeadDiametersTextBox = new TextBox();
             LeadDiametersTextBox.Parent = this;
-            LeadDiametersTextBox.Width = 100;
+            LeadDiametersTextBox.Width = 90;
 
             LeadMaterialLabel = new Label();
             LeadMaterialLabel.Parent = this;
@@ -476,7 +577,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             int x=10, y=10;
 
             StructureTypeLabel.Location = new System.Drawing.Point(x-5, y);
-            structureTypeCB.Location = new System.Drawing.Point(x, y += 20);
+            structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
 
             elementsAmountGroupBox.Location = new System.Drawing.Point(x, y+= 30);
             y += elementsAmountGroupBox.Height;
@@ -506,17 +607,15 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             DRFormulsGroupBox.Location = new System.Drawing.Point(x, y+=10);
 
-            y += DRFormulsGroupBox.Height;
-
-            GroupCapacityCheckBox.Location = new System.Drawing.Point(x, y+=10);
+            GroupCapacityCheckBox.Location = new System.Drawing.Point(x+DRFormulsGroupBox.Width, y+=10);
         }
 
         private void DrawStructureTypeCB()
         {
-            structureTypeCB = new ComboBox();
-            structureTypeCB.Parent = this;
-            structureTypeCB.Width = 210;
-            structureTypeCB.DropDownStyle = ComboBoxStyle.DropDownList;
+            structureTypeComboBox = new ComboBox();
+            structureTypeComboBox.Parent = this;
+            structureTypeComboBox.Width = 210;
+            structureTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
             StructureTypeLabel = new Label();
             StructureTypeLabel.Parent = this;
@@ -527,7 +626,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private NumericUpDown shownElementsAmount;
         private NumericUpDown realElementsAmount;
 
-        private ComboBox structureTypeCB;
+        private ComboBox structureTypeComboBox;
 
         private ComboBox LeadMaterialComboBox;
         private TextBox LeadDiametersTextBox;

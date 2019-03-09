@@ -16,6 +16,14 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static DBEntityTable get_all_as_table()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(IsolationMaterial));
+            string select_cmd = $"{t.SelectQuery}";
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
         [DBColumn("isolation_material_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "MaterInd", Nullable = false, IsPrimaryKey = true, AutoIncrement = true)]
         public uint MaterialId
         {

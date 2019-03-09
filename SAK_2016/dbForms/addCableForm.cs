@@ -341,5 +341,10 @@ namespace NormaMeasure.SAC_APP
         {
 
         }
+
+        private void waveResistance_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

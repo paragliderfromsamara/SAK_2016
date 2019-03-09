@@ -14,6 +14,14 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static DBEntityTable get_all_as_table()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(dRBringingFormula));
+            string select_cmd = $"{t.SelectQuery}";
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
         [DBColumn("dr_bringing_formula_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "DRPrivInd", Nullable = true, IsPrimaryKey = true)]
         public uint FormulaId
         {
