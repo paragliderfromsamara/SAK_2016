@@ -36,8 +36,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void AddCableStructureTabPage(CableStructure structure)
         {
-            CableStructureTabPage tp = new CableStructureTabPage(structure);
-            tp.FillFromDataSet(cableFormDataSet);
+            CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
             CableStructureTabs.TabPages.Add(tp);
         }
 
@@ -307,14 +306,41 @@ namespace NormaMeasure.DBControl.SAC.Forms
     class CableStructureTabPage : TabPage
     {
         private CableStructure CableStructure;
-        public CableStructureTabPage(CableStructure structure)
+        public CableStructureTabPage(CableStructure structure, DataSet cableFormDS)
         {
             this.CableStructure = structure;
             DrawElements();
+            FillFromDataSet(cableFormDS);
+            FillCableStructureData();
             InitTabPage();
         }
 
-        public void FillFromDataSet(DataSet ds)
+        /// <summary>
+        /// Заполняем страницу структуры в соответствии с данными структуры
+        /// </summary>
+        private void FillCableStructureData()
+        {
+            structureTypeComboBox.SelectedValue = CableStructure.StructureTypeId;
+            realElementsAmount.Value = CableStructure.RealAmount;
+            shownElementsAmount.Value = CableStructure.DisplayedAmount;
+            LeadMaterialComboBox.SelectedValue = CableStructure.LeadMaterialTypeId;
+            LeadDiametersTextBox.Text = CableStructure.LeadDiameter.ToString();
+            IsolationMaterialComboBox.SelectedValue = CableStructure.IsolationMaterialId;
+            WaveResistanceComboBox.Text = CableStructure.WaveResistance.ToString();
+            ElementsInGroupNumericUpDown.Value = CableStructure.GroupedAmount;
+            TestVoltageLeadLeadNumericUpDown.Value = CableStructure.LeadToLeadTestVoltage;
+            TestVoltageLeadShieldNumericUpDown.Value = CableStructure.LeadToShieldTestVoltage;
+            DRFormulaComboBox.SelectedValue = CableStructure.DRFormulaId;
+            DRBringingFormulaComboBox.SelectedValue = CableStructure.DRBringingFormulaId;
+            GroupCapacityCheckBox.Checked = CableStructure.WorkCapacityGroup;
+
+        }
+
+        /// <summary>
+        /// Заполняем исходными данными ComboBox-ы 
+        /// </summary>
+        /// <param name="ds"></param>
+        private void FillFromDataSet(DataSet ds)
         {
             DBEntityTable structureTypesTable = new DBEntityTable(typeof(CableStructureType));
             DBEntityTable leadMaterialsTable = new DBEntityTable(typeof(LeadMaterial));
@@ -487,7 +513,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             ElementsInGroupNumericUpDown = new NumericUpDown();
             ElementsInGroupNumericUpDown.Parent = this;
             ElementsInGroupNumericUpDown.Width = 50;
-            ElementsInGroupNumericUpDown.Minimum = 1;
+            ElementsInGroupNumericUpDown.Minimum = 0;
             ElementsInGroupNumericUpDown.Maximum = 10000;
 
             ElementsInGroupAmountLabel = new Label();

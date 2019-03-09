@@ -210,7 +210,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         /// <summary>
-        /// Рабочее затухание группы
+        /// Рабочая ёмкость группы
         /// </summary>
         [DBColumn("work_capacity_group", ColumnDomain.Boolean, Order = 22, OldDBColumnName = "Cr_grup", Nullable = true, DefaultValue = 0)]
         public bool WorkCapacityGroup
