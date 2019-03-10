@@ -57,6 +57,9 @@
             this.CodeKCH_input = new System.Windows.Forms.MaskedTextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.CableStructureTabs = new System.Windows.Forms.TabControl();
+            this.structureTypesComboBox = new System.Windows.Forms.ComboBox();
+            this.addStructureButton = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
@@ -353,17 +356,47 @@
             // 
             // CableStructureTabs
             // 
-            this.CableStructureTabs.Location = new System.Drawing.Point(12, 223);
+            this.CableStructureTabs.Location = new System.Drawing.Point(12, 272);
             this.CableStructureTabs.Name = "CableStructureTabs";
             this.CableStructureTabs.SelectedIndex = 0;
-            this.CableStructureTabs.Size = new System.Drawing.Size(788, 516);
+            this.CableStructureTabs.Size = new System.Drawing.Size(788, 467);
             this.CableStructureTabs.TabIndex = 27;
+            // 
+            // structureTypesComboBox
+            // 
+            this.structureTypesComboBox.FormattingEnabled = true;
+            this.structureTypesComboBox.Location = new System.Drawing.Point(12, 243);
+            this.structureTypesComboBox.Name = "structureTypesComboBox";
+            this.structureTypesComboBox.Size = new System.Drawing.Size(173, 21);
+            this.structureTypesComboBox.TabIndex = 28;
+            // 
+            // addStructureButton
+            // 
+            this.addStructureButton.Location = new System.Drawing.Point(191, 242);
+            this.addStructureButton.Name = "addStructureButton";
+            this.addStructureButton.Size = new System.Drawing.Size(145, 23);
+            this.addStructureButton.TabIndex = 29;
+            this.addStructureButton.Text = "Добавить структуру";
+            this.addStructureButton.UseVisualStyleBackColor = true;
+            this.addStructureButton.Click += new System.EventHandler(this.addStructureButton_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(9, 227);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(81, 13);
+            this.label10.TabIndex = 30;
+            this.label10.Text = "Тип структуры";
             // 
             // CableForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(809, 789);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.addStructureButton);
+            this.Controls.Add(this.structureTypesComboBox);
             this.Controls.Add(this.CableStructureTabs);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.CodeKCH_input);
@@ -435,5 +468,8 @@
         private System.Data.DataSet cableFormDataSet;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabControl CableStructureTabs;
+        private System.Windows.Forms.ComboBox structureTypesComboBox;
+        private System.Windows.Forms.Button addStructureButton;
+        private System.Windows.Forms.Label label10;
     }
 }

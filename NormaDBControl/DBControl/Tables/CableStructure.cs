@@ -14,15 +14,42 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        
         public static CableStructure build_for_cable(uint cableId)
         {
             DBEntityTable t = new DBEntityTable(typeof(CableStructure));
             CableStructure s = (CableStructure)t.NewRow();
             s.CableId = cableId;
+            s.LeadDiameter = 0.1f;
             return s;
         }
 
-        [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
+        public static DBEntityTable get_by_cable_id(uint cable_id)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableStructure));
+            string select_cmd = $"{t.SelectQuery} WHERE cable_id = {cable_id}";
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
+        public static uint get_last_structure_id()
+        {
+            CableStructure s = get_last_cable_structure();
+            if (s == null) return 0;
+            else return s.CableStructureId; 
+        }
+
+        public static CableStructure get_last_cable_structure()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableStructure));
+            string select_cmd = $"{t.SelectQuery} ORDER BY cable_structure_id DESC LIMIT 1;";
+            t.FillByQuery(select_cmd);
+            if (t.Rows.Count > 0) return (CableStructure)t.Rows[0];
+            else return null;
+        }
+
+
+        [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktInd", IsPrimaryKey = true, AutoIncrement = true)]
         public uint CableStructureId
         {
             get
@@ -250,6 +277,32 @@ namespace NormaMeasure.DBControl.Tables
                 this["dr_formula_id"] = value;
             }
         }
+
+
+        public string StructureTitle
+        {
+            get
+            {
+                return $"{StructureType.StructureLeadsAmount}x{DisplayedAmount}x{LeadDiameter}";
+            }
+        }
+        public CableStructureType StructureType
+        {
+            get
+            {
+                if (structureType == null)
+                {
+                    this.structureType = CableStructureType.get_by_id(this.StructureTypeId);
+                }
+                return this.structureType;
+            }
+            set
+            {
+                this.structureType = value;
+                this.StructureTypeId = this.structureType.StructureTypeId;
+            }
+        }
+        private CableStructureType structureType;
 
     }
 

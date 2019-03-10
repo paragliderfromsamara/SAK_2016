@@ -352,6 +352,19 @@ namespace NormaMeasure.DBControl.Tables
 
         protected Document cableNormDocument;
 
+        public DBEntityTable CableStructures
+        {
+            get
+            {
+                if (cableStructures == null)
+                {
+                    cableStructures = CableStructure.get_by_cable_id(this.CableId);
+                }
+                return cableStructures;
+            }
+        }
+        protected DBEntityTable cableStructures;
+
         
 
 

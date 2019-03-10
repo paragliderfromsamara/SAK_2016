@@ -22,23 +22,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             InitStructuresTabControl();
         }
 
-        private void InitStructuresTabControl()
-        {
-            AddStructureDraftTab();
-        }
 
-        private void AddStructureDraftTab()
-        {
-            CableStructure draft = CableStructure.build_for_cable(cable.CableId);
-            AddCableStructureTabPage(draft);
-            //CableStructureTabs.Refresh();
-        }
-
-        private void AddCableStructureTabPage(CableStructure structure)
-        {
-            CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
-            CableStructureTabs.TabPages.Add(tp);
-        }
 
         private void fillDBData()
         {
@@ -74,7 +58,11 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillStructureTypes()
         {
-            cableFormDataSet.Tables.Add(CableStructureType.get_all_as_table());
+            DBEntityTable t = CableStructureType.get_all_as_table();
+            cableFormDataSet.Tables.Add(t);
+            structureTypesComboBox.DataSource = t;
+            structureTypesComboBox.ValueMember = "structure_type_id";
+            structureTypesComboBox.DisplayMember = "structure_type_name";
         }
 
         private void fillDocuments()
@@ -264,7 +252,14 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            fillFormByCable();
+            //fillFormByCable();
+            string s = String.Empty;
+            DBEntityTable t = new DBEntityTable(typeof(CableStructure));
+            foreach (CableStructure cs in cable.CableStructures.Rows)
+            {
+                s += $"{cs.DisplayedAmount};";
+            }
+            MessageBox.Show(s);
         }
 
         private void CodeKCH_input_TextChanged(object sender, EventArgs e)
@@ -301,6 +296,49 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             return doc;
         }
+
+        #region Управление структурами кабеля
+        private void addStructureButton_Click(object sender, EventArgs e)
+        {
+            uint strTypeId = (uint)structureTypesComboBox.SelectedValue;
+            CableStructure draft = (CableStructure)cable.CableStructures.NewRow();
+            draft.CableStructureId = (cable.CableStructures.Rows.Count > 0) ? ((CableStructure)cable.CableStructures.Rows[cable.CableStructures.Rows.Count-1]).CableStructureId + 1 : CableStructure.get_last_structure_id() + 1;
+            draft.CableId = cable.CableId;
+            draft.StructureTypeId = strTypeId;
+            draft.LeadMaterialTypeId = 1;
+            draft.IsolationMaterialId = 1;
+            draft.LeadDiameter = 0.1f;
+            draft.WaveResistance = 0;
+            draft.LeadToLeadTestVoltage = 0;
+            draft.LeadToShieldTestVoltage = 0;
+            draft.DRBringingFormulaId = 0;
+            draft.DRFormulaId = 0;
+            cable.CableStructures.Rows.Add(draft);
+            AddCableStructureTabPage(draft);
+        }
+
+        private void InitStructuresTabControl()
+        {
+            foreach(CableStructure s in cable.CableStructures.Rows)
+            {
+                AddCableStructureTabPage(s);
+            }
+        }
+
+        private void AddStructureDraftTab()
+        {
+
+            //CableStructureTabs.Refresh();
+        }
+
+        private void AddCableStructureTabPage(CableStructure structure)
+        {
+            CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
+            CableStructureTabs.TabPages.Add(tp);
+            CableStructureTabs.SelectedIndex = CableStructureTabs.TabPages.Count - 1;
+            CableStructureTabs.Refresh();
+        }
+        #endregion
     }
 
     class CableStructureTabPage : TabPage
@@ -320,7 +358,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
         /// </summary>
         private void FillCableStructureData()
         {
-            structureTypeComboBox.SelectedValue = CableStructure.StructureTypeId;
+            StructureTypeLabel.Text += CableStructure.StructureType.StructureTypeName;
+            StructureTypeLabel.Refresh();
             realElementsAmount.Value = CableStructure.RealAmount;
             shownElementsAmount.Value = CableStructure.DisplayedAmount;
             LeadMaterialComboBox.SelectedValue = CableStructure.LeadMaterialTypeId;
@@ -334,6 +373,13 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DRBringingFormulaComboBox.SelectedValue = CableStructure.DRBringingFormulaId;
             GroupCapacityCheckBox.Checked = CableStructure.WorkCapacityGroup;
 
+            realElementsAmount.ValueChanged += RealElementsAmount_ValueChanged;
+
+        }
+
+        private void RealElementsAmount_ValueChanged(object sender, EventArgs e)
+        {
+            CableStructure.DisplayedAmount = (uint)(sender as NumericUpDown).Value;
         }
 
         /// <summary>
@@ -348,7 +394,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DBEntityTable drBringingFormulsTable = new DBEntityTable(typeof(dRBringingFormula));
             DBEntityTable drFormulsTable = new DBEntityTable(typeof(dRFormula));
 
-            if (ds.Tables.Contains(structureTypesTable.TableName)) fillStructureTypeComboBox(ds.Tables[structureTypesTable.TableName]);
+            //if (ds.Tables.Contains(structureTypesTable.TableName)) fillStructureTypeComboBox(ds.Tables[structureTypesTable.TableName]);
             if (ds.Tables.Contains(leadMaterialsTable.TableName)) fillLeadMaterialsComboBox(ds.Tables[leadMaterialsTable.TableName]);
             if (ds.Tables.Contains(isolationMaterialsTable.TableName)) fillIsolationMaterialsComboBox(ds.Tables[isolationMaterialsTable.TableName]);
             if (ds.Tables.Contains(drFormulsTable.TableName)) fill_dRFormulsComboBox(ds.Tables[drFormulsTable.TableName]);
@@ -397,7 +443,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void InitTabPage()
         {
-            this.Text = "Новая структура";
+            this.Text = CableStructure.StructureTitle;
         }
 
         #region Инициализация элементов формы
@@ -603,9 +649,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
             int x=10, y=10;
 
             StructureTypeLabel.Location = new System.Drawing.Point(x-5, y);
-            structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
+            //structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
 
-            elementsAmountGroupBox.Location = new System.Drawing.Point(x, y+= 30);
+            elementsAmountGroupBox.Location = new System.Drawing.Point(x, y+= 20);
             y += elementsAmountGroupBox.Height;
 
             LeadMaterialLabel.Location = new System.Drawing.Point(x-3, y+=10);
@@ -638,14 +684,16 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void DrawStructureTypeCB()
         {
+            /*
             structureTypeComboBox = new ComboBox();
             structureTypeComboBox.Parent = this;
             structureTypeComboBox.Width = 210;
             structureTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-
+            */
             StructureTypeLabel = new Label();
             StructureTypeLabel.Parent = this;
-            StructureTypeLabel.Text = "Тип структуры";
+            StructureTypeLabel.Text = "Тип: ";
+            StructureTypeLabel.Width = 210;
         }
 
         private GroupBox elementsAmountGroupBox;

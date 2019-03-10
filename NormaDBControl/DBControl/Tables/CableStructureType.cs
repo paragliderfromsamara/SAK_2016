@@ -14,6 +14,14 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static CableStructureType get_by_id(uint structure_type_id)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableStructureType));
+            string select_cmd = $"{t.SelectQuery} WHERE structure_type_id = {structure_type_id}";
+            t.FillByQuery(select_cmd);
+            if (t.Rows.Count > 0) return (CableStructureType)t.Rows[0];
+            else return null;
+        }
 
         public static DBEntityTable get_all_as_table()
         {
