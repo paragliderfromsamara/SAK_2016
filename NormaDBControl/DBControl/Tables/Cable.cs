@@ -12,6 +12,15 @@ namespace NormaMeasure.DBControl.Tables
     [DBTable("cables", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "cables")]
     public class Cable : BaseEntity
     {
+
+        public static DBEntityTable get_all_including_docs()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
+            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN documents USING(document_id) WHERE is_deleted = 0 AND is_draft = 0";
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
         public static Cable find_by_cable_id(uint id)
         {
             DBEntityTable t = new DBEntityTable(typeof(Cable));
@@ -304,7 +313,7 @@ namespace NormaMeasure.DBControl.Tables
             {
                 if (cableNormDocument == null)
                 {
-                    loadDocument();
+                    cableNormDocument = loadDocument();
                 }
                 return cableNormDocument;
             }

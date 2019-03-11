@@ -71,7 +71,7 @@
             // 
             // saveCableButton
             // 
-            this.saveCableButton.Location = new System.Drawing.Point(12, 745);
+            this.saveCableButton.Location = new System.Drawing.Point(12, 751);
             this.saveCableButton.Name = "saveCableButton";
             this.saveCableButton.Size = new System.Drawing.Size(112, 32);
             this.saveCableButton.TabIndex = 0;
@@ -346,7 +346,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(140, 746);
+            this.button1.Location = new System.Drawing.Point(142, 752);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(129, 31);
             this.button1.TabIndex = 26;
@@ -359,7 +359,7 @@
             this.CableStructureTabs.Location = new System.Drawing.Point(12, 272);
             this.CableStructureTabs.Name = "CableStructureTabs";
             this.CableStructureTabs.SelectedIndex = 0;
-            this.CableStructureTabs.Size = new System.Drawing.Size(788, 467);
+            this.CableStructureTabs.Size = new System.Drawing.Size(788, 474);
             this.CableStructureTabs.TabIndex = 27;
             // 
             // structureTypesComboBox

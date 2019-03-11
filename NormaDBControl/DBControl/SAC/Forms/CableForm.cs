@@ -9,19 +9,34 @@ namespace NormaMeasure.DBControl.SAC.Forms
 {
     public partial class CableForm : Form
     {
+        private bool isNew = false;
+        public bool IsNew => isNew;
         private Cable cable;
 
         public Cable Cable => cable;
         public CableForm()
         {
+            isNew = true;
             InitializeComponent();
             cable = Cable.GetDraft();
-            if (cable == null) return;
+            if (cable != null) InitFormByAssignedCable();
+        }
+
+        public CableForm(uint cable_id)
+        {
+            isNew = false;
+            InitializeComponent();
+            cable = Cable.find_by_cable_id(cable_id);
+            InitFormByAssignedCable();
+
+        }
+
+        private void InitFormByAssignedCable()
+        {
             fillDBData();
             fillFormByCable();
             InitStructuresTabControl();
         }
-
 
 
         private void fillDBData()
@@ -73,6 +88,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DocumentNumber_input.Refresh();
             //DocumentNumber_input.SelectedIndexChanged += DocumentNumberInput_Changed;
             DocumentNumber_input.TextChanged += DocumentNumberInput_Changed;
+            if (cable.QADocument == null) cable.QADocument = getDocumentDraftFromDataTable();
             DocumentNumber_input.SelectedValue = cable.DocumentId;
         }
 
@@ -105,16 +121,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
         }
 
 
-
-        public CableForm(uint cable_id)
-        {
-            InitializeComponent();
-           // cable = new CableOld(cable_id);
-        }
-
         private void saveCableButton_Click(object sender, System.EventArgs e)
         {
             if (!checkSelectedDocument()) return;
+            if (!saveCableStructures()) return;
             cable.IsDraft = false;
             if (cable.Save())
             {
@@ -123,6 +133,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
             }
 
         }
+
+
 
         private void cableNameTextField_TextChanged(object sender, System.EventArgs e)
         {
@@ -134,6 +146,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private bool checkSelectedDocument()
         {
             bool f = true;
+
             string docName = cable.QADocument.ShortName;
             if (cable.QADocument.RowState == DataRowState.Added)
             {
@@ -316,6 +329,16 @@ namespace NormaMeasure.DBControl.SAC.Forms
             cable.CableStructures.Rows.Add(draft);
             AddCableStructureTabPage(draft);
         }
+        private bool saveCableStructures()
+        {
+            bool isSave = true;
+            foreach (CableStructure s in cable.CableStructures.Rows)
+            {
+                isSave &= s.Save();
+            }
+
+            return isSave;
+        }
 
         private void InitStructuresTabControl()
         {
@@ -323,7 +346,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
             {
                 AddCableStructureTabPage(s);
             }
+            CableStructureTabs.re
         }
+
+
 
         private void AddStructureDraftTab()
         {
@@ -336,17 +362,24 @@ namespace NormaMeasure.DBControl.SAC.Forms
             CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
             CableStructureTabs.TabPages.Add(tp);
             CableStructureTabs.SelectedIndex = CableStructureTabs.TabPages.Count - 1;
+            CableStructureTabs.SelectedTab = tp;
             CableStructureTabs.Refresh();
         }
         #endregion
+
+
     }
 
     class CableStructureTabPage : TabPage
     {
         private CableStructure CableStructure;
+        public int PageIndex;   
         public CableStructureTabPage(CableStructure structure, DataSet cableFormDS)
         {
+            Random r = new Random();
             this.CableStructure = structure;
+            PageIndex = r.Next(0, 2000000);
+            this.Name = "tab_control_page_"+PageIndex.ToString();
             DrawElements();
             FillFromDataSet(cableFormDS);
             FillCableStructureData();
@@ -360,26 +393,146 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             StructureTypeLabel.Text += CableStructure.StructureType.StructureTypeName;
             StructureTypeLabel.Refresh();
-            realElementsAmount.Value = CableStructure.RealAmount;
-            shownElementsAmount.Value = CableStructure.DisplayedAmount;
-            LeadMaterialComboBox.SelectedValue = CableStructure.LeadMaterialTypeId;
-            LeadDiametersTextBox.Text = CableStructure.LeadDiameter.ToString();
-            IsolationMaterialComboBox.SelectedValue = CableStructure.IsolationMaterialId;
-            WaveResistanceComboBox.Text = CableStructure.WaveResistance.ToString();
-            ElementsInGroupNumericUpDown.Value = CableStructure.GroupedAmount;
-            TestVoltageLeadLeadNumericUpDown.Value = CableStructure.LeadToLeadTestVoltage;
-            TestVoltageLeadShieldNumericUpDown.Value = CableStructure.LeadToShieldTestVoltage;
-            DRFormulaComboBox.SelectedValue = CableStructure.DRFormulaId;
-            DRBringingFormulaComboBox.SelectedValue = CableStructure.DRBringingFormulaId;
-            GroupCapacityCheckBox.Checked = CableStructure.WorkCapacityGroup;
 
+            realElementsAmount.Value = CableStructure.RealAmount;
             realElementsAmount.ValueChanged += RealElementsAmount_ValueChanged;
 
+            shownElementsAmount.Value = CableStructure.DisplayedAmount;
+            shownElementsAmount.ValueChanged += ShownElementsAmount_ValueChanged;
+
+            LeadMaterialComboBox.SelectedValue = CableStructure.LeadMaterialTypeId;
+            LeadMaterialComboBox.SelectedValueChanged += LeadMaterialComboBox_SelectedValueChanged;
+
+            LeadDiametersTextBox.Text = CableStructure.LeadDiameter.ToString();
+            LeadDiametersTextBox.TextChanged += LeadDiametersTextBox_TextChanged;
+
+            IsolationMaterialComboBox.SelectedValue = CableStructure.IsolationMaterialId;
+            IsolationMaterialComboBox.SelectedValueChanged += IsolationMaterialComboBox_SelectedValueChanged;
+
+            WaveResistanceComboBox.Text = CableStructure.WaveResistance.ToString();
+            WaveResistanceComboBox.TextChanged += WaveResistanceComboBox_TextChanged;
+
+            ElementsInGroupNumericUpDown.Value = CableStructure.GroupedAmount;
+            ElementsInGroupNumericUpDown.ValueChanged += ElementsInGroupNumericUpDown_ValueChanged;
+
+            TestVoltageLeadLeadNumericUpDown.Value = CableStructure.LeadToLeadTestVoltage;
+            TestVoltageLeadLeadNumericUpDown.ValueChanged += TestVoltageLeadLeadNumericUpDown_ValueChanged;
+
+            TestVoltageLeadShieldNumericUpDown.Value = CableStructure.LeadToShieldTestVoltage;
+            TestVoltageLeadShieldNumericUpDown.ValueChanged += TestVoltageLeadShieldNumericUpDown_ValueChanged;
+
+            DRFormulaComboBox.SelectedValue = CableStructure.DRFormulaId;
+            DRFormulaComboBox.SelectedValueChanged += DRFormulaComboBox_SelectedValueChanged;
+
+            DRBringingFormulaComboBox.SelectedValue = CableStructure.DRBringingFormulaId;
+            DRBringingFormulaComboBox.SelectedValueChanged += DRBringingFormulaComboBox_SelectedValueChanged;
+
+
+            GroupCapacityCheckBox.Checked = CableStructure.WorkCapacityGroup;
+            GroupCapacityCheckBox.CheckedChanged += GroupCapacityCheckBox_CheckedChanged;
+
+            
+            
+
+        }
+
+        private void GroupCapacityCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CableStructure.WorkCapacityGroup = (sender as CheckBox).Checked;
+        }
+
+        private void DRBringingFormulaComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            CableStructure.DRBringingFormulaId = (uint)(sender as ComboBox).SelectedValue;
+        }
+
+        private void DRFormulaComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            CableStructure.DRFormulaId = (uint)(sender as ComboBox).SelectedValue;
+        }
+
+        private void TestVoltageLeadShieldNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            CableStructure.LeadToShieldTestVoltage = ProcWrittenVoltage(sender, CableStructure.LeadToShieldTestVoltage);
+        }
+
+        private void TestVoltageLeadLeadNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+             CableStructure.LeadToLeadTestVoltage = ProcWrittenVoltage(sender, CableStructure.LeadToLeadTestVoltage);
+        }
+
+        private uint ProcWrittenVoltage(object sender, uint valWas)
+        {
+            NumericUpDown input = sender as NumericUpDown;
+            uint val = (uint)input.Value;
+            if (val > 0 && val < 500)
+            {
+                input.Value = valWas < 500 ? 500 : 0;
+                return valWas;
+            }
+            else
+            {
+                return val;
+            }
+        }
+
+
+
+        private void ElementsInGroupNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            CableStructure.GroupedAmount = (uint)(sender as NumericUpDown).Value;
+        }
+
+        private void WaveResistanceComboBox_TextChanged(object sender, EventArgs e)
+        {
+            float val = 0;
+            ComboBox cb = sender as ComboBox;
+            if (String.IsNullOrWhiteSpace(cb.Text)) return;
+            if (float.TryParse(cb.Text, out val))
+            {
+                CableStructure.WaveResistance = val;
+            }
+            else
+            {
+                cb.Text = CableStructure.WaveResistance.ToString();
+                MessageBox.Show("Неверный формат числа", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+            
+        }
+
+        private void IsolationMaterialComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            CableStructure.IsolationMaterialId = (uint)(sender as ComboBox).SelectedValue;
+        }
+
+        private void LeadDiametersTextBox_TextChanged(object sender, EventArgs e)
+        {
+            float val = 0;
+            TextBox tb = sender as TextBox;
+            if (String.IsNullOrWhiteSpace(tb.Text)) return;
+            if (float.TryParse(tb.Text, out val))
+            {
+                CableStructure.LeadDiameter = val;
+            }else
+            {
+                tb.Text = CableStructure.LeadDiameter.ToString();
+                MessageBox.Show("Неверный формат числа", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        private void LeadMaterialComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            CableStructure.LeadMaterialTypeId = (uint)(sender as ComboBox).SelectedValue;
+        }
+
+        private void ShownElementsAmount_ValueChanged(object sender, EventArgs e)
+        {
+            CableStructure.DisplayedAmount = (uint)(sender as NumericUpDown).Value;
         }
 
         private void RealElementsAmount_ValueChanged(object sender, EventArgs e)
         {
-            CableStructure.DisplayedAmount = (uint)(sender as NumericUpDown).Value;
+            CableStructure.RealAmount= (uint)(sender as NumericUpDown).Value;
         }
 
         /// <summary>
@@ -481,16 +634,20 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DRFormulsGroupBox.Text = "Омическая ассиметрия";
             DRFormulsGroupBox.Width = 155;
             DRFormulsGroupBox.Height = 110;
+            DRFormulsGroupBox.Name = $"dr_formuls_group_box_{PageIndex}";
 
+           
             DRFormulaComboBox = new ComboBox();
             DRFormulaComboBox.Parent = DRFormulsGroupBox;
             DRFormulaComboBox.Width = 135;
             DRFormulaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            DRFormulaComboBox.Name = $"dr_formula_combobox_{PageIndex}";
 
             DRBringingFormulaComboBox = new ComboBox();
             DRBringingFormulaComboBox.Parent = DRFormulsGroupBox;
             DRBringingFormulaComboBox.Width = 135;
             DRBringingFormulaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            DRFormulaComboBox.Name = $"dr_bringing_formula_combobox_{PageIndex}";
 
             DRFormulaLabel = new Label();
             DRFormulaLabel.Parent = DRFormulsGroupBox;
