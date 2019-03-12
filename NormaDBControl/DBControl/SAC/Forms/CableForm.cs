@@ -346,7 +346,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             {
                 AddCableStructureTabPage(s);
             }
-            CableStructureTabs.re
+           // CableStructureTabs.re
         }
 
 
@@ -556,7 +556,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fill_drBringingFormulsComboBox(DataTable dt)
         {
-            DRBringingFormulaComboBox.DataSource = dt;
+            DataTable t = new DataTable();
+            t.Merge(dt);
+            DRBringingFormulaComboBox.DataSource = t;
             DRBringingFormulaComboBox.ValueMember = "dr_bringing_formula_id";
             DRBringingFormulaComboBox.DisplayMember = "dr_bringing_formula_description";
             DRBringingFormulaComboBox.Refresh();
@@ -564,7 +566,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fill_dRFormulsComboBox(DataTable dt)
         {
-            DRFormulaComboBox.DataSource = dt;
+            DataTable t = new DataTable();
+            t.Merge(dt);
+            DRFormulaComboBox.DataSource = t;
             DRFormulaComboBox.ValueMember = "dr_formula_id";
             DRFormulaComboBox.DisplayMember = "dr_formula_description";
             DRFormulaComboBox.Refresh();
@@ -572,7 +576,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillIsolationMaterialsComboBox(DataTable dt)
         {
-            IsolationMaterialComboBox.DataSource = dt;
+            DataTable t = new DataTable();
+            t.Merge(dt);
+            IsolationMaterialComboBox.DataSource = t;
             IsolationMaterialComboBox.ValueMember = "isolation_material_id";
             IsolationMaterialComboBox.DisplayMember = "isolation_material_name";
             IsolationMaterialComboBox.Refresh();
@@ -580,7 +586,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillLeadMaterialsComboBox(DataTable dt)
         {
-            LeadMaterialComboBox.DataSource = dt;
+            DataTable t = new DataTable();
+            t.Merge(dt);
+            LeadMaterialComboBox.DataSource = t;
             LeadMaterialComboBox.ValueMember = "lead_material_id";
             LeadMaterialComboBox.DisplayMember = "lead_material_name";
             LeadMaterialComboBox.Refresh();
@@ -588,7 +596,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillStructureTypeComboBox(DataTable dt)
         {
-            structureTypeComboBox.DataSource = dt;
+            DataTable t = new DataTable();
+            t.Merge(dt);
+            structureTypeComboBox.DataSource = t;
             structureTypeComboBox.ValueMember = "structure_type_id";
             structureTypeComboBox.DisplayMember = "structure_type_name";
             structureTypeComboBox.Refresh();
