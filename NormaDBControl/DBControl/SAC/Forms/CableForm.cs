@@ -372,14 +372,11 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
     class CableStructureTabPage : TabPage
     {
-        private CableStructure CableStructure;
-        public int PageIndex;   
+        private CableStructure CableStructure;  
         public CableStructureTabPage(CableStructure structure, DataSet cableFormDS)
         {
             Random r = new Random();
             this.CableStructure = structure;
-            PageIndex = r.Next(0, 2000000);
-            this.Name = "tab_control_page_"+PageIndex.ToString();
             DrawElements();
             FillFromDataSet(cableFormDS);
             FillCableStructureData();
@@ -541,7 +538,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         /// <param name="ds"></param>
         private void FillFromDataSet(DataSet ds)
         {
-            DBEntityTable structureTypesTable = new DBEntityTable(typeof(CableStructureType));
+            //DBEntityTable structureTypesTable = new DBEntityTable(typeof(CableStructureType));
             DBEntityTable leadMaterialsTable = new DBEntityTable(typeof(LeadMaterial));
             DBEntityTable isolationMaterialsTable = new DBEntityTable(typeof(IsolationMaterial));
             DBEntityTable drBringingFormulsTable = new DBEntityTable(typeof(dRBringingFormula));
@@ -558,50 +555,40 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             DataTable t = new DataTable();
             t.Merge(dt);
+            DRBringingFormulaComboBox.BindingContext = new BindingContext();
             DRBringingFormulaComboBox.DataSource = t;
             DRBringingFormulaComboBox.ValueMember = "dr_bringing_formula_id";
             DRBringingFormulaComboBox.DisplayMember = "dr_bringing_formula_description";
-            DRBringingFormulaComboBox.Refresh();
         }
 
         private void fill_dRFormulsComboBox(DataTable dt)
         {
             DataTable t = new DataTable();
             t.Merge(dt);
+            DRFormulaComboBox.BindingContext = new BindingContext();
             DRFormulaComboBox.DataSource = t;
             DRFormulaComboBox.ValueMember = "dr_formula_id";
             DRFormulaComboBox.DisplayMember = "dr_formula_description";
-            DRFormulaComboBox.Refresh();
         }
 
         private void fillIsolationMaterialsComboBox(DataTable dt)
         {
             DataTable t = new DataTable();
             t.Merge(dt);
+            IsolationMaterialComboBox.BindingContext = new BindingContext();
             IsolationMaterialComboBox.DataSource = t;
             IsolationMaterialComboBox.ValueMember = "isolation_material_id";
             IsolationMaterialComboBox.DisplayMember = "isolation_material_name";
-            IsolationMaterialComboBox.Refresh();
         }
 
         private void fillLeadMaterialsComboBox(DataTable dt)
         {
             DataTable t = new DataTable();
             t.Merge(dt);
+            LeadMaterialComboBox.BindingContext = new BindingContext();
             LeadMaterialComboBox.DataSource = t;
             LeadMaterialComboBox.ValueMember = "lead_material_id";
             LeadMaterialComboBox.DisplayMember = "lead_material_name";
-            LeadMaterialComboBox.Refresh();
-        }
-
-        private void fillStructureTypeComboBox(DataTable dt)
-        {
-            DataTable t = new DataTable();
-            t.Merge(dt);
-            structureTypeComboBox.DataSource = t;
-            structureTypeComboBox.ValueMember = "structure_type_id";
-            structureTypeComboBox.DisplayMember = "structure_type_name";
-            structureTypeComboBox.Refresh();
         }
 
         private void InitTabPage()
@@ -630,10 +617,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             GroupCapacityCheckBox.Parent = this;
             GroupCapacityCheckBox.Text = "Cр группы";
             GroupCapacityCheckBox.Checked = false;
-            //GroupCapacityCheckBox.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             GroupCapacityCheckBox.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
-            //GroupCapacityCheckBox.Width = 40;
-            //GroupCapacityCheckBox.Height = 50;
             GroupCapacityCheckBox.AutoSize = true;
         }
 
@@ -644,20 +628,20 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DRFormulsGroupBox.Text = "Омическая ассиметрия";
             DRFormulsGroupBox.Width = 155;
             DRFormulsGroupBox.Height = 110;
-            DRFormulsGroupBox.Name = $"dr_formuls_group_box_{PageIndex}";
+
 
            
             DRFormulaComboBox = new ComboBox();
             DRFormulaComboBox.Parent = DRFormulsGroupBox;
             DRFormulaComboBox.Width = 135;
             DRFormulaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            DRFormulaComboBox.Name = $"dr_formula_combobox_{PageIndex}";
+  
 
             DRBringingFormulaComboBox = new ComboBox();
             DRBringingFormulaComboBox.Parent = DRFormulsGroupBox;
             DRBringingFormulaComboBox.Width = 135;
             DRBringingFormulaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            DRFormulaComboBox.Name = $"dr_bringing_formula_combobox_{PageIndex}";
+
 
             DRFormulaLabel = new Label();
             DRFormulaLabel.Parent = DRFormulsGroupBox;
