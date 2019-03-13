@@ -14,7 +14,39 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        
+        public override bool Save()
+        {
+            try
+            {
+                return base.Save();
+            }catch(DBEntityException ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Не удалось сохранить структуру", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                return false;
+            }
+
+        }
+
+        protected override void ValidateActions()
+        {
+            CheckLeadDiameter();
+            CheckElementsNumber();
+        }
+
+        private void CheckElementsNumber()
+        {
+            if (RealAmount <= 0)
+            {
+                ErrorsList.Add("Реальное количество элементов структуры должно быть больше 0");
+            }
+            else if (RealAmount < DisplayedAmount) ErrorsList.Add("Реальное количество элементов структуры должно быть не меньше номинального");
+        }
+
+        private void CheckLeadDiameter()
+        {
+            if (LeadDiameter <= 0) ErrorsList.Add("Диаметр жилы должен быть больше 0");
+        }
+
         public static CableStructure build_for_cable(uint cableId)
         {
             DBEntityTable t = new DBEntityTable(typeof(CableStructure));
