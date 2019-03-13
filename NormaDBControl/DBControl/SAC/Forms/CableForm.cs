@@ -324,8 +324,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
             draft.WaveResistance = 0;
             draft.LeadToLeadTestVoltage = 0;
             draft.LeadToShieldTestVoltage = 0;
-            draft.DRBringingFormulaId = 0;
-            draft.DRFormulaId = 0;
+            draft.DRBringingFormulaId = 1;
+            draft.DRFormulaId = 1;
             cable.CableStructures.Rows.Add(draft);
             AddCableStructureTabPage(draft);
         }
@@ -350,13 +350,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
         }
 
 
-
-        private void AddStructureDraftTab()
-        {
-
-            //CableStructureTabs.Refresh();
-        }
-
         private void AddCableStructureTabPage(CableStructure structure)
         {
             CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
@@ -375,7 +368,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private CableStructure CableStructure;  
         public CableStructureTabPage(CableStructure structure, DataSet cableFormDS)
         {
-            Random r = new Random();
             this.CableStructure = structure;
             DrawElements();
             FillFromDataSet(cableFormDS);
@@ -524,12 +516,27 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void ShownElementsAmount_ValueChanged(object sender, EventArgs e)
         {
-            CableStructure.DisplayedAmount = (uint)(sender as NumericUpDown).Value;
+            uint real = (uint)realElementsAmount.Value;
+            uint nominal = (uint)shownElementsAmount.Value;
+            CableStructure.DisplayedAmount = nominal;
+            if (nominal > real)
+            {
+                realElementsAmount.Value = nominal;
+            }
         }
 
         private void RealElementsAmount_ValueChanged(object sender, EventArgs e)
         {
-            CableStructure.RealAmount= (uint)(sender as NumericUpDown).Value;
+            uint real = (uint)realElementsAmount.Value;
+            uint nominal = (uint)shownElementsAmount.Value;
+            CableStructure.RealAmount= real;
+            if (real < nominal)
+            {
+                shownElementsAmount.Value = real;
+            }
+            //shownElementsAmount.Maximum = real;
+
+
         }
 
         /// <summary>
