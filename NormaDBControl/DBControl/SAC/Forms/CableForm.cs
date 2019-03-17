@@ -353,10 +353,22 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private void AddCableStructureTabPage(CableStructure structure)
         {
             CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
+            tp.DeleteStructureButton.Click += DeleteStructureButton_Click;
             CableStructureTabs.TabPages.Add(tp);
             CableStructureTabs.SelectedIndex = CableStructureTabs.TabPages.Count - 1;
             CableStructureTabs.SelectedTab = tp;
             CableStructureTabs.Refresh();
+        }
+
+        private void DeleteStructureButton_Click(object sender, EventArgs e)
+        {
+            CableStructureTabPage tp = (CableStructureTabPage)(sender as Button).Parent;
+            DialogResult r = MessageBox.Show($"Вы уверены, что хотите удалить структуру кабеля {tp.CableStructure.StructureTitle}?", "Вопрос...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (r == DialogResult.Yes)
+            {
+                MessageBox.Show(tp.CableStructure.StructureTitle);
+            }
+            
         }
         #endregion
 
@@ -365,7 +377,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
     class CableStructureTabPage : TabPage
     {
-        private CableStructure CableStructure;  
+        public CableStructure CableStructure;
         public CableStructureTabPage(CableStructure structure, DataSet cableFormDS)
         {
             this.CableStructure = structure;
@@ -614,8 +626,21 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DrawTestVoltageElements();
             DrawDRFormulsElements();
             DrawGroupCapacityElements();
+            DrawDeleteButton();
 
             SetElementsLocations();
+        }
+
+        private void DrawDeleteButton()
+        {
+            DeleteStructureButton = new Button();
+            DeleteStructureButton.Size = new System.Drawing.Size(30, 30);
+            DeleteStructureButton.Text = "X";
+            DeleteStructureButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            DeleteStructureButton.Parent = this;
+            DeleteStructureButton.UseVisualStyleBackColor = true;
+            DeleteStructureButton.Cursor = Cursors.Hand;
+
         }
 
         private void DrawGroupCapacityElements()
@@ -808,6 +833,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             StructureTypeLabel.Location = new System.Drawing.Point(x-5, y);
             //structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
+            DeleteStructureButton.Location = new System.Drawing.Point(740, y );
+
 
             elementsAmountGroupBox.Location = new System.Drawing.Point(x, y+= 20);
             y += elementsAmountGroupBox.Height;
@@ -892,6 +919,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private Label DRBringingFormulaLabel;
         private Label DRFormulaLabel;
 
+        public Button DeleteStructureButton;
+        
         #endregion
     }
 
