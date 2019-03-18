@@ -83,9 +83,43 @@ namespace NormaMeasure.DBControl.Tables
         /// <returns></returns>
         public virtual bool Destroy()
         {
-            return true;
+            string query = makeDestroyQuery();
+         
+            return ((DBEntityTable)this.Table).WriteSingleQuery(query);
         }
 
+        public string makeDestroyQuery()
+        {
+            string q = ((DBEntityTable)this.Table).DeleteQuery;
+            int wasAdded = 0;
+            string vals = String.Empty;
+            string[] keys = primaryKeysColumnsAndValues();
+            if (keys.Length > 0)
+            {
+                foreach (string k in keys)
+                {
+                    if (wasAdded > 0)
+                    {
+                        vals += " AND ";
+                    }
+                    vals += k;
+                    wasAdded++;
+                }
+            }else
+            {
+                foreach (DataColumn col in this.Table.Columns)
+                {
+                    if (wasAdded > 0)
+                    {
+                        vals += " AND ";
+                    }
+                    vals += $"{col.ColumnName} = {dbColumnValue(col)}";
+                    wasAdded++;
+                }
+            }
+            q += $" WHERE {vals}";
+            return q;
+        }
         public bool IsNewRecord()
         {
             return this.RowState == DataRowState.Added || this.RowState == DataRowState.Detached;

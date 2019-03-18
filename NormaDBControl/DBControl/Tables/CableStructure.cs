@@ -14,6 +14,19 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public override bool Destroy()
+        {
+            bool delFlag = true;
+            if (!IsNewRecord())
+            {
+                delFlag = base.Destroy();
+            }
+            if (delFlag == true)
+            {
+                this.Delete();
+            }
+            return true;
+        }
         public override bool Save()
         {
             try

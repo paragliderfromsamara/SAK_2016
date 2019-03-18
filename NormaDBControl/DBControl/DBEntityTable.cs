@@ -37,6 +37,8 @@ namespace NormaMeasure.DBControl
                 this.SelectQuery = $"SELECT * FROM {a.TableName}";
                 this.InsertQuery = $"INSERT INTO {a.TableName} " + "({0}) VALUES {1}";
                 this.UpdateQuery = $"UPDATE {a.TableName}" + " SET {0} WHERE {1}";
+                this.DeleteQuery = $"DELETE FROM {a.TableName}";
+
             }
         }
         
@@ -169,5 +171,6 @@ namespace NormaMeasure.DBControl
         public string SelectQuery;
         public string InsertQuery;
         public string UpdateQuery;
+        public string DeleteQuery;
     }
 }

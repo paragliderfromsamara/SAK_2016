@@ -342,6 +342,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void InitStructuresTabControl()
         {
+            CableStructureTabs.TabPages.Clear();
             foreach(CableStructure s in cable.CableStructures.Rows)
             {
                 AddCableStructureTabPage(s);
@@ -366,7 +367,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DialogResult r = MessageBox.Show($"Вы уверены, что хотите удалить структуру кабеля {tp.CableStructure.StructureTitle}?", "Вопрос...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (r == DialogResult.Yes)
             {
-                MessageBox.Show(tp.CableStructure.StructureTitle);
+                // MessageBox.Show(tp.CableStructure.makeDestroyQuery());
+                if (tp.CableStructure.Destroy())
+                {
+                    InitStructuresTabControl();
+                }
+                else MessageBox.Show("Not okay");
             }
             
         }
