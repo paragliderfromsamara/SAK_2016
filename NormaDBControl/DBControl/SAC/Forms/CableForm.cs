@@ -345,7 +345,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             CableStructureTabs.TabPages.Clear();
             foreach(CableStructure s in cable.CableStructures.Rows)
             {
-                AddCableStructureTabPage(s);
+                if (s.RowState != DataRowState.Deleted || s.RowState == DataRowState.Detached)AddCableStructureTabPage(s);
             }
            // CableStructureTabs.re
         }
