@@ -313,9 +313,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
         #region Управление структурами кабеля
         private void addStructureButton_Click(object sender, EventArgs e)
         {
+            Random r = new Random();
             uint strTypeId = (uint)structureTypesComboBox.SelectedValue;
             CableStructure draft = (CableStructure)cable.CableStructures.NewRow();
-            draft.CableStructureId = (cable.CableStructures.Rows.Count > 0) ? ((CableStructure)cable.CableStructures.Rows[cable.CableStructures.Rows.Count-1]).CableStructureId + 1 : CableStructure.get_last_structure_id() + 1;
+            draft.CableStructureId = (uint)r.Next(9000000, 10000000); //(cable.CableStructures.Rows.Count > 0) ? ((CableStructure)cable.CableStructures.Rows[cable.CableStructures.Rows.Count-1]).CableStructureId + 1 : CableStructure.get_last_structure_id() + 1;
             draft.CableId = cable.CableId;
             draft.StructureTypeId = strTypeId;
             draft.LeadMaterialTypeId = 1;
