@@ -658,9 +658,18 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void DrawMeasuredParametersDataGrid()
         {
-            MeasuredParamsDataGrid = new DataGrid();
-            MeasuredParamsDataGrid.Size = new System.Drawing.Size(470, 400);
-            MeasuredParamsDataGrid.Parent = this;
+            MeasuredParamsDataGridView = new DataGridView();
+            MeasuredParamsDataGridView.Size = new System.Drawing.Size(470, 400);
+            MeasuredParamsDataGridView.Parent = this;
+
+            MeasuredParamsDataGridView.Columns.Add("measured_parameter_name", "Параметр");
+            MeasuredParamsDataGridView.Columns["measured_parameter_name"].DataPropertyName = "parameter_name";
+
+            MeasuredParamsDataGridView.Columns.Add("measured_parameter_min", "Min");
+            MeasuredParamsDataGridView.Columns["measured_parameter_min"].DataPropertyName = "min_value";
+
+            MeasuredParamsDataGridView.Columns.Add("measured_parameter_max", "Max");
+            MeasuredParamsDataGridView.Columns["measured_parameter_max"].DataPropertyName = "max_value";
         }
 
         private void DrawDeleteButton()
@@ -867,7 +876,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             StructureTypeLabel.Location = new System.Drawing.Point(x-5, y);
             //structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
             DeleteStructureButton.Location = new System.Drawing.Point(740, y );
-            MeasuredParamsDataGrid.Location = new System.Drawing.Point(250, y+20);
+            MeasuredParamsDataGridView.Location = new System.Drawing.Point(250, y+20);
 
             elementsAmountGroupBox.Location = new System.Drawing.Point(x, y+= 20);
             y += elementsAmountGroupBox.Height;
@@ -952,7 +961,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private Label DRBringingFormulaLabel;
         private Label DRFormulaLabel;
 
-        private DataGrid MeasuredParamsDataGrid;
+        private DataGridView MeasuredParamsDataGridView;
 
         public Button DeleteStructureButton;
         
