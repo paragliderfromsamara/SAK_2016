@@ -25,7 +25,7 @@ namespace NormaMeasure.DBControl.Tables
             {
                 this.Delete();
             }
-            return true;
+            return delFlag;
         }
         public override bool Save()
         {

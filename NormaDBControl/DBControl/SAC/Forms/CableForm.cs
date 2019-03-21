@@ -335,7 +335,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             bool isSave = true;
             foreach (CableStructure s in cable.CableStructures.Rows)
             {
-                isSave &= s.Save();
+               if (s.RowState != DataRowState.Deleted) isSave &= s.Save();
             }
 
             return isSave;
@@ -371,9 +371,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 // MessageBox.Show(tp.CableStructure.makeDestroyQuery());
                 if (tp.CableStructure.Destroy())
                 {
-                    InitStructuresTabControl();
+                    CableStructureTabs.TabPages[CableStructureTabs.SelectedIndex].Dispose();
+                    CableStructureTabs.Refresh();
                 }
-                else MessageBox.Show("Not okay");
+                else MessageBox.Show("Не удалось удалить структуру кабеля!");
             }
             
         }
