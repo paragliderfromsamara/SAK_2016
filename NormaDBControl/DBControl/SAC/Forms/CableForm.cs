@@ -48,7 +48,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
             fillIsolationMaterials();
             fillDRBringingFormuls();
             fillDRFormuls();
+            fillMeasuredParameterTypes();
         }
+
+
 
         #region Заполнение cableFormDataSet необходимыми таблицами
         private void fillDRFormuls()
@@ -97,6 +100,11 @@ namespace NormaMeasure.DBControl.SAC.Forms
             cableFormDataSet.Tables.Add(Cable.get_cable_marks());
             CableMark_input.DisplayMember = CableMark_input.ValueMember = "cable_marks.cable_mark";
             CableMark_input.Refresh();
+        }
+
+        private void fillMeasuredParameterTypes()
+        {
+            cableFormDataSet.Tables.Add(MeasuredParameterType.get_all_as_table());
         }
         #endregion
 
@@ -395,6 +403,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             InitTabPage();
         }
 
+
         /// <summary>
         /// Заполняем страницу структуры в соответствии с данными структуры
         /// </summary>
@@ -570,12 +579,19 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DBEntityTable isolationMaterialsTable = new DBEntityTable(typeof(IsolationMaterial));
             DBEntityTable drBringingFormulsTable = new DBEntityTable(typeof(dRBringingFormula));
             DBEntityTable drFormulsTable = new DBEntityTable(typeof(dRFormula));
+            DBEntityTable measuredParameterTypesTable = new DBEntityTable(typeof(MeasuredParameterType));
 
             //if (ds.Tables.Contains(structureTypesTable.TableName)) fillStructureTypeComboBox(ds.Tables[structureTypesTable.TableName]);
             if (ds.Tables.Contains(leadMaterialsTable.TableName)) fillLeadMaterialsComboBox(ds.Tables[leadMaterialsTable.TableName]);
             if (ds.Tables.Contains(isolationMaterialsTable.TableName)) fillIsolationMaterialsComboBox(ds.Tables[isolationMaterialsTable.TableName]);
             if (ds.Tables.Contains(drFormulsTable.TableName)) fill_dRFormulsComboBox(ds.Tables[drFormulsTable.TableName]);
             if (ds.Tables.Contains(drBringingFormulsTable.TableName)) fill_drBringingFormulsComboBox(ds.Tables[drBringingFormulsTable.TableName]);
+            if (ds.Tables.Contains(measuredParameterTypesTable.TableName)) fill_MeasuredParametersDataGrid(ds.Tables[measuredParameterTypesTable.TableName]);
+        }
+
+        private void fill_MeasuredParametersDataGrid(DataTable dataTable)
+        {
+            //throw new NotImplementedException();
         }
 
         private void fill_drBringingFormulsComboBox(DataTable dt)
@@ -635,8 +651,16 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DrawDRFormulsElements();
             DrawGroupCapacityElements();
             DrawDeleteButton();
+            DrawMeasuredParametersDataGrid();
 
             SetElementsLocations();
+        }
+
+        private void DrawMeasuredParametersDataGrid()
+        {
+            MeasuredParamsDataGrid = new DataGrid();
+            MeasuredParamsDataGrid.Size = new System.Drawing.Size(470, 400);
+            MeasuredParamsDataGrid.Parent = this;
         }
 
         private void DrawDeleteButton()
@@ -756,6 +780,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             ElementsInGroupAmountLabel = new Label();
             ElementsInGroupAmountLabel.Parent = this;
             ElementsInGroupAmountLabel.Text = "В пучке";
+            ElementsInGroupAmountLabel.Width = 50;
 
 
         }
@@ -842,7 +867,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             StructureTypeLabel.Location = new System.Drawing.Point(x-5, y);
             //structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
             DeleteStructureButton.Location = new System.Drawing.Point(740, y );
-
+            MeasuredParamsDataGrid.Location = new System.Drawing.Point(250, y+20);
 
             elementsAmountGroupBox.Location = new System.Drawing.Point(x, y+= 20);
             y += elementsAmountGroupBox.Height;
@@ -926,6 +951,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private Label TestVoltageLeadShieldLabel;
         private Label DRBringingFormulaLabel;
         private Label DRFormulaLabel;
+
+        private DataGrid MeasuredParamsDataGrid;
 
         public Button DeleteStructureButton;
         

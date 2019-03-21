@@ -71,7 +71,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         [DBColumn("structure_measured_parameters", ColumnDomain.Set, SetTypeValue = "'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'", Order = 13, OldDBColumnName = "Set_ParamInd", DefaultValue = "1", Nullable = true)]
-        public string StructureLeadsAmountAsString
+        public string StructureMeasuredParameters
         {
             get
             {
@@ -83,5 +83,33 @@ namespace NormaMeasure.DBControl.Tables
                 this["structure_measured_parameters"] = value;
             }
         }
+
+        public uint[] StructureMeasuredParametersIdsAsArray
+        {
+            get
+            {
+                if (measuredParamsIds == null)
+                {
+                    string strParams = StructureMeasuredParameters;
+                    measuredParamsIds = new uint[] { };
+                    if (!String.IsNullOrWhiteSpace(strParams))
+                    {
+                        string[] strArr = strParams.Split(',');
+                        uint[] uintArr = new uint[strArr.Length];
+                        for (int i = 0; i < strArr.Length; i++)
+                        {
+                            uint v = 0;
+                            uint.TryParse(strArr[i], out v);
+                            uintArr[i] = v;
+                        }
+                        measuredParamsIds = uintArr;
+                    }
+                }
+                return measuredParamsIds;
+
+            }
+        }
+
+        private uint[] measuredParamsIds;
     }
 }

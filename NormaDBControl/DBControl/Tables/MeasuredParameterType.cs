@@ -14,6 +14,14 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static DBEntityTable get_all_as_table()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
+            string select_cmd = $"{t.SelectQuery}";
+            t.FillByQuery(select_cmd);
+            return t;
+        }
+
         [DBColumn("parameter_type_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "ParamInd", Nullable = false, IsPrimaryKey = true)]
         public uint ParameterTypeId
         {

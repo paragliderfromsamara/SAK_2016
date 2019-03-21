@@ -325,7 +325,7 @@ namespace NormaMeasure.DBControl.SAC
                 d.StructureTypeId = Convert.ToUInt16(rData[0]);
                 d.StructureTypeName = rData[1];
                 d.StructureLeadsAmount = Convert.ToInt16(rData[2]);
-                d.StructureLeadsAmountAsString = rData[3];
+                d.StructureMeasuredParameters = rData[3];
 
                 t.Rows.Add(d);
             }

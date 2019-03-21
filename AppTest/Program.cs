@@ -15,7 +15,9 @@ namespace AppTest
             Thread.CurrentThread.CurrentCulture = new CultureInfo("my");
             Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
             Console.WindowWidth = 100;
+            //ExperimentFunc();
             DBTest.Start();
+
 
 
             Console.ReadLine();
@@ -37,6 +39,18 @@ namespace AppTest
 
             Console.WriteLine(r);
         }
+
+        static void ExperimentFunc()
+        {
+            string s = "1,2,3,4,5,7,8,9,10";
+            string[] arrs = s.Split(',');
+            foreach(string c in arrs)
+            {
+                Console.WriteLine(c);
+            }
+
+
+        } 
 
         
     }

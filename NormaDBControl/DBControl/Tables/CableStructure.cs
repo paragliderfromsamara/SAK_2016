@@ -347,6 +347,7 @@ namespace NormaMeasure.DBControl.Tables
                 this.StructureTypeId = this.structureType.StructureTypeId;
             }
         }
+
         private CableStructureType structureType;
 
     }
