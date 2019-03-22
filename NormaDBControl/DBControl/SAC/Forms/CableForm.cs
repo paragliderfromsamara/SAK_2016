@@ -48,7 +48,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
             fillIsolationMaterials();
             fillDRBringingFormuls();
             fillDRFormuls();
-            fillMeasuredParameterTypes();
         }
 
 
@@ -102,10 +101,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             CableMark_input.Refresh();
         }
 
-        private void fillMeasuredParameterTypes()
-        {
-            cableFormDataSet.Tables.Add(MeasuredParameterType.get_all_as_table());
-        }
+
         #endregion
 
         private string reloadDocumentsDS()
@@ -579,21 +575,27 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DBEntityTable isolationMaterialsTable = new DBEntityTable(typeof(IsolationMaterial));
             DBEntityTable drBringingFormulsTable = new DBEntityTable(typeof(dRBringingFormula));
             DBEntityTable drFormulsTable = new DBEntityTable(typeof(dRFormula));
-            DBEntityTable measuredParameterTypesTable = new DBEntityTable(typeof(MeasuredParameterType));
+            DBEntityTable measuredParameterTypesTable = MeasuredParameterType.get_all_as_table_for_cable_structure_form(CableStructure.StructureType.StructureMeasuredParameters);
 
             //if (ds.Tables.Contains(structureTypesTable.TableName)) fillStructureTypeComboBox(ds.Tables[structureTypesTable.TableName]);
             if (ds.Tables.Contains(leadMaterialsTable.TableName)) fillLeadMaterialsComboBox(ds.Tables[leadMaterialsTable.TableName]);
             if (ds.Tables.Contains(isolationMaterialsTable.TableName)) fillIsolationMaterialsComboBox(ds.Tables[isolationMaterialsTable.TableName]);
             if (ds.Tables.Contains(drFormulsTable.TableName)) fill_dRFormulsComboBox(ds.Tables[drFormulsTable.TableName]);
             if (ds.Tables.Contains(drBringingFormulsTable.TableName)) fill_drBringingFormulsComboBox(ds.Tables[drBringingFormulsTable.TableName]);
-            if (ds.Tables.Contains(measuredParameterTypesTable.TableName)) fill_MeasuredParametersDataGrid(ds.Tables[measuredParameterTypesTable.TableName]);
+
+            fill_MeasuredParametersDataGrid(measuredParameterTypesTable);
         }
 
         private void fill_MeasuredParametersDataGrid(DataTable dataTable)
         {
+            //DataRow[] currentStructureParams = dataTable.Select($"parameter_type_id IN ({CableStructure.StructureType.StructureMeasuredParameters})");
+            
+            //foreach (DataRow r in currentStructureParams) parameterNameColumn.Items.Add();
+
             parameterNameColumn.DisplayMember = "parameter_name";
             parameterNameColumn.ValueMember  = "parameter_type_id";
-            parameterNameColumn.DataSource = dataTable;
+
+            parameterNameColumn.DataSource = dataTable; 
             //throw new NotImplementedException();
         }
 

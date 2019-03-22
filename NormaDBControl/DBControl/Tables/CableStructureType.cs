@@ -84,25 +84,23 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        public uint[] StructureMeasuredParametersIdsAsArray
+        public List<uint> StructureMeasuredParametersIdsAsList
         {
             get
             {
                 if (measuredParamsIds == null)
                 {
                     string strParams = StructureMeasuredParameters;
-                    measuredParamsIds = new uint[] { };
+                    measuredParamsIds = new List<uint>();
                     if (!String.IsNullOrWhiteSpace(strParams))
                     {
                         string[] strArr = strParams.Split(',');
-                        uint[] uintArr = new uint[strArr.Length];
                         for (int i = 0; i < strArr.Length; i++)
                         {
                             uint v = 0;
                             uint.TryParse(strArr[i], out v);
-                            uintArr[i] = v;
+                            measuredParamsIds.Add(v);
                         }
-                        measuredParamsIds = uintArr;
                     }
                 }
                 return measuredParamsIds;
@@ -110,6 +108,6 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        private uint[] measuredParamsIds;
+        private List<uint> measuredParamsIds;
     }
 }

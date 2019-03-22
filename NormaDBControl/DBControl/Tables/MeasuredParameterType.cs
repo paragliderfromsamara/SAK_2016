@@ -14,10 +14,10 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        public static DBEntityTable get_all_as_table()
+        public static DBEntityTable get_all_as_table_for_cable_structure_form(string ids)
         {
             DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
-            string select_cmd = $"{t.SelectQuery}";
+            string select_cmd = $"{t.SelectQuery} WHERE parameter_type_id > 1 AND parameter_type_id < 18 AND parameter_type_id IN ({ids})";
             t.FillByQuery(select_cmd);
             return t;
         }
