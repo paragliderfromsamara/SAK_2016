@@ -591,6 +591,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fill_MeasuredParametersDataGrid(DataTable dataTable)
         {
+            parameterNameColumn.DisplayMember = "parameter_name";
+            parameterNameColumn.ValueMember  = "parameter_type_id";
+            parameterNameColumn.DataSource = dataTable;
             //throw new NotImplementedException();
         }
 
@@ -659,17 +662,66 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private void DrawMeasuredParametersDataGrid()
         {
             MeasuredParamsDataGridView = new DataGridView();
-            MeasuredParamsDataGridView.Size = new System.Drawing.Size(470, 400);
+            MeasuredParamsDataGridView.Size = new System.Drawing.Size(560, 350);
             MeasuredParamsDataGridView.Parent = this;
 
-            MeasuredParamsDataGridView.Columns.Add("measured_parameter_name", "Параметр");
-            MeasuredParamsDataGridView.Columns["measured_parameter_name"].DataPropertyName = "parameter_name";
+            parameterNameColumn = new DataGridViewComboBoxColumn();
+            parameterNameColumn.DataPropertyName = "parameter_name";
+            parameterNameColumn.HeaderText = "Параметр";
+            //parameterNameColumn.Width = 60;
+            parameterNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-            MeasuredParamsDataGridView.Columns.Add("measured_parameter_min", "Min");
-            MeasuredParamsDataGridView.Columns["measured_parameter_min"].DataPropertyName = "min_value";
+            minValueColumn = new DataGridViewTextBoxColumn();
+            minValueColumn.HeaderText = "Min";
+            minValueColumn.DataPropertyName = "min_value";
+            minValueColumn.Width = 60;
 
-            MeasuredParamsDataGridView.Columns.Add("measured_parameter_max", "Max");
-            MeasuredParamsDataGridView.Columns["measured_parameter_max"].DataPropertyName = "max_value";
+            maxValueColumn = new DataGridViewTextBoxColumn();
+            maxValueColumn.HeaderText = "Min";
+            maxValueColumn.DataPropertyName = "max_value";
+            maxValueColumn.Width = 60;
+
+            minFreqColumn = new DataGridViewTextBoxColumn();
+            minFreqColumn.HeaderText = "fmin, кГц";
+            minFreqColumn.DataPropertyName = "min_freq";
+            minFreqColumn.Width = 60;
+
+            maxFreqColumn = new DataGridViewTextBoxColumn();
+            maxFreqColumn.HeaderText = "fmax, кГц";
+            maxFreqColumn.DataPropertyName = "max_freq";
+            maxFreqColumn.Width = 60;
+
+            stepFreqColumn = new DataGridViewTextBoxColumn();
+            stepFreqColumn.HeaderText = "fшаг, кГц";
+            stepFreqColumn.DataPropertyName = "step_freq";
+            stepFreqColumn.Width = 60;
+
+            percentColumn = new DataGridViewTextBoxColumn();
+            percentColumn.HeaderText = "%";
+            percentColumn.DataPropertyName = "in_norma_percent";
+            percentColumn.Width = 35;
+
+            measureColumn = new DataGridViewTextBoxColumn();
+            measureColumn.HeaderText = "Ед. изм.";
+            measureColumn.DataPropertyName = "result_measure";
+            measureColumn.Width = 60;
+
+            bringingLengthColumn = new DataGridViewTextBoxColumn();
+            bringingLengthColumn.HeaderText = "Lприв, м";
+            bringingLengthColumn.DataPropertyName = "bringing_length";
+            bringingLengthColumn.Width = 60;
+
+
+            MeasuredParamsDataGridView.Columns.Add(parameterNameColumn);
+            MeasuredParamsDataGridView.Columns.Add(minValueColumn);
+            MeasuredParamsDataGridView.Columns.Add(maxValueColumn);
+            MeasuredParamsDataGridView.Columns.Add(percentColumn);
+            MeasuredParamsDataGridView.Columns.Add(measureColumn);
+            MeasuredParamsDataGridView.Columns.Add(bringingLengthColumn);
+            MeasuredParamsDataGridView.Columns.Add(minFreqColumn);
+            MeasuredParamsDataGridView.Columns.Add(stepFreqColumn);
+            MeasuredParamsDataGridView.Columns.Add(maxFreqColumn);
+
         }
 
         private void DrawDeleteButton()
@@ -875,8 +927,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             StructureTypeLabel.Location = new System.Drawing.Point(x-5, y);
             //structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
-            DeleteStructureButton.Location = new System.Drawing.Point(740, y );
-            MeasuredParamsDataGridView.Location = new System.Drawing.Point(250, y+20);
+            
+            MeasuredParamsDataGridView.Location = new System.Drawing.Point(240, y+40);
+            DeleteStructureButton.Location = new System.Drawing.Point(MeasuredParamsDataGridView.Location.X + MeasuredParamsDataGridView.Width-DeleteStructureButton.Width, y);
 
             elementsAmountGroupBox.Location = new System.Drawing.Point(x, y+= 20);
             y += elementsAmountGroupBox.Height;
@@ -962,6 +1015,17 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private Label DRFormulaLabel;
 
         private DataGridView MeasuredParamsDataGridView;
+        private DataGridViewComboBoxColumn parameterNameColumn;
+        private DataGridViewTextBoxColumn minValueColumn;
+        private DataGridViewTextBoxColumn maxValueColumn;
+        private DataGridViewTextBoxColumn minFreqColumn;
+        private DataGridViewTextBoxColumn maxFreqColumn;
+        private DataGridViewTextBoxColumn stepFreqColumn;
+        private DataGridViewTextBoxColumn percentColumn;
+        private DataGridViewTextBoxColumn measureColumn;
+        private DataGridViewTextBoxColumn bringingLengthColumn;
+
+
 
         public Button DeleteStructureButton;
         

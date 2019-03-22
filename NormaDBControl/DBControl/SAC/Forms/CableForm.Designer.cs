@@ -107,7 +107,7 @@
             // 
             this.CableStructures_input.Location = new System.Drawing.Point(191, 25);
             this.CableStructures_input.Name = "CableStructures_input";
-            this.CableStructures_input.Size = new System.Drawing.Size(609, 20);
+            this.CableStructures_input.Size = new System.Drawing.Size(651, 20);
             this.CableStructures_input.TabIndex = 3;
             this.CableStructures_input.TextChanged += new System.EventHandler(this.CableStructures_input_TextChanged);
             // 
@@ -142,7 +142,7 @@
             // 
             this.DocumentName_input.Location = new System.Drawing.Point(191, 72);
             this.DocumentName_input.Name = "DocumentName_input";
-            this.DocumentName_input.Size = new System.Drawing.Size(609, 20);
+            this.DocumentName_input.Size = new System.Drawing.Size(651, 20);
             this.DocumentName_input.TabIndex = 7;
             this.DocumentName_input.TextChanged += new System.EventHandler(this.DocumentName_input_TextChanged);
             // 
@@ -312,7 +312,7 @@
             // 
             this.Notes_input.Location = new System.Drawing.Point(12, 175);
             this.Notes_input.Name = "Notes_input";
-            this.Notes_input.Size = new System.Drawing.Size(788, 42);
+            this.Notes_input.Size = new System.Drawing.Size(830, 42);
             this.Notes_input.TabIndex = 22;
             this.Notes_input.Text = "";
             this.Notes_input.TextChanged += new System.EventHandler(this.Notes_input_TextChanged);
@@ -340,7 +340,7 @@
             this.CodeKCH_input.Location = new System.Drawing.Point(744, 128);
             this.CodeKCH_input.Mask = "00";
             this.CodeKCH_input.Name = "CodeKCH_input";
-            this.CodeKCH_input.Size = new System.Drawing.Size(51, 20);
+            this.CodeKCH_input.Size = new System.Drawing.Size(98, 20);
             this.CodeKCH_input.TabIndex = 25;
             this.CodeKCH_input.TextChanged += new System.EventHandler(this.CodeKCH_input_TextChanged);
             // 
@@ -359,7 +359,7 @@
             this.CableStructureTabs.Location = new System.Drawing.Point(12, 272);
             this.CableStructureTabs.Name = "CableStructureTabs";
             this.CableStructureTabs.SelectedIndex = 0;
-            this.CableStructureTabs.Size = new System.Drawing.Size(788, 474);
+            this.CableStructureTabs.Size = new System.Drawing.Size(830, 474);
             this.CableStructureTabs.TabIndex = 27;
             // 
             // structureTypesComboBox
@@ -393,7 +393,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(809, 789);
+            this.ClientSize = new System.Drawing.Size(859, 789);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.addStructureButton);
             this.Controls.Add(this.structureTypesComboBox);
