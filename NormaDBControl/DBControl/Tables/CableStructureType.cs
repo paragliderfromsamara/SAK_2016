@@ -84,30 +84,20 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        public List<uint> StructureMeasuredParametersIdsAsList
+
+        public DBEntityTable MeasuredParameterTypes
         {
             get
             {
-                if (measuredParamsIds == null)
+                if (measuredParameterTypes == null)
                 {
-                    string strParams = StructureMeasuredParameters;
-                    measuredParamsIds = new List<uint>();
-                    if (!String.IsNullOrWhiteSpace(strParams))
-                    {
-                        string[] strArr = strParams.Split(',');
-                        for (int i = 0; i < strArr.Length; i++)
-                        {
-                            uint v = 0;
-                            uint.TryParse(strArr[i], out v);
-                            measuredParamsIds.Add(v);
-                        }
-                    }
+                    measuredParameterTypes = MeasuredParameterType.get_all_as_table_for_cable_structure_form(StructureMeasuredParameters);
                 }
-                return measuredParamsIds;
-
+                return measuredParameterTypes;
             }
         }
 
         private List<uint> measuredParamsIds;
+        private DBEntityTable measuredParameterTypes;
     }
 }

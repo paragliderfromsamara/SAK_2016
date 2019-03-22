@@ -575,7 +575,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DBEntityTable isolationMaterialsTable = new DBEntityTable(typeof(IsolationMaterial));
             DBEntityTable drBringingFormulsTable = new DBEntityTable(typeof(dRBringingFormula));
             DBEntityTable drFormulsTable = new DBEntityTable(typeof(dRFormula));
-            DBEntityTable measuredParameterTypesTable = MeasuredParameterType.get_all_as_table_for_cable_structure_form(CableStructure.StructureType.StructureMeasuredParameters);
+            DBEntityTable measuredParameterTypesTable = CableStructure.StructureType.MeasuredParameterTypes;
 
             //if (ds.Tables.Contains(structureTypesTable.TableName)) fillStructureTypeComboBox(ds.Tables[structureTypesTable.TableName]);
             if (ds.Tables.Contains(leadMaterialsTable.TableName)) fillLeadMaterialsComboBox(ds.Tables[leadMaterialsTable.TableName]);
@@ -664,7 +664,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private void DrawMeasuredParametersDataGrid()
         {
             MeasuredParamsDataGridView = new DataGridView();
-            MeasuredParamsDataGridView.Size = new System.Drawing.Size(560, 350);
+            MeasuredParamsDataGridView.Size = new System.Drawing.Size(570, 350);
             MeasuredParamsDataGridView.Parent = this;
 
             parameterNameColumn = new DataGridViewComboBoxColumn();
