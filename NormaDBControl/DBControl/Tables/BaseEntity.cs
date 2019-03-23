@@ -61,9 +61,59 @@ namespace NormaMeasure.DBControl.Tables
         /// <returns></returns>
         public bool Create()
         {
+            bool wasAdded = false;
+            if (this.Table.PrimaryKey.Length > 0)
+            {
+                wasAdded = createWithPrimaryKey();
+            }else
+            {
+                wasAdded = createWithoutPrimaryKey();
+            }
             string insertQuery = makeInsertQuery();
-            return ((DBEntityTable)this.Table).WriteSingleQuery(insertQuery);
+            return wasAdded;// ((DBEntityTable)this.Table).WriteSingleQuery(insertQuery);
         }
+
+        private bool createWithPrimaryKey()
+        {
+            long prevId;
+            long afterId;
+            long status = 0;
+            bool completed;
+            DBEntityTable t = ((DBEntityTable)this.Table);
+            string lastIdQuery = makeSelectQuery("LAST_INSERT_ID()") + " LIMIT 1;";
+            string insertQuery = makeInsertQuery();
+            t.OpenDB();
+            prevId = t.GetScalarValueFromDB(lastIdQuery);
+            status = t.GetScalarValueFromDB(insertQuery);
+            afterId = t.GetScalarValueFromDB(lastIdQuery);
+            t.CloseDB();
+            completed = (afterId > prevId) && status == 0;
+
+            if (completed) this[t.PrimaryKey[0].ColumnName] = (uint)afterId; 
+
+            return afterId > prevId;
+        }
+
+        private bool createWithoutPrimaryKey()
+        {
+            long prevCount;
+            long afterCount;
+            long status = 0;
+            bool completed;
+            string countQuery = makeSelectQuery("COUNT(*)");
+            string insertQuery = makeInsertQuery();
+            DBEntityTable t = ((DBEntityTable)this.Table);
+            t.OpenDB();
+            prevCount = t.GetScalarValueFromDB(countQuery);
+            status = t.GetScalarValueFromDB(insertQuery);
+            afterCount = t.GetScalarValueFromDB(countQuery);
+            t.CloseDB();
+            completed = (afterCount > prevCount) && status == 0;
+
+            return afterCount > prevCount;
+
+        }
+
 
 
         /// <summary>
@@ -215,6 +265,11 @@ namespace NormaMeasure.DBControl.Tables
         protected string makeSelectQuery()
         {
             return $"SELECT * FROM {Table.TableName}";
+        }
+
+        protected string makeSelectQuery(string colName)
+        {
+            return makeSelectQuery().Replace("*", colName);
         }
 
         protected string dbColumnValue(DataColumn col)

@@ -20,14 +20,17 @@ namespace NormaMeasure.DBControl.Tables
             BarabanType bt = (BarabanType)t.NewRow();
             bt.BarabanWeight = 0;
             bt.TypeName = "";
-            return (BarabanType)t.NewRow();
+            return bt;
         }
 
         public override bool Save()
         {
             try
             {
-                return base.Save();
+                bool f = base.Save();
+                System.Windows.Forms.MessageBox.Show($"{TypeId}");
+                return f;
+
             }
             catch (DBEntityException ex)
             {

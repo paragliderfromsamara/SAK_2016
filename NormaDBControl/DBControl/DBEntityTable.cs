@@ -17,14 +17,41 @@ namespace NormaMeasure.DBControl
             entity_type = entityType;
             SetTableName();
             if (build_columns) ConstructColumns();
+            InitDBControl();
         }
+
         public DBEntityTable(Type entityType) : base()
         {
             entity_type = entityType;
             SetTableName();
             ConstructColumns();
+            InitDBControl();
         }
 
+        public long GetScalarValueFromDB(string query)
+        {
+            return MySqlControl.RunNoQuery(query);
+        }
+        private MySqlConnection DBConnection
+        {
+            get
+            {
+                return MySqlControl.MyConn;
+            }
+        }
+        private void InitDBControl()
+        {
+            MySqlControl = new MySQLDBControl(this.DBName);
+        }
+
+        public void OpenDB()
+        {
+            MySqlControl.MyConn.Open();
+        }
+        public void CloseDB()
+        {
+            MySqlControl.MyConn.Close();
+        }
 
         private void SetTableName()
         {
@@ -84,11 +111,10 @@ namespace NormaMeasure.DBControl
 
         public void FillByQuery(string select_query)
         {
-            MySQLDBControl mySql = new MySQLDBControl(this.DBName);
-            MySqlDataAdapter a = new MySqlDataAdapter(select_query, mySql.MyConn);
-            mySql.MyConn.Open();
+            MySqlDataAdapter a = new MySqlDataAdapter(select_query, DBConnection);
+            OpenDB();
             a.Fill(this);
-            mySql.MyConn.Close();
+            CloseDB();
         }
 
         public bool WriteSingleQuery(string query)
@@ -100,13 +126,12 @@ namespace NormaMeasure.DBControl
         private int writeQueries(string[] queries)
         {
             int counter = 0;
-            MySQLDBControl mySql = new MySQLDBControl(this.DBName);
-            mySql.MyConn.Open();
+            OpenDB();
             foreach(string q in queries)
             {
-                if (mySql.RunNoQuery(q) == 0) counter++;
+                if (MySqlControl.RunNoQuery(q) == 0) counter++;
             }
-            mySql.MyConn.Close();
+            CloseDB();
             return counter;
         }
 
@@ -167,6 +192,7 @@ namespace NormaMeasure.DBControl
         Type EntityType => entity_type;
 
         private Type entity_type;
+        private MySQLDBControl MySqlControl;
         public string DBName;
         public string SelectQuery;
         public string InsertQuery;

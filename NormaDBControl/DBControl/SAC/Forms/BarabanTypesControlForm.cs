@@ -63,8 +63,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 InitNewBaraban();
                 loadBarabanTypes();
                 //MessageBox.Show("Новый тип барабана успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+
             }
-            
+
         }
 
         private void closeForm_Click(object sender, EventArgs e)
