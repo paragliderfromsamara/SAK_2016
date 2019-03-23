@@ -27,7 +27,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("measured_parameter_data_id", ColumnDomain.UInt, Order = 11, Nullable = false)]
+        [DBColumn("measured_parameter_data_id", ColumnDomain.UInt, Order = 11, Nullable = false, ReferenceTo = "measured_parameter_data(measured_parameter_data_id)")]
         public uint MeasuredParameterDataId
         {
             get

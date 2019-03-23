@@ -108,7 +108,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        [DBColumn("cable_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false)]
+        [DBColumn("cable_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false, ReferenceTo = "cables(cable_id) ON DELETE CASCADE")]
         public uint CableId
         {
             get

@@ -51,7 +51,8 @@ namespace NormaMeasure.DBControl.SAC
                typeof(ReleasedBaraban),
                typeof(LengthBringingType),
                typeof(LeadTestStatus),
-               typeof(FrequencyRange), 
+               typeof(FrequencyRange),
+               typeof(MeasuredParameterData),
                typeof(CableStructureMeasuredParameterData)
             };
             /*
