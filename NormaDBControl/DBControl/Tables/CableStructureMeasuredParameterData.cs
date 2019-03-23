@@ -14,6 +14,16 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static DBEntityTable get_structure_measured_parameters(uint structure_id)
+        {
+            DBEntityTable mdt = new DBEntityTable(typeof(MeasuredParameterData));
+            DBEntityTable frt = new DBEntityTable(typeof(FrequencyRange));
+            DBEntityTable t = new DBEntityTable(typeof(CableStructureMeasuredParameterData));
+            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN {mdt.TableName} USING(measured_parameter_data_id) LEFT OUTER JOIN {frt.TableName} USING(frequency_range_id) WHERE cable_structure_id = {structure_id}";
+            t.FillByQuery(select_cmd);
+            return t;
+        } 
+
         [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, Nullable = false, ReferenceTo = "cable_structures(cable_structure_id) ON DELETE CASCADE")]
         public uint CableStructureId
         {
@@ -39,5 +49,22 @@ namespace NormaMeasure.DBControl.Tables
                 this["measured_parameter_data_id"] = value;
             }
         }
+
+
+
+        public MeasuredParameterData MeasuredParameterData
+        {
+            get
+            {
+                if (measuredParameterData == null)
+                {
+                    measuredParameterData = MeasuredParameterData.find_by_id(MeasuredParameterDataId);
+                }
+                return measuredParameterData;
+            }
+        }
+
+        private MeasuredParameterData measuredParameterData;
+
     }
 }

@@ -14,6 +14,19 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+
+        public static MeasuredParameterData find_by_id(uint id)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterData));
+            string select_cmd = $"{t.SelectQuery} WHERE measured_parameter_data_id = {id}";
+            t.FillByQuery(select_cmd);
+            if (t.Rows.Count > 0) return (MeasuredParameterData)t.Rows[0];
+            else
+            {
+                return null;
+            }
+        }
+
         [DBColumn("measured_parameter_data_id", ColumnDomain.UInt, Order = 10, IsPrimaryKey = true, AutoIncrement = true)]
         public uint MeasureParameterDataId
         {

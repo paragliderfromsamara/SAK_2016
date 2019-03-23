@@ -348,7 +348,27 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        public DBEntityTable MeasuredParameters
+        {
+            get
+            {
+                if (measuredParameters == null)
+                {
+                    if (IsNewRecord())
+                    {
+                        measuredParameters = CableStructureMeasuredParameterData.get_structure_measured_parameters(0);
+                    }
+                    else
+                    {
+                        measuredParameters = CableStructureMeasuredParameterData.get_structure_measured_parameters(this.CableStructureId);
+                    }
+                }
+                return measuredParameters;
+            }
+        }
+
         private CableStructureType structureType;
+        private DBEntityTable measuredParameters;
 
     }
 
