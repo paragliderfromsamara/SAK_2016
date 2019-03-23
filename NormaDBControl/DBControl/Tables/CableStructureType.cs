@@ -97,7 +97,6 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        private List<uint> measuredParamsIds;
         private DBEntityTable measuredParameterTypes;
     }
 }

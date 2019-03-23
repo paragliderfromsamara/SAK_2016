@@ -322,13 +322,18 @@ namespace NormaMeasure.DBControl
             get
             {
                 string colsTxt = "";
+                string foreignKeys = String.Empty;
+                List<string> foreignArr = new List<string>();
                 if (columns != null)
                 {
                     for (int i = 0; i < columns.Length; i++)
                     {
-                        colsTxt += String.Format("{0}, ", columns[i].AddColumnText);
+                        if (!String.IsNullOrWhiteSpace(colsTxt)) colsTxt += ", ";
+                        colsTxt += columns[i].AddColumnText;
+                        if (!string.IsNullOrWhiteSpace(columns[i].ReferenceTo)) foreignArr.Add($"FOREIGN KEY ({columns[i].Name}) REFERENCES {columns[i].ReferenceTo}");
                     }
-                    colsTxt += "PRIMARY KEY ("+primaryKey+")";
+                    if (foreignArr.Count > 0) colsTxt += $", {string.Join(", ", foreignArr)}" ;
+                    if (!String.IsNullOrWhiteSpace(primaryKey)) colsTxt += ", PRIMARY KEY ("+primaryKey+")";
                 }
                 return String.Format("CREATE TABLE IF NOT EXISTS {0} ({1})", tableName, colsTxt);
             }
@@ -542,6 +547,7 @@ namespace NormaMeasure.DBControl
         public bool Nullable;
         public string SetTypeValue;
         public bool AutoIncrement;
+        public string ReferenceTo;
         public string Name
         {
             get { return _name; }

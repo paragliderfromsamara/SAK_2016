@@ -80,6 +80,7 @@
     <Compile Include="SAC\DBEntities\DBSACTablesMigration.cs" />
     <Compile Include="SAC\DBEntities\QADocument.cs" />
     <Compile Include="Tables\CableStructure.cs" />
+    <Compile Include="Tables\CableStructureMeasuredParameterData.cs" />
     <Compile Include="Tables\CableStructureType.cs" />
     <Compile Include="Tables\Document.cs" />
     <Compile Include="SAC\Forms\CableForm.cs">
