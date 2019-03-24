@@ -763,7 +763,13 @@ namespace NormaMeasure.DBControl.SAC.Forms
             MeasuredParamsDataGridView.Columns.Add(cableStructureIdColumn);
             MeasuredParamsDataGridView.DefaultValuesNeeded += MeasuredParamsDataGridView_DefaultValuesNeeded;
             MeasuredParamsDataGridView.CellValueChanged += MeasuredParamsDataGridView_CellValueChanged;
+            MeasuredParamsDataGridView.CurrentCellDirtyStateChanged += MeasuredParamsDataGridView_CurrentCellDirtyStateChanged;
            // MeasuredParamsDataGridView.ce
+        }
+
+        private void MeasuredParamsDataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show("MeasuredParamsDataGridView_CurrentCellDirtyStateChanged");
         }
 
         private void MeasuredParamsDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -808,7 +814,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             foreach(DataGridViewCell c in e.Row.Cells)
             {
                 if (c.Visible && c.OwningColumn.Name != parameterNameColumn.Name) c.ReadOnly = true;
-                c.Style.BackColor = c.ReadOnly && c.Visible ? System.Drawing.Color.DarkSlateBlue : System.Drawing.Color.Empty;
+                c.Style.BackColor = c.ReadOnly && c.Visible ? System.Drawing.Color.Gray : System.Drawing.Color.Empty;
             }
 
         }
