@@ -52,7 +52,20 @@ namespace NormaMeasure.DBControl.Tables
                 this["measured_parameter_data_id"] = value;
             }
         }
-        #region Колонки типа измеряемого параметра
+        #region Колонки типа измеряемого параметра (ParameterType)
+
+        public MeasuredParameterType ParameterType
+        {
+            set
+            {
+                MeasuredParameterType pt = value as MeasuredParameterType;
+                ParameterTypeId = pt.ParameterTypeId;
+                ParameterName = pt.ParameterName;
+                ParameterDescription = pt.Description;
+                ParameterMeasure = pt.Measure;
+            }
+        }
+
         [DBColumn("parameter_type_id", ColumnDomain.UInt, Order = 12, IsVirtual = true)]
         public uint ParameterTypeId
         {
@@ -65,8 +78,185 @@ namespace NormaMeasure.DBControl.Tables
                 this["parameter_type_id"] = value;
             }
         }
+
+        [DBColumn("parameter_name", ColumnDomain.Tinytext, Order = 13, IsVirtual = true)]
+        public string ParameterName
+        {
+            get
+            {
+                return this["parameter_name"].ToString();
+            }
+            set
+            {
+                this["parameter_name"] = value;
+            }
+        }
+
+        [DBColumn("parameter_measure", ColumnDomain.Tinytext, Order = 14, IsVirtual = true)]
+        public string ParameterMeasure
+        {
+            get
+            {
+                return this["parameter_measure"].ToString();
+            }
+            set
+            {
+                this["parameter_measure"] = value;
+            }
+        }
+
+        [DBColumn("parameter_description", ColumnDomain.Tinytext, Order = 15, IsVirtual = true)]
+        public string ParameterDescription
+        {
+            get
+            {
+                return this["parameter_description"].ToString();
+            }
+            set
+            {
+                this["parameter_description"] = value;
+            }
+        }
+
         #endregion
 
+        #region колонки значений измеряемого параметра (MeasuredParameters)
+
+
+        [DBColumn("length_bringing_type_id", ColumnDomain.UInt, Order = 16, Nullable = true, DefaultValue =0, IsVirtual = true)]
+        public uint LngthBringingTypeId
+        {
+            get
+            {
+                return tryParseUInt("length_bringing_type_id");
+            }
+            set
+            {
+                this["length_bringing_type_id"] = value;
+            }
+        }
+
+        [DBColumn("length_bringing", ColumnDomain.Float, Order = 17, DefaultValue = 1000, IsVirtual = true)]
+        public uint LngthBringing
+        {
+            get
+            {
+                return tryParseUInt("length_bringing");
+            }
+            set
+            {
+                this["length_bringing"] = value;
+            }
+        }
+
+        [DBColumn("min_value", ColumnDomain.Float, Order = 18, DefaultValue = -9999999, IsVirtual = true)]
+        public float MinValue
+        {
+            get
+            {
+                return tryParseFloat("min_value");
+            }
+            set
+            {
+                this["min_value"] = value;
+            }
+        }
+
+        [DBColumn("max_value", ColumnDomain.Float, Order = 19, DefaultValue = 9999999, IsVirtual = true)]
+        public float MaxValue
+        {
+            get
+            {
+                return tryParseFloat("max_value");
+            }
+            set
+            {
+                this["max_value"] = value;
+            }
+        }
+
+        [DBColumn("percent", ColumnDomain.Float, Order = 20, DefaultValue = 100, IsVirtual = true)]
+        public uint Percent
+        {
+            get
+            {
+                return tryParseUInt("percent");
+            }
+            set
+            {
+                this["percent"] = value;
+            }
+        }
+        #endregion
+
+        #region Парметры частоты 
+
+        [DBColumn("frequency_min", ColumnDomain.UInt, Order = 21, Nullable = true, IsVirtual = true)]
+        public uint FrequencyMin
+        {
+            get
+            {
+                return tryParseUInt("frequency_min");
+            }
+            set
+            {
+                this["frequency_min"] = value;
+            }
+        }
+
+        [DBColumn("frequency_max", ColumnDomain.UInt, Order = 22,  Nullable = true, IsVirtual = true)]
+        public uint FrequencyMax
+        {
+            get
+            {
+                return tryParseUInt("frequency_max");
+            }
+            set
+            {
+                this["frequency_max"] = value;
+            }
+        }
+
+        [DBColumn("frequency_step", ColumnDomain.UInt, Order = 23, Nullable = true, IsVirtual = true)]
+        public uint FrequencyStep
+        {
+            get
+            {
+                return tryParseUInt("frequency_step");
+            }
+            set
+            {
+                this["frequency_step"] = value;
+            }
+        }
+
+        [DBColumn("frequency_range_id", ColumnDomain.UInt, Order = 24, DefaultValue = 0, IsVirtual = true)]
+        public uint FrequencyRangeId
+        {
+            get
+            {
+                return tryParseUInt("frequency_range_id");
+            }
+            set
+            {
+                this["frequency_range_id"] = value;
+            }
+        }
+
+        #endregion
+
+        [DBColumn("result_measure", ColumnDomain.Tinytext, Order = 25, Nullable = true, IsVirtual = true)]
+        public uint ResultMeasure
+        {
+            get
+            {
+                return tryParseUInt("result_measure");
+            }
+            set
+            {
+                this["result_measure"] = value;
+            }
+        }
 
         public MeasuredParameterData MeasuredParameterData
         {
@@ -74,13 +264,47 @@ namespace NormaMeasure.DBControl.Tables
             {
                 if (measuredParameterData == null)
                 {
-                    measuredParameterData = MeasuredParameterData.find_by_id(MeasuredParameterDataId);
+                    MeasuredParameterData mpd = MeasuredParameterData.find_by_id(MeasuredParameterDataId);
+                    if (mpd != null) MeasuredParameterData = mpd;
                 }
                 return measuredParameterData;
+            }
+            set
+            {
+                MeasuredParameterData mpd = value as MeasuredParameterData;
+                MinValue = mpd.MinValue;
+                MaxValue = mpd.MaxValue;
+                Percent = mpd.Percent;
+                LngthBringing = mpd.LngthBringing;
+                LngthBringingTypeId = mpd.LngthBringingTypeId;
+                measuredParameterData = mpd;
+            }
+        }
+
+        public bool IsFreqParameter
+        {
+            get
+            {
+                return MeasuredParameterType.IsFreqParameter(ParameterTypeId);
+            }
+        }
+
+        public bool HasMaxLimit
+        {
+            get
+            {
+                return MeasuredParameterType.HasMaxLimit(ParameterTypeId);
+            }
+        }
+
+        public bool HasMinLimit
+        {
+            get
+            {
+                return MeasuredParameterType.HasMinLimit(ParameterTypeId);
             }
         }
 
         private MeasuredParameterData measuredParameterData;
-
     }
 }

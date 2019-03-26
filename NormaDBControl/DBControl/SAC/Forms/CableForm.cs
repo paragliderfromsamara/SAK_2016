@@ -597,8 +597,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
             //parameterNameColumn.ValueMember  = "parameter_type_id";
 
             //parameterNameColumn.DataSource = dataTable;
+            DataGridViewBindingSource = new BindingSource();
+            DataGridViewBindingSource.DataSource = CableStructure.MeasuredParameters;
+            MeasuredParamsDataGridView.DataSource = DataGridViewBindingSource;
 
-            MeasuredParamsDataGridView.DataSource = CableStructure.MeasuredParameters;
             parameterTypesComboBox.BindingContext = new BindingContext();
             parameterTypesComboBox.ValueMember = "parameter_type_id";
             parameterTypesComboBox.DisplayMember = "parameter_name";
@@ -670,106 +672,128 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void DrawMeasuredParametersDataGrid()
         {
-            parameterTypesComboBox = new ComboBox();
-            parameterTypesComboBox.Parent = this;
-            parameterTypesComboBox.Height = 50;
-            parameterTypesComboBox.Width = 135;
-            parameterTypesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            addParameterButton = new Button();
-            addParameterButton.Parent = this;
-            addParameterButton.Text = "+";
-            addParameterButton.Width = 25;//100;
-            addParameterButton.Height = 25;
-            addParameterButton.Click += AddParameterButton_Click;
 
 
             MeasuredParamsDataGridView = new DataGridView();
             MeasuredParamsDataGridView.Size = new System.Drawing.Size(570, 350);
             MeasuredParamsDataGridView.Parent = this;
             MeasuredParamsDataGridView.AllowUserToAddRows = false;
+            MeasuredParamsDataGridView.AllowUserToResizeColumns = false;
             MeasuredParamsDataGridView.BackgroundColor = System.Drawing.Color.WhiteSmoke;
+            //MeasuredParamsDataGridView.BindingContext = new BindingContext();
 
-            parameterNameColumn = new DataGridViewTextBoxColumn();
-            parameterNameColumn.Name = "parameter_type_id_column";
-            parameterNameColumn.DataPropertyName = "parameter_type_id";
-            parameterNameColumn.HeaderText = "Параметр";
-            //parameterNameColumn.CellTemplate.ReadOnly = true;
-            //parameterNameColumn.CellTemplate.Style.ForeColor = System.Drawing.Color.LimeGreen;
-            //parameterNameColumn.Width = 60;
-            parameterNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            parameterTypeNameColumn = new DataGridViewTextBoxColumn();
+            parameterTypeNameColumn.Name = "parameter_type_name_column";
+            parameterTypeNameColumn.DataPropertyName = "parameter_name";
+            parameterTypeNameColumn.HeaderText = "Параметр";
+            parameterTypeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            parameterTypeNameColumn.CellTemplate = new DataGridViewTextBoxCell();
+            parameterTypeNameColumn.CellTemplate.Style.ForeColor = parameterTypeNameColumn.CellTemplate.Style.SelectionForeColor = System.Drawing.Color.White;
+            parameterTypeNameColumn.CellTemplate.Style.BackColor = parameterTypeNameColumn.CellTemplate.Style.SelectionBackColor = System.Drawing.Color.Moccasin;
+            parameterTypeNameColumn.ReadOnly = true;
+
+            parameterTypeIdColumn =new DataGridViewTextBoxColumn();
+            parameterTypeIdColumn.Name = "parameter_type_id_column";
+            parameterTypeIdColumn.DataPropertyName = "parameter_type_id";
+            parameterTypeIdColumn.Visible = false;
+            parameterTypeIdColumn.CellTemplate = new DataGridViewTextBoxCell();
+
+            parameterTypeDescriptionColumn = new DataGridViewTextBoxColumn();
+            parameterTypeDescriptionColumn.Name = "parameter_type_description_column";
+            parameterTypeDescriptionColumn.DataPropertyName = "parameter_description";
+            parameterTypeDescriptionColumn.Visible = false;
+            parameterTypeDescriptionColumn.CellTemplate = new DataGridViewTextBoxCell();
+
+
+            parameterTypeMeasureColumn = new DataGridViewTextBoxColumn();
+            parameterTypeMeasureColumn.Name = "parameter_type_measure_column";
+            parameterTypeMeasureColumn.DataPropertyName = "parameter_measure";
+            parameterTypeMeasureColumn.Visible = false;
+            parameterTypeMeasureColumn.CellTemplate = new DataGridViewTextBoxCell();
+
 
             minValueColumn = new DataGridViewTextBoxColumn();
             minValueColumn.HeaderText = "Min";
             minValueColumn.DataPropertyName = "min_value";
             minValueColumn.Name = "min_value_column";
             minValueColumn.Width = 60;
+            minValueColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             maxValueColumn = new DataGridViewTextBoxColumn();
             maxValueColumn.HeaderText = "Max";
             maxValueColumn.DataPropertyName = "max_value";
             maxValueColumn.Width = 60;
             maxValueColumn.Name = "max_value_column";
-
+            maxValueColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             minFreqColumn = new DataGridViewTextBoxColumn();
             minFreqColumn.Name = "frequency_min_column";
             minFreqColumn.HeaderText = "fmin, кГц";
             minFreqColumn.DataPropertyName = "frequency_min";
             minFreqColumn.Width = 60;
+            minFreqColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             maxFreqColumn = new DataGridViewTextBoxColumn();
             maxFreqColumn.HeaderText = "fmax, кГц";
             maxFreqColumn.DataPropertyName = "frequency_max";
             maxFreqColumn.Name = "frequency_max_column";
             maxFreqColumn.Width = 60;
+            maxFreqColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             stepFreqColumn = new DataGridViewTextBoxColumn();
             stepFreqColumn.HeaderText = "fшаг, кГц";
             stepFreqColumn.DataPropertyName = "frequency_step";
             stepFreqColumn.Name = "frequency_step_column";
             stepFreqColumn.Width = 60;
+            stepFreqColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             percentColumn = new DataGridViewTextBoxColumn();
             percentColumn.Name = "percent_column";
             percentColumn.HeaderText = "%";
             percentColumn.DataPropertyName = "percent";
             percentColumn.Width = 35;
+            percentColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             measureColumn = new DataGridViewTextBoxColumn();
             measureColumn.HeaderText = "Ед. изм.";
             measureColumn.DataPropertyName = "result_measure";
             measureColumn.Name = "result_measure_column";
             measureColumn.Width = 60;
+            measureColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             bringingLengthColumn = new DataGridViewTextBoxColumn();
             bringingLengthColumn.HeaderText = "Lприв, м";
             bringingLengthColumn.DataPropertyName = "length_bringing";
             bringingLengthColumn.Name = "length_bringing_column";
             bringingLengthColumn.Width = 60;
+            bringingLengthColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             freqRangeIdColumn = new DataGridViewTextBoxColumn();
             freqRangeIdColumn.DataPropertyName = "frequency_range_id";
             freqRangeIdColumn.Name = "frequency_range_id_column";
             freqRangeIdColumn.Visible = false;
+            freqRangeIdColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             lengthBringingTypeIdColumn = new DataGridViewTextBoxColumn();
             lengthBringingTypeIdColumn.DataPropertyName = "length_bringing_type_id";
             lengthBringingTypeIdColumn.Name = "length_bringing_type_id_column";
             lengthBringingTypeIdColumn.Visible = false;
+            lengthBringingTypeIdColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             measuredParameterDataIdColumn = new DataGridViewTextBoxColumn();
             measuredParameterDataIdColumn.DataPropertyName = "measured_parameter_data_id";
             measuredParameterDataIdColumn.Name = "measured_parameter_data_id_column";
             measuredParameterDataIdColumn.Visible = false;
+            measuredParameterDataIdColumn.CellTemplate = new DataGridViewTextBoxCell();
 
             cableStructureIdColumn = new DataGridViewTextBoxColumn();
             cableStructureIdColumn.Name = "cable_structure_id_column";
             cableStructureIdColumn.DataPropertyName = "cable_structure_id";
             cableStructureIdColumn.Visible = false;
+            cableStructureIdColumn.CellTemplate = new DataGridViewTextBoxCell();
 
-
-            MeasuredParamsDataGridView.Columns.Add(parameterNameColumn);
+            MeasuredParamsDataGridView.Columns.Add(parameterTypeNameColumn);
             MeasuredParamsDataGridView.Columns.Add(minValueColumn);
             MeasuredParamsDataGridView.Columns.Add(maxValueColumn);
             MeasuredParamsDataGridView.Columns.Add(percentColumn);
@@ -782,37 +806,73 @@ namespace NormaMeasure.DBControl.SAC.Forms
             MeasuredParamsDataGridView.Columns.Add(lengthBringingTypeIdColumn);
             MeasuredParamsDataGridView.Columns.Add(measuredParameterDataIdColumn);
             MeasuredParamsDataGridView.Columns.Add(cableStructureIdColumn);
-            MeasuredParamsDataGridView.DefaultValuesNeeded += MeasuredParamsDataGridView_DefaultValuesNeeded;
+            MeasuredParamsDataGridView.Columns.Add(parameterTypeIdColumn);
+            MeasuredParamsDataGridView.Columns.Add(parameterTypeDescriptionColumn);
+            MeasuredParamsDataGridView.Columns.Add(parameterTypeMeasureColumn);
+            
             //
             MeasuredParamsDataGridView.CellValueChanged += MeasuredParamsDataGridView_CellValueChanged;
             //MeasuredParamsDataGridView.CurrentCellChanged += MeasuredParamsDataGridView_CurrentCellChanged;
             MeasuredParamsDataGridView.CurrentCellDirtyStateChanged += MeasuredParamsDataGridView_CurrentCellDirtyStateChanged;
-            MeasuredParamsDataGridView.CellClick += MeasuredParamsDataGridView_CellClick;
-           // MeasuredParamsDataGridView.ce
+            // MeasuredParamsDataGridView.ce
+            MeasuredParamsDataGridView.RowsAdded += MeasuredParamsDataGridView_RowsAdded;
+
+            parameterTypesComboBox = new ComboBox();
+            parameterTypesComboBox.Parent = this;
+            parameterTypesComboBox.Height = 50;
+            parameterTypesComboBox.Width = 135;
+            parameterTypesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            addParameterButton = new Button();
+            addParameterButton.Parent = this;
+            addParameterButton.Text = "+";
+            addParameterButton.Width = 25;//100;
+            addParameterButton.Height = 25;
+            addParameterButton.Click += AddParameterButton_Click;
+        }
+
+        private void MeasuredParamsDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            // string s = string.Empty;
+            // for(int i = e.RowIndex; i< MeasuredParamsDataGridView.Rows.Count; i++)
+            //  {
+            //      s += MeasuredParamsDataGridView.Rows[i].Cells[parameterTypeIdColumn.Name].Value.ToString() + "; ";
+            InitRowByParameterType(MeasuredParamsDataGridView.Rows[e.RowIndex]);
+            //  }
+            //MessageBox.Show(MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[parameterTypeIdColumn.Name].Value.ToString());
         }
 
         private void AddParameterButton_Click(object sender, EventArgs e)
         {
-
-           MessageBox.Show(parameterTypesComboBox.SelectedValue.ToString());
-        }
-
-        private void MeasuredParamsDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            DataGridViewCell c = MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            if(c.OwningColumn.Name == parameterNameColumn.Name)
+           CableStructureMeasuredParameterData newPData = (CableStructureMeasuredParameterData)CableStructure.MeasuredParameters.NewRow();
+           DataRow[] rows = CableStructure.StructureType.MeasuredParameterTypes.Select($"parameter_type_id = {parameterTypesComboBox.SelectedValue}");
+           if (rows.Length > 0)
             {
-                DataGridViewComboBoxCell cbCell = c as DataGridViewComboBoxCell;
+                newPData.ParameterType = (MeasuredParameterType)rows[0];
+                newPData.CableStructureId = 0;
+                newPData.MeasuredParameterDataId = 0;
+
+                CableStructure.MeasuredParameters.Rows.Add(newPData);
+
+         
+                DataGridViewBindingSource.ResetBindings(false);
+                MeasuredParamsDataGridView.Refresh();
+
             }
-            //MessageBox.Show($"{c.OwningColumn.Name}");
-           // if()
+            else
+            {
+                MessageBox.Show("Не найден тип параметра", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+           
         }
+
+
 
         private void MeasuredParamsDataGridView_CurrentCellChanged(object sender, EventArgs e)
         {
             DataGridViewRow cngRow = MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.CurrentCell.RowIndex];
             string cngdColName = cngRow.Cells[MeasuredParamsDataGridView.CurrentCell.ColumnIndex].OwningColumn.Name;
-            if (cngdColName == parameterNameColumn.Name) InitRowByParameterType(cngRow);
+            if (cngdColName == parameterTypeNameColumn.Name) InitRowByParameterType(cngRow);
         }
 
         private void MeasuredParamsDataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -829,21 +889,23 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DataGridViewRow cngRow = MeasuredParamsDataGridView.Rows[e.RowIndex];
             string cngdColName = MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name;
             
-            if (cngdColName == parameterNameColumn.Name) InitRowByParameterType(cngRow);
+            if (cngdColName == parameterTypeNameColumn.Name) InitRowByParameterType(cngRow);
 
            // MessageBox.Show($"{e.RowIndex} {e.ColumnIndex} {MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name}");
         }
 
         private void InitRowByParameterType(DataGridViewRow r)
         {
-            DataGridViewComboBoxCell cell = r.Cells[parameterNameColumn.Name] as DataGridViewComboBoxCell;
-            uint[] allowedMax = new uint[] {MeasuredParameterType.al };
+            DataGridViewTextBoxCell cell = r.Cells[parameterTypeIdColumn.Name] as DataGridViewTextBoxCell;
+
             uint val = 0;
             uint.TryParse($"{cell.Value}", out val);
 
             bool isFreqParams = MeasuredParameterType.IsFreqParameter(val);
             bool hasMaxValue = MeasuredParameterType.HasMaxLimit(val);
             bool hasMinValue = MeasuredParameterType.HasMinLimit(val);
+
+            r.Cells[parameterTypeNameColumn.Name].ToolTipText = r.Cells[parameterTypeDescriptionColumn.Name].Value.ToString() ;
 
             r.Cells[maxFreqColumn.Name].ReadOnly = r.Cells[stepFreqColumn.Name].ReadOnly = r.Cells[minFreqColumn.Name].ReadOnly = !isFreqParams;
             r.Cells[minValueColumn.Name].ReadOnly = !hasMinValue;
@@ -856,27 +918,28 @@ namespace NormaMeasure.DBControl.SAC.Forms
            // MessageBox.Show($"{isFreqParams}");
         }
 
-        private void MeasuredParamsDataGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
-        {
-            e.Row.Cells[measuredParameterDataIdColumn.Name].Value = 0;
-            e.Row.Cells[parameterNameColumn.Name].Value = 2;
-            e.Row.Cells[cableStructureIdColumn.Name].Value = CableStructure.CableStructureId;
-            e.Row.Cells[percentColumn.Name].Value = 100;
-            
-            foreach(DataGridViewCell c in e.Row.Cells)
-            {
-                if (c.Visible && c.OwningColumn.Name != parameterNameColumn.Name) c.ReadOnly = true;
-                c.Style.BackColor = c.ReadOnly && c.Visible ? System.Drawing.Color.Gray : System.Drawing.Color.Empty;
-            }
 
-        }
 
 
         private void refreshReadOnlyCellColor(DataGridViewRow row)
         {
-            foreach(DataGridViewCell c in row.Cells)
+            System.Drawing.Color activeRowBGColor = System.Drawing.Color.Empty;
+            System.Drawing.Color activeRowFontColor = System.Drawing.Color.Black;
+            System.Drawing.Color activeRowSelectedBGColor = System.Drawing.Color.DeepSkyBlue;
+            System.Drawing.Color activeRowSelectedFontColor = System.Drawing.Color.White;
+
+            System.Drawing.Color passiveRowBGColor = System.Drawing.Color.Moccasin;
+            System.Drawing.Color passiveRowFontColor = System.Drawing.Color.Moccasin;
+            System.Drawing.Color passiveRowSelectedBGColor = System.Drawing.Color.Moccasin;
+            System.Drawing.Color passiveRowSelectedFontColor = System.Drawing.Color.Moccasin;
+
+            foreach (DataGridViewCell c in row.Cells)
             {
-                c.Style.BackColor = c.ReadOnly && c.Visible ? System.Drawing.Color.DarkSlateBlue : System.Drawing.Color.Empty; 
+                if (!c.Visible || c.OwningColumn.Name == parameterTypeNameColumn.Name) continue;
+                c.Style.BackColor = c.ReadOnly ? passiveRowBGColor : activeRowBGColor;
+                c.Style.SelectionBackColor = c.ReadOnly ? passiveRowSelectedBGColor : activeRowSelectedBGColor;
+                c.Style.SelectionForeColor = c.ReadOnly ? passiveRowSelectedFontColor : activeRowSelectedFontColor;
+                c.Style.ForeColor = c.ReadOnly ? passiveRowFontColor : activeRowFontColor;
             }
         }
 
@@ -1137,7 +1200,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private NumericUpDown shownElementsAmount;
         private NumericUpDown realElementsAmount;
 
-        private ComboBox structureTypeComboBox;
 
         private ComboBox LeadMaterialComboBox;
         private TextBox LeadDiametersTextBox;
@@ -1172,7 +1234,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private Label DRFormulaLabel;
 
         private DataGridView MeasuredParamsDataGridView;
-        private DataGridViewTextBoxColumn parameterNameColumn;
+        private DataGridViewTextBoxColumn parameterTypeNameColumn;
         private DataGridViewTextBoxColumn minValueColumn;
         private DataGridViewTextBoxColumn maxValueColumn;
         private DataGridViewTextBoxColumn minFreqColumn;
@@ -1181,16 +1243,20 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private DataGridViewTextBoxColumn percentColumn;
         private DataGridViewTextBoxColumn measureColumn;
         private DataGridViewTextBoxColumn bringingLengthColumn;
-        private DataGridViewColumn freqRangeIdColumn;
-        private DataGridViewColumn cableStructureIdColumn;
-        private DataGridViewColumn lengthBringingTypeIdColumn;
-        private DataGridViewColumn measuredParameterDataIdColumn;
+        private DataGridViewTextBoxColumn freqRangeIdColumn;
+        private DataGridViewTextBoxColumn cableStructureIdColumn;
+        private DataGridViewTextBoxColumn lengthBringingTypeIdColumn;
+        private DataGridViewTextBoxColumn measuredParameterDataIdColumn;
+        private DataGridViewTextBoxColumn parameterTypeIdColumn;
+        private DataGridViewTextBoxColumn parameterTypeDescriptionColumn;
+        private DataGridViewTextBoxColumn parameterTypeMeasureColumn;
 
         private ComboBox parameterTypesComboBox;
         private Button addParameterButton;
 
         public Button DeleteStructureButton;
-        
+
+        public BindingSource DataGridViewBindingSource;
         #endregion
     }
 
