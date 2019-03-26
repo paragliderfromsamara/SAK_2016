@@ -808,6 +808,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             parameterTypesComboBox.Height = 25;
             parameterTypesComboBox.Width = 135;
             parameterTypesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            parameterTypesComboBox.KeyPress += ParameterTypesComboBox_KeyPress;
 
             addParameterButton = new Button();
             addParameterButton.Parent = this;
@@ -815,9 +816,30 @@ namespace NormaMeasure.DBControl.SAC.Forms
             addParameterButton.Width = 23;//100;
             addParameterButton.Height = 23;
             addParameterButton.Click += AddParameterButton_Click;
+
+            addAllAllowedParameterTypesButton = new Button();
+            addAllAllowedParameterTypesButton.Parent = this;
+            addAllAllowedParameterTypesButton.Text = "Добавить все";
+            addAllAllowedParameterTypesButton.Width = 120;//100;
+            addAllAllowedParameterTypesButton.Height = 23;
+            addAllAllowedParameterTypesButton.Click += AddAllAllowedParameterTypesButton_Click;
+
         }
 
+        private void AddAllAllowedParameterTypesButton_Click(object sender, EventArgs e)
+        {
 
+            foreach(MeasuredParameterType mpt in CableStructure.StructureType.MeasuredParameterTypes.Rows)
+            {
+                AddParameterDataToCableStructure(mpt);
+            }
+            RefreshDataGridView();
+        }
+
+        private void ParameterTypesComboBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter) AddParameterTypeToCableStructure();
+        }
 
         private void MeasuredParamsDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
@@ -830,28 +852,46 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void AddParameterButton_Click(object sender, EventArgs e)
         {
-           CableStructureMeasuredParameterData newPData = (CableStructureMeasuredParameterData)CableStructure.MeasuredParameters.NewRow();
-           DataRow[] rows = CableStructure.StructureType.MeasuredParameterTypes.Select($"parameter_type_id = {parameterTypesComboBox.SelectedValue}");
-           if (rows.Length > 0)
+            AddParameterTypeToCableStructure();
+        }
+
+        /// <summary>
+        /// Добавляем тип параметра из чекбокса в DataGridView
+        /// </summary>
+        private void AddParameterTypeToCableStructure()
+        {
+            DataRow[] rows = CableStructure.StructureType.MeasuredParameterTypes.Select($"parameter_type_id = {parameterTypesComboBox.SelectedValue}");
+            if (rows.Length > 0)
             {
-                newPData.ParameterType = (MeasuredParameterType)rows[0];
-                newPData.CableStructureId = 0;
-                newPData.MeasuredParameterDataId = 0;
-
-                CableStructure.MeasuredParameters.Rows.Add(newPData);
-
-                DataGridViewBindingSource.ResetBindings(false);
-                MeasuredParamsDataGridView.Refresh();
-
+                AddParameterDataToCableStructure((MeasuredParameterType)rows[0]);
+                RefreshDataGridView();
             }
             else
             {
                 MessageBox.Show("Не найден тип параметра", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-           
         }
 
+        /// <summary>
+        /// Обновляем данные DataGridView после изменения списка MeasuredParameters
+        /// </summary>
+        private void RefreshDataGridView()
+        {
+            DataGridViewBindingSource.ResetBindings(false);
+        }
 
+        /// <summary>
+        /// Добавляет тип параметра в коллекцию CableStructure.MeasuredParameters
+        /// </summary>
+        /// <param name="parameter_type"></param>
+        private void AddParameterDataToCableStructure(MeasuredParameterType parameter_type)
+        {
+            CableStructureMeasuredParameterData newPData = (CableStructureMeasuredParameterData)CableStructure.MeasuredParameters.NewRow();
+            newPData.ParameterType = parameter_type;
+            newPData.CableStructureId = 0;
+            newPData.MeasuredParameterDataId = 0;
+            CableStructure.MeasuredParameters.Rows.Add(newPData);
+        } 
 
         private void MeasuredParamsDataGridView_CurrentCellChanged(object sender, EventArgs e)
         {
@@ -1130,9 +1170,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
             int x=10, y=10;
 
             StructureTypeLabel.Location = new System.Drawing.Point(x-5, y);
-            //structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
             parameterTypesComboBox.Location = new System.Drawing.Point(240, y+5);
             addParameterButton.Location = new System.Drawing.Point(parameterTypesComboBox.Location.X + parameterTypesComboBox.Width + 10, y+4);
+            addAllAllowedParameterTypesButton.Location = new System.Drawing.Point(addParameterButton.Width + addParameterButton.Location.X + 5, addParameterButton.Location.Y);
             MeasuredParamsDataGridView.Location = new System.Drawing.Point(240, y+40);
             DeleteStructureButton.Location = new System.Drawing.Point(MeasuredParamsDataGridView.Location.X + MeasuredParamsDataGridView.Width-DeleteStructureButton.Width, y);
 
@@ -1169,12 +1209,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void DrawStructureTypeCB()
         {
-            /*
-            structureTypeComboBox = new ComboBox();
-            structureTypeComboBox.Parent = this;
-            structureTypeComboBox.Width = 210;
-            structureTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            */
             StructureTypeLabel = new Label();
             StructureTypeLabel.Parent = this;
             StructureTypeLabel.Text = "Тип: ";
@@ -1238,6 +1272,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private ComboBox parameterTypesComboBox;
         private Button addParameterButton;
+        private Button addAllAllowedParameterTypesButton;
 
         public Button DeleteStructureButton;
 
