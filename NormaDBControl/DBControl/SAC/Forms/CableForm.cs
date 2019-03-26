@@ -590,15 +590,19 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private void fill_MeasuredParametersDataGrid(DataTable dataTable)
         {
             //DataRow[] currentStructureParams = dataTable.Select($"parameter_type_id IN ({CableStructure.StructureType.StructureMeasuredParameters})");
-            
+
             //foreach (DataRow r in currentStructureParams) parameterNameColumn.Items.Add();
 
-            parameterNameColumn.DisplayMember = "parameter_name";
-            parameterNameColumn.ValueMember  = "parameter_type_id";
+            //parameterNameColumn.DisplayMember = "parameter_name";
+            //parameterNameColumn.ValueMember  = "parameter_type_id";
 
-            parameterNameColumn.DataSource = dataTable;
+            //parameterNameColumn.DataSource = dataTable;
 
             MeasuredParamsDataGridView.DataSource = CableStructure.MeasuredParameters;
+            parameterTypesComboBox.BindingContext = new BindingContext();
+            parameterTypesComboBox.ValueMember = "parameter_type_id";
+            parameterTypesComboBox.DisplayMember = "parameter_name";
+            parameterTypesComboBox.DataSource = dataTable;
             //throw new NotImplementedException();
         }
 
@@ -666,15 +670,32 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void DrawMeasuredParametersDataGrid()
         {
+            parameterTypesComboBox = new ComboBox();
+            parameterTypesComboBox.Parent = this;
+            parameterTypesComboBox.Height = 50;
+            parameterTypesComboBox.Width = 135;
+            parameterTypesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            addParameterButton = new Button();
+            addParameterButton.Parent = this;
+            addParameterButton.Text = "+";
+            addParameterButton.Width = 25;//100;
+            addParameterButton.Height = 25;
+            addParameterButton.Click += AddParameterButton_Click;
+
 
             MeasuredParamsDataGridView = new DataGridView();
             MeasuredParamsDataGridView.Size = new System.Drawing.Size(570, 350);
             MeasuredParamsDataGridView.Parent = this;
+            MeasuredParamsDataGridView.AllowUserToAddRows = false;
+            MeasuredParamsDataGridView.BackgroundColor = System.Drawing.Color.WhiteSmoke;
 
-            parameterNameColumn = new DataGridViewComboBoxColumn();
+            parameterNameColumn = new DataGridViewTextBoxColumn();
             parameterNameColumn.Name = "parameter_type_id_column";
             parameterNameColumn.DataPropertyName = "parameter_type_id";
             parameterNameColumn.HeaderText = "Параметр";
+            //parameterNameColumn.CellTemplate.ReadOnly = true;
+            //parameterNameColumn.CellTemplate.Style.ForeColor = System.Drawing.Color.LimeGreen;
             //parameterNameColumn.Width = 60;
             parameterNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
@@ -762,14 +783,45 @@ namespace NormaMeasure.DBControl.SAC.Forms
             MeasuredParamsDataGridView.Columns.Add(measuredParameterDataIdColumn);
             MeasuredParamsDataGridView.Columns.Add(cableStructureIdColumn);
             MeasuredParamsDataGridView.DefaultValuesNeeded += MeasuredParamsDataGridView_DefaultValuesNeeded;
+            //
             MeasuredParamsDataGridView.CellValueChanged += MeasuredParamsDataGridView_CellValueChanged;
+            //MeasuredParamsDataGridView.CurrentCellChanged += MeasuredParamsDataGridView_CurrentCellChanged;
             MeasuredParamsDataGridView.CurrentCellDirtyStateChanged += MeasuredParamsDataGridView_CurrentCellDirtyStateChanged;
+            MeasuredParamsDataGridView.CellClick += MeasuredParamsDataGridView_CellClick;
            // MeasuredParamsDataGridView.ce
+        }
+
+        private void AddParameterButton_Click(object sender, EventArgs e)
+        {
+
+           MessageBox.Show(parameterTypesComboBox.SelectedValue.ToString());
+        }
+
+        private void MeasuredParamsDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewCell c = MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            if(c.OwningColumn.Name == parameterNameColumn.Name)
+            {
+                DataGridViewComboBoxCell cbCell = c as DataGridViewComboBoxCell;
+            }
+            //MessageBox.Show($"{c.OwningColumn.Name}");
+           // if()
+        }
+
+        private void MeasuredParamsDataGridView_CurrentCellChanged(object sender, EventArgs e)
+        {
+            DataGridViewRow cngRow = MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.CurrentCell.RowIndex];
+            string cngdColName = cngRow.Cells[MeasuredParamsDataGridView.CurrentCell.ColumnIndex].OwningColumn.Name;
+            if (cngdColName == parameterNameColumn.Name) InitRowByParameterType(cngRow);
         }
 
         private void MeasuredParamsDataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
-            MessageBox.Show("MeasuredParamsDataGridView_CurrentCellDirtyStateChanged");
+            if (MeasuredParamsDataGridView.IsCurrentCellDirty)
+            {
+                MeasuredParamsDataGridView.CommitEdit(DataGridViewDataErrorContexts.CurrentCellChange);
+            }
+            //MessageBox.Show("MeasuredParamsDataGridView_CurrentCellDirtyStateChanged");
         }
 
         private void MeasuredParamsDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -1031,7 +1083,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             StructureTypeLabel.Location = new System.Drawing.Point(x-5, y);
             //structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
-            
+            parameterTypesComboBox.Location = new System.Drawing.Point(240, y+5);
+            addParameterButton.Location = new System.Drawing.Point(parameterTypesComboBox.Location.X + parameterTypesComboBox.Width + 10, y+5);
             MeasuredParamsDataGridView.Location = new System.Drawing.Point(240, y+40);
             DeleteStructureButton.Location = new System.Drawing.Point(MeasuredParamsDataGridView.Location.X + MeasuredParamsDataGridView.Width-DeleteStructureButton.Width, y);
 
@@ -1119,7 +1172,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private Label DRFormulaLabel;
 
         private DataGridView MeasuredParamsDataGridView;
-        private DataGridViewComboBoxColumn parameterNameColumn;
+        private DataGridViewTextBoxColumn parameterNameColumn;
         private DataGridViewTextBoxColumn minValueColumn;
         private DataGridViewTextBoxColumn maxValueColumn;
         private DataGridViewTextBoxColumn minFreqColumn;
@@ -1133,7 +1186,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private DataGridViewColumn lengthBringingTypeIdColumn;
         private DataGridViewColumn measuredParameterDataIdColumn;
 
-
+        private ComboBox parameterTypesComboBox;
+        private Button addParameterButton;
 
         public Button DeleteStructureButton;
         

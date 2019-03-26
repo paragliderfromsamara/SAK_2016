@@ -61,12 +61,13 @@ namespace NormaMeasure.DBControl
         public string SetTypeValue = null;
         public bool AutoIncrement = false;
         public string ReferenceTo;
+        public bool IsVirtual = false;
 
         public DBTableColumn ColumnStruct
         {
             get
             {
-                DBTableColumn c = new DBTableColumn() { DefaultValue = DefaultValue, AutoIncrement = AutoIncrement, SetTypeValue = SetTypeValue,ColumnType = DataType, Size = Size, Name = ColumnName, OldName = OldDBColumnName, IsPrimaryKey = IsPrimaryKey, Nullable = Nullable, ReferenceTo = ReferenceTo};
+                DBTableColumn c = new DBTableColumn() { IsVirtual = IsVirtual, DefaultValue = DefaultValue, AutoIncrement = AutoIncrement, SetTypeValue = SetTypeValue,ColumnType = DataType, Size = Size, Name = ColumnName, OldName = OldDBColumnName, IsPrimaryKey = IsPrimaryKey, Nullable = Nullable, ReferenceTo = ReferenceTo};
                 return c;
             }
         }

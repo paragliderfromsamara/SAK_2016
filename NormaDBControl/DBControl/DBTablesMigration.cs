@@ -301,6 +301,7 @@ namespace NormaMeasure.DBControl
             int wasAdded = 0;
             foreach (DBTableColumn col in columns)
             {
+                if (col.IsVirtual) continue;
                 if (colVals.ContainsKey(col.Name))
                 {
                     if (wasAdded > 0)
@@ -328,6 +329,7 @@ namespace NormaMeasure.DBControl
                 {
                     for (int i = 0; i < columns.Length; i++)
                     {
+                        if (columns[i].IsVirtual) continue; // Не добавляем колонку в запрос если она виртуальная
                         if (!String.IsNullOrWhiteSpace(colsTxt)) colsTxt += ", ";
                         colsTxt += columns[i].AddColumnText;
                         if (!string.IsNullOrWhiteSpace(columns[i].ReferenceTo)) foreignArr.Add($"FOREIGN KEY ({columns[i].Name}) REFERENCES {columns[i].ReferenceTo}");
@@ -433,7 +435,6 @@ namespace NormaMeasure.DBControl
             get
             {
                 DataTable dt = new DataTable(tableName);
-                MySqlCommandBuilder cb = new MySqlCommandBuilder();
                 string[] columnsArr = GetColumnTitlesIncludeJoined(true);
                 foreach (string colName in columnsArr)
                 {
@@ -548,6 +549,7 @@ namespace NormaMeasure.DBControl
         public string SetTypeValue;
         public bool AutoIncrement;
         public string ReferenceTo;
+        public bool IsVirtual; // Колонка таблицы, которая не сохраняется в БД
         public string Name
         {
             get { return _name; }

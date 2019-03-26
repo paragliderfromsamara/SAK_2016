@@ -135,7 +135,11 @@ namespace NormaMeasure.DBControl
             return counter;
         }
 
-        public string[] getColumnNames()
+        /// <summary>
+        /// Получает список колонок таблицы с атрибутом IsVirtual = false
+        /// </summary>
+        /// <returns></returns>
+        public string[] getNotVirtualColumnNames()
         {
             List<string> cols = new List<string>();
             foreach (PropertyInfo prop in entity_type.GetProperties())
@@ -144,7 +148,7 @@ namespace NormaMeasure.DBControl
                 if (columnAttributes.Length == 1)
                 {
                     DBColumnAttribute dca = columnAttributes[0] as DBColumnAttribute;
-                    cols.Add(dca.ColumnName);
+                    if (!dca.IsVirtual) cols.Add(dca.ColumnName);
                 }
             }
             return cols.ToArray();

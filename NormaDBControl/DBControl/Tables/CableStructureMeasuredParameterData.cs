@@ -14,12 +14,15 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+
+
         public static DBEntityTable get_structure_measured_parameters(uint structure_id)
         {
             DBEntityTable mdt = new DBEntityTable(typeof(MeasuredParameterData));
             DBEntityTable frt = new DBEntityTable(typeof(FrequencyRange));
             DBEntityTable t = new DBEntityTable(typeof(CableStructureMeasuredParameterData));
-            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN {mdt.TableName} USING(measured_parameter_data_id) LEFT OUTER JOIN {frt.TableName} USING(frequency_range_id) WHERE cable_structure_id = {structure_id}";
+            DBEntityTable pt = new DBEntityTable(typeof(MeasuredParameterType));
+            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN {mdt.TableName} USING(measured_parameter_data_id) LEFT OUTER JOIN {frt.TableName} USING(frequency_range_id) LEFT OUTER JOIN {pt.TableName} USING(parameter_type_id) WHERE cable_structure_id = {structure_id}";
             t.FillByQuery(select_cmd);
             return t;
         } 
@@ -49,7 +52,20 @@ namespace NormaMeasure.DBControl.Tables
                 this["measured_parameter_data_id"] = value;
             }
         }
-
+        #region Колонки типа измеряемого параметра
+        [DBColumn("parameter_type_id", ColumnDomain.UInt, Order = 12, IsVirtual = true)]
+        public uint ParameterTypeId
+        {
+            get
+            {
+                return tryParseUInt("parameter_type_id");
+            }
+            set
+            {
+                this["parameter_type_id"] = value;
+            }
+        }
+        #endregion
 
 
         public MeasuredParameterData MeasuredParameterData
