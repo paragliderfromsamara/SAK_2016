@@ -52,5 +52,22 @@ namespace NormaMeasure.DBControl.Tables
                 this["length_bringing_name"] = value;
             }
         }
+
+        /// <summary>
+        /// Без приведения
+        /// </summary>
+        public static uint NoBringing => 0;
+        /// <summary>
+        /// К строительной длине
+        /// </summary>
+        public static uint ForBuildLength => 1;
+        /// <summary>
+        /// К одному километру
+        /// </summary>
+        public static uint ForOneKilometer => 2;
+        /// <summary>
+        /// Другая длина в метрах
+        /// </summary>
+        public static uint ForAnotherLengthInMeters => 3;
     }
 }

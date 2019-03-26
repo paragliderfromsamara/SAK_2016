@@ -779,6 +779,19 @@ namespace NormaMeasure.DBControl.SAC.Forms
             cableStructureIdColumn.Visible = false;
             cableStructureIdColumn.CellTemplate = new DataGridViewTextBoxCell();
 
+            lengthBringingMeasureTitleColumn = new DataGridViewTextBoxColumn();
+            lengthBringingMeasureTitleColumn.Name = "bringing_length_measure_title_column";
+            lengthBringingMeasureTitleColumn.DataPropertyName = "measure_title";
+            lengthBringingMeasureTitleColumn.Visible = false;
+            lengthBringingMeasureTitleColumn.CellTemplate = new DataGridViewTextBoxCell();
+
+
+            lengthBringtingMeasureNameColumn = new DataGridViewTextBoxColumn();
+            lengthBringtingMeasureNameColumn.Name = "length_bringing_name_column";
+            lengthBringtingMeasureNameColumn.DataPropertyName = "length_bringing_name";
+            lengthBringtingMeasureNameColumn.Visible = false;
+            lengthBringtingMeasureNameColumn.CellTemplate = new DataGridViewTextBoxCell();
+
             MeasuredParamsDataGridView.Columns.Add(parameterTypeNameColumn);
             MeasuredParamsDataGridView.Columns.Add(minValueColumn);
             MeasuredParamsDataGridView.Columns.Add(maxValueColumn);
@@ -795,9 +808,11 @@ namespace NormaMeasure.DBControl.SAC.Forms
             MeasuredParamsDataGridView.Columns.Add(parameterTypeIdColumn);
             MeasuredParamsDataGridView.Columns.Add(parameterTypeDescriptionColumn);
             MeasuredParamsDataGridView.Columns.Add(parameterTypeMeasureColumn);
-            
+            MeasuredParamsDataGridView.Columns.Add(lengthBringingMeasureTitleColumn);
+            MeasuredParamsDataGridView.Columns.Add(lengthBringtingMeasureNameColumn);
+
             //
-           // MeasuredParamsDataGridView.CellValueChanged += MeasuredParamsDataGridView_CellValueChanged;
+            // MeasuredParamsDataGridView.CellValueChanged += MeasuredParamsDataGridView_CellValueChanged;
             //MeasuredParamsDataGridView.CurrentCellChanged += MeasuredParamsDataGridView_CurrentCellChanged;
             MeasuredParamsDataGridView.CurrentCellDirtyStateChanged += MeasuredParamsDataGridView_CurrentCellDirtyStateChanged;
             // MeasuredParamsDataGridView.ce
@@ -1269,6 +1284,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private DataGridViewTextBoxColumn parameterTypeIdColumn;
         private DataGridViewTextBoxColumn parameterTypeDescriptionColumn;
         private DataGridViewTextBoxColumn parameterTypeMeasureColumn;
+        private DataGridViewTextBoxColumn lengthBringingMeasureTitleColumn;
+        private DataGridViewTextBoxColumn lengthBringtingMeasureNameColumn;
 
         private ComboBox parameterTypesComboBox;
         private Button addParameterButton;

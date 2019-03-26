@@ -22,7 +22,8 @@ namespace NormaMeasure.DBControl.Tables
             DBEntityTable frt = new DBEntityTable(typeof(FrequencyRange));
             DBEntityTable t = new DBEntityTable(typeof(CableStructureMeasuredParameterData));
             DBEntityTable pt = new DBEntityTable(typeof(MeasuredParameterType));
-            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN {mdt.TableName} USING(measured_parameter_data_id) LEFT OUTER JOIN {frt.TableName} USING(frequency_range_id) LEFT OUTER JOIN {pt.TableName} USING(parameter_type_id) WHERE cable_structure_id = {structure_id}";
+            DBEntityTable lbt = new DBEntityTable(typeof(LengthBringingType));
+            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN {mdt.TableName} USING(measured_parameter_data_id) LEFT OUTER JOIN {frt.TableName} USING(frequency_range_id) LEFT OUTER JOIN {pt.TableName} USING(parameter_type_id) LEFT OUTER JOIN {lbt.TableName} USING (length_bringing_type_id) WHERE cable_structure_id = {structure_id}";
             t.FillByQuery(select_cmd);
             return t;
         } 
@@ -245,7 +246,38 @@ namespace NormaMeasure.DBControl.Tables
 
         #endregion
 
-        [DBColumn("result_measure", ColumnDomain.Tinytext, Order = 25, Nullable = true, IsVirtual = true)]
+        #region Тип приведения результата 
+
+
+        [DBColumn("measure_title", ColumnDomain.Tinytext, Order = 25, Nullable = true, IsVirtual = true)]
+        public string MeasureLengthTitle
+        {
+            get
+            {
+                return this["measure_title"].ToString();
+            }
+            set
+            {
+                this["measure_title"] = value;
+            }
+        }
+
+        [DBColumn("length_bringing_name", ColumnDomain.Tinytext, Order = 26, Nullable = true, IsVirtual = true)]
+        public string LengthBringingName
+        {
+            get
+            {
+                return this["length_bringing_name"].ToString();
+            }
+            set
+            {
+                this["length_bringing_name"] = value;
+            }
+        }
+
+        #endregion
+
+        [DBColumn("result_measure", ColumnDomain.Tinytext, Order = 27, Nullable = true, IsVirtual = true)]
         public uint ResultMeasure
         {
             get

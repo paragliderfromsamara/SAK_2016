@@ -92,7 +92,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("min_value", ColumnDomain.Float, Order = 15, DefaultValue = -9999999)]
+        [DBColumn("min_value", ColumnDomain.Float, Order = 15, DefaultValue = float.MinValue)]
         public float MinValue
         {
             get
@@ -105,7 +105,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("max_value", ColumnDomain.Float, Order = 16, DefaultValue = 9999999)]
+        [DBColumn("max_value", ColumnDomain.Float, Order = 16, DefaultValue = float.MaxValue)]
         public float MaxValue
         {
             get
