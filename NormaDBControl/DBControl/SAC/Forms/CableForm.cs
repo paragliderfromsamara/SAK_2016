@@ -559,9 +559,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
             {
                 shownElementsAmount.Value = real;
             }
-            //shownElementsAmount.Maximum = real;
-
-
         }
 
         /// <summary>
@@ -570,14 +567,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
         /// <param name="ds"></param>
         private void FillFromDataSet(DataSet ds)
         {
-            //DBEntityTable structureTypesTable = new DBEntityTable(typeof(CableStructureType));
             DBEntityTable leadMaterialsTable = new DBEntityTable(typeof(LeadMaterial));
             DBEntityTable isolationMaterialsTable = new DBEntityTable(typeof(IsolationMaterial));
             DBEntityTable drBringingFormulsTable = new DBEntityTable(typeof(dRBringingFormula));
             DBEntityTable drFormulsTable = new DBEntityTable(typeof(dRFormula));
             DBEntityTable measuredParameterTypesTable = CableStructure.StructureType.MeasuredParameterTypes;
 
-            //if (ds.Tables.Contains(structureTypesTable.TableName)) fillStructureTypeComboBox(ds.Tables[structureTypesTable.TableName]);
             if (ds.Tables.Contains(leadMaterialsTable.TableName)) fillLeadMaterialsComboBox(ds.Tables[leadMaterialsTable.TableName]);
             if (ds.Tables.Contains(isolationMaterialsTable.TableName)) fillIsolationMaterialsComboBox(ds.Tables[isolationMaterialsTable.TableName]);
             if (ds.Tables.Contains(drFormulsTable.TableName)) fill_dRFormulsComboBox(ds.Tables[drFormulsTable.TableName]);
@@ -589,14 +584,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fill_MeasuredParametersDataGrid(DataTable dataTable)
         {
-            //DataRow[] currentStructureParams = dataTable.Select($"parameter_type_id IN ({CableStructure.StructureType.StructureMeasuredParameters})");
-
-            //foreach (DataRow r in currentStructureParams) parameterNameColumn.Items.Add();
-
-            //parameterNameColumn.DisplayMember = "parameter_name";
-            //parameterNameColumn.ValueMember  = "parameter_type_id";
-
-            //parameterNameColumn.DataSource = dataTable;
             DataGridViewBindingSource = new BindingSource();
             DataGridViewBindingSource.DataSource = CableStructure.MeasuredParameters;
             MeasuredParamsDataGridView.DataSource = DataGridViewBindingSource;
@@ -605,7 +592,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             parameterTypesComboBox.ValueMember = "parameter_type_id";
             parameterTypesComboBox.DisplayMember = "parameter_name";
             parameterTypesComboBox.DataSource = dataTable;
-            //throw new NotImplementedException();
+
         }
 
         private void fill_drBringingFormulsComboBox(DataTable dt)
@@ -673,14 +660,13 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private void DrawMeasuredParametersDataGrid()
         {
 
-
-
             MeasuredParamsDataGridView = new DataGridView();
             MeasuredParamsDataGridView.Size = new System.Drawing.Size(570, 350);
             MeasuredParamsDataGridView.Parent = this;
             MeasuredParamsDataGridView.AllowUserToAddRows = false;
             MeasuredParamsDataGridView.AllowUserToResizeColumns = false;
             MeasuredParamsDataGridView.BackgroundColor = System.Drawing.Color.WhiteSmoke;
+            MeasuredParamsDataGridView.AllowUserToOrderColumns = false;
             //MeasuredParamsDataGridView.BindingContext = new BindingContext();
 
             parameterTypeNameColumn = new DataGridViewTextBoxColumn();
@@ -689,8 +675,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
             parameterTypeNameColumn.HeaderText = "Параметр";
             parameterTypeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             parameterTypeNameColumn.CellTemplate = new DataGridViewTextBoxCell();
-            parameterTypeNameColumn.CellTemplate.Style.ForeColor = parameterTypeNameColumn.CellTemplate.Style.SelectionForeColor = System.Drawing.Color.White;
-            parameterTypeNameColumn.CellTemplate.Style.BackColor = parameterTypeNameColumn.CellTemplate.Style.SelectionBackColor = System.Drawing.Color.Moccasin;
+            parameterTypeNameColumn.CellTemplate.Style.ForeColor = parameterTypeNameColumn.CellTemplate.Style.SelectionForeColor = System.Drawing.Color.MidnightBlue;
+            parameterTypeNameColumn.CellTemplate.Style.BackColor = parameterTypeNameColumn.CellTemplate.Style.SelectionBackColor = System.Drawing.Color.MintCream;
             parameterTypeNameColumn.ReadOnly = true;
 
             parameterTypeIdColumn =new DataGridViewTextBoxColumn();
@@ -811,7 +797,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             MeasuredParamsDataGridView.Columns.Add(parameterTypeMeasureColumn);
             
             //
-            MeasuredParamsDataGridView.CellValueChanged += MeasuredParamsDataGridView_CellValueChanged;
+           // MeasuredParamsDataGridView.CellValueChanged += MeasuredParamsDataGridView_CellValueChanged;
             //MeasuredParamsDataGridView.CurrentCellChanged += MeasuredParamsDataGridView_CurrentCellChanged;
             MeasuredParamsDataGridView.CurrentCellDirtyStateChanged += MeasuredParamsDataGridView_CurrentCellDirtyStateChanged;
             // MeasuredParamsDataGridView.ce
@@ -819,27 +805,27 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             parameterTypesComboBox = new ComboBox();
             parameterTypesComboBox.Parent = this;
-            parameterTypesComboBox.Height = 50;
+            parameterTypesComboBox.Height = 25;
             parameterTypesComboBox.Width = 135;
             parameterTypesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
             addParameterButton = new Button();
             addParameterButton.Parent = this;
             addParameterButton.Text = "+";
-            addParameterButton.Width = 25;//100;
-            addParameterButton.Height = 25;
+            addParameterButton.Width = 23;//100;
+            addParameterButton.Height = 23;
             addParameterButton.Click += AddParameterButton_Click;
         }
 
+
+
         private void MeasuredParamsDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            // string s = string.Empty;
-            // for(int i = e.RowIndex; i< MeasuredParamsDataGridView.Rows.Count; i++)
-            //  {
-            //      s += MeasuredParamsDataGridView.Rows[i].Cells[parameterTypeIdColumn.Name].Value.ToString() + "; ";
-            InitRowByParameterType(MeasuredParamsDataGridView.Rows[e.RowIndex]);
-            //  }
-            //MessageBox.Show(MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[parameterTypeIdColumn.Name].Value.ToString());
+             for(int i = 0; i< MeasuredParamsDataGridView.Rows.Count; i++)
+              {
+                    InitRowByParameterType(MeasuredParamsDataGridView.Rows[i]);
+              }
+            MeasuredParamsDataGridView.Sort(MeasuredParamsDataGridView.Columns[parameterTypeNameColumn.Name], System.ComponentModel.ListSortDirection.Ascending);
         }
 
         private void AddParameterButton_Click(object sender, EventArgs e)
@@ -854,7 +840,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
                 CableStructure.MeasuredParameters.Rows.Add(newPData);
 
-         
                 DataGridViewBindingSource.ResetBindings(false);
                 MeasuredParamsDataGridView.Refresh();
 
@@ -925,8 +910,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             System.Drawing.Color activeRowBGColor = System.Drawing.Color.Empty;
             System.Drawing.Color activeRowFontColor = System.Drawing.Color.Black;
-            System.Drawing.Color activeRowSelectedBGColor = System.Drawing.Color.DeepSkyBlue;
-            System.Drawing.Color activeRowSelectedFontColor = System.Drawing.Color.White;
+            System.Drawing.Color activeRowSelectedBGColor = System.Drawing.Color.PowderBlue;
+            System.Drawing.Color activeRowSelectedFontColor = System.Drawing.Color.MidnightBlue;
 
             System.Drawing.Color passiveRowBGColor = System.Drawing.Color.Moccasin;
             System.Drawing.Color passiveRowFontColor = System.Drawing.Color.Moccasin;
@@ -1147,7 +1132,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             StructureTypeLabel.Location = new System.Drawing.Point(x-5, y);
             //structureTypeComboBox.Location = new System.Drawing.Point(x, y += 20);
             parameterTypesComboBox.Location = new System.Drawing.Point(240, y+5);
-            addParameterButton.Location = new System.Drawing.Point(parameterTypesComboBox.Location.X + parameterTypesComboBox.Width + 10, y+5);
+            addParameterButton.Location = new System.Drawing.Point(parameterTypesComboBox.Location.X + parameterTypesComboBox.Width + 10, y+4);
             MeasuredParamsDataGridView.Location = new System.Drawing.Point(240, y+40);
             DeleteStructureButton.Location = new System.Drawing.Point(MeasuredParamsDataGridView.Location.X + MeasuredParamsDataGridView.Width-DeleteStructureButton.Width, y);
 

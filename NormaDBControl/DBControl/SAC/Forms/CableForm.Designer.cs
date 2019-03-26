@@ -422,6 +422,7 @@
             this.Controls.Add(this.CableMark_input);
             this.Controls.Add(this.saveCableButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "CableForm";
             this.Text = "CableForm";
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).EndInit();
