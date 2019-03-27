@@ -80,10 +80,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_by_cable_id(uint cable_id)
         {
-            DBEntityTable t = new DBEntityTable(typeof(CableStructure));
-            string select_cmd = $"{t.SelectQuery} WHERE cable_id = {cable_id}";
-            t.FillByQuery(select_cmd);
-            return t;
+            return find_by_criteria($"cable_id = {cable_id}", typeof(CableStructure));
         }
 
         public static uint get_last_structure_id()
@@ -373,6 +370,14 @@ namespace NormaMeasure.DBControl.Tables
                     }
                 }
                 return measuredParameters;
+            }
+        }
+
+        public bool HasFreqParameters
+        {
+            get
+            {
+               return StructureType.MeasuredParameterTypes.Select($"parameter_type_id IN ({MeasuredParameterType.al}, {MeasuredParameterType.Ao}, {MeasuredParameterType.Az})").Count() > 0;
             }
         }
 

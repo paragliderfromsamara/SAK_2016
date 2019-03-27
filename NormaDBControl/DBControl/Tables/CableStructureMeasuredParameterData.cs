@@ -23,9 +23,8 @@ namespace NormaMeasure.DBControl.Tables
             DBEntityTable t = new DBEntityTable(typeof(CableStructureMeasuredParameterData));
             DBEntityTable pt = new DBEntityTable(typeof(MeasuredParameterType));
             DBEntityTable lbt = new DBEntityTable(typeof(LengthBringingType));
-            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN {mdt.TableName} USING(measured_parameter_data_id) LEFT OUTER JOIN {frt.TableName} USING(frequency_range_id) LEFT OUTER JOIN {pt.TableName} USING(parameter_type_id) LEFT OUTER JOIN {lbt.TableName} USING (length_bringing_type_id) WHERE cable_structure_id = {structure_id}";
-            t.FillByQuery(select_cmd);
-            return t;
+            string criteria = $"LEFT OUTER JOIN {mdt.TableName} USING(measured_parameter_data_id) LEFT OUTER JOIN {frt.TableName} USING(frequency_range_id) LEFT OUTER JOIN {pt.TableName} USING(parameter_type_id) LEFT OUTER JOIN {lbt.TableName} USING (length_bringing_type_id) WHERE cable_structure_id = {structure_id}";
+            return find_by_criteria(criteria, typeof(CableStructureMeasuredParameterData));
         } 
 
         [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, Nullable = false, ReferenceTo = "cable_structures(cable_structure_id) ON DELETE CASCADE")]
@@ -140,7 +139,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("min_value", ColumnDomain.Float, Order = 18, DefaultValue = -9999999, IsVirtual = true)]
+        [DBColumn("min_value", ColumnDomain.Float, Order = 18, DefaultValue = float.MinValue, IsVirtual = true)]
         public float MinValue
         {
             get
@@ -153,7 +152,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("max_value", ColumnDomain.Float, Order = 19, DefaultValue = 9999999, IsVirtual = true)]
+        [DBColumn("max_value", ColumnDomain.Float, Order = 19, DefaultValue = float.MaxValue, IsVirtual = true)]
         public float MaxValue
         {
             get
@@ -307,7 +306,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
-                return MeasuredParameterType.IsFreqParameter(ParameterTypeId);
+                return MeasuredParameterType.IsItFreqParameter(ParameterTypeId);
             }
         }
 
@@ -315,7 +314,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
-                return MeasuredParameterType.HasMaxLimit(ParameterTypeId);
+                return MeasuredParameterType.IsHasMaxLimit(ParameterTypeId);
             }
         }
 
@@ -323,7 +322,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
-                return MeasuredParameterType.HasMinLimit(ParameterTypeId);
+                return MeasuredParameterType.IsHasMinLimit(ParameterTypeId);
             }
         }
 
@@ -363,6 +362,14 @@ namespace NormaMeasure.DBControl.Tables
                     ParameterName = parameterType.ParameterName;
                     ParameterDescription = parameterType.Description;
                     ParameterMeasure = parameterType.Measure;
+                    if (parameterType.HasMaxLimit) MaxValue = 10;
+                    if (parameterType.HasMinLimit) MinValue = 1; 
+                    if (parameterType.IsFreqParameter)
+                    {
+                        FrequencyMin = 40;
+                        FrequencyMax = 1000;
+                        FrequencyStep = 8;
+                    }
                 }
             }
         }

@@ -25,10 +25,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table_for_cable_structure_form(string ids)
         {
-            DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
-            string select_cmd = $"{t.SelectQuery} WHERE parameter_type_id > 1 AND parameter_type_id < 18 AND parameter_type_id IN ({ids})";
-            t.FillByQuery(select_cmd);
-            return t;
+            return find_by_criteria($"WHERE parameter_type_id > 1 AND parameter_type_id < 18 AND parameter_type_id IN ({ids})", typeof(MeasuredParameterType));
         }
 
         [DBColumn("parameter_type_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "ParamInd", Nullable = false, IsPrimaryKey = true)]
@@ -84,12 +81,23 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        public static bool IsFreqParameter(uint parameter_type_id)
+        /// <summary>
+        /// Возвращает список id типов частотных парметров
+        /// </summary>
+        public static uint[] FrequencyParameterIds
+        {
+            get
+            {
+                return new uint[] { al, Ao, Az };
+            }
+        }
+
+        public static bool IsItFreqParameter(uint parameter_type_id)
         {
             return (parameter_type_id == al || parameter_type_id == Ao || parameter_type_id == Az);
         }
 
-        public static bool HasMaxLimit(uint parameter_type_id)
+        public static bool IsHasMaxLimit(uint parameter_type_id)
         {
             uint[] notAllowed = new uint[] {Calling, Ao, Az};
             foreach(uint v in notAllowed)
@@ -99,7 +107,23 @@ namespace NormaMeasure.DBControl.Tables
             return true;
         }
 
-        public static bool HasMinLimit(uint parameter_type_id)
+        /// <summary>
+        /// Есть ли максимальное ограничение
+        /// </summary>
+        public bool HasMaxLimit => IsHasMaxLimit(ParameterTypeId);
+
+        /// <summary>
+        /// Есть ли минимальное ограничение
+        /// </summary>
+        public bool HasMinLimit => IsHasMinLimit(ParameterTypeId);
+
+        /// <summary>
+        /// Является ли текущий параметр частотным
+        /// </summary>
+        public bool IsFreqParameter => IsItFreqParameter(ParameterTypeId);
+
+
+        public static bool IsHasMinLimit(uint parameter_type_id)
         {
             uint[] notAllowed = new uint[] { Calling, Risol2, Risol4, al, dCp, dR };
             foreach (uint v in notAllowed)
@@ -107,6 +131,24 @@ namespace NormaMeasure.DBControl.Tables
                 if (v == parameter_type_id) return false;
             }
             return true;
+        }
+
+        public static bool AllowBringingLength(uint parameter_type_id)
+        {
+            bool f = false;
+            f |= parameter_type_id == Rleads;
+            f |= parameter_type_id == Risol1;
+            f |= parameter_type_id == Risol3;
+            f |= parameter_type_id == Cp;
+            f |= parameter_type_id == Az;
+            f |= parameter_type_id == Ao;
+            f |= parameter_type_id == al;
+            return f;
+        }
+
+        public static bool AllowBringingLength(MeasuredParameterType parameter_type)
+        {
+            return AllowBringingLength(parameter_type.ParameterTypeId);
         }
 
 

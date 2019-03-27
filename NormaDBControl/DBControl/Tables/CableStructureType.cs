@@ -65,6 +65,9 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        /// <summary>
+        /// Список id измеряемых параметров доступных для данного типа структуры, в виде строки
+        /// </summary>
         [DBColumn("structure_measured_parameters", ColumnDomain.Set, SetTypeValue = "'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'", Order = 13, OldDBColumnName = "Set_ParamInd", DefaultValue = "1", Nullable = true)]
         public string StructureMeasuredParameters
         {
