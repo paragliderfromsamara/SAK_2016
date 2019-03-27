@@ -175,7 +175,6 @@ namespace NormaMeasure.SAC_APP
         /// Проверяет наличие записи в таблице по названию таблицы и условиям в основноей БД
         /// </summary>
         /// <param name="tabName">Наименование </param>
-        /// <param name="conditions"></param>
         /// <returns></returns>
         public bool checkFieldExistingInDb(string tabName)
         {

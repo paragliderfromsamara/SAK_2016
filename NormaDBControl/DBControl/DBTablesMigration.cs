@@ -539,7 +539,6 @@ namespace NormaMeasure.DBControl
     {
         private string _name;
         private string _oldName;
-        private string _columnType;
         private object _defaultValue;
         private DBTable? _joinedTable;
         public ColumnDomain ColumnType;

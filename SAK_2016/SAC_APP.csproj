@@ -103,12 +103,6 @@
     <Compile Include="dbSakModels\CableStructure.cs" />
     <Compile Include="dbSakModels\dbCableStructureType.cs" />
     <Compile Include="DBControl.cs" />
-    <Compile Include="dbForms\addCableForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="dbForms\addCableForm.Designer.cs">
-      <DependentUpon>addCableForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="dbSakModels\dbBase.cs" />
     <Compile Include="Properties\dbSakQueries.cs" />
     <Compile Include="Properties\dbSakQueries.Designer.cs">
@@ -123,12 +117,6 @@
     </Compile>
     <Compile Include="testsForm\autoTestForm.Designer.cs">
       <DependentUpon>autoTestForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="dbForms\dbCablesForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="dbForms\dbCablesForm.Designer.cs">
-      <DependentUpon>dbCablesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="dbForms\dbTestsForm.cs">
       <SubType>Form</SubType>
@@ -167,17 +155,11 @@
       <DependentUpon>Signin.cs</DependentUpon>
     </Compile>
     <Compile Include="userControl\UserGrants.cs" />
-    <EmbeddedResource Include="dbForms\addCableForm.resx">
-      <DependentUpon>addCableForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="dbForms\oldDbDataMigration.resx">
       <DependentUpon>oldDbDataMigration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="testsForm\autoTestForm.resx">
       <DependentUpon>autoTestForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="dbForms\dbCablesForm.resx">
-      <DependentUpon>dbCablesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>

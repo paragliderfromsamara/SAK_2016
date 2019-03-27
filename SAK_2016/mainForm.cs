@@ -21,7 +21,6 @@ namespace NormaMeasure.SAC_APP
         public string user_id = "undefined";
         public manualTestForm manualTestForm = null;
         public autoTestForm autoTestForm = null;
-        public dbCablesForm dbCablesForm = null;
         public dbTestsForm dbTestForm = null;
 
         private UsersForm usersForm;
@@ -55,6 +54,10 @@ namespace NormaMeasure.SAC_APP
             manualTestForm.Show();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="v"></param>
         public void switchMenuStripItems(bool v)
         {
            autoTestToolStripMenuItem.Enabled = manualTestToolStripMenuItem.Enabled = testsToolStripMenuItem.Enabled = dbControlToolStripMenuItem.Enabled = v;
@@ -80,7 +83,7 @@ namespace NormaMeasure.SAC_APP
             //dm.createTables();
             //DBSACTablesMigration dbMigartion = new DBSACTablesMigration();
            // dbMigartion.InitDataBase();
-            NormaMeasure.DBControl.SAC.DBEntities.CableOld c = new NormaMeasure.DBControl.SAC.DBEntities.CableOld();
+           // NormaMeasure.DBControl.SAC.DBEntities.CableOld c = new NormaMeasure.DBControl.SAC.DBEntities.CableOld();
             //string cols = DBSACTablesMigration.DocumentsTable.SelectQuery;
 
             //MessageBox.Show(cols);
