@@ -15,17 +15,14 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_including_docs()
         {
-            DBEntityTable t = new DBEntityTable(typeof(Cable));
-            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN documents USING(document_id) WHERE is_deleted = 0 AND is_draft = 0";
-            t.FillByQuery(select_cmd);
-            return t;
+            DBEntityTable docsTable = new DBEntityTable(typeof(Document));
+            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE is_deleted = 0 AND is_draft = 0";
+            return find_by_criteria(select_cmd, typeof(Cable));
         }
 
         public static Cable find_by_cable_id(uint id)
         {
-            DBEntityTable t = new DBEntityTable(typeof(Cable));
-            string select_cmd = $"{t.SelectQuery} WHERE cable_id = {id}";
-            t.FillByQuery(select_cmd);
+            DBEntityTable t = find_by_primary_key(id, typeof(Cable));//new DBEntityTable(typeof(Cable));
             if (t.Rows.Count > 0) return (Cable)t.Rows[0];
             else
             {
@@ -68,10 +65,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            DBEntityTable t = new DBEntityTable(typeof(Cable));
-            string select_cmd = $"{t.SelectQuery} WHERE is_draft = 0 AND is_deleted = 0";
-            t.FillByQuery(select_cmd);
-            return t;
+            return find_by_criteria("is_draft = 0 AND is_deleted = 0", typeof(Cable));
         }
 
         /// <summary>
@@ -92,9 +86,7 @@ namespace NormaMeasure.DBControl.Tables
         /// <returns></returns>
         private static Cable findDraft()
         {
-            DBEntityTable t = new DBEntityTable(typeof(Cable));
-            string query = $"{t.SelectQuery} WHERE is_draft = 1";
-            t.FillByQuery(query);
+            DBEntityTable t = find_by_criteria("is_draft = 1", typeof(Cable));
             if (t.Rows.Count != 0) return (Cable)t.Rows[0];
             else return null;
         }

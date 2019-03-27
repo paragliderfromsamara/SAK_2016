@@ -16,6 +16,35 @@ namespace NormaMeasure.DBControl.Tables
 
         }
 
+        protected static DBEntityTable find_by_primary_key(uint primary_key_value, Type type)
+        {
+            DBEntityTable t = new DBEntityTable(type);
+            string primary_key = t.PrimaryKey[0].ColumnName;
+            string query = $"{t.SelectQuery} WHERE {primary_key} = {primary_key_value} LIMIT 1";
+            t.FillByQuery(query);
+            return t;
+        }
+
+        /// <summary>
+        /// Поиск по критерию 
+        /// </summary>
+        /// <param name="criteria">Аргумент должен содержать типичный для SQL синтаксис WHERE. При этом само слово Where можно не указывать</param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        protected static DBEntityTable find_by_criteria(string criteria, Type type)
+        {
+            DBEntityTable t = new DBEntityTable(type);
+            if (!criteria.Contains("WHERE") && !criteria.Contains("where") && !String.IsNullOrWhiteSpace(criteria)) criteria = "WHERE "+ criteria; //на случай, если ключевого слова WHERE нет
+            string query = $"{t.SelectQuery} {criteria}";
+            t.FillByQuery(query);
+            return t;
+        }
+
+        protected static DBEntityTable get_all(Type type)
+        {
+            return find_by_criteria("", type);
+        }
+
         public virtual bool Save()
         {
             bool isCompleted;

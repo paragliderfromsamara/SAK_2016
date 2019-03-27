@@ -36,11 +36,11 @@
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.newBarabanType = new System.Windows.Forms.GroupBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.addBarabanType = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.barabanName = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.closeForm = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.barabanTypesDS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barabanTypeList)).BeginInit();
@@ -53,6 +53,7 @@
             // 
             // barabanTypeList
             // 
+            this.barabanTypeList.AllowUserToAddRows = false;
             this.barabanTypeList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.barabanTypeList.BackgroundColor = System.Drawing.Color.LightGray;
             this.barabanTypeList.ColumnHeadersHeight = 41;
@@ -123,6 +124,14 @@
             this.newBarabanType.TabStop = false;
             this.newBarabanType.Text = "Новый тип барабана";
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(309, 45);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(128, 20);
+            this.textBox1.TabIndex = 5;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // addBarabanType
             // 
             this.addBarabanType.Location = new System.Drawing.Point(473, 43);
@@ -158,14 +167,6 @@
             this.barabanName.Size = new System.Drawing.Size(276, 20);
             this.barabanName.TabIndex = 0;
             this.barabanName.TextChanged += new System.EventHandler(this.barabanName_TextChanged);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(309, 45);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(128, 20);
-            this.textBox1.TabIndex = 5;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // closeForm
             // 

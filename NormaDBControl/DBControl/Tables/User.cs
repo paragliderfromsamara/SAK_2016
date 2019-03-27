@@ -30,15 +30,11 @@ namespace NormaMeasure.DBControl.Tables
 
         public static User SignIn(User u)
         {
-            DBEntityTable t = new DBEntityTable(typeof(User));
-            string query = $"{t.SelectQuery} WHERE last_name = '{u.LastName}' AND employee_number = '{u.EmployeeNumber}' AND password = '{u.Password}' AND is_active = 1 LIMIT 1";
-            t.FillByQuery(query);
-            if (t.Rows.Count > 0)
-            {
-                u = (User)t.Rows[0];
-                return u;
-            }
-            else return null;
+            User user = null;
+            string query = $"last_name = '{u.LastName}' AND employee_number = '{u.EmployeeNumber}' AND password = '{u.Password}' AND is_active = 1 LIMIT 1";
+            DBEntityTable t = find_by_criteria(query, typeof(User)); // new DBEntityTable();
+            if (t.Rows.Count > 0) user = (User)t.Rows[0];
+            return user;
         }
 
         public override bool Save()
@@ -68,9 +64,8 @@ namespace NormaMeasure.DBControl.Tables
             }
             else
             {
-                DBEntityTable t = new DBEntityTable(typeof(User));
-                string query = $"{t.SelectQuery} WHERE employee_number = '{EmployeeNumber}' AND is_active = 1 AND NOT user_id = {this.UserId}"; // 
-                t.FillByQuery(query);
+                string query = $"employee_number = '{EmployeeNumber}' AND is_active = 1 AND NOT user_id = {UserId}"; 
+                DBEntityTable t = find_by_criteria(query, typeof(User));
                 if (t.Rows.Count > 0)
                 {
                     this.ErrorsList.Add("Указанный табельный номер принадлежит другому пользователю");
@@ -101,9 +96,9 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            DBEntityTable t = new DBEntityTable(typeof(User));
-            string select_cmd = $"{t.SelectQuery} LEFT OUTER JOIN user_roles USING(user_role_id) WHERE is_active = 1 AND NOT user_id = 1"; // 
-            t.FillByQuery(select_cmd);
+            DBEntityTable rolesTable = new DBEntityTable(typeof(UserRole));
+            string select_cmd = $"LEFT OUTER JOIN {rolesTable.TableName} USING({rolesTable.PrimaryKey[0]}) WHERE is_active = 1 AND NOT user_id = 1"; // 
+            DBEntityTable t = find_by_criteria(select_cmd, typeof(User));//new DBEntityTable(typeof(User));
             return t;
         }
 

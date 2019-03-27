@@ -14,6 +14,15 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static MeasuredParameterType find_by_parameter_type_id(uint parameter_type_id)
+        {
+            DBEntityTable t = find_by_primary_key(parameter_type_id, typeof(MeasuredParameterType));
+            MeasuredParameterType parameter_type = null;
+            if (t.Rows.Count > 0) parameter_type = (MeasuredParameterType)t.Rows[0];
+            return parameter_type;
+        }
+
+
         public static DBEntityTable get_all_as_table_for_cable_structure_form(string ids)
         {
             DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));

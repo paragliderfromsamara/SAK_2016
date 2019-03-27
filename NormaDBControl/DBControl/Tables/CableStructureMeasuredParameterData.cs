@@ -55,17 +55,7 @@ namespace NormaMeasure.DBControl.Tables
         }
         #region Колонки типа измеряемого параметра (ParameterType)
 
-        public MeasuredParameterType ParameterType
-        {
-            set
-            {
-                MeasuredParameterType pt = value as MeasuredParameterType;
-                ParameterTypeId = pt.ParameterTypeId;
-                ParameterName = pt.ParameterName;
-                ParameterDescription = pt.Description;
-                ParameterMeasure = pt.Measure;
-            }
-        }
+
 
         [DBColumn("parameter_type_id", ColumnDomain.UInt, Order = 12, IsVirtual = true)]
         public uint ParameterTypeId
@@ -337,6 +327,48 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        public CableStructure CableStructure
+        {
+            get
+            {
+                if (cableStructure == null)
+                {
+                    CableStructure = CableStructure.find_by_structure_id(CableStructureId);
+                }
+                return cableStructure;
+            }
+            set
+            {
+                cableStructure = value;
+                if (cableStructure != null)
+                {
+                    this.CableStructureId = cableStructure.CableStructureId;
+                }
+            }
+        }
+
+        public MeasuredParameterType ParameterType
+        {
+            get
+            {
+                if (parameterType == null) ParameterType = MeasuredParameterType.find_by_parameter_type_id(ParameterTypeId);
+                return parameterType;
+            }
+            set
+            {
+                parameterType = value;
+                if(parameterType != null)
+                {
+                    ParameterTypeId = parameterType.ParameterTypeId;
+                    ParameterName = parameterType.ParameterName;
+                    ParameterDescription = parameterType.Description;
+                    ParameterMeasure = parameterType.Measure;
+                }
+            }
+        }
+
         private MeasuredParameterData measuredParameterData;
+        private CableStructure cableStructure;
+        private MeasuredParameterType parameterType;
     }
 }

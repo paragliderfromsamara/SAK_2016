@@ -14,6 +14,15 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static CableStructure find_by_structure_id(uint structure_id)
+        {
+            DBEntityTable t = find_by_primary_key(structure_id, typeof(CableStructure));
+            CableStructure structure = null;
+            if (t.Rows.Count > 0) structure = (CableStructure)t.Rows[0];
+            return structure;
+        }
+
+
         public override bool Destroy()
         {
             bool delFlag = true;

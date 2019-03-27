@@ -68,9 +68,9 @@ namespace NormaMeasure.DBControl.Tables
 
         protected void CheckNameUniquiness()
         {
-            DBEntityTable t = new DBEntityTable(typeof(BarabanType));
-            string select_cmd = $"{t.SelectQuery} WHERE (NOT baraban_type_id = {this.TypeId}) AND baraban_type_name = '{this.TypeName}'";
-            t.FillByQuery(select_cmd);
+
+            string select_cmd = $"(NOT baraban_type_id = {this.TypeId}) AND baraban_type_name = '{this.TypeName}'";
+            DBEntityTable t = find_by_criteria(select_cmd, typeof(BarabanType));//new DBEntityTable(typeof(BarabanType));
             if (t.Rows.Count > 0)
             {
                 this.ErrorsList.Add("Наименование типа барабана должно быть уникальным");
@@ -80,10 +80,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            DBEntityTable t = new DBEntityTable(typeof(BarabanType));
-            string select_cmd = $"{t.SelectQuery}";
-            t.FillByQuery(select_cmd);
-            return t;
+            return get_all(typeof(BarabanType));//new DBEntityTable(typeof(BarabanType));
         }
 
 
