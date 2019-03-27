@@ -267,11 +267,11 @@ namespace NormaMeasure.DBControl.Tables
         #endregion
 
         [DBColumn("result_measure", ColumnDomain.Tinytext, Order = 27, Nullable = true, IsVirtual = true)]
-        public uint ResultMeasure
+        public string ResultMeasure
         {
             get
             {
-                return tryParseUInt("result_measure");
+                return this["result_measure"].ToString();
             }
             set
             {
@@ -362,6 +362,7 @@ namespace NormaMeasure.DBControl.Tables
                     ParameterName = parameterType.ParameterName;
                     ParameterDescription = parameterType.Description;
                     ParameterMeasure = parameterType.Measure;
+                    ResultMeasure = parameterType.Measure;
                     if (parameterType.HasMaxLimit) MaxValue = 10;
                     if (parameterType.HasMinLimit) MinValue = 1; 
                     if (parameterType.IsFreqParameter)

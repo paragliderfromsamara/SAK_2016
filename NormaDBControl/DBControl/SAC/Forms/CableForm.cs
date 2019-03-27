@@ -723,6 +723,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
             measureColumn.DataPropertyName = "result_measure";
             measureColumn.Name = "result_measure_column";
             measureColumn.Width = 60;
+            measureColumn.CellTemplate = new DataGridViewTextBoxCell();
+            measureColumn.CellTemplate.Style.ForeColor = measureColumn.CellTemplate.Style.SelectionForeColor = System.Drawing.Color.MidnightBlue;
+            measureColumn.CellTemplate.Style.BackColor = measureColumn.CellTemplate.Style.SelectionBackColor = System.Drawing.Color.MintCream;
+            measureColumn.ReadOnly = true;
 
             bringingLengthColumn = new DataGridViewTextBoxColumn();
             bringingLengthColumn.HeaderText = "Lприв, м";
@@ -799,7 +803,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             deleteParameterTypeButtonColumn.Name = "delete_parameter_button_column";
             deleteParameterTypeButtonColumn.UseColumnTextForButtonValue = true;
             deleteParameterTypeButtonColumn.HeaderText = "";
-            deleteParameterTypeButtonColumn.Width = 25;
+            deleteParameterTypeButtonColumn.Width = 23;
             deleteParameterTypeButtonColumn.FlatStyle = FlatStyle.System;
 
             MeasuredParamsDataGridView.Columns.AddRange(new DataGridViewColumn[] {
@@ -969,7 +973,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             CableStructureMeasuredParameterData newPData = (CableStructureMeasuredParameterData)CableStructure.MeasuredParameters.NewRow();
             newPData.ParameterType = parameter_type;
-            newPData.CableStructureId = 0;
+            newPData.CableStructure = CableStructure;
             newPData.MeasuredParameterDataId = 0;
             CableStructure.MeasuredParameters.Rows.Add(newPData);
         } 
@@ -1019,7 +1023,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
             r.Cells[maxValueColumn.Name].ReadOnly = !hasMaxValue;
             r.Cells[percentColumn.Name].ReadOnly = false;
             r.Cells[lengthBringingTypeIdColumn.Name].ReadOnly = false;
-            r.Cells[measureColumn.Name].ReadOnly = false;
             r.Cells[bringingLengthColumn.Name].ReadOnly = !allowBringingLength;
             refreshReadOnlyCellColor(r);
            // MessageBox.Show($"{isFreqParams}");
@@ -1042,11 +1045,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             foreach (DataGridViewCell c in row.Cells)
             {
-                if (!c.Visible || c.OwningColumn.Name == parameterTypeNameColumn.Name) continue;
+                if (!c.Visible || c.OwningColumn.Name == parameterTypeNameColumn.Name || c.OwningColumn.Name == measureColumn.Name) continue;
                 c.Style.BackColor = c.ReadOnly ? passiveRowBGColor : activeRowBGColor;
                 c.Style.SelectionBackColor = c.ReadOnly ? passiveRowSelectedBGColor : activeRowSelectedBGColor;
                 c.Style.SelectionForeColor = c.ReadOnly ? passiveRowSelectedFontColor : activeRowSelectedFontColor;
                 c.Style.ForeColor = c.ReadOnly ? passiveRowFontColor : activeRowFontColor;
+
             }
         }
 
@@ -1368,7 +1372,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         #endregion
     }
 
-    class ParameterTypesToolStripItem : ToolStripItem
+    class ParameterTypesToolStripItem : ToolStripMenuItem
     {
         public ParameterTypesToolStripItem() : base() 
         {
