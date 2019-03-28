@@ -381,8 +381,27 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        public Cable OwnCable
+        {
+            get
+            {
+                if (ownCable == null)
+                {
+                    Cable c = Cable.find_by_cable_id(CableId);
+                    if (c != null) OwnCable = c;
+                }
+                return ownCable;
+            }
+            set
+            {
+                ownCable = value;
+                CableId = ownCable.CableId;
+            }
+        }
+
         private CableStructureType structureType;
         private DBEntityTable measuredParameters;
+        private Cable ownCable;
 
     }
 

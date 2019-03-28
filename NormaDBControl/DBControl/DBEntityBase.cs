@@ -31,6 +31,11 @@ namespace NormaMeasure.DBControl
             }
         }
 
+        public virtual void OnColumnChanged()
+        {
+
+        }
+
 
 
         /// <summary>

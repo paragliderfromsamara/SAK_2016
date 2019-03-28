@@ -26,6 +26,7 @@ namespace NormaMeasure.DBControl
             SetTableName();
             ConstructColumns();
             InitDBControl();
+            
         }
 
         public long GetScalarValueFromDB(string query)

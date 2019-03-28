@@ -12,8 +12,14 @@ namespace NormaMeasure.DBControl.Tables
     {
         public CableStructureMeasuredParameterData(DataRowBuilder builder) : base(builder)
         {
+            this.Table.ColumnChanged += Table_ColumnChanged;
         }
 
+        private void Table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
+        {
+            //System.Windows.Forms.MessageBox.Show(e.Column.ColumnName);
+            if (e.Column.ColumnName == "length_bringing_type_id" || e.Column.ColumnName == "length_bringing") RefreshResultMeasure();
+        }
 
 
         public static DBEntityTable get_structure_measured_parameters(uint structure_id)
@@ -113,7 +119,7 @@ namespace NormaMeasure.DBControl.Tables
         #region колонки значений измеряемого параметра (MeasuredParameters)
 
 
-        [DBColumn("length_bringing_type_id", ColumnDomain.UInt, Order = 16, Nullable = true, DefaultValue =0, IsVirtual = true)]
+        [DBColumn(" ", ColumnDomain.UInt, Order = 16, Nullable = true, DefaultValue =0, IsVirtual = true)]
         public uint LngthBringingTypeId
         {
             get
@@ -123,8 +129,7 @@ namespace NormaMeasure.DBControl.Tables
             set
             {
                 this["length_bringing_type_id"] = value;
-                RefreshResultMeasure();
-                
+
                 //System.Windows.Forms.MessageBox.Show(value.ToString());
             }
         }
@@ -139,6 +144,7 @@ namespace NormaMeasure.DBControl.Tables
             set
             {
                 this["length_bringing"] = value;
+                //RefreshResultMeasure();
             }
         }
 
@@ -307,7 +313,24 @@ namespace NormaMeasure.DBControl.Tables
 
         private void RefreshResultMeasure()
         {
-            ResultMeasure = "XUY";
+            if (!MeasuredParameterType.AllowBringingLength(ParameterTypeId)) return;
+            if (LngthBringingTypeId == LengthBringingType.ForOneKilometer)
+            {
+                ResultMeasure = $"{ParameterMeasure}/км";
+            }
+            else if (LngthBringingTypeId == LengthBringingType.ForBuildLength)
+            {
+                ResultMeasure = $"{ParameterMeasure}/{CableStructure.OwnCable.BuildLength}м";
+            }
+            else if (LngthBringingTypeId == LengthBringingType.ForAnotherLengthInMeters)
+            {
+                ResultMeasure = $"{ParameterMeasure}/{LngthBringing}м";
+            }
+            else
+            {
+                ResultMeasure = ParameterMeasure;
+            }
+            //ResultMeasure = "XUY";
         }
 
         public bool IsFreqParameter

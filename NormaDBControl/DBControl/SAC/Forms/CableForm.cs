@@ -326,7 +326,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             uint strTypeId = (uint)structureTypesComboBox.SelectedValue;
             CableStructure draft = (CableStructure)cable.CableStructures.NewRow();
             draft.CableStructureId = (uint)r.Next(9000000, 10000000); //(cable.CableStructures.Rows.Count > 0) ? ((CableStructure)cable.CableStructures.Rows[cable.CableStructures.Rows.Count-1]).CableStructureId + 1 : CableStructure.get_last_structure_id() + 1;
-            draft.CableId = cable.CableId;
+            draft.OwnCable = cable;
             draft.StructureTypeId = strTypeId;
             draft.LeadMaterialTypeId = 1;
             draft.IsolationMaterialId = 1;
@@ -686,6 +686,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             MeasuredParamsDataGridView.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             MeasuredParamsDataGridView.AllowUserToOrderColumns = false;
             MeasuredParamsDataGridView.AutoGenerateColumns = false;
+            MeasuredParamsDataGridView.MultiSelect = false;
 
             parameterTypeNameColumn = new DataGridViewTextBoxColumn();
             parameterTypeNameColumn.Name = "parameter_type_name_column";
@@ -941,7 +942,22 @@ namespace NormaMeasure.DBControl.SAC.Forms
             }
             if (!e.Cancel)
             {
-                MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex].Cells[lengthBringtingMeasureNameColumn.Name].Selected = true;
+                DataGridViewCell c = MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex].Cells[lengthBringingTypeIdColumn.Name];
+                foreach(ParameterTypesToolStripItem item in lengthBringingColumnContextMenu.Items)
+                {
+                    LengthBringingType t = item.Entity as LengthBringingType;
+                    if (t.TypeId.ToString() != c.Value.ToString())
+                    {
+                        item.Enabled = true;
+                        item.BackColor = System.Drawing.Color.Transparent;
+                    }
+                    else
+                    {
+                        item.Enabled = false;
+                        item.BackColor = System.Drawing.Color.Aqua;
+                    }
+                    
+                }
             }
         }
 
@@ -949,7 +965,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             CableStructureMeasuredParameterData csmpd = (CableStructureMeasuredParameterData)CableStructure.MeasuredParameters.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex];
             csmpd.LengthBringingType = (LengthBringingType)((ParameterTypesToolStripItem)e.ClickedItem).Entity;
-            
+            MeasuredParamsDataGridView.SelectedCells[0].OwningRow.Cells[bringingLengthColumn.Name].ReadOnly = csmpd.LngthBringingTypeId != LengthBringingType.ForAnotherLengthInMeters;
         }
 
         private void AddAllAllowedParameterTypesButton_Click(object sender, EventArgs e)
@@ -1016,6 +1032,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             newPData.ParameterType = parameter_type;
             newPData.CableStructure = CableStructure;
             newPData.MeasuredParameterDataId = 0;
+            newPData.LngthBringingTypeId = LengthBringingType.NoBringing;
             CableStructure.MeasuredParameters.Rows.Add(newPData);
         } 
 
@@ -1055,7 +1072,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             bool isFreqParams = MeasuredParameterType.IsItFreqParameter(val);
             bool hasMaxValue = MeasuredParameterType.IsHasMaxLimit(val);
             bool hasMinValue = MeasuredParameterType.IsHasMinLimit(val);
-            bool allowBringingLength = MeasuredParameterType.AllowBringingLength(val);
+            bool allowBringingLength = MeasuredParameterType.AllowBringingLength(val) && ((uint)r.Cells[lengthBringingTypeIdColumn.Name].Value == LengthBringingType.ForAnotherLengthInMeters);
 
             r.Cells[parameterTypeNameColumn.Name].ToolTipText = r.Cells[parameterTypeDescriptionColumn.Name].Value.ToString() ;
 
@@ -1074,6 +1091,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void refreshReadOnlyCellColor(DataGridViewRow row)
         {
+            string[] ExceptedColumns = new string[] {
+                parameterTypeNameColumn.Name,
+                measureColumn.Name
+            };
             System.Drawing.Color activeRowBGColor = System.Drawing.Color.Empty;
             System.Drawing.Color activeRowFontColor = System.Drawing.Color.Black;
             System.Drawing.Color activeRowSelectedBGColor = System.Drawing.Color.PowderBlue;
@@ -1086,7 +1107,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             foreach (DataGridViewCell c in row.Cells)
             {
-                if (!c.Visible || c.OwningColumn.Name == parameterTypeNameColumn.Name || c.OwningColumn.Name == measureColumn.Name) continue;
+                if (!c.Visible || Array.IndexOf(ExceptedColumns, c.OwningColumn.Name) > -1) continue;
+                if (bringingLengthColumn.Name == c.OwningColumn.Name && MeasuredParameterType.AllowBringingLength((uint)row.Cells[parameterTypeIdColumn.Name].Value)) continue;
                 c.Style.BackColor = c.ReadOnly ? passiveRowBGColor : activeRowBGColor;
                 c.Style.SelectionBackColor = c.ReadOnly ? passiveRowSelectedBGColor : activeRowSelectedBGColor;
                 c.Style.SelectionForeColor = c.ReadOnly ? passiveRowSelectedFontColor : activeRowSelectedFontColor;

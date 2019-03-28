@@ -13,7 +13,6 @@ namespace NormaMeasure.DBControl
         
         public DBTableAttribute(string tableName, string dbName)
         {
-
             TableName = tableName;
             DBName = dbName;
         }
