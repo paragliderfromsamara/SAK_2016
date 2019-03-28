@@ -48,11 +48,16 @@ namespace NormaMeasure.DBControl.SAC.Forms
             fillIsolationMaterials();
             fillDRBringingFormuls();
             fillDRFormuls();
+            fillLengthBringingTypes();
         }
 
-
-
         #region Заполнение cableFormDataSet необходимыми таблицами
+
+        private void fillLengthBringingTypes()
+        {
+            cableFormDataSet.Tables.Add(LengthBringingType.get_all_as_table());
+        }
+
         private void fillDRFormuls()
         {
             cableFormDataSet.Tables.Add(dRFormula.get_all_as_table());
