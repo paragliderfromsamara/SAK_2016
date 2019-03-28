@@ -123,6 +123,9 @@ namespace NormaMeasure.DBControl.Tables
             set
             {
                 this["length_bringing_type_id"] = value;
+                RefreshResultMeasure();
+                
+                //System.Windows.Forms.MessageBox.Show(value.ToString());
             }
         }
 
@@ -302,6 +305,11 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        private void RefreshResultMeasure()
+        {
+            ResultMeasure = "XUY";
+        }
+
         public bool IsFreqParameter
         {
             get
@@ -375,8 +383,29 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        public LengthBringingType LengthBringingType
+        {
+            get
+            {
+               if  (lengthBringingType == null)
+                {
+                    LengthBringingType t = LengthBringingType.find_by_lengt_bringing_type_id(LngthBringingTypeId);
+                    if (t != null) LengthBringingType = t;
+                }
+                return lengthBringingType;
+            }
+            set
+            {
+                lengthBringingType = value;
+                LngthBringingTypeId = lengthBringingType.TypeId;
+                LengthBringingName = lengthBringingType.BringingName;
+                MeasureLengthTitle = lengthBringingType.MeasureTitle;
+            }
+        }
+
         private MeasuredParameterData measuredParameterData;
         private CableStructure cableStructure;
         private MeasuredParameterType parameterType;
+        private LengthBringingType lengthBringingType;
     }
 }

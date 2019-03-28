@@ -58,6 +58,13 @@ namespace NormaMeasure.DBControl.Tables
             return get_all(typeof(LengthBringingType));
         }
 
+        internal static LengthBringingType find_by_lengt_bringing_type_id(uint id)
+        {
+            DBEntityTable t = find_by_primary_key(id, typeof(LengthBringingType));
+            if (t.Rows.Count > 0) return (LengthBringingType)t.Rows[0];
+            else return null;
+        }
+
         /// <summary>
         /// Без приведения
         /// </summary>

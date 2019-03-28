@@ -577,14 +577,26 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DBEntityTable drBringingFormulsTable = new DBEntityTable(typeof(dRBringingFormula));
             DBEntityTable drFormulsTable = new DBEntityTable(typeof(dRFormula));
             DBEntityTable measuredParameterTypesTable = CableStructure.StructureType.MeasuredParameterTypes;
+            DBEntityTable lengthBringingTypesTable = new DBEntityTable(typeof(LengthBringingType));
 
             if (ds.Tables.Contains(leadMaterialsTable.TableName)) fillLeadMaterialsComboBox(ds.Tables[leadMaterialsTable.TableName]);
             if (ds.Tables.Contains(isolationMaterialsTable.TableName)) fillIsolationMaterialsComboBox(ds.Tables[isolationMaterialsTable.TableName]);
             if (ds.Tables.Contains(drFormulsTable.TableName)) fill_dRFormulsComboBox(ds.Tables[drFormulsTable.TableName]);
             if (ds.Tables.Contains(drBringingFormulsTable.TableName)) fill_drBringingFormulsComboBox(ds.Tables[drBringingFormulsTable.TableName]);
-
+            if (ds.Tables.Contains(lengthBringingTypesTable.TableName)) fill_lengthBringingContextMenu(ds.Tables[lengthBringingTypesTable.TableName]);
 
             fill_MeasuredParametersDataGrid(measuredParameterTypesTable);
+
+            
+        }
+
+        private void fill_lengthBringingContextMenu(DataTable dataTable)
+        {
+            foreach(LengthBringingType type in dataTable.Rows)
+            {
+                ParameterTypesToolStripItem item = new ParameterTypesToolStripItem(type.TypeId, type.BringingName, type);
+                lengthBringingColumnContextMenu.Items.Add(item);
+            }
         }
 
         private void fill_MeasuredParametersDataGrid(DataTable dataTable)
@@ -764,12 +776,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
 
             lengthBringingColumnContextMenu = new ContextMenuStrip();
-            lengthBringingColumnContextMenu.Items.Add("1000");
-            lengthBringingColumnContextMenu.Items.Add("Строительная длина");
             bringingLengthColumn.ContextMenuStrip = lengthBringingColumnContextMenu;
             lengthBringingColumnContextMenu.ItemClicked += LengthBringingColumnContextMenu_ItemClicked;
             lengthBringingColumnContextMenu.Opening += LengthBringingColumnContextMenu_Opening;
-     
+            lengthBringingColumnContextMenu.RenderMode = ToolStripRenderMode.System;
 
 
             freqRangeIdColumn = new DataGridViewTextBoxColumn();
@@ -810,6 +820,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             deleteParameterTypeButtonColumn.HeaderText = "";
             deleteParameterTypeButtonColumn.Width = 23;
             deleteParameterTypeButtonColumn.FlatStyle = FlatStyle.System;
+            deleteParameterTypeButtonColumn.CellTemplate.ToolTipText = "Удалить";
 
             MeasuredParamsDataGridView.Columns.AddRange(new DataGridViewColumn[] {
                 parameterTypeNameColumn,
@@ -840,7 +851,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             MeasuredParamsDataGridView.CurrentCellDirtyStateChanged += MeasuredParamsDataGridView_CurrentCellDirtyStateChanged;
             // MeasuredParamsDataGridView.ce
             MeasuredParamsDataGridView.RowsAdded += MeasuredParamsDataGridView_RowsAdded;
-            MeasuredParamsDataGridView.CellClick += MeasuredParamsDataGridView_CellClick;
+            MeasuredParamsDataGridView.CellMouseClick += MeasuredParamsDataGridView_CellMouseClick; ;
 
             parameterTypesComboBox = new ComboBox();
             parameterTypesComboBox.Parent = this;
@@ -865,13 +876,32 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         }
 
-        private void MeasuredParamsDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void MeasuredParamsDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.ColumnIndex == MeasuredParamsDataGridView.Columns[deleteParameterTypeButtonColumn.Name].Index)
+            try
             {
-                MeasuredParamsDataGridView.Rows.Remove(MeasuredParamsDataGridView.Rows[e.RowIndex]);
+                DataGridViewCell cell = MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                if (e.Button == MouseButtons.Left)
+                {
+                    if (e.ColumnIndex == MeasuredParamsDataGridView.Columns[deleteParameterTypeButtonColumn.Name].Index)
+                    {
+                        MeasuredParamsDataGridView.Rows.Remove(MeasuredParamsDataGridView.Rows[e.RowIndex]);
+                    }
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    foreach (DataGridViewCell c in MeasuredParamsDataGridView.SelectedCells) c.Selected = false;
+                    foreach (DataGridViewRow r in MeasuredParamsDataGridView.SelectedRows) r.Selected = false;
+                    cell.Selected = true;
+                    cell.OwningRow.Selected = true;
+                    //MessageBox.Show(cell.Value.ToString());
+                }
             }
+            catch (ArgumentOutOfRangeException) { }
+
+
         }
+
 
         private void SetMeasuredParameterDataGrid_ColumnsOrder()
         {
@@ -907,13 +937,19 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 e.Cancel = true;
             }else
             {
-                e.Cancel = MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex].Cells[bringingLengthColumn.Name].ReadOnly;
+                e.Cancel = !MeasuredParameterType.AllowBringingLength((uint)MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex].Cells[parameterTypeIdColumn.Name].Value);//MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex].Cells[bringingLengthColumn.Name].ReadOnly;
+            }
+            if (!e.Cancel)
+            {
+                MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex].Cells[lengthBringtingMeasureNameColumn.Name].Selected = true;
             }
         }
 
         private void LengthBringingColumnContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            MessageBox.Show(MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex].Cells[parameterTypeNameColumn.Name].Value.ToString());
+            CableStructureMeasuredParameterData csmpd = (CableStructureMeasuredParameterData)CableStructure.MeasuredParameters.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex];
+            csmpd.LengthBringingType = (LengthBringingType)((ParameterTypesToolStripItem)e.ClickedItem).Entity;
+            
         }
 
         private void AddAllAllowedParameterTypesButton_Click(object sender, EventArgs e)
@@ -1384,13 +1420,16 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         }
 
-        public ParameterTypesToolStripItem(uint item_id, string item_text) : this()
+        public ParameterTypesToolStripItem(uint item_id, string item_text, BaseEntity base_entity) : this()
         {
             itemId = item_id;
             Text = item_text;
+            entity = base_entity;
         }
 
         public uint ItemId => itemId;
+        public BaseEntity Entity => entity;
         private uint itemId;
+        private BaseEntity entity;
     }
 }
