@@ -80,7 +80,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         [DBColumn("length_bringing", ColumnDomain.Float, Order = 14, DefaultValue = 1000)]
-        public uint LngthBringing
+        public uint LengthBringing
         {
             get
             {

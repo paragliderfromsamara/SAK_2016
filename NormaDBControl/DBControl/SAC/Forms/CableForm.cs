@@ -202,7 +202,23 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
            float v = 0f;
            float.TryParse((sender as NumericUpDown).Value.ToString(), out v);
-           cable.BuildLength = v;
+           Cable.BuildLength = v;
+           refreshBuildLengthOnStructureMeasureParameters();
+        }
+
+        /// <summary>
+        /// Обновляем длину приведения в измеряемых параметрах структур, в которых длина приведения - строительная длина кабеля
+        /// </summary>
+        private void refreshBuildLengthOnStructureMeasureParameters()
+        {
+            foreach(CableStructure structure in cable.CableStructures.Rows)
+            {
+                foreach(CableStructureMeasuredParameterData pd in structure.MeasuredParameters.Rows)
+                {
+                    if (pd.LngthBringingTypeId == LengthBringingType.ForBuildLength) pd.LengthBringing = Cable.BuildLength;
+                    
+                }
+            }
         }
 
         private void linearMass_input_ValueChanged(object sender, System.EventArgs e)
@@ -677,9 +693,35 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void DrawMeasuredParametersDataGrid()
         {
+            ParameterTypeNameCellStyle = new DataGridViewCellStyle();
+            ParameterTypeNameCellStyle.ForeColor = ParameterTypeNameCellStyle.SelectionForeColor = System.Drawing.Color.MidnightBlue;
+            ParameterTypeNameCellStyle.BackColor = ParameterTypeNameCellStyle.SelectionBackColor = System.Drawing.Color.MintCream;
+
+            DisabledCellStyle = new DataGridViewCellStyle();
+            DisabledCellStyle.BackColor = System.Drawing.Color.Moccasin;
+            DisabledCellStyle.SelectionBackColor = System.Drawing.Color.Moccasin;
+            DisabledCellStyle.ForeColor = System.Drawing.Color.Moccasin;
+            DisabledCellStyle.SelectionForeColor = System.Drawing.Color.Moccasin;
+
+            EnabledCellStyle = new DataGridViewCellStyle();
+            EnabledCellStyle.BackColor = System.Drawing.Color.White;
+            EnabledCellStyle.SelectionBackColor = System.Drawing.Color.PowderBlue;
+            EnabledCellStyle.ForeColor = System.Drawing.Color.Black;
+            EnabledCellStyle.SelectionForeColor = System.Drawing.Color.MidnightBlue;
+
+            DisabledBringingLengthCellStyle = new DataGridViewCellStyle();
+            DisabledBringingLengthCellStyle.ForeColor = EnabledCellStyle.BackColor;
+            DisabledBringingLengthCellStyle.SelectionForeColor = EnabledCellStyle.SelectionBackColor;
+
+            EnabledBringingLengthCellStyle = new DataGridViewCellStyle();
+            EnabledBringingLengthCellStyle.ForeColor = EnabledCellStyle.ForeColor;
+            EnabledBringingLengthCellStyle.SelectionForeColor = EnabledCellStyle.SelectionForeColor;
+
+            EnabledBringingLengthCellStyle.BackColor = DisabledBringingLengthCellStyle.BackColor = EnabledCellStyle.BackColor;
+            EnabledBringingLengthCellStyle.SelectionBackColor = DisabledBringingLengthCellStyle.SelectionBackColor = EnabledCellStyle.SelectionBackColor;
 
             MeasuredParamsDataGridView = new DataGridView();
-            MeasuredParamsDataGridView.Size = new System.Drawing.Size(570, 350);
+            MeasuredParamsDataGridView.Size = new System.Drawing.Size(600, 350);
             MeasuredParamsDataGridView.Parent = this;
             MeasuredParamsDataGridView.AllowUserToAddRows = false;
             MeasuredParamsDataGridView.AllowUserToResizeColumns = false;
@@ -694,8 +736,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             parameterTypeNameColumn.HeaderText = "Параметр";
             parameterTypeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             parameterTypeNameColumn.CellTemplate = new DataGridViewTextBoxCell();
-            parameterTypeNameColumn.CellTemplate.Style.ForeColor = parameterTypeNameColumn.CellTemplate.Style.SelectionForeColor = System.Drawing.Color.MidnightBlue;
-            parameterTypeNameColumn.CellTemplate.Style.BackColor = parameterTypeNameColumn.CellTemplate.Style.SelectionBackColor = System.Drawing.Color.MintCream;
+            parameterTypeNameColumn.CellTemplate.Style = ParameterTypeNameCellStyle;
             parameterTypeNameColumn.ReadOnly = true;
 
 
@@ -740,10 +781,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
             measureColumn.HeaderText = "Ед. изм.";
             measureColumn.DataPropertyName = "result_measure";
             measureColumn.Name = "result_measure_column";
-            measureColumn.Width = 60;
+            measureColumn.Width = 90;
             measureColumn.CellTemplate = new DataGridViewTextBoxCell();
-            measureColumn.CellTemplate.Style.ForeColor = measureColumn.CellTemplate.Style.SelectionForeColor = System.Drawing.Color.MidnightBlue;
-            measureColumn.CellTemplate.Style.BackColor = measureColumn.CellTemplate.Style.SelectionBackColor = System.Drawing.Color.MintCream;
+            measureColumn.CellTemplate.Style = ParameterTypeNameCellStyle;
             measureColumn.ReadOnly = true;
 
             bringingLengthColumn = new DataGridViewTextBoxColumn();
@@ -891,10 +931,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
-                    foreach (DataGridViewCell c in MeasuredParamsDataGridView.SelectedCells) c.Selected = false;
-                    foreach (DataGridViewRow r in MeasuredParamsDataGridView.SelectedRows) r.Selected = false;
-                    cell.Selected = true;
-                    cell.OwningRow.Selected = true;
+                    //foreach (DataGridViewCell c in MeasuredParamsDataGridView.SelectedCells) c.Selected = false;
+                    //foreach (DataGridViewRow r in MeasuredParamsDataGridView.SelectedRows) r.Selected = false;
+                   // cell.Selected = true;
+                    //cell.OwningRow.Selected = true;
                     //MessageBox.Show(cell.Value.ToString());
                 }
             }
@@ -954,7 +994,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
                     else
                     {
                         item.Enabled = false;
-                        item.BackColor = System.Drawing.Color.Aqua;
+                        item.BackColor = EnabledCellStyle.SelectionBackColor;
                     }
                     
                 }
@@ -963,9 +1003,28 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void LengthBringingColumnContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            CableStructureMeasuredParameterData csmpd = (CableStructureMeasuredParameterData)CableStructure.MeasuredParameters.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex];
-            csmpd.LengthBringingType = (LengthBringingType)((ParameterTypesToolStripItem)e.ClickedItem).Entity;
-            MeasuredParamsDataGridView.SelectedCells[0].OwningRow.Cells[bringingLengthColumn.Name].ReadOnly = csmpd.LngthBringingTypeId != LengthBringingType.ForAnotherLengthInMeters;
+            MeasuredParamsDataGridView.SelectedCells[0].OwningRow.Cells[lengthBringingTypeIdColumn.Name].Value = ((ParameterTypesToolStripItem)e.ClickedItem).ItemId;
+            MeasuredParamsDataGridView.CommitEdit(DataGridViewDataErrorContexts.LeaveControl);
+            MeasuredParamsDataGridView.Refresh();
+            ReStyleBringingLengthColumnByBringingLengthType(MeasuredParamsDataGridView.SelectedCells[0].OwningRow);
+         
+        }
+
+        private void ReStyleBringingLengthColumnByBringingLengthType(DataGridViewRow r)
+        {
+            uint blId = (uint)r.Cells[lengthBringingTypeIdColumn.Name].Value;
+            uint pTypeId = (uint)r.Cells[parameterTypeIdColumn.Name].Value;
+            DataGridViewCell cell = r.Cells[bringingLengthColumn.Name];
+            if (MeasuredParameterType.AllowBringingLength(pTypeId))
+            {
+                cell.ReadOnly = blId != LengthBringingType.ForAnotherLengthInMeters;
+                cell.Style = (blId == LengthBringingType.NoBringing) ? DisabledBringingLengthCellStyle : EnabledBringingLengthCellStyle;
+            }else
+            {
+                cell.ReadOnly = true;
+                cell.Style = DisabledCellStyle;
+            }
+
         }
 
         private void AddAllAllowedParameterTypesButton_Click(object sender, EventArgs e)
@@ -1095,24 +1154,17 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 parameterTypeNameColumn.Name,
                 measureColumn.Name
             };
-            System.Drawing.Color activeRowBGColor = System.Drawing.Color.Empty;
-            System.Drawing.Color activeRowFontColor = System.Drawing.Color.Black;
-            System.Drawing.Color activeRowSelectedBGColor = System.Drawing.Color.PowderBlue;
-            System.Drawing.Color activeRowSelectedFontColor = System.Drawing.Color.MidnightBlue;
-
-            System.Drawing.Color passiveRowBGColor = System.Drawing.Color.Moccasin;
-            System.Drawing.Color passiveRowFontColor = System.Drawing.Color.Moccasin;
-            System.Drawing.Color passiveRowSelectedBGColor = System.Drawing.Color.Moccasin;
-            System.Drawing.Color passiveRowSelectedFontColor = System.Drawing.Color.Moccasin;
-
             foreach (DataGridViewCell c in row.Cells)
             {
                 if (!c.Visible || Array.IndexOf(ExceptedColumns, c.OwningColumn.Name) > -1) continue;
-                if (bringingLengthColumn.Name == c.OwningColumn.Name && MeasuredParameterType.AllowBringingLength((uint)row.Cells[parameterTypeIdColumn.Name].Value)) continue;
-                c.Style.BackColor = c.ReadOnly ? passiveRowBGColor : activeRowBGColor;
-                c.Style.SelectionBackColor = c.ReadOnly ? passiveRowSelectedBGColor : activeRowSelectedBGColor;
-                c.Style.SelectionForeColor = c.ReadOnly ? passiveRowSelectedFontColor : activeRowSelectedFontColor;
-                c.Style.ForeColor = c.ReadOnly ? passiveRowFontColor : activeRowFontColor;
+                else if (bringingLengthColumn.Name == c.OwningColumn.Name)
+                {
+                    ReStyleBringingLengthColumnByBringingLengthType(c.OwningRow);
+                }else
+                {
+                    c.Style = c.ReadOnly ? DisabledCellStyle : EnabledCellStyle;
+                }
+
 
             }
         }
@@ -1421,6 +1473,14 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private DataGridViewTextBoxColumn lengthBringingMeasureTitleColumn;
         private DataGridViewTextBoxColumn lengthBringtingMeasureNameColumn;
         private DataGridViewButtonColumn deleteParameterTypeButtonColumn;
+
+        private DataGridViewCellStyle DisabledCellStyle;
+        private DataGridViewCellStyle EnabledCellStyle;
+
+        private DataGridViewCellStyle EnabledBringingLengthCellStyle;
+        private DataGridViewCellStyle DisabledBringingLengthCellStyle;
+
+        private DataGridViewCellStyle ParameterTypeNameCellStyle;
 
         private ContextMenuStrip lengthBringingColumnContextMenu;
 

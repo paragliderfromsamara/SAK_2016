@@ -135,11 +135,11 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         [DBColumn("length_bringing", ColumnDomain.Float, Order = 17, DefaultValue = 1000, IsVirtual = true)]
-        public uint LngthBringing
+        public float LengthBringing
         {
             get
             {
-                return tryParseUInt("length_bringing");
+                return tryParseFloat("length_bringing");
             }
             set
             {
@@ -305,7 +305,7 @@ namespace NormaMeasure.DBControl.Tables
                 MinValue = mpd.MinValue;
                 MaxValue = mpd.MaxValue;
                 Percent = mpd.Percent;
-                LngthBringing = mpd.LngthBringing;
+                LengthBringing = mpd.LengthBringing;
                 LngthBringingTypeId = mpd.LngthBringingTypeId;
                 measuredParameterData = mpd;
             }
@@ -314,6 +314,7 @@ namespace NormaMeasure.DBControl.Tables
         private void RefreshResultMeasure()
         {
             if (!MeasuredParameterType.AllowBringingLength(ParameterTypeId)) return;
+
             if (LngthBringingTypeId == LengthBringingType.ForOneKilometer)
             {
                 ResultMeasure = $"{ParameterMeasure}/км";
@@ -321,16 +322,16 @@ namespace NormaMeasure.DBControl.Tables
             else if (LngthBringingTypeId == LengthBringingType.ForBuildLength)
             {
                 ResultMeasure = $"{ParameterMeasure}/{CableStructure.OwnCable.BuildLength}м";
+                //System.Windows.Forms.MessageBox.Show($"Im here {CableStructure.OwnCable.BuildLength}");
             }
             else if (LngthBringingTypeId == LengthBringingType.ForAnotherLengthInMeters)
             {
-                ResultMeasure = $"{ParameterMeasure}/{LngthBringing}м";
+                ResultMeasure = $"{ParameterMeasure}/{LengthBringing}м";
             }
             else
             {
                 ResultMeasure = ParameterMeasure;
             }
-            //ResultMeasure = "XUY";
         }
 
         public bool IsFreqParameter
