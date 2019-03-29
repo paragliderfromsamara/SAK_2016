@@ -1198,9 +1198,9 @@ namespace NormaMeasure.DBControl.SAC.Forms
             DRFormulsGroupBox.Text = "Омическая ассиметрия";
             DRFormulsGroupBox.Width = 155;
             DRFormulsGroupBox.Height = 110;
+            DRFormulsGroupBox.Enabled = CableStructure.IsAllowParameterType(MeasuredParameterType.dR);
 
 
-           
             DRFormulaComboBox = new ComboBox();
             DRFormulaComboBox.Parent = DRFormulsGroupBox;
             DRFormulaComboBox.Width = 135;

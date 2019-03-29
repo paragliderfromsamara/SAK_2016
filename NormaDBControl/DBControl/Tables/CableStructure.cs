@@ -389,7 +389,6 @@ namespace NormaMeasure.DBControl.Tables
                 {
                     Cable c = Cable.find_by_cable_id(CableId);
                     if (c != null) OwnCable = c;
-                    System.Windows.Forms.MessageBox.Show("okay");
                 }
                 return ownCable;
             }
@@ -398,6 +397,16 @@ namespace NormaMeasure.DBControl.Tables
                 ownCable = value;
                 CableId = ownCable.CableId;
             }
+        }
+
+        /// <summary>
+        /// Может ли тип параметра измеряться на данном типе структуры
+        /// </summary>
+        /// <param name="parameter_type_id"></param>
+        /// <returns></returns>
+        public bool IsAllowParameterType(uint parameter_type_id)
+        {
+            return StructureType.MeasuredParameterTypes.Select($"parameter_type_id = {parameter_type_id}").Length > 0 ;
         }
 
         private CableStructureType structureType;
