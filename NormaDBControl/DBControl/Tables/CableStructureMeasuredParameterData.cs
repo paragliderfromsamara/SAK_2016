@@ -13,13 +13,37 @@ namespace NormaMeasure.DBControl.Tables
         public CableStructureMeasuredParameterData(DataRowBuilder builder) : base(builder)
         {
             this.Table.ColumnChanged += Table_ColumnChanged;
+            this.Table.RowDeleted += Table_RowDeleted;
+        }
+
+        private void Table_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            e.Row.Table.ColumnChanged -= Table_ColumnChanged;
         }
 
         private void Table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
         {
             //System.Windows.Forms.MessageBox.Show(e.Column.ColumnName);
-            if (e.Column.ColumnName == "length_bringing_type_id" || e.Column.ColumnName == "length_bringing") RefreshResultMeasure();
+            try
+            {
+                switch (e.Column.ColumnName)
+                {
+                    case "length_bringing_type_id":
+                        SetBringingLengthByTypeId();
+                        RefreshResultMeasure();
+                        break;
+                    case "length_bringing":
+                        RefreshResultMeasure();
+                        break;
+                }
+            }
+            catch(RowNotInTableException)
+            {
+                System.Windows.Forms.MessageBox.Show("Table_ColumnChanged вызвано для удалённой строки");
+            }
+
         }
+
 
 
         public static DBEntityTable get_structure_measured_parameters(uint structure_id)
@@ -311,6 +335,17 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        private void SetBringingLengthByTypeId()
+        {
+            if (LngthBringingTypeId == LengthBringingType.ForBuildLength)
+            {
+                LengthBringing = CableStructure.OwnCable.BuildLength;
+            }else if (LngthBringingTypeId == LengthBringingType.ForOneKilometer)
+            {
+                LengthBringing = 1000;
+            }
+        }
+
         private void RefreshResultMeasure()
         {
             if (!MeasuredParameterType.AllowBringingLength(ParameterTypeId)) return;
@@ -322,7 +357,6 @@ namespace NormaMeasure.DBControl.Tables
             else if (LngthBringingTypeId == LengthBringingType.ForBuildLength)
             {
                 ResultMeasure = $"{ParameterMeasure}/{CableStructure.OwnCable.BuildLength}м";
-                //System.Windows.Forms.MessageBox.Show($"Im here {CableStructure.OwnCable.BuildLength}");
             }
             else if (LngthBringingTypeId == LengthBringingType.ForAnotherLengthInMeters)
             {

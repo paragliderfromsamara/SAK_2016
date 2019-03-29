@@ -389,6 +389,7 @@ namespace NormaMeasure.DBControl.Tables
                 {
                     Cable c = Cable.find_by_cable_id(CableId);
                     if (c != null) OwnCable = c;
+                    System.Windows.Forms.MessageBox.Show("okay");
                 }
                 return ownCable;
             }
