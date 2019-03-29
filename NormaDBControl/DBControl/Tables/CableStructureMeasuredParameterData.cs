@@ -18,7 +18,7 @@ namespace NormaMeasure.DBControl.Tables
 
         private void Table_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            e.Row.Table.ColumnChanged -= Table_ColumnChanged;
+            //e.Row.Table.ColumnChanged -= Table_ColumnChanged;
         }
 
         private void Table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
@@ -39,7 +39,8 @@ namespace NormaMeasure.DBControl.Tables
             }
             catch(RowNotInTableException)
             {
-                System.Windows.Forms.MessageBox.Show("Table_ColumnChanged вызвано для удалённой строки");
+                e.Row.Table.ColumnChanged -= Table_ColumnChanged;
+                //System.Windows.Forms.MessageBox.Show("Table_ColumnChanged вызвано для удалённой строки");
             }
 
         }
