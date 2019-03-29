@@ -904,8 +904,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             addParameterButton = new Button();
             addParameterButton.Parent = this;
-            addParameterButton.Text = "+";
-            addParameterButton.Width = 23;//100;
+            addParameterButton.Text = "Добавить";
+            addParameterButton.Width = 80;//100;
             addParameterButton.Height = 23;
             addParameterButton.Click += AddParameterButton_Click;
 
