@@ -408,6 +408,7 @@ namespace NormaMeasure.DBControl.Tables
                 if (cableStructure != null)
                 {
                     this.CableStructureId = cableStructure.CableStructureId;
+                    if (ParameterType.ParameterTypeId == MeasuredParameterType.dR) ResultMeasure = cableStructure.DRFormula.ResultMeasure;
                 }
             }
         }
@@ -428,7 +429,7 @@ namespace NormaMeasure.DBControl.Tables
                     ParameterName = parameterType.ParameterName;
                     ParameterDescription = parameterType.Description;
                     ParameterMeasure = parameterType.Measure;
-                    ResultMeasure = parameterType.Measure;
+                    if (parameterType.ParameterTypeId != MeasuredParameterType.dR) ResultMeasure = parameterType.Measure;
                     if (parameterType.HasMaxLimit) MaxValue = 10;
                     if (parameterType.HasMinLimit) MinValue = 1; 
                     if (parameterType.IsFreqParameter)

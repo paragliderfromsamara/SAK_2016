@@ -14,6 +14,14 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+
+        public static dRFormula find_drFormula_by_id(uint dr_formula_id)
+        {
+            DBEntityTable r = find_by_primary_key(dr_formula_id, typeof(dRFormula));
+            if (r.Rows.Count > 0) return (dRFormula)r.Rows[0];
+            else return null;
+        }
+
         public static DBEntityTable get_all_as_table()
         {
             DBEntityTable t = new DBEntityTable(typeof(dRFormula));

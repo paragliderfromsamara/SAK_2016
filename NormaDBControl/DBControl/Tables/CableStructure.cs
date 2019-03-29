@@ -326,9 +326,19 @@ namespace NormaMeasure.DBControl.Tables
             set
             {
                 this["dr_formula_id"] = value;
+                loadDRFormula();
+                refreshDRMeasureData();
             }
         }
 
+        private void refreshDRMeasureData()
+        {
+            foreach(CableStructureMeasuredParameterData mpd in MeasuredParameters.Rows)
+            {
+                if (mpd.ParameterTypeId == MeasuredParameterType.dR) mpd.ResultMeasure = drFormula.ResultMeasure;
+            }
+            
+        }
 
         public string StructureTitle
         {
@@ -377,7 +387,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
-               return StructureType.MeasuredParameterTypes.Select($"parameter_type_id IN ({MeasuredParameterType.al}, {MeasuredParameterType.Ao}, {MeasuredParameterType.Az})").Count() > 0;
+                return StructureType.MeasuredParameterTypes.Select($"parameter_type_id IN ({MeasuredParameterType.al}, {MeasuredParameterType.Ao}, {MeasuredParameterType.Az})").Count() > 0;
             }
         }
 
@@ -399,6 +409,24 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        public dRFormula DRFormula
+        {
+            get
+            {
+                if (drFormula == null) loadDRFormula();
+                return drFormula;
+            }
+            set
+            {
+                drFormula = value;
+            }
+        }
+
+        private void loadDRFormula()
+        {
+            drFormula = dRFormula.find_drFormula_by_id(DRFormulaId);
+        }
+
         /// <summary>
         /// Может ли тип параметра измеряться на данном типе структуры
         /// </summary>
@@ -412,6 +440,7 @@ namespace NormaMeasure.DBControl.Tables
         private CableStructureType structureType;
         private DBEntityTable measuredParameters;
         private Cable ownCable;
+        private dRFormula drFormula;
 
     }
 
