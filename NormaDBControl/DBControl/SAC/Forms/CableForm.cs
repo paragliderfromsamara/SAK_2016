@@ -935,8 +935,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 {
                     MeasuredParamsDataGridView.Rows.RemoveAt(0);
                 }
-
-                
             }
         }
 
@@ -957,18 +955,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
                         MeasuredParamsDataGridView.Rows.Remove(MeasuredParamsDataGridView.Rows[e.RowIndex]);
                     }
                 }
-                else if (e.Button == MouseButtons.Right)
-                {
-                    //foreach (DataGridViewCell c in MeasuredParamsDataGridView.SelectedCells) c.Selected = false;
-                    //foreach (DataGridViewRow r in MeasuredParamsDataGridView.SelectedRows) r.Selected = false;
-                   // cell.Selected = true;
-                    //cell.OwningRow.Selected = true;
-                    //MessageBox.Show(cell.Value.ToString());
-                }
             }
             catch (ArgumentOutOfRangeException) { }
-
-
         }
 
 
