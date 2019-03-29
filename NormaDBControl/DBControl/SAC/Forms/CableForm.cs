@@ -892,7 +892,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
             MeasuredParamsDataGridView.CurrentCellDirtyStateChanged += MeasuredParamsDataGridView_CurrentCellDirtyStateChanged;
             // MeasuredParamsDataGridView.ce
             MeasuredParamsDataGridView.RowsAdded += MeasuredParamsDataGridView_RowsAdded;
-            MeasuredParamsDataGridView.CellMouseClick += MeasuredParamsDataGridView_CellMouseClick; ;
+            MeasuredParamsDataGridView.CellMouseClick += MeasuredParamsDataGridView_CellMouseClick;
+            MeasuredParamsDataGridView.RowsRemoved += MeasuredParamsDataGridView_RowsRemoved;
 
             parameterTypesComboBox = new ComboBox();
             parameterTypesComboBox.Parent = this;
@@ -911,10 +912,37 @@ namespace NormaMeasure.DBControl.SAC.Forms
             addAllAllowedParameterTypesButton = new Button();
             addAllAllowedParameterTypesButton.Parent = this;
             addAllAllowedParameterTypesButton.Text = "Добавить все";
-            addAllAllowedParameterTypesButton.Width = 120;//100;
+            addAllAllowedParameterTypesButton.Width = 110;//100;
             addAllAllowedParameterTypesButton.Height = 23;
             addAllAllowedParameterTypesButton.Click += AddAllAllowedParameterTypesButton_Click;
 
+            deleteAllMeasuredParametersDataButton = new Button();
+            deleteAllMeasuredParametersDataButton.Parent = this;
+            deleteAllMeasuredParametersDataButton.Text = "Удалить все";
+            deleteAllMeasuredParametersDataButton.Width = 110;//100;
+            deleteAllMeasuredParametersDataButton.Height = 23;
+            deleteAllMeasuredParametersDataButton.Enabled = false;
+            deleteAllMeasuredParametersDataButton.Click += DeleteAllMeasuredParametersDataButton_Click;
+
+        }
+
+        private void DeleteAllMeasuredParametersDataButton_Click(object sender, EventArgs e)
+        {
+            DialogResult r = MessageBox.Show("Вы уверены, что хотите удалить все измеряемые параметры для данной структуры кабеля?", "Вопрос...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (r == DialogResult.Yes)
+            {
+                while(MeasuredParamsDataGridView.Rows.Count > 0)
+                {
+                    MeasuredParamsDataGridView.Rows.RemoveAt(0);
+                }
+
+                
+            }
+        }
+
+        private void MeasuredParamsDataGridView_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            deleteAllMeasuredParametersDataButton.Enabled = MeasuredParamsDataGridView.Rows.Count > 0;
         }
 
         private void MeasuredParamsDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -1049,6 +1077,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
                     InitRowByParameterType(MeasuredParamsDataGridView.Rows[i]);
               }
             MeasuredParamsDataGridView.Sort(MeasuredParamsDataGridView.Columns[parameterTypeIdColumn.Name], System.ComponentModel.ListSortDirection.Ascending);
+            deleteAllMeasuredParametersDataButton.Enabled = MeasuredParamsDataGridView.Rows.Count > 0;
         }
 
         private void AddParameterButton_Click(object sender, EventArgs e)
@@ -1374,6 +1403,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
             parameterTypesComboBox.Location = new System.Drawing.Point(240, y+5);
             addParameterButton.Location = new System.Drawing.Point(parameterTypesComboBox.Location.X + parameterTypesComboBox.Width + 10, y+4);
             addAllAllowedParameterTypesButton.Location = new System.Drawing.Point(addParameterButton.Width + addParameterButton.Location.X + 5, addParameterButton.Location.Y);
+            deleteAllMeasuredParametersDataButton.Location = new System.Drawing.Point(addAllAllowedParameterTypesButton.Width + addAllAllowedParameterTypesButton.Location.X + 5, addAllAllowedParameterTypesButton.Location.Y);
+
             MeasuredParamsDataGridView.Location = new System.Drawing.Point(240, y+40);
             DeleteStructureButton.Location = new System.Drawing.Point(MeasuredParamsDataGridView.Location.X + MeasuredParamsDataGridView.Width-DeleteStructureButton.Width, y);
 
@@ -1488,6 +1519,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private ComboBox parameterTypesComboBox;
         private Button addParameterButton;
         private Button addAllAllowedParameterTypesButton;
+        private Button deleteAllMeasuredParametersDataButton;
 
         public Button DeleteStructureButton;
 

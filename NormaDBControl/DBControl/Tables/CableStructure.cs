@@ -437,6 +437,15 @@ namespace NormaMeasure.DBControl.Tables
             return StructureType.MeasuredParameterTypes.Select($"parameter_type_id = {parameter_type_id}").Length > 0 ;
         }
 
+        public bool HasMeasuredParameters
+        {
+            get
+            {
+                return MeasuredParameters.Rows.Count > 0;
+            }
+        }
+
+
         private CableStructureType structureType;
         private DBEntityTable measuredParameters;
         private Cable ownCable;
