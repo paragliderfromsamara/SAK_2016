@@ -935,6 +935,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 {
                     MeasuredParamsDataGridView.Rows.RemoveAt(0);
                 }
+                CableStructure.MeasuredParameters.AcceptChanges();
             }
         }
 
@@ -953,6 +954,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
                     if (e.ColumnIndex == MeasuredParamsDataGridView.Columns[deleteParameterTypeButtonColumn.Name].Index)
                     {
                         MeasuredParamsDataGridView.Rows.Remove(MeasuredParamsDataGridView.Rows[e.RowIndex]);
+                        CableStructure.MeasuredParameters.AcceptChanges();
                     }
                 }
             }
