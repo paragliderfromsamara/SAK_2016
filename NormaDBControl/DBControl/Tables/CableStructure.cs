@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NormaMeasure.DBControl.Tables
 {
     [DBTable("cable_structures", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "struktury_cab")]
-    class CableStructure : BaseEntity
+    public class CableStructure : BaseEntity
     {
         public CableStructure(DataRowBuilder builder) : base(builder)
         {
@@ -40,13 +40,29 @@ namespace NormaMeasure.DBControl.Tables
         {
             try
             {
-                return base.Save();
+                if (base.Save())
+                {
+                    return SaveMeasuredParameters();
+                }
+                else return false;
             }catch(DBEntityException ex)
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message, "Не удалось сохранить структуру", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
                 return false;
             }
 
+        }
+
+        protected bool SaveMeasuredParameters()
+        {
+            bool flag = true;
+            foreach(CableStructureMeasuredParameterData cdmpd in MeasuredParameters.Rows)
+            {
+                if (cdmpd.RowState == DataRowState.Deleted) continue;
+                cdmpd.CableStructureId = this.CableStructureId;
+                flag &= cdmpd.Save();
+            }
+            return flag;
         }
 
         protected override void ValidateActions()

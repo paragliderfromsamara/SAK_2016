@@ -1106,7 +1106,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             CableStructureMeasuredParameterData newPData = (CableStructureMeasuredParameterData)CableStructure.MeasuredParameters.NewRow();
             newPData.ParameterType = parameter_type;
-            newPData.CableStructure = CableStructure;
+            newPData.AssignedStructure = CableStructure;
             newPData.MeasuredParameterDataId = 0;
             newPData.LngthBringingTypeId = LengthBringingType.NoBringing;
             CableStructure.MeasuredParameters.Rows.Add(newPData);
@@ -1140,26 +1140,31 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void InitRowByParameterType(DataGridViewRow r)
         {
-            DataGridViewTextBoxCell cell = r.Cells[parameterTypeIdColumn.Name] as DataGridViewTextBoxCell;
+            try
+            {
+                DataGridViewTextBoxCell cell = r.Cells[parameterTypeIdColumn.Name] as DataGridViewTextBoxCell;
 
-            uint val = 0;
-            uint.TryParse($"{cell.Value}", out val);
+                uint val = 0;
+                uint.TryParse($"{cell.Value}", out val);
 
-            bool isFreqParams = MeasuredParameterType.IsItFreqParameter(val);
-            bool hasMaxValue = MeasuredParameterType.IsHasMaxLimit(val);
-            bool hasMinValue = MeasuredParameterType.IsHasMinLimit(val);
-            bool allowBringingLength = MeasuredParameterType.AllowBringingLength(val) && ((uint)r.Cells[lengthBringingTypeIdColumn.Name].Value == LengthBringingType.ForAnotherLengthInMeters);
+                bool isFreqParams = MeasuredParameterType.IsItFreqParameter(val);
+                bool hasMaxValue = MeasuredParameterType.IsHasMaxLimit(val);
+                bool hasMinValue = MeasuredParameterType.IsHasMinLimit(val);
+                bool allowBringingLength = MeasuredParameterType.AllowBringingLength(val) && ((uint)r.Cells[lengthBringingTypeIdColumn.Name].Value == LengthBringingType.ForAnotherLengthInMeters);
 
-            r.Cells[parameterTypeNameColumn.Name].ToolTipText = r.Cells[parameterTypeDescriptionColumn.Name].Value.ToString() ;
+                r.Cells[parameterTypeNameColumn.Name].ToolTipText = r.Cells[parameterTypeDescriptionColumn.Name].Value.ToString();
 
-            r.Cells[maxFreqColumn.Name].ReadOnly = r.Cells[stepFreqColumn.Name].ReadOnly = r.Cells[minFreqColumn.Name].ReadOnly = !isFreqParams;
-            r.Cells[minValueColumn.Name].ReadOnly = !hasMinValue;
-            r.Cells[maxValueColumn.Name].ReadOnly = !hasMaxValue;
-            r.Cells[percentColumn.Name].ReadOnly = false;
-            r.Cells[lengthBringingTypeIdColumn.Name].ReadOnly = false;
-            r.Cells[bringingLengthColumn.Name].ReadOnly = !allowBringingLength;
-            refreshReadOnlyCellColor(r);
-           // MessageBox.Show($"{isFreqParams}");
+                r.Cells[maxFreqColumn.Name].ReadOnly = r.Cells[stepFreqColumn.Name].ReadOnly = r.Cells[minFreqColumn.Name].ReadOnly = !isFreqParams;
+                r.Cells[minValueColumn.Name].ReadOnly = !hasMinValue;
+                r.Cells[maxValueColumn.Name].ReadOnly = !hasMaxValue;
+                r.Cells[percentColumn.Name].ReadOnly = false;
+                r.Cells[lengthBringingTypeIdColumn.Name].ReadOnly = false;
+                r.Cells[bringingLengthColumn.Name].ReadOnly = !allowBringingLength;
+                refreshReadOnlyCellColor(r);
+                // MessageBox.Show($"{isFreqParams}");
+            }
+            catch (NullReferenceException) { }
+
         }
 
 

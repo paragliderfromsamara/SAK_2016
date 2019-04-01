@@ -40,6 +40,24 @@ namespace NormaMeasure.DBControl.Tables
             return t;
         }
 
+        /// <summary>
+        /// Поиск по критерию 
+        /// </summary>
+        /// <param name="criteria">Аргумент должен содержать типичный для SQL синтаксис WHERE. При этом само слово Where можно не указывать</param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        protected static DBEntityTable find_by_criteria(string criteria, Type type, DBEntityTableMode init_table_mode)
+        {
+            DBEntityTable t = new DBEntityTable(type, init_table_mode);
+            if (!criteria.Contains("WHERE") && !criteria.Contains("where") && !String.IsNullOrWhiteSpace(criteria)) criteria = "WHERE " + criteria; //на случай, если ключевого слова WHERE нет
+            string query = $"{t.SelectQuery} {criteria}";
+            t.FillByQuery(query);
+            return t;
+        }
+
+
+
+
         protected static DBEntityTable get_all(Type type)
         {
             return find_by_criteria("", type);
@@ -144,6 +162,25 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
+        protected string makeWhereQueryForAllColumns()
+        {
+            string vals = String.Empty;
+            int wasAdded = 0;
+            string[] selfColumns = ((DBEntityTable)this.Table).getNotVirtualColumnNames();
+            foreach (DataColumn col in this.Table.Columns)
+            {
+                if (!selfColumns.Contains(col.ColumnName)) continue; //Проверяем принадлежит ли данная колонка данному типу
+                if (this.Table.PrimaryKey.Contains(col)) continue;
+                if (wasAdded > 0)
+                {
+                    vals += " AND ";
+                }
+                vals += $"{col.ColumnName} = {dbColumnValue(col)}";
+                wasAdded++;
+            }
+            return vals;
+        }
+
 
         /// <summary>
         /// Обновляет объект в БД 
@@ -186,6 +223,8 @@ namespace NormaMeasure.DBControl.Tables
                 }
             }else
             {
+                vals = makeWhereQueryForAllColumns();
+                /*
                 foreach (DataColumn col in this.Table.Columns)
                 {
                     if (wasAdded > 0)
@@ -195,6 +234,7 @@ namespace NormaMeasure.DBControl.Tables
                     vals += $"{col.ColumnName} = {dbColumnValue(col)}";
                     wasAdded++;
                 }
+                */
             }
             q += $" WHERE {vals}";
             return q;
@@ -214,8 +254,10 @@ namespace NormaMeasure.DBControl.Tables
             string vals = String.Empty;
             string keys = String.Empty;
             int wasAdded = 0;
+            string[] selfColumns = ((DBEntityTable)this.Table).getNotVirtualColumnNames();
             foreach (DataColumn col in this.Table.Columns)
             {
+                if (!selfColumns.Contains(col.ColumnName)) continue; //Проверяем принадлежит ли данная колонка данному типу
                 if (col.Table.PrimaryKey.Contains(col)) continue;
                 if (wasAdded > 0)
                 {

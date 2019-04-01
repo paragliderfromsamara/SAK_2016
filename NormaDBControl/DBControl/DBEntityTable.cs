@@ -12,21 +12,21 @@ namespace NormaMeasure.DBControl
     public class DBEntityTable : DataTable
     {
 
-        public DBEntityTable(Type entityType, bool build_columns) : base()
-        {
-            entity_type = entityType;
-            SetTableName();
-            if (build_columns) ConstructColumns();
-            InitDBControl();
-        }
 
         public DBEntityTable(Type entityType) : base()
         {
             entity_type = entityType;
             SetTableName();
-            ConstructColumns();
+            ConstructColumns(DBEntityTableMode.OwnAndVirtualColumns);
             InitDBControl();
-            
+        }
+
+        public DBEntityTable(Type entityType, DBEntityTableMode initMode) : base()
+        {
+            entity_type = entityType;
+            SetTableName();
+            ConstructColumns(initMode);
+            InitDBControl();
         }
 
         public long GetScalarValueFromDB(string query)
@@ -155,16 +155,21 @@ namespace NormaMeasure.DBControl
             return cols.ToArray();
         }
 
-        private void ConstructColumns()
+        private void ConstructColumns(DBEntityTableMode init_mode)
         {
+            if (init_mode == DBEntityTableMode.NoColumns) return; //Выскакиваем если режим без колонок
+
             SortedList<int, DataColumn> columns = new SortedList<int, DataColumn>();
             List<DataColumn> primaryKeys = new List<DataColumn>();
+
             foreach (PropertyInfo prop in entity_type.GetProperties())
             {
                 object[] columnAttributes = prop.GetCustomAttributes(typeof(DBColumnAttribute), true);
                 if (columnAttributes.Length == 1)
                 {
                     DBColumnAttribute dca = columnAttributes[0] as DBColumnAttribute;
+                    if (init_mode == DBEntityTableMode.OwnColumns && dca.IsVirtual) continue;
+                    else if (init_mode == DBEntityTableMode.VirtualColumns && !dca.IsVirtual) continue;
                     DataColumn dc = new DataColumn(dca.ColumnName, prop.PropertyType);
 
                     dc.AllowDBNull = dca.Nullable;
@@ -203,5 +208,13 @@ namespace NormaMeasure.DBControl
         public string InsertQuery;
         public string UpdateQuery;
         public string DeleteQuery;
+    }
+
+    public enum DBEntityTableMode
+    {
+        NoColumns,
+        VirtualColumns,
+        OwnColumns,
+        OwnAndVirtualColumns
     }
 }

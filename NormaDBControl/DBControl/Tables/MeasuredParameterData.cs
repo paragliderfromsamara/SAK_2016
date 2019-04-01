@@ -14,6 +14,51 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static MeasuredParameterData GetByParameters(CableStructureMeasuredParameterData cab_struct_data)
+        {
+            Random r = new Random();
+            MeasuredParameterData mpd = build_with_data(cab_struct_data);
+            //mpd.MeasureParameterDataId = (uint)r.Next();
+            mpd.find_or_create();
+            return mpd;
+
+        }
+
+        public static MeasuredParameterData build_with_data(CableStructureMeasuredParameterData cab_struct_data)
+        {
+            MeasuredParameterData data = build();
+            data.MinValue = cab_struct_data.MinValue;
+            data.MaxValue = cab_struct_data.MaxValue;
+            data.Percent = cab_struct_data.Percent;
+            data.ParameterTypeId = cab_struct_data.ParameterTypeId;
+            data.LengthBringing = cab_struct_data.LengthBringing;
+            data.LngthBringingTypeId = cab_struct_data.LngthBringingTypeId;
+            data.FrequencyRangeId = MeasuredParameterType.IsItFreqParameter(data.ParameterTypeId) ? FrequencyRange.get_by_frequencies(cab_struct_data.FrequencyMin, cab_struct_data.FrequencyStep, cab_struct_data.FrequencyMax).FrequencyRangeId : 1;
+            data.find_or_create();
+            return data;
+        }
+
+        protected void find_or_create()
+        {
+            DBEntityTable t = find_by_criteria(makeWhereQueryForAllColumns(), typeof(MeasuredParameterData));
+            if (t.Rows.Count > 0)
+            {
+                this.MeasureParameterDataId = (t.Rows[0] as MeasuredParameterData).MeasureParameterDataId;
+                //System.Windows.Forms.MessageBox.Show($"find_or_create() on measured_parameter_data {MeasureParameterDataId}");
+            }
+            else
+            {
+                this.Save();
+            }
+        }
+
+        public static MeasuredParameterData build()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterData));
+            MeasuredParameterData mpd = (MeasuredParameterData)t.NewRow();
+            return mpd;
+        }
+
 
         public static MeasuredParameterData find_by_id(uint id)
         {
@@ -80,11 +125,11 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         [DBColumn("length_bringing", ColumnDomain.Float, Order = 14, DefaultValue = 1000)]
-        public uint LengthBringing
+        public float LengthBringing
         {
             get
             {
-                return tryParseUInt("length_bringing");
+                return tryParseFloat("length_bringing");
             }
             set
             {

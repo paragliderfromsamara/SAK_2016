@@ -14,6 +14,29 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static FrequencyRange get_by_frequencies(uint min_freq, uint step_freq, uint max_freq)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(FrequencyRange));
+            FrequencyRange fr = t.NewRow() as FrequencyRange;
+            fr.FrequencyMin = min_freq;
+            fr.FrequencyMax = max_freq;
+            fr.FrequencyStep = step_freq;
+            fr.find_or_create();
+            return fr;
+        }
+
+        protected void find_or_create()
+        {
+            DBEntityTable t = find_by_criteria(makeWhereQueryForAllColumns(), typeof(FrequencyRange));
+            if (t.Rows.Count > 0)
+            {
+                this.FrequencyRangeId = (t.Rows[0] as FrequencyRange).FrequencyRangeId;
+            }else
+            {
+                this.Save();
+            }
+        }
+
         [DBColumn("frequency_range_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "FreqDiapInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint FrequencyRangeId
         {

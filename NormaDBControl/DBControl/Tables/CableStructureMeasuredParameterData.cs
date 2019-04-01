@@ -8,12 +8,35 @@ using System.Threading.Tasks;
 namespace NormaMeasure.DBControl.Tables
 {
     [DBTable("cab_struct_meas_params_data", "db_norma_sac")]
-    class CableStructureMeasuredParameterData : BaseEntity
+    public class CableStructureMeasuredParameterData : BaseEntity
     {
         public CableStructureMeasuredParameterData(DataRowBuilder builder) : base(builder)
         {
             this.Table.ColumnChanged += Table_ColumnChanged;
             this.Table.RowDeleted += Table_RowDeleted;
+        }
+
+
+        public override bool Save()
+        {
+            this.MeasuredParameterDataId = MeasuredParameterData.GetByParameters(this).MeasureParameterDataId;
+            this.find_or_create();
+            return true;
+            //return base.Save();
+        }
+
+        protected void find_or_create()
+        {
+
+            DBEntityTable t = find_by_criteria(makeWhereQueryForAllColumns() + " LIMIT 1",typeof(CableStructureMeasuredParameterData), DBEntityTableMode.OwnColumns);
+            
+            if (t.Rows.Count == 0)
+            {
+                this.AcceptChanges();
+                this.SetAdded();
+                //System.Windows.Forms.MessageBox.Show($"find_or_create() on CableStructureMeasuredParameterData {this.RowState}");
+                base.Save();
+            }
         }
 
         private void Table_RowDeleted(object sender, DataRowChangeEventArgs e)
@@ -126,7 +149,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("parameter_description", ColumnDomain.Tinytext, Order = 15, IsVirtual = true)]
+        [DBColumn("parameter_description", ColumnDomain.Tinytext, Nullable = true, Order = 15, IsVirtual = true)]
         public string ParameterDescription
         {
             get
@@ -159,7 +182,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("length_bringing", ColumnDomain.Float, Order = 17, DefaultValue = 1000, IsVirtual = true)]
+        [DBColumn("length_bringing", ColumnDomain.Float, Nullable = true, Order = 17, DefaultValue = 1000, IsVirtual = true)]
         public float LengthBringing
         {
             get
@@ -173,7 +196,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("min_value", ColumnDomain.Float, Order = 18, DefaultValue = float.MinValue, IsVirtual = true)]
+        [DBColumn("min_value", ColumnDomain.Float, Order = 18, Nullable = true, DefaultValue = float.MinValue, IsVirtual = true)]
         public float MinValue
         {
             get
@@ -186,7 +209,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("max_value", ColumnDomain.Float, Order = 19, DefaultValue = float.MaxValue, IsVirtual = true)]
+        [DBColumn("max_value", ColumnDomain.Float, Order = 19, Nullable = true, DefaultValue = float.MaxValue, IsVirtual = true)]
         public float MaxValue
         {
             get
@@ -199,7 +222,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("percent", ColumnDomain.Float, Order = 20, DefaultValue = 100, IsVirtual = true)]
+        [DBColumn("percent", ColumnDomain.Float, Order = 20, Nullable = true, DefaultValue = 100, IsVirtual = true)]
         public uint Percent
         {
             get
@@ -254,7 +277,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("frequency_range_id", ColumnDomain.UInt, Order = 24, DefaultValue = 0, IsVirtual = true)]
+        [DBColumn("frequency_range_id", ColumnDomain.UInt, Nullable = true, Order = 24, DefaultValue = 0, IsVirtual = true)]
         public uint FrequencyRangeId
         {
             get
@@ -340,7 +363,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             if (LngthBringingTypeId == LengthBringingType.ForBuildLength)
             {
-                LengthBringing = CableStructure.OwnCable.BuildLength;
+                LengthBringing = AssignedStructure.OwnCable.BuildLength;
             }else if (LngthBringingTypeId == LengthBringingType.ForOneKilometer)
             {
                 LengthBringing = 1000;
@@ -357,7 +380,7 @@ namespace NormaMeasure.DBControl.Tables
             }
             else if (LngthBringingTypeId == LengthBringingType.ForBuildLength)
             {
-                ResultMeasure = $"{ParameterMeasure}/{CableStructure.OwnCable.BuildLength}м";
+                ResultMeasure = $"{ParameterMeasure}/{AssignedStructure.OwnCable.BuildLength}м";
             }
             else if (LngthBringingTypeId == LengthBringingType.ForAnotherLengthInMeters)
             {
@@ -393,13 +416,13 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        public CableStructure CableStructure
+        public CableStructure AssignedStructure
         {
             get
             {
                 if (cableStructure == null)
                 {
-                    CableStructure = CableStructure.find_by_structure_id(CableStructureId);
+                    AssignedStructure = CableStructure.find_by_structure_id(CableStructureId);
                 }
                 return cableStructure;
             }

@@ -42,7 +42,7 @@ namespace NormaMeasure.DBControl.Tables
         /// <returns></returns>
         public static DBEntityTable get_cable_marks()
         {
-            DBEntityTable t = new DBEntityTable(typeof(Cable), false);
+            DBEntityTable t = new DBEntityTable(typeof(Cable), DBEntityTableMode.NoColumns);
             t.TableName = "cable_marks";
             t.Columns.Add("cable_mark");
             string q = $"{t.SelectQuery} WHERE is_draft = 0 AND is_deleted = 0 ORDER BY name ASC";
