@@ -95,9 +95,13 @@ namespace NormaMeasure.DBControl.Tables
             return s;
         }
 
-        public static DBEntityTable get_by_cable_id(uint cable_id)
+        public static DBEntityTable get_by_cable(Cable cable)
         {
-            return find_by_criteria($"cable_id = {cable_id}", typeof(CableStructure));
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
+            DBEntityTable cabStructures = find_by_criteria($"{t.PrimaryKey[0].ColumnName} = {t.PrimaryKey[0].ColumnName}", typeof(CableStructure));
+            foreach (CableStructure cs in cabStructures.Rows) cs.OwnCable = cable;
+
+            return cabStructures;
         }
 
         public static uint get_last_structure_id()
@@ -110,7 +114,7 @@ namespace NormaMeasure.DBControl.Tables
         public static CableStructure get_last_cable_structure()
         {
             DBEntityTable t = new DBEntityTable(typeof(CableStructure));
-            string select_cmd = $"{t.SelectQuery} ORDER BY cable_structure_id DESC LIMIT 1;";
+            string select_cmd = $"{t.SelectQuery} ORDER BY {t.PrimaryKey[0].ColumnName} DESC LIMIT 1;";
             t.FillByQuery(select_cmd);
             if (t.Rows.Count > 0) return (CableStructure)t.Rows[0];
             else return null;
@@ -394,7 +398,7 @@ namespace NormaMeasure.DBControl.Tables
                     }
                     else
                     {
-                        measuredParameters = CableStructureMeasuredParameterData.get_structure_measured_parameters(this.CableStructureId);
+                        measuredParameters = CableStructureMeasuredParameterData.get_structure_measured_parameters(this);
                     }
                     measuredParameters_was = measuredParameters.Clone() as DBEntityTable;
                 }
@@ -422,7 +426,8 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
-                return StructureType.MeasuredParameterTypes.Select($"parameter_type_id IN ({MeasuredParameterType.al}, {MeasuredParameterType.Ao}, {MeasuredParameterType.Az})").Count() > 0;
+                DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
+                return StructureType.MeasuredParameterTypes.Select($"{t.PrimaryKey[0].ColumnName} IN ({MeasuredParameterType.al}, {MeasuredParameterType.Ao}, {MeasuredParameterType.Az})").Count() > 0;
             }
         }
 
@@ -469,7 +474,8 @@ namespace NormaMeasure.DBControl.Tables
         /// <returns></returns>
         public bool IsAllowParameterType(uint parameter_type_id)
         {
-            return StructureType.MeasuredParameterTypes.Select($"parameter_type_id = {parameter_type_id}").Length > 0 ;
+            DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
+            return StructureType.MeasuredParameterTypes.Select($"{t.PrimaryKey[0].ColumnName} = {parameter_type_id}").Length > 0 ;
         }
 
         public bool HasMeasuredParameters

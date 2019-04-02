@@ -215,7 +215,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             {
                 foreach(CableStructureMeasuredParameterData pd in structure.MeasuredParameters.Rows)
                 {
-                    if (pd.LngthBringingTypeId == LengthBringingType.ForBuildLength) pd.LengthBringing = Cable.BuildLength;
+                    if (pd.LengthBringingTypeId == LengthBringingType.ForBuildLength) pd.LengthBringing = Cable.BuildLength;
                     
                 }
             }
@@ -1110,7 +1110,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             newPData.ParameterType = parameter_type;
             newPData.AssignedStructure = CableStructure;
             newPData.MeasuredParameterDataId = 0;
-            newPData.LngthBringingTypeId = LengthBringingType.NoBringing;
+            newPData.LengthBringingTypeId = LengthBringingType.NoBringing;
             CableStructure.MeasuredParameters.Rows.Add(newPData);
         } 
 
@@ -1127,7 +1127,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
             {
                 MeasuredParamsDataGridView.CommitEdit(DataGridViewDataErrorContexts.CurrentCellChange);
             }
-            //MessageBox.Show("MeasuredParamsDataGridView_CurrentCellDirtyStateChanged");
         }
 
         private void MeasuredParamsDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -1136,8 +1135,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
             string cngdColName = MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name;
             
             if (cngdColName == parameterTypeNameColumn.Name) InitRowByParameterType(cngRow);
-
-           // MessageBox.Show($"{e.RowIndex} {e.ColumnIndex} {MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name}");
         }
 
         private void InitRowByParameterType(DataGridViewRow r)
@@ -1163,7 +1160,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 r.Cells[lengthBringingTypeIdColumn.Name].ReadOnly = false;
                 r.Cells[bringingLengthColumn.Name].ReadOnly = !allowBringingLength;
                 refreshReadOnlyCellColor(r);
-                // MessageBox.Show($"{isFreqParams}");
+
             }
             catch (NullReferenceException) { }
 

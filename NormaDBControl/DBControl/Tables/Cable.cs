@@ -360,8 +360,7 @@ namespace NormaMeasure.DBControl.Tables
             {
                 if (cableStructures == null)
                 {
-                    cableStructures = CableStructure.get_by_cable_id(this.CableId);
-                    foreach (CableStructure s in cableStructures.Rows) s.OwnCable = this;
+                    cableStructures = CableStructure.get_by_cable(this);
                 }
                 return cableStructures;
             }

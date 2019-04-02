@@ -55,9 +55,25 @@ namespace NormaMeasure.DBControl.Tables
             return t;
         }
 
+        /// <summary>
+        /// Поиск по заданному запросу с ключевым словом SELECT
+        /// </summary>
+        /// <param name="select_query"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        protected static DBEntityTable find_by_query(string select_query, Type type)
+        {
+            DBEntityTable t = new DBEntityTable(type);
+            t.FillByQuery(select_query);
+            return t;
+        }
 
 
-
+        /// <summary>
+        /// Достаёт все записи из таблицы
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         protected static DBEntityTable get_all(Type type)
         {
             return find_by_criteria("", type);

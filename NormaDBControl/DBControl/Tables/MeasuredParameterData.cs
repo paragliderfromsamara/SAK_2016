@@ -31,7 +31,7 @@ namespace NormaMeasure.DBControl.Tables
             data.MinValue =  MeasuredParameterType.IsHasMinLimit(data.ParameterTypeId) ? cab_struct_data.MinValue : MinValueDefault;
             data.MaxValue = MeasuredParameterType.IsHasMaxLimit(data.ParameterTypeId) ? cab_struct_data.MaxValue : MaxValueDefault;
             data.Percent = cab_struct_data.Percent;
-            data.LngthBringingTypeId = cab_struct_data.LngthBringingTypeId;
+            data.LngthBringingTypeId = cab_struct_data.LengthBringingTypeId;
             data.LengthBringing =  LengthBringingType.NoBringing == data.LngthBringingTypeId ? LengthBringingDefault :  cab_struct_data.LengthBringing;
             data.FrequencyRangeId = MeasuredParameterType.IsItFreqParameter(data.ParameterTypeId) ? FrequencyRange.get_by_frequencies(cab_struct_data.FrequencyMin, cab_struct_data.FrequencyStep, cab_struct_data.FrequencyMax).FrequencyRangeId : 1;
             data.find_or_create();

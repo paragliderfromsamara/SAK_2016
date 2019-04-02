@@ -13,7 +13,6 @@ namespace NormaMeasure.DBControl.Tables
         public CableStructureMeasuredParameterData(DataRowBuilder builder) : base(builder)
         {
             this.Table.ColumnChanged += Table_ColumnChanged;
-            this.Table.RowDeleted += Table_RowDeleted;
         }
 
         protected void Validate()
@@ -30,7 +29,7 @@ namespace NormaMeasure.DBControl.Tables
 
         private void ValidateBringingLength()
         {
-            if (LngthBringingTypeId != LengthBringingType.NoBringing && LengthBringing <= 0) ErrorsList.Add("Длина приведения должна быть больше 0!");
+            if (LengthBringingTypeId != LengthBringingType.NoBringing && LengthBringing <= 0) ErrorsList.Add("Длина приведения должна быть больше 0!");
         }
 
         private void ValidatePercent()
@@ -74,10 +73,6 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        private void Table_RowDeleted(object sender, DataRowChangeEventArgs e)
-        {
-            //e.Row.Table.ColumnChanged -= Table_ColumnChanged;
-        }
 
         private void Table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
         {
@@ -123,9 +118,23 @@ namespace NormaMeasure.DBControl.Tables
             DBEntityTable t = new DBEntityTable(typeof(CableStructureMeasuredParameterData));
             DBEntityTable pt = new DBEntityTable(typeof(MeasuredParameterType));
             DBEntityTable lbt = new DBEntityTable(typeof(LengthBringingType));
-            string criteria = $"LEFT OUTER JOIN {mdt.TableName} USING(measured_parameter_data_id) LEFT OUTER JOIN {frt.TableName} USING(frequency_range_id) LEFT OUTER JOIN {pt.TableName} USING(parameter_type_id) LEFT OUTER JOIN {lbt.TableName} USING (length_bringing_type_id) WHERE cable_structure_id = {structure_id}";
-            return find_by_criteria(criteria, typeof(CableStructureMeasuredParameterData));
+            DBEntityTable cs = new DBEntityTable(typeof(CableStructure));
+            string selectQuery = t.SelectQuery.Replace("*", $"*, {pt.TableName}.parameter_measure AS result_measure");
+            selectQuery = $"{selectQuery} LEFT OUTER JOIN {mdt.TableName} USING({mdt.PrimaryKey[0].ColumnName}) LEFT OUTER JOIN {frt.TableName} USING({frt.PrimaryKey[0].ColumnName}) LEFT OUTER JOIN {pt.TableName} USING({pt.PrimaryKey[0].ColumnName}) LEFT OUTER JOIN {lbt.TableName} USING ({lbt.PrimaryKey[0].ColumnName}) WHERE {cs.PrimaryKey[0].ColumnName} = {structure_id}";
+            return find_by_query(selectQuery, typeof(CableStructureMeasuredParameterData));
         } 
+
+
+        public static DBEntityTable get_structure_measured_parameters(CableStructure cable_structure)
+        {
+            DBEntityTable t = get_structure_measured_parameters(cable_structure.CableStructureId);
+            foreach(CableStructureMeasuredParameterData md in t.Rows)
+            {
+                md.AssignedStructure = cable_structure;
+                md.AcceptChanges();
+            }
+            return t;
+        }
 
         [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, Nullable = false, ReferenceTo = "cable_structures(cable_structure_id) ON DELETE CASCADE")]
         public uint CableStructureId
@@ -214,7 +223,7 @@ namespace NormaMeasure.DBControl.Tables
 
 
         [DBColumn(" ", ColumnDomain.UInt, Order = 16, Nullable = true, DefaultValue =0, IsVirtual = true)]
-        public uint LngthBringingTypeId
+        public uint LengthBringingTypeId
         {
             get
             {
@@ -400,17 +409,17 @@ namespace NormaMeasure.DBControl.Tables
                 MaxValue = mpd.MaxValue;
                 Percent = mpd.Percent;
                 LengthBringing = mpd.LengthBringing;
-                LngthBringingTypeId = mpd.LngthBringingTypeId;
+                LengthBringingTypeId = mpd.LngthBringingTypeId;
                 measuredParameterData = mpd;
             }
         }
 
         private void SetBringingLengthByTypeId()
         {
-            if (LngthBringingTypeId == LengthBringingType.ForBuildLength)
+            if (LengthBringingTypeId == LengthBringingType.ForBuildLength)
             {
                 LengthBringing = AssignedStructure.OwnCable.BuildLength;
-            }else if (LngthBringingTypeId == LengthBringingType.ForOneKilometer)
+            }else if (LengthBringingTypeId == LengthBringingType.ForOneKilometer)
             {
                 LengthBringing = 1000;
             }
@@ -420,15 +429,15 @@ namespace NormaMeasure.DBControl.Tables
         {
             if (!MeasuredParameterType.AllowBringingLength(ParameterTypeId)) return;
 
-            if (LngthBringingTypeId == LengthBringingType.ForOneKilometer)
+            if (LengthBringingTypeId == LengthBringingType.ForOneKilometer)
             {
                 ResultMeasure = $"{ParameterMeasure}/км";
             }
-            else if (LngthBringingTypeId == LengthBringingType.ForBuildLength)
+            else if (LengthBringingTypeId == LengthBringingType.ForBuildLength)
             {
                 ResultMeasure = $"{ParameterMeasure}/{AssignedStructure.OwnCable.BuildLength}м";
             }
-            else if (LngthBringingTypeId == LengthBringingType.ForAnotherLengthInMeters)
+            else if (LengthBringingTypeId == LengthBringingType.ForAnotherLengthInMeters)
             {
                 ResultMeasure = $"{ParameterMeasure}/{LengthBringing}м";
             }
@@ -479,6 +488,7 @@ namespace NormaMeasure.DBControl.Tables
                 {
                     this.CableStructureId = cableStructure.CableStructureId;
                     if (ParameterType.ParameterTypeId == MeasuredParameterType.dR) ResultMeasure = cableStructure.DRFormula.ResultMeasure;
+                   // else RefreshResultMeasure();
                 }
             }
         }
@@ -518,7 +528,7 @@ namespace NormaMeasure.DBControl.Tables
             {
                if  (lengthBringingType == null)
                 {
-                    LengthBringingType t = LengthBringingType.find_by_lengt_bringing_type_id(LngthBringingTypeId);
+                    LengthBringingType t = LengthBringingType.find_by_lengt_bringing_type_id(LengthBringingTypeId);
                     if (t != null) LengthBringingType = t;
                 }
                 return lengthBringingType;
@@ -526,7 +536,7 @@ namespace NormaMeasure.DBControl.Tables
             set
             {
                 lengthBringingType = value;
-                LngthBringingTypeId = lengthBringingType.TypeId;
+                LengthBringingTypeId = lengthBringingType.TypeId;
                 LengthBringingName = lengthBringingType.BringingName;
                 MeasureLengthTitle = lengthBringingType.MeasureTitle;
             }
