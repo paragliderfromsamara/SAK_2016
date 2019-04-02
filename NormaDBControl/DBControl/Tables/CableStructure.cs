@@ -62,7 +62,7 @@ namespace NormaMeasure.DBControl.Tables
                 cdmpd.CableStructureId = this.CableStructureId;
                 flag &= cdmpd.Save();
             }
-            CableStructureMeasuredParameterData.DeleteUnusedFromStructure(this);// CleanUnusedParameterData();
+            CableStructureMeasuredParameterData.DeleteUnusedFromStructure(this);
             return flag;
         }
 

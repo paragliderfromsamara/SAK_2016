@@ -58,7 +58,6 @@ namespace NormaMeasure.DBControl.Tables
             this.MeasuredParameterDataId = MeasuredParameterData.GetByParameters(this).MeasureParameterDataId;
             this.find_or_create();
             return true;
-            //return base.Save();
         }
 
         protected void find_or_create()
@@ -82,7 +81,6 @@ namespace NormaMeasure.DBControl.Tables
 
         private void Table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
         {
-            //System.Windows.Forms.MessageBox.Show(e.Column.ColumnName);
             try
             {
                 switch (e.Column.ColumnName)
@@ -99,7 +97,6 @@ namespace NormaMeasure.DBControl.Tables
             catch(RowNotInTableException)
             {
                 e.Row.Table.ColumnChanged -= Table_ColumnChanged;
-                //System.Windows.Forms.MessageBox.Show("Table_ColumnChanged вызвано для удалённой строки");
             }
 
         }
