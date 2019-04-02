@@ -27,12 +27,14 @@ namespace NormaMeasure.DBControl.Tables
         public static MeasuredParameterData build_with_data(CableStructureMeasuredParameterData cab_struct_data)
         {
             MeasuredParameterData data = build();
-            data.MinValue = cab_struct_data.MinValue;
-            data.MaxValue = cab_struct_data.MaxValue;
-            data.Percent = cab_struct_data.Percent;
             data.ParameterTypeId = cab_struct_data.ParameterTypeId;
-            data.LengthBringing = cab_struct_data.LengthBringing;
+
+            data.MinValue =  MeasuredParameterType.IsHasMinLimit(data.ParameterTypeId) ? cab_struct_data.MinValue : MinValueDefault;
+            data.MaxValue = MeasuredParameterType.IsHasMaxLimit(data.ParameterTypeId) ? cab_struct_data.MaxValue : MaxValueDefault;
+            data.Percent = cab_struct_data.Percent;
             data.LngthBringingTypeId = cab_struct_data.LngthBringingTypeId;
+            data.LengthBringing =  LengthBringingType.NoBringing == data.LngthBringingTypeId ? LengthBringingDefault :  cab_struct_data.LengthBringing;
+
             data.FrequencyRangeId = MeasuredParameterType.IsItFreqParameter(data.ParameterTypeId) ? FrequencyRange.get_by_frequencies(cab_struct_data.FrequencyMin, cab_struct_data.FrequencyStep, cab_struct_data.FrequencyMax).FrequencyRangeId : 1;
             data.find_or_create();
             return data;
@@ -98,7 +100,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("frequency_range_id", ColumnDomain.UInt, Order = 12, OldDBColumnName = "FreqDiapInd", DefaultValue = 0, ReferenceTo = "frequency_ranges(frequency_range_id)")]
+        [DBColumn("frequency_range_id", ColumnDomain.UInt, Order = 12, OldDBColumnName = "FreqDiapInd", DefaultValue = 1, ReferenceTo = "frequency_ranges(frequency_range_id)")]
         public uint FrequencyRangeId
         {
             get
@@ -124,7 +126,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("length_bringing", ColumnDomain.Float, Order = 14, DefaultValue = 1000)]
+        [DBColumn("length_bringing", ColumnDomain.Float, Order = 14, DefaultValue = LengthBringingDefault)]
         public float LengthBringing
         {
             get
@@ -137,7 +139,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("min_value", ColumnDomain.Float, Order = 15, DefaultValue = float.MinValue)]
+        [DBColumn("min_value", ColumnDomain.Float, Order = 15, DefaultValue = MinValueDefault)]
         public float MinValue
         {
             get
@@ -150,7 +152,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("max_value", ColumnDomain.Float, Order = 16, DefaultValue = float.MaxValue)]
+        [DBColumn("max_value", ColumnDomain.Float, Order = 16, DefaultValue = MaxValueDefault)]
         public float MaxValue
         {
             get
@@ -163,7 +165,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("percent", ColumnDomain.Float, Order = 17, DefaultValue = 100)]
+        [DBColumn("percent", ColumnDomain.Float, Order = 17, DefaultValue = PercentDefault)]
         public uint Percent
         {
             get
@@ -176,7 +178,9 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-
-
+        public const float MinValueDefault = -1000000000;
+        public const float MaxValueDefault = 1000000000;
+        public const float LengthBringingDefault = 1000;
+        public const float PercentDefault = 100;
     }
 }

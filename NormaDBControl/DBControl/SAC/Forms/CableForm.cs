@@ -292,11 +292,11 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             //fillFormByCable();
             string s = String.Empty;
-            DBEntityTable t = new DBEntityTable(typeof(CableStructure));
-            foreach (CableStructure cs in cable.CableStructures.Rows)
-            {
-                s += $"{cs.DisplayedAmount};";
-            }
+            //DBEntityTable t = new DBEntityTable(typeof(CableStructure));
+            //foreach (CableStructure cs in cable.CableStructures.Rows)
+            //{
+                s += $"{float.MinValue};";
+            //}
             MessageBox.Show(s);
         }
 
