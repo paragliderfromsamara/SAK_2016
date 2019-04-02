@@ -127,15 +127,16 @@ namespace NormaMeasure.DBControl.Tables
             long status = 0;
             bool completed;
             DBEntityTable t = ((DBEntityTable)this.Table);
-            string lastIdQuery = makeSelectQuery("LAST_INSERT_ID()") + " LIMIT 1;";
+            string lastIdQuery = makeSelectQuery(t.PrimaryKey[0].ColumnName) + $" ORDER BY {t.PrimaryKey[0].ColumnName} DESC LIMIT 1;";
             string insertQuery = makeInsertQuery();
             t.OpenDB();
             prevId = t.GetScalarValueFromDB(lastIdQuery);
             status = t.GetScalarValueFromDB(insertQuery);
             afterId = t.GetScalarValueFromDB(lastIdQuery);
             t.CloseDB();
-            completed = (afterId > prevId) && status == 0;
+            //System.Windows.Forms.MessageBox.Show($"after {afterId} prev {prevId} status {status} {this.GetType().Name}");
 
+            completed = (afterId > prevId) && status == 0;
             if (completed) this[t.PrimaryKey[0].ColumnName] = (uint)afterId; 
 
             return afterId > prevId;

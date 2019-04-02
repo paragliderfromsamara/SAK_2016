@@ -34,7 +34,6 @@ namespace NormaMeasure.DBControl.Tables
             data.Percent = cab_struct_data.Percent;
             data.LngthBringingTypeId = cab_struct_data.LngthBringingTypeId;
             data.LengthBringing =  LengthBringingType.NoBringing == data.LngthBringingTypeId ? LengthBringingDefault :  cab_struct_data.LengthBringing;
-
             data.FrequencyRangeId = MeasuredParameterType.IsItFreqParameter(data.ParameterTypeId) ? FrequencyRange.get_by_frequencies(cab_struct_data.FrequencyMin, cab_struct_data.FrequencyStep, cab_struct_data.FrequencyMax).FrequencyRangeId : 1;
             data.find_or_create();
             return data;

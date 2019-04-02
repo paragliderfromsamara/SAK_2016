@@ -33,7 +33,7 @@ namespace NormaMeasure.DBControl.Tables
                 this.FrequencyRangeId = (t.Rows[0] as FrequencyRange).FrequencyRangeId;
             }else
             {
-                this.Save();
+                base.Save();
             }
         }
 

@@ -34,7 +34,6 @@ namespace NormaMeasure.DBControl.Tables
             {
                 this.AcceptChanges();
                 this.SetAdded();
-                //System.Windows.Forms.MessageBox.Show($"find_or_create() on CableStructureMeasuredParameterData {this.RowState}");
                 base.Save();
             }
         }
