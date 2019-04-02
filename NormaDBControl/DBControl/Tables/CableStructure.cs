@@ -62,6 +62,7 @@ namespace NormaMeasure.DBControl.Tables
                 cdmpd.CableStructureId = this.CableStructureId;
                 flag &= cdmpd.Save();
             }
+            CableStructureMeasuredParameterData.DeleteUnusedFromStructure(this);// CleanUnusedParameterData();
             return flag;
         }
 
@@ -380,6 +381,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        public DBEntityTable MeasuredParameters_was => measuredParameters_was;
         public DBEntityTable MeasuredParameters
         {
             get
@@ -394,8 +396,25 @@ namespace NormaMeasure.DBControl.Tables
                     {
                         measuredParameters = CableStructureMeasuredParameterData.get_structure_measured_parameters(this.CableStructureId);
                     }
+                    measuredParameters_was = measuredParameters.Clone() as DBEntityTable;
                 }
                 return measuredParameters;
+            }
+        }
+
+        /// <summary>
+        /// Достает MeasuredParameterDataId используемые текущей структурой
+        /// </summary>
+        public uint[] MeasuredParameters_ids
+        {
+            get
+            {
+                List<uint> idsList = new List<uint>();
+                foreach(CableStructureMeasuredParameterData csmpd in MeasuredParameters.Rows)
+                {
+                    idsList.Add(csmpd.MeasuredParameterDataId);
+                }
+                return idsList.ToArray();
             }
         }
 
@@ -464,6 +483,7 @@ namespace NormaMeasure.DBControl.Tables
 
         private CableStructureType structureType;
         private DBEntityTable measuredParameters;
+        private DBEntityTable measuredParameters_was;
         private Cable ownCable;
         private dRFormula drFormula;
 

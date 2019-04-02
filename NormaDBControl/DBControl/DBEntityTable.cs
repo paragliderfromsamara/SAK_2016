@@ -199,6 +199,13 @@ namespace NormaMeasure.DBControl
             return (DataRow)Activator.CreateInstance(GetRowType(), new object[1] { builder });
         }
 
+        public override DataTable Clone()
+        {
+            DBEntityTable tb = new DBEntityTable(EntityType);
+            tb.Merge(this);
+            return tb;
+        }
+
         Type EntityType => entity_type;
 
         private Type entity_type;

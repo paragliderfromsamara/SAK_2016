@@ -21,7 +21,6 @@ namespace NormaMeasure.DBControl.Tables
             //mpd.MeasureParameterDataId = (uint)r.Next();
             mpd.find_or_create();
             return mpd;
-
         }
 
         public static MeasuredParameterData build_with_data(CableStructureMeasuredParameterData cab_struct_data)

@@ -16,6 +16,42 @@ namespace NormaMeasure.DBControl.Tables
             this.Table.RowDeleted += Table_RowDeleted;
         }
 
+        protected void Validate()
+        {
+            ValidateMinMax();
+            ValidatePercent();
+            ValidateBringingLength();
+            ValidateFrequencyRanges();
+        }
+
+        private void ValidateFrequencyRanges()
+        {
+        }
+
+        private void ValidateBringingLength()
+        {
+            if (LngthBringingTypeId != LengthBringingType.NoBringing && LengthBringing <= 0) ErrorsList.Add("Длина приведения должна быть больше 0!");
+        }
+
+        private void ValidatePercent()
+        {
+            if (Percent < 0) ErrorsList.Add("Допустимый процент брака должен быть не меньше 0%!");
+            if (Percent > 100) ErrorsList.Add("Допустимый процент брака должен быть не больше 100%!");
+        }
+
+        private void ValidateMinMax()
+        {
+            bool hasMin, hasMax;
+            hasMax = MeasuredParameterType.IsHasMaxLimit(ParameterTypeId);
+            hasMin = MeasuredParameterType.IsHasMinLimit(ParameterTypeId);
+            if (hasMin && hasMax)
+            {
+                if (MaxValue < MinValue) ErrorsList.Add("Максимальное допустимое значение не должно быть меньше минимального!");
+            }
+            if (hasMin && MinValue < MeasuredParameterData.MinValueDefault) ErrorsList.Add( $"Минимальное допустимое значение не должно быть меньше {MeasuredParameterData.MinValueDefault}");
+            if (hasMax && MaxValue > MeasuredParameterData.MaxValueDefault) ErrorsList.Add($"Максимальное допустимое значение не должно быть больше {MeasuredParameterData.MaxValueDefault}");
+
+        }
 
         public override bool Save()
         {
@@ -35,6 +71,7 @@ namespace NormaMeasure.DBControl.Tables
                 this.AcceptChanges();
                 this.SetAdded();
                 base.Save();
+                this.AcceptChanges();
             }
         }
 
@@ -67,7 +104,20 @@ namespace NormaMeasure.DBControl.Tables
 
         }
 
-
+        public static void DeleteUnusedFromStructure(CableStructure cable_structure)
+        {
+            string ids = String.Empty;
+            DBEntityTable t = new DBEntityTable(typeof(CableStructureMeasuredParameterData));
+            DBEntityTable mpdTable = new DBEntityTable(typeof(MeasuredParameterData));
+            string query = t.DeleteQuery + $" WHERE {cable_structure.Table.PrimaryKey[0].ColumnName} = {cable_structure.CableStructureId}";
+            foreach (uint id in cable_structure.MeasuredParameters_ids)
+            {
+                if (!string.IsNullOrWhiteSpace(ids)) ids += ",";
+                ids += id.ToString();
+            }
+            if (!string.IsNullOrWhiteSpace(ids)) query += $" AND NOT {mpdTable.PrimaryKey[0].ColumnName} IN ({ids})";
+            t.WriteSingleQuery(query);
+        }
 
         public static DBEntityTable get_structure_measured_parameters(uint structure_id)
         {
