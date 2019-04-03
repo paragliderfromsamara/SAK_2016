@@ -257,7 +257,8 @@ namespace NormaMeasure.DBControl
             }
             catch (MySqlException ex)
             {
-                MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString() + " SQL команда: " + comm, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            
+                MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString() + " " + ex.Number.ToString() + " SQL команда: " + comm, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new DBException("");
             }
         }

@@ -29,13 +29,23 @@ namespace NormaMeasure.DBControl.Tables
             if (!IsNewRecord())
             {
                 delFlag = base.Destroy();
+                if (delFlag) DeleteAllMeasuredParametersData(); //Удаляем неиспользуемые измеряемые параметры
+                //System.Windows.Forms.MessageBox.Show(this.CableStructureId.ToString() + " ");
+
             }
-            if (delFlag == true)
+            if (delFlag)
             {
                 this.Delete();
             }
             return delFlag;
         }
+
+        private void DeleteAllMeasuredParametersData()
+        {
+            this.MeasuredParameters.Rows.Clear();
+            CableStructureMeasuredParameterData.DeleteUnusedFromStructure(this);
+        }
+
         public override bool Save()
         {
             try

@@ -128,6 +128,7 @@ namespace NormaMeasure.DBControl
         {
             int counter = 0;
             OpenDB();
+
             foreach(string q in queries)
             {
                 if (MySqlControl.RunNoQuery(q) == 0) counter++;
