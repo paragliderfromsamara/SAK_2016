@@ -246,6 +246,7 @@ namespace NormaMeasure.DBControl
         //------------------------------------------------------------------------------------------------------------------------
         public long RunNoQuery(string comm)
         {
+            repeat:
             try
             {
                 MC.CommandText = comm;
@@ -257,9 +258,18 @@ namespace NormaMeasure.DBControl
             }
             catch (MySqlException ex)
             {
-            
-                MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString() + " " + ex.Number.ToString() + " SQL команда: " + comm, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw new DBException("");
+                //MessageBox.Show($"{DBName} {ex.ErrorCode} {ex.Number}");
+                if (ex.Number == 1046 && ex.ErrorCode == -2147467259 && !string.IsNullOrWhiteSpace(DBName))
+                {
+                   // MessageBox.Show($"{DBName} was connected");
+                    MC.CommandText = "USE " + DBName;
+                    MC.ExecuteScalar();
+                    goto repeat;
+                }else
+                {
+                    MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString() + " " + ex.Number.ToString() + " SQL команда: " + comm, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw new DBException("");
+                }
             }
         }
         /// <summary>
