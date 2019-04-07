@@ -379,12 +379,25 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void AddCableStructureTabPage(CableStructure structure)
         {
-            CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
-            tp.DeleteStructureButton.Click += DeleteStructureButton_Click;
-            CableStructureTabs.TabPages.Add(tp);
-            CableStructureTabs.SelectedIndex = CableStructureTabs.TabPages.Count - 1;
-            CableStructureTabs.SelectedTab = tp;
-            CableStructureTabs.Refresh();
+            if (SaveSelectedStructure())
+            {
+                CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
+                tp.DeleteStructureButton.Click += DeleteStructureButton_Click;
+                CableStructureTabs.TabPages.Add(tp);
+                CableStructureTabs.SelectedTab = tp;
+            }
+
+        }
+
+        /// <summary>
+        /// Пытаемся сохранить текущую структуру
+        /// </summary>
+        /// <returns></returns>
+        private bool SaveSelectedStructure()
+        {
+            if (CableStructureTabs.TabCount == 0) return true;
+            CableStructureTabPage tp = CableStructureTabs.SelectedTab as CableStructureTabPage;
+            return !tp.CableStructure.Save();
         }
 
         private void DeleteStructureButton_Click(object sender, EventArgs e)
@@ -403,9 +416,15 @@ namespace NormaMeasure.DBControl.SAC.Forms
             }
             
         }
+
         #endregion
 
-
+        private void CableStructureTabs_Deselecting(object sender, TabControlCancelEventArgs e)
+        {
+            //CableStructureTabPage page = e.TabPage as CableStructureTabPage;
+            // MessageBox.Show(.CableStructure.StructureType.StructureTypeName);
+            e.Cancel = !SaveSelectedStructure();
+        }
     }
 
     class CableStructureTabPage : TabPage

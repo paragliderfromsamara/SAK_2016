@@ -361,6 +361,7 @@
             this.CableStructureTabs.SelectedIndex = 0;
             this.CableStructureTabs.Size = new System.Drawing.Size(860, 474);
             this.CableStructureTabs.TabIndex = 27;
+            this.CableStructureTabs.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.CableStructureTabs_Deselecting);
             // 
             // structureTypesComboBox
             // 
