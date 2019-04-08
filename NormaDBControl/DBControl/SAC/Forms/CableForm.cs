@@ -338,22 +338,26 @@ namespace NormaMeasure.DBControl.SAC.Forms
         #region Управление структурами кабеля
         private void addStructureButton_Click(object sender, EventArgs e)
         {
-            Random r = new Random();
-            uint strTypeId = (uint)structureTypesComboBox.SelectedValue;
-            CableStructure draft = (CableStructure)cable.CableStructures.NewRow();
-            draft.CableStructureId = (uint)r.Next(9000000, 10000000); //(cable.CableStructures.Rows.Count > 0) ? ((CableStructure)cable.CableStructures.Rows[cable.CableStructures.Rows.Count-1]).CableStructureId + 1 : CableStructure.get_last_structure_id() + 1;
-            draft.OwnCable = cable;
-            draft.StructureTypeId = strTypeId;
-            draft.LeadMaterialTypeId = 1;
-            draft.IsolationMaterialId = 1;
-            draft.LeadDiameter = 0.1f;
-            draft.WaveResistance = 0;
-            draft.LeadToLeadTestVoltage = 0;
-            draft.LeadToShieldTestVoltage = 0;
-            draft.DRBringingFormulaId = 1;
-            draft.DRFormulaId = 1;
-            cable.CableStructures.Rows.Add(draft);
-            AddCableStructureTabPage(draft);
+            if (SaveSelectedStructure())
+            {
+                Random r = new Random();
+                uint strTypeId = (uint)structureTypesComboBox.SelectedValue;
+                CableStructure draft = (CableStructure)cable.CableStructures.NewRow();
+                draft.CableStructureId = (uint)r.Next(9000000, 10000000); //(cable.CableStructures.Rows.Count > 0) ? ((CableStructure)cable.CableStructures.Rows[cable.CableStructures.Rows.Count-1]).CableStructureId + 1 : CableStructure.get_last_structure_id() + 1;
+                draft.OwnCable = cable;
+                draft.StructureTypeId = strTypeId;
+                draft.LeadMaterialTypeId = 1;
+                draft.IsolationMaterialId = 1;
+                draft.LeadDiameter = 0.1f;
+                draft.WaveResistance = 0;
+                draft.LeadToLeadTestVoltage = 0;
+                draft.LeadToShieldTestVoltage = 0;
+                draft.DRBringingFormulaId = 1;
+                draft.DRFormulaId = 1;
+                cable.CableStructures.Rows.Add(draft);
+                AddCableStructureTabPage(draft);
+            }
+
         }
         private bool saveCableStructures()
         {
@@ -379,14 +383,10 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void AddCableStructureTabPage(CableStructure structure)
         {
-            if (SaveSelectedStructure())
-            {
-                CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
-                tp.DeleteStructureButton.Click += DeleteStructureButton_Click;
-                CableStructureTabs.TabPages.Add(tp);
-                CableStructureTabs.SelectedTab = tp;
-            }
-
+            CableStructureTabPage tp = new CableStructureTabPage(structure, cableFormDataSet);
+            tp.DeleteStructureButton.Click += DeleteStructureButton_Click;
+            CableStructureTabs.TabPages.Add(tp);
+            CableStructureTabs.SelectedTab = tp;
         }
 
         /// <summary>
@@ -395,9 +395,17 @@ namespace NormaMeasure.DBControl.SAC.Forms
         /// <returns></returns>
         private bool SaveSelectedStructure()
         {
-            if (CableStructureTabs.TabCount == 0) return true;
-            CableStructureTabPage tp = CableStructureTabs.SelectedTab as CableStructureTabPage;
-            return !tp.CableStructure.Save();
+            try
+            {
+                if (CableStructureTabs.TabCount == 0) return true;
+                CableStructureTabPage tp = CableStructureTabs.SelectedTab as CableStructureTabPage;
+                return tp.CableStructure.Save();
+            }
+            catch(NullReferenceException)
+            {
+                return true;
+            }
+
         }
 
         private void DeleteStructureButton_Click(object sender, EventArgs e)

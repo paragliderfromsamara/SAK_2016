@@ -30,7 +30,7 @@ namespace NormaMeasure.DBControl.Tables
             {
                 delFlag = base.Destroy();
                 if (delFlag) DeleteAllMeasuredParametersData(); //Удаляем неиспользуемые измеряемые параметры
-                //System.Windows.Forms.MessageBox.Show(this.CableStructureId.ToString() + " ");
+                // System.Windows.Forms.MessageBox.Show(this.CableStructureId.ToString() + " ");
 
             }
             if (delFlag)
