@@ -26,7 +26,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             isNew = false;
             InitializeComponent();
-            MessageBox.Show(cable_id.ToString());
             cable = Cable.find_by_cable_id(cable_id);
             InitFormByAssignedCable();
 
