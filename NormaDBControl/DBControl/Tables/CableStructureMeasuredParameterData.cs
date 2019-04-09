@@ -293,12 +293,12 @@ namespace NormaMeasure.DBControl.Tables
 
         #region Парметры частоты 
 
-        [DBColumn("frequency_min", ColumnDomain.UInt, Order = 21, Nullable = true, IsVirtual = true)]
-        public uint FrequencyMin
+        [DBColumn("frequency_min", ColumnDomain.Float, Order = 21, Nullable = true, IsVirtual = true)]
+        public float FrequencyMin
         {
             get
             {
-                return tryParseUInt("frequency_min");
+                return tryParseFloat("frequency_min");
             }
             set
             {
@@ -306,12 +306,12 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("frequency_max", ColumnDomain.UInt, Order = 22,  Nullable = true, IsVirtual = true)]
-        public uint FrequencyMax
+        [DBColumn("frequency_max", ColumnDomain.Float, Order = 22,  Nullable = true, IsVirtual = true)]
+        public float FrequencyMax
         {
             get
             {
-                return tryParseUInt("frequency_max");
+                return tryParseFloat("frequency_max");
             }
             set
             {
@@ -319,12 +319,12 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("frequency_step", ColumnDomain.UInt, Order = 23, Nullable = true, IsVirtual = true)]
-        public uint FrequencyStep
+        [DBColumn("frequency_step", ColumnDomain.Float, Order = 23, Nullable = true, IsVirtual = true)]
+        public float FrequencyStep
         {
             get
             {
-                return tryParseUInt("frequency_step");
+                return tryParseFloat("frequency_step");
             }
             set
             {

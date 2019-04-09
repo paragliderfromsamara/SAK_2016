@@ -14,7 +14,7 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        public static FrequencyRange get_by_frequencies(uint min_freq, uint step_freq, uint max_freq)
+        public static FrequencyRange get_by_frequencies(float min_freq, float step_freq, float max_freq)
         {
             DBEntityTable t = new DBEntityTable(typeof(FrequencyRange));
             FrequencyRange fr = t.NewRow() as FrequencyRange;
@@ -50,12 +50,12 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("frequency_min", ColumnDomain.UInt, Order = 11, OldDBColumnName = "FreqMin", Nullable = true)]
-        public uint FrequencyMin
+        [DBColumn("frequency_min", ColumnDomain.Float, Order = 11, OldDBColumnName = "FreqMin", Nullable = true)]
+        public float FrequencyMin
         {
             get
             {
-                return tryParseUInt("frequency_min");
+                return tryParseFloat("frequency_min");
             }
             set
             {
@@ -63,12 +63,12 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("frequency_max", ColumnDomain.UInt, Order = 12, OldDBColumnName = "FreqMax", Nullable = true)]
-        public uint FrequencyMax
+        [DBColumn("frequency_max", ColumnDomain.Float, Order = 12, OldDBColumnName = "FreqMax", Nullable = true)]
+        public float FrequencyMax
         {
             get
             {
-                return tryParseUInt("frequency_max");
+                return tryParseFloat("frequency_max");
             }
             set
             {
@@ -76,12 +76,12 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("frequency_step", ColumnDomain.UInt, Order = 13, OldDBColumnName = "FreqStep", Nullable = true)]
-        public uint FrequencyStep
+        [DBColumn("frequency_step", ColumnDomain.Float, Order = 13, OldDBColumnName = "FreqStep", Nullable = true)]
+        public float FrequencyStep
         {
             get
             {
-                return tryParseUInt("frequency_step");
+                return tryParseFloat("frequency_step");
             }
             set
             {
