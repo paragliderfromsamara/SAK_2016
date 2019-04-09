@@ -519,8 +519,8 @@ namespace NormaMeasure.DBControl.Tables
         public void SetDefaultsByParameterType()
         {
             if (ParameterType.ParameterTypeId != MeasuredParameterType.dR) ResultMeasure = ParameterType.Measure;
-            if (ParameterType.HasMaxLimit) MaxValue = 102;
-            if (ParameterType.HasMinLimit) MinValue = 33;
+            if (ParameterType.HasMaxLimit) MaxValue = 10;
+            if (ParameterType.HasMinLimit) MinValue = 0;
             if (ParameterType.IsFreqParameter)
             {
                 FrequencyMin = 40;
