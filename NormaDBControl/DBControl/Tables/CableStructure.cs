@@ -108,7 +108,7 @@ namespace NormaMeasure.DBControl.Tables
         public static DBEntityTable get_by_cable(Cable cable)
         {
             DBEntityTable t = new DBEntityTable(typeof(Cable));
-            DBEntityTable cabStructures = find_by_criteria($"{t.PrimaryKey[0].ColumnName} = {t.PrimaryKey[0].ColumnName}", typeof(CableStructure));
+            DBEntityTable cabStructures = find_by_criteria($"{t.PrimaryKey[0].ColumnName} = {cable.CableId}", typeof(CableStructure));
             foreach (CableStructure cs in cabStructures.Rows) cs.OwnCable = cable;
 
             return cabStructures;
