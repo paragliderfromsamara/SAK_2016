@@ -921,6 +921,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             MeasuredParamsDataGridView.RowsAdded += MeasuredParamsDataGridView_RowsAdded;
             MeasuredParamsDataGridView.CellMouseClick += MeasuredParamsDataGridView_CellMouseClick;
             MeasuredParamsDataGridView.RowsRemoved += MeasuredParamsDataGridView_RowsRemoved;
+            MeasuredParamsDataGridView.DataError += MeasuredParamsDataGridView_DataError;
 
             parameterTypesComboBox = new ComboBox();
             parameterTypesComboBox.Parent = this;
@@ -951,6 +952,13 @@ namespace NormaMeasure.DBControl.SAC.Forms
             deleteAllMeasuredParametersDataButton.Enabled = false;
             deleteAllMeasuredParametersDataButton.Click += DeleteAllMeasuredParametersDataButton_Click;
 
+        }
+
+        private void MeasuredParamsDataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            DataGridViewCell c = MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            //c.Value = 0;
+            MessageBox.Show("Введённое значение должно иметь числовой формат");
         }
 
         private void DeleteAllMeasuredParametersDataButton_Click(object sender, EventArgs e)

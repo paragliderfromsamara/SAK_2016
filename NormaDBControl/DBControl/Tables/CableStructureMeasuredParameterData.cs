@@ -511,18 +511,24 @@ namespace NormaMeasure.DBControl.Tables
                     ParameterName = parameterType.ParameterName;
                     ParameterDescription = parameterType.Description;
                     ParameterMeasure = parameterType.Measure;
-                    if (parameterType.ParameterTypeId != MeasuredParameterType.dR) ResultMeasure = parameterType.Measure;
-                    if (parameterType.HasMaxLimit) MaxValue = 10;
-                    if (parameterType.HasMinLimit) MinValue = 1; 
-                    if (parameterType.IsFreqParameter)
-                    {
-                        FrequencyMin = 40;
-                        FrequencyMax = 1000;
-                        FrequencyStep = 8;
-                    }
+                    if (IsNewRecord()) SetDefaultsByParameterType();
                 }
             }
         }
+
+        public void SetDefaultsByParameterType()
+        {
+            if (ParameterType.ParameterTypeId != MeasuredParameterType.dR) ResultMeasure = ParameterType.Measure;
+            if (ParameterType.HasMaxLimit) MaxValue = 102;
+            if (ParameterType.HasMinLimit) MinValue = 33;
+            if (ParameterType.IsFreqParameter)
+            {
+                FrequencyMin = 40;
+                FrequencyMax = 1000;
+                FrequencyStep = 8;
+            }
+        }
+
 
         public LengthBringingType LengthBringingType
         {
