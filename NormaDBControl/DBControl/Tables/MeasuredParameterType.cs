@@ -122,6 +122,18 @@ namespace NormaMeasure.DBControl.Tables
         /// </summary>
         public bool IsFreqParameter => IsItFreqParameter(ParameterTypeId);
 
+        public bool IsIsolationResistance => IsItIsolationaResistance(ParameterTypeId);
+
+        public static bool IsItIsolationaResistance(uint parameterTypeId)
+        {
+            bool isIt = false;
+            isIt |= parameterTypeId == Risol1;
+            isIt |= parameterTypeId == Risol2;
+            isIt |= parameterTypeId == Risol3;
+            isIt |= parameterTypeId == Risol4;
+            return isIt;
+           
+        }
 
         public static bool IsHasMinLimit(uint parameter_type_id)
         {

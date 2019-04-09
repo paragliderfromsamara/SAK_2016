@@ -427,19 +427,21 @@ namespace NormaMeasure.DBControl.Tables
 
         private void RefreshResultMeasure()
         {
+            string delimiter = ParameterType.IsIsolationResistance ? "•" : "/";
             if (!MeasuredParameterType.AllowBringingLength(ParameterTypeId)) return;
+
 
             if (LengthBringingTypeId == LengthBringingType.ForOneKilometer)
             {
-                ResultMeasure = $"{ParameterMeasure}/км";
+                ResultMeasure = $"{ParameterMeasure}{delimiter}км";
             }
             else if (LengthBringingTypeId == LengthBringingType.ForBuildLength)
             {
-                ResultMeasure = $"{ParameterMeasure}/{AssignedStructure.OwnCable.BuildLength}м";
+                ResultMeasure = $"{ParameterMeasure}{delimiter}Lстр";
             }
             else if (LengthBringingTypeId == LengthBringingType.ForAnotherLengthInMeters)
             {
-                ResultMeasure = $"{ParameterMeasure}/{LengthBringing}м";
+                ResultMeasure = $"{ParameterMeasure}{delimiter}{LengthBringing}м";
             }
             else
             {
