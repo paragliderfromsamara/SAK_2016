@@ -88,5 +88,7 @@ namespace NormaMeasure.DBControl.Tables
                 this["frequency_step"] = value;
             }
         }
+
+        
     }
 }

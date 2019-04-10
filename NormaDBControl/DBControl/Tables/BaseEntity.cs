@@ -395,6 +395,7 @@ namespace NormaMeasure.DBControl.Tables
             return v;
         }
 
+        public string[] ErrorsAsArray => ErrorsList.ToArray();
 
         public new bool HasErrors()
         {
@@ -408,17 +409,35 @@ namespace NormaMeasure.DBControl.Tables
 
         public void ValidationException()
         {
-            string s = String.Empty;
-            int i = 0;
-            foreach(string msg in ErrorsList)
-            {
-                i++;
-                s += $"{i}) {msg}; \n";
-            }
-            throw new DBEntityException(s);
+            throw new DBEntityException(ErrorsAsNumericList);
         }
 
         protected List<string> ErrorsList = new List<string>();
+        public string ErrorsAsNumericList
+        {
+            get
+            {
+                string s = string.Empty;
+                for(int i=0; i<ErrorsList.Count; i++)
+                {
+                    s += $"{i+1}) {ErrorsList[i]}; \n";
+                }
+                return s;
+            }
+        }
+
+        public string ErrorsAsMarkerList
+        {
+            get
+            {
+                string s = string.Empty;
+                for (int i = 0; i < ErrorsList.Count; i++)
+                {
+                    s += $" • {ErrorsList[i]}; \n";
+                }
+                return s;
+            }
+        }
         public string EntityRuName => entityRuName;
         protected string entityRuName; 
 

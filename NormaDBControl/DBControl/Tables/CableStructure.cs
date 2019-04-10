@@ -80,6 +80,23 @@ namespace NormaMeasure.DBControl.Tables
         {
             CheckLeadDiameter();
             CheckElementsNumber();
+            CheckMeasuredParameters();
+        }
+
+        private void CheckMeasuredParameters()
+        {
+            foreach(CableStructureMeasuredParameterData mpd in MeasuredParameters.Rows)
+            {
+                if(!mpd.Validate())
+                {
+                    foreach(string e in mpd.ErrorsAsArray)
+                    {
+                        ErrorsList.Add($"{mpd.ParameterName}: {e};");
+                    }
+                    
+                }
+            }
+
         }
 
         private void CheckElementsNumber()

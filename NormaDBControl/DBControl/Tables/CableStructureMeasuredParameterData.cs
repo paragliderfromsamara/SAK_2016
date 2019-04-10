@@ -15,27 +15,37 @@ namespace NormaMeasure.DBControl.Tables
             this.Table.ColumnChanged += Table_ColumnChanged;
         }
 
-        protected void Validate()
+        public bool Validate()
         {
+            ClearErrors();
             ValidateMinMax();
             ValidatePercent();
             ValidateBringingLength();
-            ValidateFrequencyRanges();
+            if (ParameterType.IsFreqParameter) ValidateFrequencyRanges();
+            return ErrorsList.Count == 0;
         }
 
         private void ValidateFrequencyRanges()
         {
+            bool max_freq_is_upper_than_limit = FrequencyMax > 2000;
+            bool min_freq_is_lower_than_limit = FrequencyMin < 10 && FrequencyMin != 0.8;
+            if (max_freq_is_upper_than_limit || min_freq_is_lower_than_limit)
+            {
+               if (max_freq_is_upper_than_limit) ErrorsList.Add("Максимальная частота должна быть не больше 2000кГц !");
+               if (min_freq_is_lower_than_limit) ErrorsList.Add("Минимальная частота должна быть не меньше 10кГц!");
+            } 
+            else if (FrequencyMax < FrequencyMin && FrequencyMax != 0) ErrorsList.Add("Максимальная частота диапазона должна быть больше минимальной!");
         }
 
         private void ValidateBringingLength()
         {
             if (LengthBringingTypeId != LengthBringingType.NoBringing && LengthBringing <= 0) ErrorsList.Add("Длина приведения должна быть больше 0!");
-        }
+        } 
 
         private void ValidatePercent()
         {
-            if (Percent < 0) ErrorsList.Add("Допустимый процент брака должен быть не меньше 0%!");
-            if (Percent > 100) ErrorsList.Add("Допустимый процент брака должен быть не больше 100%!");
+            if (Percent < 0) ErrorsList.Add("Значение допустимого процента брака должно быть не меньше 0%!");
+            if (Percent > 100) ErrorsList.Add("Значение допустимого процента брака должно быть не больше 100%!");
         }
 
         private void ValidateMinMax()
