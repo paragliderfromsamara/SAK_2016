@@ -1009,8 +1009,8 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
             MeasuredParamsDataGridView.Columns[parameterTypeMeasureColumn.Name].DisplayIndex = 6;
             MeasuredParamsDataGridView.Columns[minFreqColumn.Name].DisplayIndex = 7;
-            MeasuredParamsDataGridView.Columns[stepFreqColumn.Name].DisplayIndex = 8;
-            MeasuredParamsDataGridView.Columns[maxFreqColumn.Name].DisplayIndex = 9;
+            MeasuredParamsDataGridView.Columns[maxFreqColumn.Name].DisplayIndex = 8;
+            MeasuredParamsDataGridView.Columns[stepFreqColumn.Name].DisplayIndex = 9;
             MeasuredParamsDataGridView.Columns[deleteParameterTypeButtonColumn.Name].DisplayIndex = 10;
 
             MeasuredParamsDataGridView.Columns[freqRangeIdColumn.Name].DisplayIndex = 11;
