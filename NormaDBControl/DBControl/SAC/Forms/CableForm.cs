@@ -983,7 +983,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             try
             {
-                DataGridViewCell cell = MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                DataGridViewCell cell = MeasuredParamsDataGr idView.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 if (e.Button == MouseButtons.Left)
                 {
                     if (e.ColumnIndex == MeasuredParamsDataGridView.Columns[deleteParameterTypeButtonColumn.Name].Index)
@@ -1149,27 +1149,12 @@ namespace NormaMeasure.DBControl.SAC.Forms
             CableStructure.MeasuredParameters.Rows.Add(newPData);
         } 
 
-        private void MeasuredParamsDataGridView_CurrentCellChanged(object sender, EventArgs e)
-        {
-            DataGridViewRow cngRow = MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.CurrentCell.RowIndex];
-            string cngdColName = cngRow.Cells[MeasuredParamsDataGridView.CurrentCell.ColumnIndex].OwningColumn.Name;
-            if (cngdColName == parameterTypeNameColumn.Name) InitRowByParameterType(cngRow);
-        }
-
         private void MeasuredParamsDataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (MeasuredParamsDataGridView.IsCurrentCellDirty)
             {
                 MeasuredParamsDataGridView.CommitEdit(DataGridViewDataErrorContexts.CurrentCellChange);
             }
-        }
-
-        private void MeasuredParamsDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            DataGridViewRow cngRow = MeasuredParamsDataGridView.Rows[e.RowIndex];
-            string cngdColName = MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name;
-            
-            if (cngdColName == parameterTypeNameColumn.Name) InitRowByParameterType(cngRow);
         }
 
         private void InitRowByParameterType(DataGridViewRow r)
@@ -1187,13 +1172,18 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 bool allowBringingLength = MeasuredParameterType.AllowBringingLength(val) && ((uint)r.Cells[lengthBringingTypeIdColumn.Name].Value == LengthBringingType.ForAnotherLengthInMeters);
 
                 r.Cells[parameterTypeNameColumn.Name].ToolTipText = r.Cells[parameterTypeDescriptionColumn.Name].Value.ToString();
-
                 r.Cells[maxFreqColumn.Name].ReadOnly = r.Cells[stepFreqColumn.Name].ReadOnly = r.Cells[minFreqColumn.Name].ReadOnly = !isFreqParams;
+                if (isFreqParams)
+                {
+                    r.Cells[stepFreqColumn.Name].ReadOnly = r.Cells[maxFreqColumn.Name].ReadOnly = ((float)r.Cells[minFreqColumn.Name].Value == 1.0 || (float)r.Cells[minFreqColumn.Name].Value == 0.8);
+                }
+
                 r.Cells[minValueColumn.Name].ReadOnly = !hasMinValue;
                 r.Cells[maxValueColumn.Name].ReadOnly = !hasMaxValue;
                 r.Cells[percentColumn.Name].ReadOnly = false;
                 r.Cells[lengthBringingTypeIdColumn.Name].ReadOnly = false;
                 r.Cells[bringingLengthColumn.Name].ReadOnly = !allowBringingLength;
+
                 refreshReadOnlyCellColor(r);
 
             }

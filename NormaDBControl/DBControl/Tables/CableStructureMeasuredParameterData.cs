@@ -27,14 +27,13 @@ namespace NormaMeasure.DBControl.Tables
 
         private void ValidateFrequencyRanges()
         {
+            bool minFreqIsTooLow = FrequencyMin < 0.8 && FrequencyMin < 10;
             bool max_freq_is_upper_than_limit = FrequencyMax > 2000;
             bool min_freq_is_lower_than_limit = FrequencyMin < 10 && FrequencyMin != 0.8;
-            if (max_freq_is_upper_than_limit || min_freq_is_lower_than_limit)
+            if (minFreqIsTooLow)
             {
-               if (max_freq_is_upper_than_limit) ErrorsList.Add("Максимальная частота должна быть не больше 2000кГц !");
-               if (min_freq_is_lower_than_limit) ErrorsList.Add("Минимальная частота должна быть не меньше 10кГц!");
-            } 
-            else if (FrequencyMax < FrequencyMin && FrequencyMax != 0) ErrorsList.Add("Максимальная частота диапазона должна быть больше минимальной!");
+                ErrorsList.Add("Введите корректную минимальную частоту измерения. \n(Допустимые для ввода частоты: 0.8кГц, от 10 до 2000 кГц)");
+            } else if (FrequencyMax < FrequencyMin && FrequencyMax != 0) ErrorsList.Add("Максимальная частота диапазона должна быть больше минимальной!");
         }
 
         private void ValidateBringingLength()
@@ -97,6 +96,15 @@ namespace NormaMeasure.DBControl.Tables
                     case "length_bringing":
                         RefreshResultMeasure();
                         break;
+                    case "frequency_max":
+                        if (!skipFreqChangeEvent) CheckMaxFreqChange();
+                        break;
+                    case "frequency_min":
+                        if (!skipFreqChangeEvent) CheckFreqMinChange();
+                        break;
+                    case "frequency_step":
+                        if (!skipFreqChangeEvent) CheckFreqStepChange();
+                        break;
                 }
             }
             catch(RowNotInTableException)
@@ -105,6 +113,52 @@ namespace NormaMeasure.DBControl.Tables
             }
 
         }
+
+        private void CheckMaxFreqChange()
+        {
+            float newFrStep = Math.Abs(FrequencyMax - FrequencyMin);
+            float min = FrequencyMin;
+            float max = FrequencyMax;
+            float step = FrequencyStep;
+            string msg = String.Empty;
+            skipFreqChangeEvent = true; //Чтобы не произошло зацикливания при срабатывании
+            if (min == max && max >= 10)
+            {
+                FrequencyStep = 0;
+                FrequencyMax = 0;
+            }
+            else if (min >= 10 && (step == 0 || step > newFrStep) && max > min)
+            {
+                FrequencyStep = newFrStep;
+            }
+            skipFreqChangeEvent = false;
+        }
+
+        private void CheckFreqStepChange()
+        {
+
+        }
+        private void CheckFreqMinChange()
+        {
+            float newFrStep = Math.Abs(FrequencyMax - FrequencyMin);
+            float min = FrequencyMin;
+            float max = FrequencyMax;
+            float step = FrequencyStep;
+            string msg = String.Empty;
+            skipFreqChangeEvent = true; //Чтобы не произошло зацикливания при срабатывании
+            if ((min == 0.8 || min == 1) || (min == max && max >= 10))
+            {
+                FrequencyStep = 0;
+                FrequencyMax = 0;
+            }
+            else if (min >= 10 && (step == 0 || step > newFrStep) && max > min)
+            {
+                FrequencyStep = newFrStep;
+            }
+            //FrequencyStep = newFrStep;
+            skipFreqChangeEvent = false;
+        }
+
 
         public static void DeleteUnusedFromStructure(CableStructure cable_structure)
         {
@@ -533,9 +587,9 @@ namespace NormaMeasure.DBControl.Tables
             if (ParameterType.HasMinLimit) MinValue = 0;
             if (ParameterType.IsFreqParameter)
             {
-                FrequencyMin = 40;
-                FrequencyMax = 1000;
-                FrequencyStep = 8;
+                FrequencyMin = 0;
+                FrequencyMax = 0;
+                FrequencyStep = 0;
             }
         }
 
@@ -564,5 +618,6 @@ namespace NormaMeasure.DBControl.Tables
         private CableStructure cableStructure;
         private MeasuredParameterType parameterType;
         private LengthBringingType lengthBringingType;
+        private bool skipFreqChangeEvent = false;
     }
 }
