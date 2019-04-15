@@ -366,9 +366,19 @@ namespace NormaMeasure.DBControl.SAC.Forms
             foreach (CableStructure s in cable.CableStructures.Rows)
             {
                if (s.RowState != DataRowState.Deleted) isSave &= s.Save();
+               
             }
-
             return isSave;
+        }
+
+        public void RefreshStructuresName()
+        {
+            string strName = String.Empty;
+            foreach(CableStructure s in cable.CableStructures.Rows)
+            {
+                if (s.RowState != DataRowState.Deleted) strName += $"{s.StructureTitle} ";
+            }
+            CableStructures_input.Text = strName;
         }
 
         private void InitStructuresTabControl()
@@ -378,9 +388,20 @@ namespace NormaMeasure.DBControl.SAC.Forms
             {
                 if (s.RowState != DataRowState.Deleted || s.RowState == DataRowState.Detached)AddCableStructureTabPage(s);
             }
+            cable.CableStructures.RowDeleted += CableStructures_RowDeleted;
+            cable.CableStructures.RowChanged += CableStructures_RowChanged;
            // CableStructureTabs.re
         }
 
+        private void CableStructures_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            RefreshStructuresName();
+        }
+
+        private void CableStructures_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            RefreshStructuresName();
+        }
 
         private void AddCableStructureTabPage(CableStructure structure)
         {
