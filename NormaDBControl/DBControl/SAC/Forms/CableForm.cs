@@ -291,14 +291,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //fillFormByCable();
-            string s = String.Empty;
-            //DBEntityTable t = new DBEntityTable(typeof(CableStructure));
-            //foreach (CableStructure cs in cable.CableStructures.Rows)
-            //{
-                s += $"{float.MinValue};";
-            //}
-            MessageBox.Show(s);
+            this.Close();
         }
 
         private void CodeKCH_input_TextChanged(object sender, EventArgs e)
@@ -1195,10 +1188,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
                 r.Cells[parameterTypeNameColumn.Name].ToolTipText = r.Cells[parameterTypeDescriptionColumn.Name].Value.ToString();
                 r.Cells[maxFreqColumn.Name].ReadOnly = r.Cells[stepFreqColumn.Name].ReadOnly = r.Cells[minFreqColumn.Name].ReadOnly = !isFreqParams;
-                if (isFreqParams)
-                {
-                    r.Cells[stepFreqColumn.Name].ReadOnly = r.Cells[maxFreqColumn.Name].ReadOnly = ((float)r.Cells[minFreqColumn.Name].Value == 1.0 || (float)r.Cells[minFreqColumn.Name].Value == 0.8);
-                }
+
 
                 r.Cells[minValueColumn.Name].ReadOnly = !hasMinValue;
                 r.Cells[maxValueColumn.Name].ReadOnly = !hasMaxValue;
