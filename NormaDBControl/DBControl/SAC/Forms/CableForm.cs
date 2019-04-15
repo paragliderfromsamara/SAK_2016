@@ -104,6 +104,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             cableFormDataSet.Tables.Add(Cable.get_cable_marks());
             CableMark_input.DisplayMember = CableMark_input.ValueMember = "cable_marks.cable_mark";
             CableMark_input.Refresh();
+            if (String.IsNullOrWhiteSpace(Cable.Name)) Cable.Name = CableMark_input.SelectedText;
         }
 
 
@@ -155,7 +156,6 @@ namespace NormaMeasure.DBControl.SAC.Forms
         private bool checkSelectedDocument()
         {
             bool f = true;
-
             string docName = cable.QADocument.ShortName;
             if (cable.QADocument.RowState == DataRowState.Added)
             {
@@ -165,6 +165,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 {
                     tableName = reloadDocumentsDS();
                     DocumentNumber_input.Refresh();
+                    cable.DocumentId = cable.QADocument.DocumentId;
                     foreach (DataRow r in cableFormDataSet.Tables[tableName].Rows)
                     {
                         Document d = (Document)r;
