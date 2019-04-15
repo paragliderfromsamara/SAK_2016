@@ -52,6 +52,31 @@ namespace NormaMeasure.DBControl.Tables
             return t;    
         }
 
+        protected override void ValidateActions()
+        {
+            base.ValidateActions();
+            if (IsDraft) return;
+            validateCableMark();
+            validateNormDoc();
+            validateStructuresCount();
+            
+        }
+
+        private void validateStructuresCount()
+        {
+            if (CableStructures.Rows.Count == 0) ErrorsList.Add("Не было добавлено ни одной структуры кабеля");
+        }
+
+        private void validateNormDoc()
+        {
+            if (DocumentId == 0 && this.QADocument == null) ErrorsList.Add("Не выбран нормативный документ");
+        }
+
+        private void validateCableMark()
+        {
+            if (String.IsNullOrWhiteSpace(Name)) ErrorsList.Add("Не выбрана марка кабеля");
+        }
+
         public static Cable[] get_all_as_array()
         {
             DBEntityTable t = get_all_as_table();
@@ -105,8 +130,15 @@ namespace NormaMeasure.DBControl.Tables
 
         public override bool Save()
         {
-            
-            return base.Save();
+            try
+            {
+                return base.Save();
+            }
+            catch (DBEntityException ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Не удалось сохранить кабель...", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                return false;
+            }
         }
 
 
@@ -330,26 +362,6 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-       // private bool SaveDocumentIfItNeccessary()
-       // {
-       //     if (this.documentIsValid())
-       // }
-
-        private bool documentWasAssigned()
-        {
-            if (DocumentId == 0 && this.QADocument == null)
-            {
-                NoDocumentException();
-                return false;
-            }
-            else return true;
-            
-        }
-
-        private void NoDocumentException()
-        {
-            throw new DBEntityException("Не был выбран норматив для кабеля");
-        }
 
 
         protected Document cableNormDocument;

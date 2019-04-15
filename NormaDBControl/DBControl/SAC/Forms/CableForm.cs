@@ -983,7 +983,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
         {
             try
             {
-                DataGridViewCell cell = MeasuredParamsDataGr idView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                DataGridViewCell cell = MeasuredParamsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 if (e.Button == MouseButtons.Left)
                 {
                     if (e.ColumnIndex == MeasuredParamsDataGridView.Columns[deleteParameterTypeButtonColumn.Name].Index)
