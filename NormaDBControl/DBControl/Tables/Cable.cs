@@ -16,7 +16,7 @@ namespace NormaMeasure.DBControl.Tables
         public static DBEntityTable get_all_including_docs()
         {
             DBEntityTable docsTable = new DBEntityTable(typeof(Document));
-            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE is_deleted = 0 AND is_draft = 0";
+            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE is_deleted = 0 AND is_draft = 0 AND is_test_cable = 0";
             return find_by_criteria(select_cmd, typeof(Cable));
         }
 
@@ -50,6 +50,12 @@ namespace NormaMeasure.DBControl.Tables
             q = q.Replace("*", selectString);
             t.FillByQuery(q);
             return t;    
+        }
+
+        public override bool Destroy()
+        {
+            this.IsDeleted = true;
+            return this.Save();
         }
 
         protected override void ValidateActions()
@@ -325,7 +331,20 @@ namespace NormaMeasure.DBControl.Tables
             }
             set
             {
-                this["is_delete"] = value;
+                this["is_deleted"] = value;
+            }
+        }
+
+        [DBColumn("is_test_cable", ColumnDomain.Boolean, Order = 24, DefaultValue = false)]
+        public bool IsTestCable
+        {
+            get
+            {
+                return tryParseBoolean("is_test_cable", false);
+            }
+            set
+            {
+                this["is_test_cable"] = value;
             }
         }
 

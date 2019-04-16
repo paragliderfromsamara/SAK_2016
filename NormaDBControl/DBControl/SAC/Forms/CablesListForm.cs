@@ -17,7 +17,19 @@ namespace NormaMeasure.DBControl.SAC.Forms
         public CablesListForm()
         {
             InitializeComponent();
+            InitCablesList();
             FillCablesList();
+        }
+
+        private void InitCablesList()
+        {
+            cablesList.RowTemplate.ContextMenuStrip.Opening += ContextMenuStrip_Opening;
+        }
+
+        private void ContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            e.Cancel = cablesList.SelectedRows.Count == 0;
+            createFromToolStripMenuItem.Enabled = cablesList.SelectedRows.Count == 1;
         }
 
         private void FillCablesList()
@@ -132,6 +144,27 @@ namespace NormaMeasure.DBControl.SAC.Forms
             }
         }
 
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string msg = cablesList.SelectedRows.Count == 1 ? "выбранный кабель" : "выбранные кабели";
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
+            DialogResult r = MessageBox.Show($"Вы уверены, что хотите удалить {msg}?", "Вопрос...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (r == DialogResult.Yes)
+            {
+                foreach(DataGridViewRow row in cablesList.SelectedRows)
+                {
+                    uint cabId = 0;
+                    if (uint.TryParse(row.Cells[t.PrimaryKey[0].ColumnName].Value.ToString(), out cabId))
+                    {
+                        Cable cab = Cable.find_by_cable_id(cabId);
+                        cab.Destroy();
+                    }
+                    
+                }
+            }
+            FillCablesList();
+            //if (r == DialogResult.OK) 
 
+        }
     }
 }
