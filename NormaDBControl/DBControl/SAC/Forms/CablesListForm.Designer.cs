@@ -108,7 +108,7 @@
             this.createFromToolStripMenuItem,
             this.deleteToolStripMenuItem});
             this.cableListContextMenu.Name = "cableListContextMenu";
-            this.cableListContextMenu.Size = new System.Drawing.Size(155, 70);
+            this.cableListContextMenu.Size = new System.Drawing.Size(155, 92);
             // 
             // editToolStripMenuItem
             // 
@@ -122,6 +122,7 @@
             this.createFromToolStripMenuItem.Name = "createFromToolStripMenuItem";
             this.createFromToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.createFromToolStripMenuItem.Text = "Создать из...";
+            this.createFromToolStripMenuItem.Click += new System.EventHandler(this.createFromToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 

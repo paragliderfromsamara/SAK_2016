@@ -28,8 +28,18 @@ namespace NormaMeasure.DBControl.SAC.Forms
             InitializeComponent();
             cable = Cable.find_by_cable_id(cable_id);
             InitFormByAssignedCable();
-
         }
+
+        public CableForm(Cable copiedCable)
+        {
+            isNew = true;
+            InitializeComponent();
+            cable = Cable.GetCableCopy(copiedCable);
+            
+            InitFormByAssignedCable();
+        }
+
+
 
         private void InitFormByAssignedCable()
         {
@@ -336,19 +346,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             {
                 Random r = new Random();
                 uint strTypeId = (uint)structureTypesComboBox.SelectedValue;
-                CableStructure draft = (CableStructure)cable.CableStructures.NewRow();
-                draft.CableStructureId = (uint)r.Next(9000000, 10000000); //(cable.CableStructures.Rows.Count > 0) ? ((CableStructure)cable.CableStructures.Rows[cable.CableStructures.Rows.Count-1]).CableStructureId + 1 : CableStructure.get_last_structure_id() + 1;
-                draft.OwnCable = cable;
-                draft.StructureTypeId = strTypeId;
-                draft.LeadMaterialTypeId = 1;
-                draft.IsolationMaterialId = 1;
-                draft.LeadDiameter = 0.1f;
-                draft.WaveResistance = 0;
-                draft.LeadToLeadTestVoltage = 0;
-                draft.LeadToShieldTestVoltage = 0;
-                draft.DRBringingFormulaId = 1;
-                draft.DRFormulaId = 1;
-                cable.CableStructures.Rows.Add(draft);
+                CableStructure draft = cable.AddCableStructure(strTypeId);
                 AddCableStructureTabPage(draft);
             }
 

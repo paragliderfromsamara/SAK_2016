@@ -89,6 +89,29 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 cableForms.Add(cable_form);
                 cable_form.FormClosed += new FormClosedEventHandler(cableForm_Closed);
             }
+        }
+
+        private void CreateCopyFromCableForm(uint cable_id)
+        {
+            Cable copiedCable = Cable.find_by_cable_id(cable_id);
+            if (copiedCable != null)
+            {
+                CableForm cable_form = new CableForm(copiedCable);
+
+                if (cable_form.Cable == null)
+                {
+                    cable_form.Close();
+                    MessageBox.Show($"Кабель с id = {cable_id} не найден");
+                }
+                else
+                {
+                    cable_form.MdiParent = this.MdiParent;
+                    cable_form.Show();
+                    cableForms.Add(cable_form);
+                    cable_form.FormClosed += new FormClosedEventHandler(cableForm_Closed);
+                }
+            }
+
 
         }
 
@@ -164,6 +187,19 @@ namespace NormaMeasure.DBControl.SAC.Forms
             }
             FillCablesList();
             //if (r == DialogResult.OK) 
+
+        }
+
+        private void createFromToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
+            uint cableId = 0;
+
+            if (uint.TryParse(cablesList.SelectedRows[0].Cells[t.PrimaryKey[0].ColumnName].Value.ToString(), out cableId))
+            {
+                CreateCopyFromCableForm(cableId);
+            }
+            
 
         }
     }

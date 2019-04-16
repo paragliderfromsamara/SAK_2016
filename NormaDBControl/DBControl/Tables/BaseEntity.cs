@@ -341,6 +341,20 @@ namespace NormaMeasure.DBControl.Tables
 
 
         /// <summary>
+        /// Копирует все колонки сущности из аргумента
+        /// </summary>
+        /// <param name="entity"></param>
+        public void FillColsFromEntity(BaseEntity entity)
+        {
+            DBEntityTable t = entity.Table as DBEntityTable;
+            foreach(DataColumn col in t.Columns)
+            {
+                 if (t.PrimaryKey.Contains(col)) continue;
+                 this[col.ColumnName] = entity[col.ColumnName];
+            }
+        }
+
+        /// <summary>
         /// Формирует строку запроса Select по критерию Where
         /// </summary>
         /// <param name="where"></param>

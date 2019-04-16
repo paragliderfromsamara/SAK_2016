@@ -22,6 +22,25 @@ namespace NormaMeasure.DBControl.Tables
             return structure;
         }
 
+        public void CopyFromStructure(CableStructure structure)
+        {
+            this.FillColsFromEntity(structure);
+            this.AddMeasuredParameterDataFromStructure(structure);
+        }
+
+        private void AddMeasuredParameterDataFromStructure(CableStructure structure)
+        {
+            this.MeasuredParameters.Clear();
+            foreach(CableStructureMeasuredParameterData data in structure.MeasuredParameters.Rows)
+            {
+                CableStructureMeasuredParameterData dta = (CableStructureMeasuredParameterData)MeasuredParameters.NewRow();
+                dta.FillColsFromEntity(data);
+                dta.CableStructureId = this.CableStructureId;
+                
+                this.MeasuredParameters.Rows.Add(dta);
+            }
+
+        }
 
         public override bool Destroy()
         {
@@ -157,7 +176,9 @@ namespace NormaMeasure.DBControl.Tables
             }
             set
             {
+                if (CableStructureId != value) structureType = null;
                 this["cable_structure_id"] = value;
+
             }
         }
 

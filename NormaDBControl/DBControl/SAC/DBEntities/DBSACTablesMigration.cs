@@ -314,11 +314,11 @@ namespace NormaMeasure.DBControl.SAC
         {
             string[][] data =
 {
-                new string[] {"1", "Жила", "1", "1,2,4,5,6,7,10"},
-                new string[] {"2", "Пара", "2","1,2,3,4,5,6,7,8,9,10,11,15,16,17"},
-                new string[] {"3", "Тройка", "3","1,2,4,5,6,7,10"},
-                new string[] {"4", "Четвёрка", "4", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17" },
-                new string[] {"5", "Высокочастотная четвёрка", "4", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17" }
+                new string[] {$"{CableStructureType.Lead}", "Жила", "1", "1,2,4,5,6,7,10"},
+                new string[] {$"{CableStructureType.Pair}", "Пара", "2","1,2,3,4,5,6,7,8,9,10,11,15,16,17"},
+                new string[] {$"{CableStructureType.Triplet}", "Тройка", "3","1,2,4,5,6,7,10"},
+                new string[] {$"{CableStructureType.Quattro}", "Четвёрка", "4", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17" },
+                new string[] {$"{CableStructureType.HightFreqQuattro}", "Высокочастотная четвёрка", "4", "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17" }
             };
 
             foreach (string[] rData in data)

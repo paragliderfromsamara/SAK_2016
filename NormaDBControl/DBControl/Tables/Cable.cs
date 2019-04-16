@@ -29,6 +29,65 @@ namespace NormaMeasure.DBControl.Tables
                 return null;
             }
         }
+
+        public static Cable GetCableCopy(Cable copiedCable)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
+            Cable draft = GetDraft();
+            draft.FillColsFromEntity(copiedCable);
+            draft.AddStructuresFromCable(copiedCable);
+            draft.IsDraft = true;
+            //System.Windows.Forms.MessageBox.Show(draft.CableId.ToString());
+            return draft;
+        }
+
+        private void AddStructuresFromCable(Cable copiedCable)
+        {
+            ClearStructures();
+            foreach (CableStructure cabStruct in copiedCable.CableStructures.Rows)
+            {
+                AddCableStructure(cabStruct);
+            }
+        }
+
+        private void ClearStructures()
+        {
+            if (this.CableStructures.Rows.Count == 0) return;
+            foreach(CableStructure s in this.CableStructures.Rows) s.Destroy();
+            this.CableStructures.Rows.Clear();
+        }
+
+        public CableStructure AddCableStructure(uint cable_structure_type_id)
+        {
+            Random r = new Random();
+            CableStructure draft = (CableStructure)CableStructures.NewRow();
+            //draft.CableStructureId = (uint)r.Next(9000000, 10000000); //(cable.CableStructures.Rows.Count > 0) ? ((CableStructure)cable.CableStructures.Rows[cable.CableStructures.Rows.Count-1]).CableStructureId + 1 : CableStructure.get_last_structure_id() + 1;
+            draft.StructureTypeId = cable_structure_type_id;
+            draft.OwnCable = this;
+            draft.LeadMaterialTypeId = 1;
+            draft.IsolationMaterialId = 1;
+            draft.LeadDiameter = 0.1f;
+            draft.WaveResistance = 0;
+            draft.LeadToLeadTestVoltage = 0;
+            draft.LeadToShieldTestVoltage = 0;
+            draft.DRBringingFormulaId = 1;
+            draft.DRFormulaId = 1;
+            draft.Create();
+            CableStructures.Rows.Add(draft);
+            draft.AcceptChanges();
+            return draft;
+        }
+
+        public CableStructure AddCableStructure(CableStructure copied_structure)
+        {
+            CableStructure structure = AddCableStructure(copied_structure.StructureTypeId);
+            structure.CopyFromStructure(copied_structure);
+            structure.OwnCable = this;
+            structure.Save();
+            return structure;
+        }
+
+
         public static Cable build()
         {
             DBEntityTable t = new DBEntityTable(typeof(Cable));
@@ -45,7 +104,7 @@ namespace NormaMeasure.DBControl.Tables
             DBEntityTable t = new DBEntityTable(typeof(Cable), DBEntityTableMode.NoColumns);
             t.TableName = "cable_marks";
             t.Columns.Add("cable_mark");
-            string q = $"{t.SelectQuery} WHERE is_draft = 0 AND is_deleted = 0 ORDER BY name ASC";
+            string q = $"{t.SelectQuery} WHERE is_draft = 0 AND is_deleted = 0 AND is_test_cable = 0 ORDER BY name ASC";
             string selectString = " DISTINCT name AS cable_mark ";
             q = q.Replace("*", selectString);
             t.FillByQuery(q);
@@ -61,7 +120,7 @@ namespace NormaMeasure.DBControl.Tables
         protected override void ValidateActions()
         {
             base.ValidateActions();
-            if (IsDraft) return;
+            if (IsDraft || IsDeleted || IsTestCable) return;
             validateCableMark();
             validateNormDoc();
             validateStructuresCount();
@@ -96,7 +155,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            return find_by_criteria("is_draft = 0 AND is_deleted = 0", typeof(Cable));
+            return find_by_criteria("is_draft = 0 AND is_deleted = 0 is_test_cable = 0", typeof(Cable));
         }
 
         /// <summary>
@@ -107,6 +166,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             Cable draft = findDraft();
             if (draft == null) draft = createDraft();
+            else draft.ClearStructures();
             return draft;
         }
 
@@ -118,7 +178,12 @@ namespace NormaMeasure.DBControl.Tables
         private static Cable findDraft()
         {
             DBEntityTable t = find_by_criteria("is_draft = 1", typeof(Cable));
-            if (t.Rows.Count != 0) return (Cable)t.Rows[0];
+            if (t.Rows.Count != 0)
+            {
+                Cable draft = (Cable)t.Rows[0];
+                return draft;
+            }
+
             else return null;
         }
 
