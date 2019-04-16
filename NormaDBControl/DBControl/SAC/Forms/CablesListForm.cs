@@ -100,7 +100,25 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void cableForm_Closed(object sender, EventArgs e)
         {
-            cableForms.Remove(sender as CableForm);
+            CableForm f = sender as CableForm;
+            uint cabId = f.Cable.CableId;
+            cableForms.Remove(f);
+            FillCablesList();
+            selectRowWithCableId(cabId);
+        }
+
+        private void selectRowWithCableId(uint cabId)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable));
+            cablesList.ClearSelection();
+            foreach (DataGridViewRow r in cablesList.Rows)
+            {
+                if((uint)r.Cells[t.PrimaryKey[0].ColumnName].Value == cabId)
+                {
+                    r.Selected = true;
+                    return;
+                }
+            }
         }
 
         private void editCableToolStripMenuItem_Click(object sender, EventArgs e)

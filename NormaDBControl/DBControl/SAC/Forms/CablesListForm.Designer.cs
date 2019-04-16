@@ -32,10 +32,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.newCableFormButton = new System.Windows.Forms.Button();
             this.cablesList = new System.Windows.Forms.DataGridView();
-            this.cableListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.редактироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.создатьИзToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.удалитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cable_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CabName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CabNameStruct = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,6 +48,10 @@
             this.u_cover = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.linear_mass = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.full_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cableListContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.редактироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.создатьИзToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.удалитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.cablesList)).BeginInit();
             this.cableListContextMenu.SuspendLayout();
             this.SuspendLayout();
@@ -98,34 +98,6 @@
             this.cablesList.Size = new System.Drawing.Size(943, 390);
             this.cablesList.StandardTab = true;
             this.cablesList.TabIndex = 2;
-            // 
-            // cableListContextMenu
-            // 
-            this.cableListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.редактироватьToolStripMenuItem,
-            this.создатьИзToolStripMenuItem,
-            this.удалитьToolStripMenuItem});
-            this.cableListContextMenu.Name = "cableListContextMenu";
-            this.cableListContextMenu.Size = new System.Drawing.Size(155, 70);
-            // 
-            // редактироватьToolStripMenuItem
-            // 
-            this.редактироватьToolStripMenuItem.Name = "редактироватьToolStripMenuItem";
-            this.редактироватьToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.редактироватьToolStripMenuItem.Text = "Редактировать";
-            this.редактироватьToolStripMenuItem.Click += new System.EventHandler(this.editCableToolStripMenuItem_Click);
-            // 
-            // создатьИзToolStripMenuItem
-            // 
-            this.создатьИзToolStripMenuItem.Name = "создатьИзToolStripMenuItem";
-            this.создатьИзToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.создатьИзToolStripMenuItem.Text = "Создать из...";
-            // 
-            // удалитьToolStripMenuItem
-            // 
-            this.удалитьToolStripMenuItem.Name = "удалитьToolStripMenuItem";
-            this.удалитьToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.удалитьToolStripMenuItem.Text = "Удалить";
             // 
             // cable_id
             // 
@@ -239,6 +211,34 @@
             this.full_name.Name = "full_name";
             this.full_name.Visible = false;
             // 
+            // cableListContextMenu
+            // 
+            this.cableListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.редактироватьToolStripMenuItem,
+            this.создатьИзToolStripMenuItem,
+            this.удалитьToolStripMenuItem});
+            this.cableListContextMenu.Name = "cableListContextMenu";
+            this.cableListContextMenu.Size = new System.Drawing.Size(155, 70);
+            // 
+            // редактироватьToolStripMenuItem
+            // 
+            this.редактироватьToolStripMenuItem.Name = "редактироватьToolStripMenuItem";
+            this.редактироватьToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.редактироватьToolStripMenuItem.Text = "Редактировать";
+            this.редактироватьToolStripMenuItem.Click += new System.EventHandler(this.editCableToolStripMenuItem_Click);
+            // 
+            // создатьИзToolStripMenuItem
+            // 
+            this.создатьИзToolStripMenuItem.Name = "создатьИзToolStripMenuItem";
+            this.создатьИзToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.создатьИзToolStripMenuItem.Text = "Создать из...";
+            // 
+            // удалитьToolStripMenuItem
+            // 
+            this.удалитьToolStripMenuItem.Name = "удалитьToolStripMenuItem";
+            this.удалитьToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.удалитьToolStripMenuItem.Text = "Удалить";
+            // 
             // CablesListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -247,7 +247,7 @@
             this.Controls.Add(this.cablesList);
             this.Controls.Add(this.newCableFormButton);
             this.Name = "CablesListForm";
-            this.Text = "CablesListForm";
+            this.Text = "База кабелей";
             ((System.ComponentModel.ISupportInitialize)(this.cablesList)).EndInit();
             this.cableListContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
