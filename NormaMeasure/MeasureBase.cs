@@ -75,8 +75,8 @@ namespace NormaMeasure.MeasureControl
             {
                 MeasureThread.Abort();
                 MeasureThread = null;
+                OverallMeasureTimer.Dispose();
             }
-
             isStarted = false;
             OnMeasureStop(this);
         }

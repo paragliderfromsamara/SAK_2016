@@ -59,7 +59,7 @@
             // 
             // measureControlButton
             // 
-            this.measureControlButton.Location = new System.Drawing.Point(12, 341);
+            this.measureControlButton.Location = new System.Drawing.Point(12, 352);
             this.measureControlButton.Name = "measureControlButton";
             this.measureControlButton.Size = new System.Drawing.Size(111, 28);
             this.measureControlButton.TabIndex = 0;
@@ -241,7 +241,7 @@
             0,
             0});
             this.numericUpDown2.Minimum = new decimal(new int[] {
-            5,
+            50,
             0,
             0,
             0});
