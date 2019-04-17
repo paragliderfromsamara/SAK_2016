@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Threading;
 using NormaMeasure.DBControl.SAC.DBEntities;
 using NormaMeasure.DBControl.SAC.Forms;
+using NormaMeasure.MeasureControl.SACMeasureForms;
 
 namespace NormaMeasure.SAC_APP
 {
@@ -20,7 +21,10 @@ namespace NormaMeasure.SAC_APP
         public string user_type = "undefined";
         public string user_id = "undefined";
         public manualTestForm manualTestForm = null;
-        public autoTestForm autoTestForm = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        public SACCableTestForm CableTestForm = null;
         public dbTestsForm dbTestForm = null;
 
         private UsersForm usersForm;
@@ -40,10 +44,10 @@ namespace NormaMeasure.SAC_APP
         //Управление дочерними окнами
         private void autoTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            autoTestForm = new autoTestForm(this);
-            autoTestForm.MdiParent = this;
+            CableTestForm = new SACCableTestForm();
+            CableTestForm.MdiParent = this;
             switchMenuStripItems(false);
-            autoTestForm.Show();
+            CableTestForm.Show();
         }
 
         private void manualTestToolStripMenuItem_Click(object sender, EventArgs e)

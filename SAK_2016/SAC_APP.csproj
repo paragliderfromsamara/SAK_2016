@@ -112,12 +112,6 @@
     </Compile>
     <Compile Include="ServiceFunctions.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="testsForm\autoTestForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="testsForm\autoTestForm.Designer.cs">
-      <DependentUpon>autoTestForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="dbForms\dbTestsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,9 +151,6 @@
     <Compile Include="userControl\UserGrants.cs" />
     <EmbeddedResource Include="dbForms\oldDbDataMigration.resx">
       <DependentUpon>oldDbDataMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="testsForm\autoTestForm.resx">
-      <DependentUpon>autoTestForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>
@@ -233,6 +224,10 @@
     <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">
       <Project>{6828dd40-1488-46d6-8f70-db5ef38c463f}</Project>
       <Name>NormaDBControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NormaMeasure\NormaMeasureControl.csproj">
+      <Project>{2c7874cb-f87f-4e63-89c3-b45ffb6a245e}</Project>
+      <Name>NormaMeasureControl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
