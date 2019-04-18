@@ -37,16 +37,16 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("frequency_range_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "FreqDiapInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
+        [DBColumn(FreqRangeId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "FreqDiapInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint FrequencyRangeId
         {
             get
             {
-                return tryParseUInt("frequency_range_id");
+                return tryParseUInt(FreqRangeId_ColumnName);
             }
             set
             {
-                this["frequency_range_id"] = value;
+                this[FreqRangeId_ColumnName] = value;
             }
         }
 
@@ -88,6 +88,8 @@ namespace NormaMeasure.DBControl.Tables
                 this["frequency_step"] = value;
             }
         }
+
+        public const string FreqRangeId_ColumnName = "frequency_range_id";
 
         
     }

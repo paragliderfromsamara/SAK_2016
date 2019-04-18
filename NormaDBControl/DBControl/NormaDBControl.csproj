@@ -79,6 +79,9 @@
     <Compile Include="Tables\CableStructure.cs" />
     <Compile Include="Tables\CableStructureMeasuredParameterData.cs" />
     <Compile Include="Tables\CableStructureType.cs" />
+    <Compile Include="Tables\CableTest.cs" />
+    <Compile Include="Tables\CableTestResult.cs" />
+    <Compile Include="Tables\CableTestStatus.cs" />
     <Compile Include="Tables\Document.cs" />
     <Compile Include="SAC\Forms\CableForm.cs">
       <SubType>Form</SubType>

@@ -167,32 +167,32 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktInd", IsPrimaryKey = true, Nullable = true, AutoIncrement = true)]
+        [DBColumn(StructureId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktInd", IsPrimaryKey = true, Nullable = true, AutoIncrement = true)]
         public uint CableStructureId
         {
             get
             {
-                return tryParseUInt("cable_structure_id");
+                return tryParseUInt(StructureId_ColumnName);
             }
             set
             {
                 if (CableStructureId != value) structureType = null;
-                this["cable_structure_id"] = value;
+                this[StructureId_ColumnName] = value;
 
             }
         }
 
 
-        [DBColumn("cable_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false, ReferenceTo = "cables(cable_id) ON DELETE CASCADE")]
+        [DBColumn(Cable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false, ReferenceTo = "cables(cable_id) ON DELETE CASCADE")]
         public uint CableId
         {
             get
             {
-                return tryParseUInt("cable_id");
+                return tryParseUInt(Cable.CableId_ColumnName);
             }
             set
             {
-                this["cable_id"] = value;
+                this[Cable.CableId_ColumnName] = value;
             }
         }
 
@@ -540,6 +540,8 @@ namespace NormaMeasure.DBControl.Tables
         private DBEntityTable measuredParameters_was;
         private Cable ownCable;
         private dRFormula drFormula;
+
+        public const string StructureId_ColumnName = "cable_structure_id";
 
     }
 

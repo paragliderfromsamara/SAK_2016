@@ -25,19 +25,19 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table_for_cable_structure_form(string ids)
         {
-            return find_by_criteria($"WHERE parameter_type_id > 1 AND parameter_type_id < 18 AND parameter_type_id IN ({ids})", typeof(MeasuredParameterType));
+            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < 18 AND {ParameterTypeId_ColumnName} IN ({ids})", typeof(MeasuredParameterType));
         }
 
-        [DBColumn("parameter_type_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "ParamInd", Nullable = false, IsPrimaryKey = true)]
+        [DBColumn(ParameterTypeId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "ParamInd", Nullable = false, IsPrimaryKey = true)]
         public uint ParameterTypeId
         {
             get
             {
-                return tryParseUInt("parameter_type_id");
+                return tryParseUInt(ParameterTypeId_ColumnName);
             }
             set
             {
-                this["parameter_type_id"] = value;
+                this[ParameterTypeId_ColumnName] = value;
             }
         }
 
@@ -188,6 +188,8 @@ namespace NormaMeasure.DBControl.Tables
         public static uint K11 => 22;
         public static uint K12 => 23;
 
+
+        public const string ParameterTypeId_ColumnName = "parameter_type_id";
     }
 
 

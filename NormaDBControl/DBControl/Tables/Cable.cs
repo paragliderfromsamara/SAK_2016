@@ -218,16 +218,16 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        [DBColumn("cable_id", ColumnDomain.UInt, Order = 10, OldDBColumnName ="CabNum", Nullable =true, IsPrimaryKey = true, AutoIncrement = true)]
+        [DBColumn(CableId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName ="CabNum", Nullable =true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint CableId
         {
             get
             {
-                return tryParseUInt("cable_id");
+                return tryParseUInt(CableId_ColumnName);
             }
             set
             {
-                this["cable_id"] = value;
+                this[CableId_ColumnName] = value;
             }
         }
 
@@ -463,8 +463,18 @@ namespace NormaMeasure.DBControl.Tables
         }
         protected DBEntityTable cableStructures;
 
-        
 
+        public const string CableId_ColumnName = "cable_id";
 
     }
+
+    /*
+    [DBTable("tested_cables", "db_norma_sac", OldDBName = "bd_isp", OldTableName = "cables")]
+    public class TestedCable : Cable
+    {
+        public TestedCable(DataRowBuilder builder) : base(builder)
+        {
+        }
+    }
+    */
 }

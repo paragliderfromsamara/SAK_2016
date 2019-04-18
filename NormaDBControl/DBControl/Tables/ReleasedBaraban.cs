@@ -14,16 +14,16 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        [DBColumn("baraban_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "BarabanInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
+        [DBColumn(BarabanId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "BarabanInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint BarabanId
         {
             get
             {
-                return tryParseUInt("baraban_id");
+                return tryParseUInt(BarabanId_ColumnName);
             }
             set
             {
-                this["baraban_id"] = value;
+                this[BarabanId_ColumnName] = value;
             }
         }
 
@@ -52,5 +52,8 @@ namespace NormaMeasure.DBControl.Tables
                 this["serial_number"] = value;
             }
         }
+
+
+        public const string BarabanId_ColumnName = "baraban_id";
     }
 }

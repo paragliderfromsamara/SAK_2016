@@ -53,7 +53,10 @@ namespace NormaMeasure.DBControl.SAC
                typeof(LeadTestStatus),
                typeof(FrequencyRange),
                typeof(MeasuredParameterData),
-               typeof(CableStructureMeasuredParameterData)
+               typeof(CableStructureMeasuredParameterData),
+               typeof(CableTestStatus),
+               typeof(CableTest),
+               typeof(CableTestResult)
             };
             /*
             _tablesList = new DBTable[] 
@@ -80,8 +83,26 @@ namespace NormaMeasure.DBControl.SAC
             else if (type == typeof(LengthBringingType)) make_LengthBringingTypesTablesSeeds(ref t);
             else if (type == typeof(LeadTestStatus)) make_LeadTestStatussTablesSeeds(ref t);
             else if (type == typeof(FrequencyRange)) make_FrequencyRangesTablesSeeds(ref t);
-
+            else if (type == typeof(CableTestStatus)) make_CableTestStatusesTablesSeeds(ref t);
             return t;
+        }
+
+        private void make_CableTestStatusesTablesSeeds(ref DBEntityTable t)
+        {
+            string[][] data = {
+                new string[] {$"{CableTestStatus.NotStarted}", "Испытание не начато"},
+                new string[] {$"{CableTestStatus.Started}", "Испытание начато"},
+                new string[] {$"{CableTestStatus.Finished}", "Испытание окончено"},
+                new string[] {$"{CableTestStatus.StopedOutOfNorma}", "Остановлено по причине выхода за норму"},
+                new string[] {$"{CableTestStatus.StopedByOperator}", "Остановлено пользователем"}
+            };
+            foreach (string[] rData in data)
+            {
+                CableTestStatus d = (CableTestStatus)t.NewRow();
+                d.StatusId = Convert.ToUInt16(rData[0]);
+                d.Description = rData[1];
+                t.Rows.Add(d);
+            }
         }
 
         private void make_FrequencyRangesTablesSeeds(ref DBEntityTable t)
