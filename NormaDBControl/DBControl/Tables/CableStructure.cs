@@ -454,6 +454,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+
         /// <summary>
         /// Достает MeasuredParameterDataId используемые текущей структурой
         /// </summary>
@@ -535,15 +536,66 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        private CableStructureType structureType;
-        private DBEntityTable measuredParameters;
-        private DBEntityTable measuredParameters_was;
-        private Cable ownCable;
-        private dRFormula drFormula;
+        protected CableStructureType structureType;
+        protected DBEntityTable measuredParameters;
+        protected DBEntityTable measuredParameters_was;
+        protected Cable ownCable;
+        protected dRFormula drFormula;
 
         public const string StructureId_ColumnName = "cable_structure_id";
 
     }
+
+    [DBTable("tested_cable_structures", "db_norma_sac", OldDBName = "bd_isp", OldTableName = "structury_cab")]
+    public class TestedCableStructure : CableStructure
+    {
+        public TestedCableStructure(DataRowBuilder builder) : base(builder)
+        {
+        }
+
+        public static DBEntityTable get_by_cable(TestedCable cable)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(TestedCable));
+            DBEntityTable cabStructures = find_by_criteria($"{t.PrimaryKey[0].ColumnName} = {cable.CableId}", typeof(TestedCableStructure));
+            foreach (TestedCableStructure cs in cabStructures.Rows) cs.OwnCable = cable;
+
+            return cabStructures;
+        }
+
+        [DBColumn(Cable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false, ReferenceTo = "tested_cables(cable_id) ON DELETE CASCADE")]
+        public new uint CableId
+        {
+            get
+            {
+                return tryParseUInt(Cable.CableId_ColumnName);
+            }
+            set
+            {
+                this[Cable.CableId_ColumnName] = value;
+            }
+        }
+
+        public new DBEntityTable MeasuredParameters
+        {
+            get
+            {
+                if (measuredParameters == null)
+                {
+                    if (IsNewRecord())
+                    {
+                        measuredParameters = TestedStructureMeasuredParameterData.get_structure_measured_parameters(0);
+                    }
+                    else
+                    {
+                        measuredParameters = TestedStructureMeasuredParameterData.get_structure_measured_parameters(this);
+                    }
+                    measuredParameters_was = measuredParameters.Clone() as DBEntityTable;
+                }
+                return measuredParameters;
+            }
+        }
+    }
+
 
 
 

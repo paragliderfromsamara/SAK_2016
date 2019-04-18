@@ -120,7 +120,7 @@ namespace NormaMeasure.DBControl.Tables
         protected override void ValidateActions()
         {
             base.ValidateActions();
-            if (IsDraft || IsDeleted || IsTestCable) return;
+            if (IsDraft || IsDeleted) return;
             validateCableMark();
             validateNormDoc();
             validateStructuresCount();
@@ -155,7 +155,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            return find_by_criteria("is_draft = 0 AND is_deleted = 0 is_test_cable = 0", typeof(Cable));
+            return find_by_criteria("is_draft = 0 AND is_deleted = 0", typeof(Cable));
         }
 
         /// <summary>
@@ -400,18 +400,6 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("is_test_cable", ColumnDomain.Boolean, Order = 24, DefaultValue = false)]
-        public bool IsTestCable
-        {
-            get
-            {
-                return tryParseBoolean("is_test_cable", false);
-            }
-            set
-            {
-                this["is_test_cable"] = value;
-            }
-        }
 
         /// <summary>
         /// Выдает нормативный документ по данному кабелю
@@ -456,11 +444,17 @@ namespace NormaMeasure.DBControl.Tables
             {
                 if (cableStructures == null)
                 {
-                    cableStructures = CableStructure.get_by_cable(this);
+                    cableStructures = LoadCableStructures();
                 }
                 return cableStructures;
             }
         }
+
+        protected virtual DBEntityTable LoadCableStructures()
+        {
+            return CableStructure.get_by_cable(this);
+        }
+
         protected DBEntityTable cableStructures;
 
 
@@ -468,13 +462,20 @@ namespace NormaMeasure.DBControl.Tables
 
     }
 
-    /*
+    
     [DBTable("tested_cables", "db_norma_sac", OldDBName = "bd_isp", OldTableName = "cables")]
     public class TestedCable : Cable
     {
         public TestedCable(DataRowBuilder builder) : base(builder)
         {
         }
+
+        protected override DBEntityTable LoadCableStructures()
+        {
+            return TestedCableStructure.get_by_cable(this);
+        }
     }
-    */
+
+
+    
 }

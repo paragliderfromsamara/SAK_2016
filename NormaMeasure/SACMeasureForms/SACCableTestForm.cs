@@ -7,16 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NormaMeasure.DBControl.Tables;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {
     
     public partial class SACCableTestForm : Form
     {
+        
         public SACCableTestForm()
         {
             InitializeComponent();
             InitMeasure();
+            CurrentTest = CableTest.GetLastOrCreateNew();
         }
 
         private void InitMeasure()
@@ -95,5 +98,9 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             Measure.Stop();
         }
 
+
+
+
+        private CableTest CurrentTest;
     }
 }

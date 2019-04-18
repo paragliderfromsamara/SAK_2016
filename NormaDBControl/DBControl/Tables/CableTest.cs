@@ -15,6 +15,52 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         
+        public static CableTest GetLastOrCreateNew()
+        {
+            DBEntityTable t = find_stoped_tests();
+            CableTest test;
+            if (t.Rows.Count > 0)
+            {
+                test= (CableTest)t.Rows[0];
+            }else
+            {
+                test = get_new_test();
+            }
+            return test;
+
+        }
+
+        public static CableTest get_new_test()
+        {
+            CableTest test = find_not_started_test();
+            return test;
+        }
+
+        public static CableTest find_not_started_test()
+        {
+            string select_cmd = $"{CableTestStatus.StatusId_ColumnName} = {CableTestStatus.NotStarted}";
+            DBEntityTable t = find_by_criteria(select_cmd, typeof(CableTest));
+            if (t.Rows.Count > 0) return (CableTest)t.Rows[0];
+            else return create_not_started_test();
+        }
+
+        private static CableTest create_not_started_test()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableTest));
+            CableTest test = (CableTest)t.NewRow();
+            test.StatusId = CableTestStatus.NotStarted;
+            test.CableId = 0;
+            test.TestId = 0;
+            t.Rows.Add(test);
+            test.Save();
+            return test;
+        }
+
+        private static DBEntityTable find_stoped_tests()
+        {
+            string select_cmd = $"{CableTestStatus.StatusId_ColumnName} IN ({CableTestStatus.StopedByOperator}, {CableTestStatus.StopedOutOfNorma}, {CableTestStatus.Started})";
+            return find_by_criteria(select_cmd, typeof(CableTest));
+        }
 
         [DBColumn(CableTestId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "IspInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint TestId
@@ -43,7 +89,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        [DBColumn(ReleasedBaraban.BarabanId_ColumnName, ColumnDomain.UInt, Order = 12, OldDBColumnName = "BarabanInd", Nullable = false)]
+        [DBColumn(ReleasedBaraban.BarabanId_ColumnName, ColumnDomain.UInt, Order = 12, OldDBColumnName = "BarabanInd", Nullable = true)]
         public uint BarabanId
         {
             get
@@ -56,7 +102,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(OperatorId_ColumnName, ColumnDomain.UInt, Order = 13, OldDBColumnName = "Operator", Nullable = false)]
+        [DBColumn(OperatorId_ColumnName, ColumnDomain.UInt, Order = 13, OldDBColumnName = "Operator", Nullable = true)]
         public uint OperatorId
         {
             get
@@ -174,4 +220,7 @@ namespace NormaMeasure.DBControl.Tables
         public const string BruttoWeight_ColumnName = "brutto_weight";
 
     }
+
+
+
 }

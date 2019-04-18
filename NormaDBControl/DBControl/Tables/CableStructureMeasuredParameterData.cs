@@ -620,4 +620,51 @@ namespace NormaMeasure.DBControl.Tables
         private LengthBringingType lengthBringingType;
         private bool skipFreqChangeEvent = false;
     }
+
+    [DBTable("tested_cable_structure_measured_parameters", "db_norma_sac", OldDBName = "bd_isp", OldTableName = "structury_cab")]
+    public class TestedStructureMeasuredParameterData : CableStructureMeasuredParameterData
+    {
+        public TestedStructureMeasuredParameterData(DataRowBuilder builder) : base(builder)
+        {
+        }
+
+        [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, Nullable = false, ReferenceTo = "tested_cable_structures(cable_structure_id) ON DELETE CASCADE")]
+        public new uint CableStructureId
+        {
+            get
+            {
+                return tryParseUInt("cable_structure_id");
+            }
+            set
+            {
+                this["cable_structure_id"] = value;
+            }
+        }
+
+        public static new DBEntityTable get_structure_measured_parameters(uint structure_id)
+        {
+            DBEntityTable mdt = new DBEntityTable(typeof(MeasuredParameterData));
+            DBEntityTable frt = new DBEntityTable(typeof(FrequencyRange));
+            DBEntityTable t = new DBEntityTable(typeof(TestedStructureMeasuredParameterData));
+            DBEntityTable pt = new DBEntityTable(typeof(MeasuredParameterType));
+            DBEntityTable lbt = new DBEntityTable(typeof(LengthBringingType));
+            DBEntityTable cs = new DBEntityTable(typeof(CableStructure));
+            string selectQuery = t.SelectQuery.Replace("*", $"*, {pt.TableName}.parameter_measure AS result_measure");
+            selectQuery = $"{selectQuery} LEFT OUTER JOIN {mdt.TableName} USING({mdt.PrimaryKey[0].ColumnName}) LEFT OUTER JOIN {frt.TableName} USING({frt.PrimaryKey[0].ColumnName}) LEFT OUTER JOIN {pt.TableName} USING({pt.PrimaryKey[0].ColumnName}) LEFT OUTER JOIN {lbt.TableName} USING ({lbt.PrimaryKey[0].ColumnName}) WHERE {cs.PrimaryKey[0].ColumnName} = {structure_id}";
+            return find_by_query(selectQuery, typeof(TestedStructureMeasuredParameterData));
+        }
+
+
+        public static DBEntityTable get_structure_measured_parameters(TestedCableStructure cable_structure)
+        {
+            DBEntityTable t = get_structure_measured_parameters(cable_structure.CableStructureId);
+            foreach (TestedStructureMeasuredParameterData md in t.Rows)
+            {
+                md.AssignedStructure = cable_structure;
+                md.AcceptChanges();
+            }
+            return t;
+        }
+
+    }
 }

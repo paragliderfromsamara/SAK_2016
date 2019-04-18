@@ -56,7 +56,10 @@ namespace NormaMeasure.DBControl.SAC
                typeof(CableStructureMeasuredParameterData),
                typeof(CableTestStatus),
                typeof(CableTest),
-               typeof(CableTestResult)
+               typeof(CableTestResult),
+               typeof(TestedCable),
+               typeof(TestedCableStructure),
+               typeof(TestedStructureMeasuredParameterData)
             };
             /*
             _tablesList = new DBTable[] 
