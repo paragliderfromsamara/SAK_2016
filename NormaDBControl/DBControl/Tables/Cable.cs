@@ -16,7 +16,7 @@ namespace NormaMeasure.DBControl.Tables
         public static DBEntityTable get_all_including_docs()
         {
             DBEntityTable docsTable = new DBEntityTable(typeof(Document));
-            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE is_deleted = 0 AND is_draft = 0";
+            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE is_draft = 0";
             return find_by_criteria(select_cmd, typeof(Cable));
         }
 
@@ -104,23 +104,17 @@ namespace NormaMeasure.DBControl.Tables
             DBEntityTable t = new DBEntityTable(typeof(Cable), DBEntityTableMode.NoColumns);
             t.TableName = "cable_marks";
             t.Columns.Add("cable_mark");
-            string q = $"{t.SelectQuery} WHERE is_draft = 0 AND is_deleted = 0 ORDER BY name ASC";
+            string q = $"{t.SelectQuery} WHERE is_draft = 0 ORDER BY name ASC";
             string selectString = " DISTINCT name AS cable_mark ";
             q = q.Replace("*", selectString);
             t.FillByQuery(q);
             return t;    
         }
 
-        public override bool Destroy()
-        {
-            this.IsDeleted = true;
-            return this.Save();
-        }
-
         protected override void ValidateActions()
         {
             base.ValidateActions();
-            if (IsDraft || IsDeleted) return;
+            if (IsDraft) return;
             validateCableMark();
             validateNormDoc();
             validateStructuresCount();
@@ -155,7 +149,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            return find_by_criteria("is_draft = 0 AND is_deleted = 0", typeof(Cable));
+            return find_by_criteria("is_draft = 0", typeof(Cable));
         }
 
         /// <summary>
@@ -387,20 +381,6 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("is_deleted", ColumnDomain.Boolean,  Order = 23, DefaultValue =false)]
-        public bool IsDeleted
-        {
-            get
-            {
-                return tryParseBoolean("is_deleted", false);
-            }
-            set
-            {
-                this["is_deleted"] = value;
-            }
-        }
-
-
         /// <summary>
         /// Выдает нормативный документ по данному кабелю
         /// </summary>
@@ -470,7 +450,7 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 24, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+")")]
+        [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 23, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+")")]
         public uint TestId
         {
             get
