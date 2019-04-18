@@ -16,7 +16,7 @@ namespace NormaMeasure.DBControl.Tables
         public static DBEntityTable get_all_including_docs()
         {
             DBEntityTable docsTable = new DBEntityTable(typeof(Document));
-            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE is_deleted = 0 AND is_draft = 0 AND is_test_cable = 0";
+            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE is_deleted = 0 AND is_draft = 0";
             return find_by_criteria(select_cmd, typeof(Cable));
         }
 
@@ -104,7 +104,7 @@ namespace NormaMeasure.DBControl.Tables
             DBEntityTable t = new DBEntityTable(typeof(Cable), DBEntityTableMode.NoColumns);
             t.TableName = "cable_marks";
             t.Columns.Add("cable_mark");
-            string q = $"{t.SelectQuery} WHERE is_draft = 0 AND is_deleted = 0 AND is_test_cable = 0 ORDER BY name ASC";
+            string q = $"{t.SelectQuery} WHERE is_draft = 0 AND is_deleted = 0 ORDER BY name ASC";
             string selectString = " DISTINCT name AS cable_mark ";
             q = q.Replace("*", selectString);
             t.FillByQuery(q);
