@@ -28,7 +28,6 @@ namespace NormaMeasure.DBControl.Tables
             try
             {
                 bool f = base.Save();
-                System.Windows.Forms.MessageBox.Show($"{TypeId}");
                 return f;
 
             }
@@ -69,7 +68,7 @@ namespace NormaMeasure.DBControl.Tables
         protected void CheckNameUniquiness()
         {
 
-            string select_cmd = $"(NOT baraban_type_id = {this.TypeId}) AND baraban_type_name = '{this.TypeName}'";
+            string select_cmd = $"(NOT {TypeId_ColumnName} = {this.TypeId}) AND {TypeName_ColumnName} = '{this.TypeName}'";
             DBEntityTable t = find_by_criteria(select_cmd, typeof(BarabanType));//new DBEntityTable(typeof(BarabanType));
             if (t.Rows.Count > 0)
             {
@@ -84,44 +83,48 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        [DBColumn("baraban_type_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "TipInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
+        [DBColumn(TypeId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "TipInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint TypeId
         {
             get
             {
-                return tryParseUInt("baraban_type_id");
+                return tryParseUInt(TypeId_ColumnName);
             }
             set
             {
-                this["baraban_type_id"] = value;
+                this[TypeId_ColumnName] = value;
             }
         }
 
-        [DBColumn("baraban_type_name", ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "TipName", Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(TypeName_ColumnName, ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "TipName", Nullable = true, IsPrimaryKey = false)]
         public string TypeName
         {
             get
             {
-                return this["baraban_type_name"].ToString();
+                return this[TypeName_ColumnName].ToString();
             }
             set
             {
-                this["baraban_type_name"] = value;
+                this[TypeName_ColumnName] = value;
             }
         }
 
-        [DBColumn("baraban_weight", ColumnDomain.Float, Order = 12, OldDBColumnName = "Massa", Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(BarabanWeight_ColumnName, ColumnDomain.Float, Order = 12, OldDBColumnName = "Massa", Nullable = true, IsPrimaryKey = false)]
         public float BarabanWeight
         {
             get
             {
-                return tryParseFloat("baraban_weight");
+                return tryParseFloat(BarabanWeight_ColumnName);
             }
             set
             {
-                this["baraban_weight"] = value;
+                this[BarabanWeight_ColumnName] = value;
             }
         }
+
+        public const string TypeId_ColumnName = "baraban_type_id";
+        public const string TypeName_ColumnName = "baraban_type_name";
+        public const string BarabanWeight_ColumnName = "baraban_weight";
 
     }
 }

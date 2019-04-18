@@ -226,16 +226,16 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        [DBColumn("name", ColumnDomain.Tinytext, OldDBColumnName ="name", Order = 11, Nullable = true)]
+        [DBColumn(CableName_ColumnName, ColumnDomain.Tinytext, OldDBColumnName ="name", Order = 11, Nullable = true)]
         public string Name
         {
             get
             {
-                return this["name"].ToString();
+                return this[CableName_ColumnName].ToString();
             }
             set
             {
-                this["name"] = value;
+                this[CableName_ColumnName] = value;
             }
         }
 
@@ -439,7 +439,7 @@ namespace NormaMeasure.DBControl.Tables
 
 
         public const string CableId_ColumnName = "cable_id";
-
+        public const string CableName_ColumnName = "name";
     }
 
     
@@ -467,6 +467,8 @@ namespace NormaMeasure.DBControl.Tables
         {
             return TestedCableStructure.get_by_cable(this);
         }
+
+
 
         protected CableTest cable_test;
     }

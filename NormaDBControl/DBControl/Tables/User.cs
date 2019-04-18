@@ -26,6 +26,20 @@ namespace NormaMeasure.DBControl.Tables
          
         public User(DataRowBuilder builder) : base(builder)
         {
+           // FillFullName();
+        }
+
+        protected void FillFullName()
+        {
+            if (this.RowState == DataRowState.Deleted) return;
+            try
+            {
+                this[FullName_ColumnName] = FirstName;
+            }
+            catch(System.Reflection.TargetInvocationException)
+            {
+
+            }
         }
 
         public static User SignIn(User u)
@@ -94,10 +108,20 @@ namespace NormaMeasure.DBControl.Tables
             return u;
         }
 
+        /// <summary>
+        /// Поиск пользователей которых можно выбрать в роли оператора
+        /// </summary>
+        /// <returns></returns>
+        public static DBEntityTable get_allowed_for_cable_test()
+        {
+            string criteria = $"{UserRole.RoleId_ColumnName} = {UserRole.Operator} AND {IsActiveFlag_ColumnName} = 1 AND NOT {UserId_ColumnName} = 1";
+            return find_by_criteria(criteria, typeof(User));
+        }
+
         public static DBEntityTable get_all_as_table()
         {
             DBEntityTable rolesTable = new DBEntityTable(typeof(UserRole));
-            string select_cmd = $"LEFT OUTER JOIN {rolesTable.TableName} USING({rolesTable.PrimaryKey[0]}) WHERE is_active = 1 AND NOT user_id = 1"; // 
+            string select_cmd = $"LEFT OUTER JOIN {rolesTable.TableName} USING({rolesTable.PrimaryKey[0]}) WHERE {IsActiveFlag_ColumnName} = 1 AND NOT {UserId_ColumnName} = 1"; // 
             DBEntityTable t = find_by_criteria(select_cmd, typeof(User));//new DBEntityTable(typeof(User));
             return t;
         }
@@ -106,9 +130,10 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
+                if (!Table.Columns.Contains(FirstName_ColumnName) || !Table.Columns.Contains(LastName_ColumnName) || !Table.Columns.Contains(ThirdName_ColumnName)) return "";
                 string _nameFull = LastName;
-                if (!String.IsNullOrWhiteSpace(FirstName)) _nameFull += $"{FirstName.ToUpper()[0]}.";
-                if (!String.IsNullOrWhiteSpace(ThirdName)) _nameFull += $"{ThirdName.ToUpper()[0]}.";
+                if (!String.IsNullOrWhiteSpace(FirstName)) _nameFull += $" {FirstName.ToUpper()[0]}.";
+                if (!String.IsNullOrWhiteSpace(ThirdName)) _nameFull += $" {ThirdName.ToUpper()[0]}.";
                 return _nameFull;
             }
         }
@@ -120,55 +145,55 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        [DBColumn("user_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "UserNum", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
+        [DBColumn(UserId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "UserNum", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint UserId
         {
             get
             {
-                return tryParseUInt("user_id");
+                return tryParseUInt(UserId_ColumnName);
             }
             set
             {
-                this["user_id"] = value;
+                this[UserId_ColumnName] = value;
             }
         }
 
-        [DBColumn("last_name", ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "familija", Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(LastName_ColumnName, ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "familija", Nullable = true, IsPrimaryKey = false)]
         public string LastName
         {
             get
             {
-                return this["last_name"].ToString();
+                return this[LastName_ColumnName].ToString();
             }
             set
             {
-                this["last_name"] = value;
+                this[LastName_ColumnName] = value;
             }
         }
 
-        [DBColumn("first_name", ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "imja", Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(FirstName_ColumnName, ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "imja", Nullable = true, IsPrimaryKey = false)]
         public string FirstName
         {
             get
             {
-                return this["first_name"].ToString();
+                return this[FirstName_ColumnName].ToString();
             }
             set
             {
-                this["first_name"] = value;
+                this[FirstName_ColumnName] = value;
             }
         }
 
-        [DBColumn("third_name", ColumnDomain.Tinytext, Order = 13, OldDBColumnName = "Otchestvo", Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(ThirdName_ColumnName, ColumnDomain.Tinytext, Order = 13, OldDBColumnName = "Otchestvo", Nullable = true, IsPrimaryKey = false)]
         public string ThirdName
         {
             get
             {
-                return this["third_name"].ToString();
+                return this[ThirdName_ColumnName].ToString();
             }
             set
             {
-                this["third_name"] = value;
+                this[ThirdName_ColumnName] = value;
             }
         }
 
@@ -185,16 +210,16 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("user_role_id", ColumnDomain.Tinytext, Order = 15, OldDBColumnName = "Dolshnost", Nullable = false, IsPrimaryKey = false)]
+        [DBColumn(UserRole.RoleId_ColumnName, ColumnDomain.Tinytext, Order = 15, OldDBColumnName = "Dolshnost", Nullable = false, IsPrimaryKey = false)]
         public uint RoleId
         {
             get
             {
-                return tryParseUInt("user_role_id");
+                return tryParseUInt(UserRole.RoleId_ColumnName);
             }
             set
             {
-                this["user_role_id"] = value;
+                this[UserRole.RoleId_ColumnName] = value;
             }
         }
 
@@ -211,17 +236,33 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("is_active", ColumnDomain.Boolean, Order = 17, OldDBColumnName = "Activ", DefaultValue = true, Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(IsActiveFlag_ColumnName, ColumnDomain.Boolean, Order = 17, OldDBColumnName = "Activ", DefaultValue = true, Nullable = true, IsPrimaryKey = false)]
         public bool IsActive
         {
             get
             {
-                return tryParseBoolean("is_active", true);
+                return tryParseBoolean(IsActiveFlag_ColumnName, true);
             }
             set
             {
-                this["is_active"] = value;
+                this[IsActiveFlag_ColumnName] = value;
             }
         }
+
+        [DBColumn(FullName_ColumnName, ColumnDomain.Tinytext, Order = 18, Nullable = true, IsVirtual = true)]
+        public string FullName
+        {
+            get
+            {
+                return this[FullName_ColumnName].ToString();
+            }
+        }
+
+        public const string UserId_ColumnName = "user_id";
+        public const string LastName_ColumnName = "last_name";
+        public const string FirstName_ColumnName = "first_name";
+        public const string ThirdName_ColumnName = "third_name";
+        public const string IsActiveFlag_ColumnName = "is_active";
+        public const string FullName_ColumnName = "full_name";
     }
 }

@@ -32,31 +32,60 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        [DBColumn("user_role_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "DolshNum", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
+        [DBColumn(RoleId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "DolshNum", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint UserRoleId
         {
             get
             {
-                return tryParseUInt("user_role_id");
+                return tryParseUInt(RoleId_ColumnName);
             }
             set
             {
-                this["user_role_id"] = value;
+                this[RoleId_ColumnName] = value;
             }
         }
 
-        [DBColumn("user_role_name", ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "Dolshnost", Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(RoleName_ColumnName, ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "Dolshnost", Nullable = true, IsPrimaryKey = false)]
         public string UserRoleName
         {
             get
             {
-                return this["user_role_name"].ToString();
+                return this[RoleName_ColumnName].ToString();
             }
             set
             {
-                this["user_role_name"] = value;
+                this[RoleName_ColumnName] = value;
             }
         }
+
+        /// <summary>
+        /// Администратор БД
+        /// </summary>
+        public const uint DBAdmin = 1;
+        /// <summary>
+        /// Метролог
+        /// </summary>
+        public const uint Metrolog = 2;
+        /// <summary>
+        /// Мастер
+        /// </summary>
+        public const uint Master = 3;
+        /// <summary>
+        /// Оператор
+        /// </summary>
+        public const uint Operator = 4;
+        /// <summary>
+        /// Опрессовщик
+        /// </summary>
+        public const uint PleasureTester = 5;
+        /// <summary>
+        /// Перемотчик
+        /// </summary>
+        public const uint Rewinder = 6;
+
+
+        public const string RoleId_ColumnName = "user_role_id";
+        public const string RoleName_ColumnName = "user_role_name";
     }
 
 }

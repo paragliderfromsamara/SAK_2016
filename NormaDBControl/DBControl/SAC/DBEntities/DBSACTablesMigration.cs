@@ -184,12 +184,12 @@ namespace NormaMeasure.DBControl.SAC
         private void make_UserGroupsTableSeeds(ref DBEntityTable t)
         {
             string[][] data = {
-                new string[] { "1", "Администратор БД" },
-                new string[] { "2", "Метролог" },
-                new string[] { "3", "Мастер" },
-                new string[] { "4", "Оператор" },
-                new string[] { "5", "Опрессовщик"  },
-                new string[] { "6", "Перемотчик"}
+                new string[] { UserRole.DBAdmin.ToString(), "Администратор БД" },
+                new string[] { UserRole.Metrolog.ToString(), "Метролог" },
+                new string[] { UserRole.Master.ToString(), "Мастер" },
+                new string[] { UserRole.Operator.ToString(), "Оператор" },
+                new string[] { UserRole.PleasureTester.ToString(), "Опрессовщик"  },
+                new string[] { UserRole.Rewinder.ToString(), "Перемотчик"}
             };
             foreach (string[] rData in data)
             {

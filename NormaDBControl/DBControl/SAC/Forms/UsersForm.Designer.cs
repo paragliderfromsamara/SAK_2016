@@ -31,15 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.usersList = new System.Windows.Forms.DataGridView();
-            this.user_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.last_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.third_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.employee_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.role_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.password = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.user_role_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.is_active = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RowContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.initEditUserMode = new System.Windows.Forms.ToolStripMenuItem();
             this.delUserMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,6 +51,16 @@
             this.userLastNameLabel = new System.Windows.Forms.Label();
             this.userThirdName = new System.Windows.Forms.TextBox();
             this.userFormDataSet = new System.Data.DataSet();
+            this.user_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.full_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.last_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.third_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.employee_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.role_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.password = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.user_role_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.is_active = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.usersList)).BeginInit();
             this.RowContextMenuStrip.SuspendLayout();
             this.userFormField.SuspendLayout();
@@ -75,6 +76,7 @@
             this.usersList.ColumnHeadersHeight = 30;
             this.usersList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.user_id,
+            this.full_name,
             this.last_name,
             this.name,
             this.third_name,
@@ -100,96 +102,25 @@
             this.usersList.StandardTab = true;
             this.usersList.TabIndex = 13;
             // 
-            // user_id
-            // 
-            this.user_id.DataPropertyName = "user_id";
-            this.user_id.FillWeight = 101.7259F;
-            this.user_id.HeaderText = "id";
-            this.user_id.Name = "user_id";
-            this.user_id.ReadOnly = true;
-            // 
-            // last_name
-            // 
-            this.last_name.DataPropertyName = "last_name";
-            this.last_name.FillWeight = 101.7259F;
-            this.last_name.HeaderText = "Фамилия";
-            this.last_name.Name = "last_name";
-            this.last_name.ReadOnly = true;
-            // 
-            // name
-            // 
-            this.name.DataPropertyName = "first_name";
-            this.name.FillWeight = 101.7259F;
-            this.name.HeaderText = "Имя";
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            // 
-            // third_name
-            // 
-            this.third_name.DataPropertyName = "third_name";
-            this.third_name.FillWeight = 101.7259F;
-            this.third_name.HeaderText = "Отчество";
-            this.third_name.Name = "third_name";
-            this.third_name.ReadOnly = true;
-            // 
-            // employee_number
-            // 
-            this.employee_number.DataPropertyName = "employee_number";
-            this.employee_number.FillWeight = 91.37056F;
-            this.employee_number.HeaderText = "Табельный номер";
-            this.employee_number.MinimumWidth = 30;
-            this.employee_number.Name = "employee_number";
-            this.employee_number.ReadOnly = true;
-            // 
-            // role_name
-            // 
-            this.role_name.DataPropertyName = "user_role_name";
-            this.role_name.FillWeight = 101.7259F;
-            this.role_name.HeaderText = "Должность";
-            this.role_name.Name = "role_name";
-            this.role_name.ReadOnly = true;
-            // 
-            // password
-            // 
-            this.password.DataPropertyName = "password";
-            this.password.HeaderText = "Пароль";
-            this.password.Name = "password";
-            this.password.ReadOnly = true;
-            this.password.Visible = false;
-            // 
-            // user_role_id
-            // 
-            this.user_role_id.DataPropertyName = "user_role_id";
-            this.user_role_id.HeaderText = "user_role_id";
-            this.user_role_id.Name = "user_role_id";
-            this.user_role_id.Visible = false;
-            // 
-            // is_active
-            // 
-            this.is_active.DataPropertyName = "is_active";
-            this.is_active.HeaderText = "is_active";
-            this.is_active.Name = "is_active";
-            this.is_active.Visible = false;
-            // 
             // RowContextMenuStrip
             // 
             this.RowContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.initEditUserMode,
             this.delUserMenuItem});
             this.RowContextMenuStrip.Name = "RowContextMenuStrip";
-            this.RowContextMenuStrip.Size = new System.Drawing.Size(153, 70);
+            this.RowContextMenuStrip.Size = new System.Drawing.Size(129, 48);
             // 
             // initEditUserMode
             // 
             this.initEditUserMode.Name = "initEditUserMode";
-            this.initEditUserMode.Size = new System.Drawing.Size(152, 22);
+            this.initEditUserMode.Size = new System.Drawing.Size(128, 22);
             this.initEditUserMode.Text = "Изменить";
             this.initEditUserMode.Click += new System.EventHandler(this.initEditUserMode_Click);
             // 
             // delUserMenuItem
             // 
             this.delUserMenuItem.Name = "delUserMenuItem";
-            this.delUserMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.delUserMenuItem.Size = new System.Drawing.Size(128, 22);
             this.delUserMenuItem.Text = "Удалить";
             this.delUserMenuItem.Click += new System.EventHandler(this.delUserMenuItem_Click);
             // 
@@ -352,6 +283,83 @@
             // 
             this.userFormDataSet.DataSetName = "NewDataSet";
             // 
+            // user_id
+            // 
+            this.user_id.DataPropertyName = "user_id";
+            this.user_id.FillWeight = 101.7259F;
+            this.user_id.HeaderText = "id";
+            this.user_id.Name = "user_id";
+            this.user_id.ReadOnly = true;
+            // 
+            // full_name
+            // 
+            this.full_name.DataPropertyName = "full_name";
+            this.full_name.HeaderText = "Полное имя";
+            this.full_name.Name = "full_name";
+            // 
+            // last_name
+            // 
+            this.last_name.DataPropertyName = "last_name";
+            this.last_name.FillWeight = 101.7259F;
+            this.last_name.HeaderText = "Фамилия";
+            this.last_name.Name = "last_name";
+            this.last_name.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.DataPropertyName = "first_name";
+            this.name.FillWeight = 101.7259F;
+            this.name.HeaderText = "Имя";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // third_name
+            // 
+            this.third_name.DataPropertyName = "third_name";
+            this.third_name.FillWeight = 101.7259F;
+            this.third_name.HeaderText = "Отчество";
+            this.third_name.Name = "third_name";
+            this.third_name.ReadOnly = true;
+            // 
+            // employee_number
+            // 
+            this.employee_number.DataPropertyName = "employee_number";
+            this.employee_number.FillWeight = 91.37056F;
+            this.employee_number.HeaderText = "Табельный номер";
+            this.employee_number.MinimumWidth = 30;
+            this.employee_number.Name = "employee_number";
+            this.employee_number.ReadOnly = true;
+            // 
+            // role_name
+            // 
+            this.role_name.DataPropertyName = "user_role_name";
+            this.role_name.FillWeight = 101.7259F;
+            this.role_name.HeaderText = "Должность";
+            this.role_name.Name = "role_name";
+            this.role_name.ReadOnly = true;
+            // 
+            // password
+            // 
+            this.password.DataPropertyName = "password";
+            this.password.HeaderText = "Пароль";
+            this.password.Name = "password";
+            this.password.ReadOnly = true;
+            this.password.Visible = false;
+            // 
+            // user_role_id
+            // 
+            this.user_role_id.DataPropertyName = "user_role_id";
+            this.user_role_id.HeaderText = "user_role_id";
+            this.user_role_id.Name = "user_role_id";
+            this.user_role_id.Visible = false;
+            // 
+            // is_active
+            // 
+            this.is_active.DataPropertyName = "is_active";
+            this.is_active.HeaderText = "is_active";
+            this.is_active.Name = "is_active";
+            this.is_active.Visible = false;
+            // 
             // UsersForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -395,6 +403,7 @@
         private System.Windows.Forms.ToolStripMenuItem initEditUserMode;
         private System.Windows.Forms.ToolStripMenuItem delUserMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn user_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn full_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn last_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn third_name;

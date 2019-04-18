@@ -49,7 +49,6 @@ namespace NormaMeasure.DBControl.Tables
             DBEntityTable t = new DBEntityTable(typeof(CableTest));
             CableTest test = (CableTest)t.NewRow();
             test.StatusId = CableTestStatus.NotStarted;
-           // test.CableId = 0;
             test.TestId = 0;
             t.Rows.Add(test);
             test.Save();
@@ -74,23 +73,8 @@ namespace NormaMeasure.DBControl.Tables
                 this[CableTestId_ColumnName] = value;
             }
         }
-
-        /*
-        [DBColumn(Cable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false, ReferenceTo = "cables(cable_id) ON DELETE CASCADE")]
-        public uint CableId
-        {
-            get
-            {
-                return tryParseUInt(Cable.CableId_ColumnName);
-            }
-            set
-            {
-                this[Cable.CableId_ColumnName] = value;
-            }
-        }
-        */
         
-        [DBColumn(ReleasedBaraban.BarabanId_ColumnName, ColumnDomain.UInt, Order = 12, OldDBColumnName = "BarabanInd", Nullable = true)]
+        [DBColumn(ReleasedBaraban.BarabanId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "BarabanInd", Nullable = true)]
         public uint BarabanId
         {
             get
@@ -103,7 +87,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(OperatorId_ColumnName, ColumnDomain.UInt, Order = 13, OldDBColumnName = "Operator", Nullable = true)]
+        [DBColumn(OperatorId_ColumnName, ColumnDomain.UInt, Order = 12, OldDBColumnName = "Operator", Nullable = true)]
         public uint OperatorId
         {
             get
@@ -116,7 +100,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(CableTestStatus.StatusId_ColumnName, ColumnDomain.UInt, Order = 14, OldDBColumnName = "Status", Nullable = false)]
+        [DBColumn(CableTestStatus.StatusId_ColumnName, ColumnDomain.UInt, Order = 13, OldDBColumnName = "Status", Nullable = false)]
         public uint StatusId
         {
             get
@@ -129,7 +113,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(Temperature_ColumnName, ColumnDomain.Float, Order = 15, OldDBColumnName = "Temperetur", Nullable = true)]
+        [DBColumn(Temperature_ColumnName, ColumnDomain.Float, Order = 14, OldDBColumnName = "Temperetur", Nullable = true)]
         public float Temperature
         {
             get
@@ -142,7 +126,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(CableLength_ColumnName, ColumnDomain.Float, Order = 16, OldDBColumnName = "CabelLengt", Nullable = true)]
+        [DBColumn(CableLength_ColumnName, ColumnDomain.Float, Order = 15, OldDBColumnName = "CabelLengt", Nullable = true)]
         public float CableLength
         {
             get
@@ -155,7 +139,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(VSVILeadLead_ColumnName, ColumnDomain.Boolean, Order = 17, OldDBColumnName = "Vsvi", Nullable = true)]
+        [DBColumn(VSVILeadLead_ColumnName, ColumnDomain.Boolean, Order = 16, OldDBColumnName = "Vsvi", Nullable = true)]
         public bool VSVILeadLeadResult
         {
             get
@@ -168,7 +152,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(VSVILeadShield_ColumnName, ColumnDomain.Boolean, Order = 18, OldDBColumnName = "Vsvi_Obol", Nullable = true)]
+        [DBColumn(VSVILeadShield_ColumnName, ColumnDomain.Boolean, Order = 17, OldDBColumnName = "Vsvi_Obol", Nullable = true)]
         public bool VSVILeadShieldResult
         {
             get
@@ -181,7 +165,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(NettoWeight_ColumnName, ColumnDomain.Float, Order = 19, OldDBColumnName = "Netto", Nullable = true)]
+        [DBColumn(NettoWeight_ColumnName, ColumnDomain.Float, Order = 18, OldDBColumnName = "Netto", Nullable = true)]
         public float NettoWeight
         {
             get
@@ -194,7 +178,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(BruttoWeight_ColumnName, ColumnDomain.Float, Order = 20, OldDBColumnName = "Brutto", Nullable = true)]
+        [DBColumn(BruttoWeight_ColumnName, ColumnDomain.Float, Order = 19, OldDBColumnName = "Brutto", Nullable = true)]
         public float BruttoWeight
         {
             get
@@ -207,7 +191,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-
+        
 
 
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NormaMeasure.DBControl;
 using NormaMeasure.DBControl.Tables;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
@@ -18,9 +19,13 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         public SACCableTestForm()
         {
             InitializeComponent();
+            LoadDataFromDB();
             InitMeasure();
             CurrentTest = CableTest.GetLastOrCreateNew();
         }
+
+
+
 
         private void InitMeasure()
         {
@@ -68,7 +73,6 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                     measureControlButton.Click -= stopMeasure_Click;
                     measureControlButton.Click += startMeasure_Click;
                 }
-                
             }
         }
 
@@ -98,7 +102,41 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             Measure.Stop();
         }
 
+        #region Загрузка необходимых данных из БД
+        private void LoadDataFromDB()
+        {
+            LoadOperators();
+            LoadCables();
+            LoadBarabanTypes();
+        }
 
+        private void LoadBarabanTypes()
+        {
+            DBEntityTable t = BarabanType.get_all_as_table();
+            CableTestFormDataSet.Tables.Add(t);
+            barabanTypes_CB.DataSource = t;
+            barabanTypes_CB.DisplayMember = BarabanType.TypeName_ColumnName;
+            barabanTypes_CB.ValueMember = BarabanType.TypeId_ColumnName;
+        }
+
+        private void LoadCables()
+        {
+            DBEntityTable t = Cable.get_all_as_table();
+            CableTestFormDataSet.Tables.Add(t);
+            cableForTest_CB.DataSource = t;
+            cableForTest_CB.DisplayMember = Cable.CableName_ColumnName;
+            cableForTest_CB.ValueMember = Cable.CableId_ColumnName;
+        }
+
+        private void LoadOperators()
+        {
+            DBEntityTable t = User.get_allowed_for_cable_test();
+            CableTestFormDataSet.Tables.Add(t);
+            operatorsList.DataSource = t;
+            operatorsList.DisplayMember = User.FullName_ColumnName;
+            operatorsList.ValueMember = User.UserId_ColumnName;
+        }
+        #endregion
 
 
         private CableTest CurrentTest;

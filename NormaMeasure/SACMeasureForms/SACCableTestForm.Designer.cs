@@ -35,14 +35,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cableForTest_CB = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.barabanTypes_CB = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -52,9 +52,11 @@
             this.label10 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.CableTestFormDataSet = new System.Data.DataSet();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CableTestFormDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // measureControlButton
@@ -86,6 +88,7 @@
             // 
             // operatorsList
             // 
+            this.operatorsList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.operatorsList.FormattingEnabled = true;
             this.operatorsList.Location = new System.Drawing.Point(12, 25);
             this.operatorsList.Name = "operatorsList";
@@ -132,13 +135,14 @@
             this.label4.TabIndex = 7;
             this.label4.Text = "Температура, °С";
             // 
-            // comboBox1
+            // cableForTest_CB
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(12, 70);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(289, 21);
-            this.comboBox1.TabIndex = 8;
+            this.cableForTest_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cableForTest_CB.FormattingEnabled = true;
+            this.cableForTest_CB.Location = new System.Drawing.Point(12, 70);
+            this.cableForTest_CB.Name = "cableForTest_CB";
+            this.cableForTest_CB.Size = new System.Drawing.Size(289, 21);
+            this.cableForTest_CB.TabIndex = 8;
             // 
             // label5
             // 
@@ -199,13 +203,14 @@
             this.radioButton1.Text = "с ДК";
             this.radioButton1.UseVisualStyleBackColor = true;
             // 
-            // comboBox3
+            // barabanTypes_CB
             // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(12, 127);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(142, 21);
-            this.comboBox3.TabIndex = 13;
+            this.barabanTypes_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.barabanTypes_CB.FormattingEnabled = true;
+            this.barabanTypes_CB.Location = new System.Drawing.Point(12, 127);
+            this.barabanTypes_CB.Name = "barabanTypes_CB";
+            this.barabanTypes_CB.Size = new System.Drawing.Size(142, 21);
+            this.barabanTypes_CB.TabIndex = 13;
             // 
             // label7
             // 
@@ -299,6 +304,10 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Программа испытаний";
             // 
+            // CableTestFormDataSet
+            // 
+            this.CableTestFormDataSet.DataSetName = "NewDataSet";
+            // 
             // SACCableTestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -313,12 +322,12 @@
             this.Controls.Add(this.label8);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.comboBox3);
+            this.Controls.Add(this.barabanTypes_CB);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.cableForTest_CB);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.label3);
@@ -332,6 +341,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CableTestFormDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -346,14 +356,14 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cableForTest_CB;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox barabanTypes_CB;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label8;
@@ -363,5 +373,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Data.DataSet CableTestFormDataSet;
     }
 }
