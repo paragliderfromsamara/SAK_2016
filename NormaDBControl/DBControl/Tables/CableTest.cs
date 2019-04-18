@@ -49,7 +49,7 @@ namespace NormaMeasure.DBControl.Tables
             DBEntityTable t = new DBEntityTable(typeof(CableTest));
             CableTest test = (CableTest)t.NewRow();
             test.StatusId = CableTestStatus.NotStarted;
-            test.CableId = 0;
+           // test.CableId = 0;
             test.TestId = 0;
             t.Rows.Add(test);
             test.Save();
@@ -75,6 +75,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        /*
         [DBColumn(Cable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false, ReferenceTo = "cables(cable_id) ON DELETE CASCADE")]
         public uint CableId
         {
@@ -87,8 +88,8 @@ namespace NormaMeasure.DBControl.Tables
                 this[Cable.CableId_ColumnName] = value;
             }
         }
-
-
+        */
+        
         [DBColumn(ReleasedBaraban.BarabanId_ColumnName, ColumnDomain.UInt, Order = 12, OldDBColumnName = "BarabanInd", Nullable = true)]
         public uint BarabanId
         {

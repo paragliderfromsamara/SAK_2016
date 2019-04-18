@@ -470,10 +470,25 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 24, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+")")]
+        public uint TestId
+        {
+            get
+            {
+                return tryParseUInt(CableTest.CableTestId_ColumnName);
+            }
+            set
+            {
+                this[CableTest.CableTestId_ColumnName] = value;
+            }
+        }
+
         protected override DBEntityTable LoadCableStructures()
         {
             return TestedCableStructure.get_by_cable(this);
         }
+
+        protected CableTest cable_test;
     }
 
 
