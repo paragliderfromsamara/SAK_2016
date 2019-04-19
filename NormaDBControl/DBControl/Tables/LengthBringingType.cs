@@ -14,45 +14,6 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        [DBColumn("length_bringing_type_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "LprivInd", Nullable = true, IsPrimaryKey = true)]
-        public uint TypeId
-        {
-            get
-            {
-                return tryParseUInt("length_bringing_type_id");
-            }
-            set
-            {
-                this["length_bringing_type_id"] = value;
-            }
-        }
-
-        [DBColumn("measure_title", ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "Ed_izm", Nullable = false, IsPrimaryKey = false)]
-        public string MeasureTitle
-        {
-            get
-            {
-                return this["measure_title"].ToString();
-            }
-            set
-            {
-                this["measure_title"] = value;
-            }
-        }
-
-        [DBColumn("length_bringing_name", ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "LprivName", Nullable = false, IsPrimaryKey = false)]
-        public string BringingName
-        {
-            get
-            {
-                return this["length_bringing_name"].ToString();
-            }
-            set
-            {
-                this["length_bringing_name"] = value;
-            }
-        }
-
         internal static DataTable get_all_as_table()
         {
             return get_all(typeof(LengthBringingType));
@@ -68,18 +29,67 @@ namespace NormaMeasure.DBControl.Tables
         /// <summary>
         /// Без приведения
         /// </summary>
-        public static uint NoBringing => 0;
+        public const uint NoBringing = 0;
         /// <summary>
         /// К строительной длине
         /// </summary>
-        public static uint ForBuildLength => 1;
+        public const uint ForBuildLength = 1;
         /// <summary>
         /// К одному километру
         /// </summary>
-        public static uint ForOneKilometer => 2;
+        public const uint ForOneKilometer = 2;
         /// <summary>
         /// Другая длина в метрах
         /// </summary>
-        public static uint ForAnotherLengthInMeters => 3;
+        public const uint ForAnotherLengthInMeters = 3;
+
+
+        #region Колонки таблицы
+        [DBColumn(BringingId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "LprivInd", Nullable = true, IsPrimaryKey = true)]
+        public uint TypeId
+        {
+            get
+            {
+                return tryParseUInt(BringingId_ColumnName);
+            }
+            set
+            {
+                this[BringingId_ColumnName] = value;
+            }
+        }
+
+        [DBColumn(BringingMeasure_ColumnName, ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "Ed_izm", Nullable = false, IsPrimaryKey = false)]
+        public string MeasureTitle
+        {
+            get
+            {
+                return this[BringingMeasure_ColumnName].ToString();
+            }
+            set
+            {
+                this[BringingMeasure_ColumnName] = value;
+            }
+        }
+
+        [DBColumn(BringingName_ColumnName, ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "LprivName", Nullable = false, IsPrimaryKey = false)]
+        public string BringingName
+        {
+            get
+            {
+                return this[BringingName_ColumnName].ToString();
+            }
+            set
+            {
+                this[BringingName_ColumnName] = value;
+            }
+        }
+
+
+        public const string BringingId_ColumnName = "length_bringing_type_id";
+        public const string BringingMeasure_ColumnName = "measure_title";
+        public const string BringingName_ColumnName = "length_bringing_name";
+        #endregion
+
+
     }
 }

@@ -143,10 +143,8 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_by_cable(Cable cable)
         {
-            DBEntityTable t = new DBEntityTable(typeof(Cable));
-            DBEntityTable cabStructures = find_by_criteria($"{t.PrimaryKey[0].ColumnName} = {cable.CableId}", typeof(CableStructure));
+            DBEntityTable cabStructures = find_by_criteria($"{Cable.CableId_ColumnName} = {cable.CableId}", typeof(CableStructure));
             foreach (CableStructure cs in cabStructures.Rows) cs.OwnCable = cable;
-
             return cabStructures;
         }
 
@@ -160,13 +158,13 @@ namespace NormaMeasure.DBControl.Tables
         public static CableStructure get_last_cable_structure()
         {
             DBEntityTable t = new DBEntityTable(typeof(CableStructure));
-            string select_cmd = $"{t.SelectQuery} ORDER BY {t.PrimaryKey[0].ColumnName} DESC LIMIT 1;";
+            string select_cmd = $"{t.SelectQuery} ORDER BY {StructureId_ColumnName} DESC LIMIT 1;";
             t.FillByQuery(select_cmd);
             if (t.Rows.Count > 0) return (CableStructure)t.Rows[0];
             else return null;
         }
 
-
+        #region Колонки таблицы
         [DBColumn(StructureId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktInd", IsPrimaryKey = true, Nullable = true, AutoIncrement = true)]
         public uint CableStructureId
         {
@@ -199,207 +197,218 @@ namespace NormaMeasure.DBControl.Tables
         /// <summary>
         /// Реальное количество элементов структуры
         /// </summary>
-        [DBColumn("real_amount", ColumnDomain.UInt, Order = 12, OldDBColumnName = "Kolvo", Nullable = false, DefaultValue = 1)]
+        [DBColumn(RealAmount_ColumnName, ColumnDomain.UInt, Order = 12, OldDBColumnName = "Kolvo", Nullable = false, DefaultValue = 1)]
         public uint RealAmount
         {
             get
             {
-                return tryParseUInt("real_amount");
+                return tryParseUInt(RealAmount_ColumnName);
             }
             set
             {
-                this["real_amount"] = value;
+                this[RealAmount_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// Номинальное количество элементов структуры
         /// </summary>
-        [DBColumn("shown_amount", ColumnDomain.UInt, Order = 13, OldDBColumnName = "Kolvo_ind", Nullable = false, DefaultValue = 1)]
+        [DBColumn(ShownAmount_ColumnName, ColumnDomain.UInt, Order = 13, OldDBColumnName = "Kolvo_ind", Nullable = false, DefaultValue = 1)]
         public uint DisplayedAmount
         {
             get
             {
-                return tryParseUInt("shown_amount");
+                return tryParseUInt(ShownAmount_ColumnName);
             }
             set
             {
-                this["shown_amount"] = value;
+                this[ShownAmount_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// ID типа структуры
         /// </summary>
-        [DBColumn("structure_type_id", ColumnDomain.UInt, Order = 14, OldDBColumnName = "PovivTip", Nullable = false)]
+        [DBColumn(CableStructureType.TypeId_ColumnName, ColumnDomain.UInt, Order = 14, OldDBColumnName = "PovivTip", Nullable = false)]
         public uint StructureTypeId
         {
             get
             {
-                return tryParseUInt("structure_type_id");
+                return tryParseUInt(CableStructureType.TypeId_ColumnName);
             }
             set
             {
-                this["structure_type_id"] = value;
+                this[CableStructureType.TypeId_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// ID типа материала токопроводящей жилы
         /// </summary>
-        [DBColumn("lead_material_id", ColumnDomain.UInt, Order = 15, OldDBColumnName = "MaterGil", Nullable = false)]
+        [DBColumn(LeadMaterial.MaterialId_ColumnName, ColumnDomain.UInt, Order = 15, OldDBColumnName = "MaterGil", Nullable = false)]
         public uint LeadMaterialTypeId
         {
             get
             {
-                return tryParseUInt("lead_material_id");
+                return tryParseUInt(LeadMaterial.MaterialId_ColumnName);
             }
             set
             {
-                this["lead_material_id"] = value;
+                this[LeadMaterial.MaterialId_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// Диаметр жилы
         /// </summary>
-        [DBColumn("lead_diameter", ColumnDomain.Float, Order = 16, OldDBColumnName = "DiamGil", Nullable = false)]
+        [DBColumn(LeadDiameter_ColumnName, ColumnDomain.Float, Order = 16, OldDBColumnName = "DiamGil", Nullable = false)]
         public float LeadDiameter
         {
             get
             {
-                return tryParseFloat("lead_diameter");
+                return tryParseFloat(LeadDiameter_ColumnName);
             }
             set
             {
-                this["lead_diameter"] = value;
+                this[LeadDiameter_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// ID типа материала изоляции жил структуры
         /// </summary>
-        [DBColumn("isolation_material_id", ColumnDomain.UInt, Order = 17, OldDBColumnName = "MaterIsol", Nullable = false)]
+        [DBColumn(IsolationMaterial.MaterialId_ColumnName, ColumnDomain.UInt, Order = 17, OldDBColumnName = "MaterIsol", Nullable = false)]
         public uint IsolationMaterialId
         {
             get
             {
-                return tryParseUInt("isolation_material_id");
+                return tryParseUInt(IsolationMaterial.MaterialId_ColumnName);
             }
             set
             {
-                this["isolation_material_id"] = value;
+                this[IsolationMaterial.MaterialId_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// Волновое сопротивление кабеля
         /// </summary>
-        [DBColumn("wave_resistance", ColumnDomain.Float, Order = 18, OldDBColumnName = "Zwave", Nullable = false)]
+        [DBColumn(WaveResistance_ColumnName, ColumnDomain.Float, Order = 18, OldDBColumnName = "Zwave", Nullable = false)]
         public float WaveResistance
         {
             get
             {
-                return tryParseFloat("wave_resistance");
+                return tryParseFloat(WaveResistance_ColumnName);
             }
             set
             {
-                this["wave_resistance"] = value;
+                this[WaveResistance_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// Количество элементов в пучке
         /// </summary>
-        [DBColumn("grouped_amount", ColumnDomain.UInt, Order = 19, OldDBColumnName = "Puchek", Nullable = false, DefaultValue = 0)]
+        [DBColumn(GroupedAmount_ColumnName, ColumnDomain.UInt, Order = 19, OldDBColumnName = "Puchek", Nullable = false, DefaultValue = 0)]
         public uint GroupedAmount
         {
             get
             {
-                return tryParseUInt("grouped_amount");
+                return tryParseUInt(GroupedAmount_ColumnName);
             }
             set
             {
-                this["grouped_amount"] = value;
+                this[GroupedAmount_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// Испытательное напряжение прочности оболочик жила-жила
         /// </summary>
-        [DBColumn("ll_test_voltage", ColumnDomain.UInt, Order = 20, OldDBColumnName = "U_gil_gil", Nullable = false, DefaultValue = 0)]
+        [DBColumn(LeadLeadVoltage_ColumnName, ColumnDomain.UInt, Order = 20, OldDBColumnName = "U_gil_gil", Nullable = false, DefaultValue = 0)]
         public uint LeadToLeadTestVoltage
         {
             get
             {
-                return tryParseUInt("ll_test_voltage");
+                return tryParseUInt(LeadLeadVoltage_ColumnName);
             }
             set
             {
-                this["ll_test_voltage"] = value;
+                this[LeadLeadVoltage_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// Испытательное напряжение прочности оболочик жила-экран
         /// </summary>
-        [DBColumn("ls_test_voltage", ColumnDomain.UInt, Order = 21, OldDBColumnName = "U_gil_ekr", Nullable = false, DefaultValue = 0)]
+        [DBColumn(LeadShieldVoltage_ColumnName, ColumnDomain.UInt, Order = 21, OldDBColumnName = "U_gil_ekr", Nullable = false, DefaultValue = 0)]
         public uint LeadToShieldTestVoltage
         {
             get
             {
-                return tryParseUInt("ls_test_voltage");
+                return tryParseUInt(LeadShieldVoltage_ColumnName);
             }
             set
             {
-                this["ls_test_voltage"] = value;
+                this[LeadShieldVoltage_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// Рабочая ёмкость группы
         /// </summary>
-        [DBColumn("work_capacity_group", ColumnDomain.Boolean, Order = 22, OldDBColumnName = "Cr_grup", Nullable = true, DefaultValue = 0)]
+        [DBColumn(WorkCapGroup_ColumnName, ColumnDomain.Boolean, Order = 22, OldDBColumnName = "Cr_grup", Nullable = true, DefaultValue = 0)]
         public bool WorkCapacityGroup
         {
             get
             {
-                return tryParseBoolean("work_capacity_group", false);
+                return tryParseBoolean(WorkCapGroup_ColumnName, false);
             }
             set
             {
-                this["work_capacity_group"] = value;
+                this[WorkCapGroup_ColumnName] = value;
             }
         }
 
-        [DBColumn("dr_bringing_formula_id", ColumnDomain.UInt, Order = 23, OldDBColumnName = "Delta_R", Nullable = true, DefaultValue = 1)]
+        [DBColumn(dRBringingFormula.FormulaId_ColumnName, ColumnDomain.UInt, Order = 23, OldDBColumnName = "Delta_R", Nullable = true, DefaultValue = 1)]
         public uint DRBringingFormulaId
         {
             get
             {
-                return tryParseUInt("dr_bringing_formula_id");
+                return tryParseUInt(dRBringingFormula.FormulaId_ColumnName);
             }
             set
             {
-                this["dr_bringing_formula_id"] = value;
+                this[dRBringingFormula.FormulaId_ColumnName] = value;
             }
         }
 
-        [DBColumn("dr_formula_id", ColumnDomain.UInt, Order = 24, OldDBColumnName = "DRPrivInd", Nullable = true, DefaultValue = 1)]
+        [DBColumn(dRFormula.FormulaId_ColumnName, ColumnDomain.UInt, Order = 24, OldDBColumnName = "DRPrivInd", Nullable = true, DefaultValue = 1)]
         public uint DRFormulaId
         {
             get
             {
-                return tryParseUInt("dr_formula_id");
+                return tryParseUInt(dRFormula.FormulaId_ColumnName);
             }
             set
             {
-                this["dr_formula_id"] = value;
+                this[dRFormula.FormulaId_ColumnName] = value;
                 loadDRFormula();
                 refreshDRMeasureData();
             }
         }
 
+        public const string StructureId_ColumnName = "cable_structure_id";
+        public const string RealAmount_ColumnName = "real_amount";
+        public const string ShownAmount_ColumnName = "shown_amount";
+        public const string LeadDiameter_ColumnName = "lead_diameter";
+        public const string WaveResistance_ColumnName = "wave_resistance";
+        public const string GroupedAmount_ColumnName = "grouped_amount";
+        public const string LeadLeadVoltage_ColumnName = "ll_test_voltage";
+        public const string LeadShieldVoltage_ColumnName = "ls_test_voltage";
+        public const string WorkCapGroup_ColumnName = "work_capacity_group";
+
+        #endregion 
         private void refreshDRMeasureData()
         {
             foreach(CableStructureMeasuredParameterData mpd in MeasuredParameters.Rows)
@@ -542,7 +551,7 @@ namespace NormaMeasure.DBControl.Tables
         protected Cable ownCable;
         protected dRFormula drFormula;
 
-        public const string StructureId_ColumnName = "cable_structure_id";
+
 
     }
 
@@ -562,7 +571,7 @@ namespace NormaMeasure.DBControl.Tables
             return cabStructures;
         }
 
-        [DBColumn(Cable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false, ReferenceTo = "tested_cables(cable_id) ON DELETE CASCADE")]
+        [DBColumn(Cable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false, ReferenceTo = "tested_cables("+ Cable.CableId_ColumnName +") ON DELETE CASCADE")]
         public new uint CableId
         {
             get

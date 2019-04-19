@@ -197,16 +197,16 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("employee_number", ColumnDomain.Tinytext, Order = 14, OldDBColumnName = "TabNum", Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(EmployeeNumber_ColumnName, ColumnDomain.Tinytext, Order = 14, OldDBColumnName = "TabNum", Nullable = true, IsPrimaryKey = false)]
         public string EmployeeNumber
         {
             get
             {
-                return this["employee_number"].ToString();
+                return this[EmployeeNumber_ColumnName].ToString();
             }
             set
             {
-                this["employee_number"] = value;
+                this[EmployeeNumber_ColumnName] = value;
             }
         }
 
@@ -223,16 +223,16 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("password", ColumnDomain.Tinytext, Order = 16, OldDBColumnName = "Pass", Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(Password_ColumnName, ColumnDomain.Tinytext, Order = 16, OldDBColumnName = "Pass", Nullable = true, IsPrimaryKey = false)]
         public string Password
         {
             get
             {
-                return this["password"].ToString();
+                return this[Password_ColumnName].ToString();
             }
             set
             {
-                this["password"] = value;
+                this[Password_ColumnName] = value;
             }
         }
 
@@ -264,5 +264,7 @@ namespace NormaMeasure.DBControl.Tables
         public const string ThirdName_ColumnName = "third_name";
         public const string IsActiveFlag_ColumnName = "is_active";
         public const string FullName_ColumnName = "full_name";
+        public const string EmployeeNumber_ColumnName = "employee_number";
+        public const string Password_ColumnName = "password";
     }
 }

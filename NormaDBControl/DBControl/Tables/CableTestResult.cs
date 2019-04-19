@@ -14,6 +14,7 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        #region Колонки таблицы
         [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "IspInd", ReferenceTo = "cable_tests(cable_test_id) ON DELETE CASCADE", Nullable = true)]
         public uint TestId
         {
@@ -176,7 +177,7 @@ namespace NormaMeasure.DBControl.Tables
         public const string MeasureResult_ColumnName = "result";
         public const string ElementNumberOnGenerator_ColumnName = "generator_element_number";
         public const string PairNumberOnGenerator_ColumnName = "generator_pair_number";
-
+        #endregion
 
     }
 }

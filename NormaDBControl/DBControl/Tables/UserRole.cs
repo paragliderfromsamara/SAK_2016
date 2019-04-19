@@ -16,19 +16,14 @@ namespace NormaMeasure.DBControl.Tables
 
         public static UserRole find_by_role_id(uint _roleId)
         {
-            DBEntityTable t = new DBEntityTable(typeof(UserRole));
-            string select_cmd = $"{t.SelectQuery} WHERE user_role_id = {_roleId}";
-            t.FillByQuery(select_cmd);
+            DBEntityTable t = find_by_primary_key(_roleId, typeof(UserRole));
             if (t.Rows.Count > 0) return (UserRole)t.Rows[0];
             else return null;
         }
 
         public static DBEntityTable get_all_as_table()
         {
-            DBEntityTable t = new DBEntityTable(typeof(UserRole));
-            string select_cmd = $"{t.SelectQuery}";
-            t.FillByQuery(select_cmd);
-            return t;
+            return get_all(typeof(UserRole));
         }
 
 

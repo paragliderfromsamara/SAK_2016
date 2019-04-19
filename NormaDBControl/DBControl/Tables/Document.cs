@@ -46,7 +46,7 @@ namespace NormaMeasure.DBControl.Tables
         protected void CheckShortNameUniquiness()
         {
             DBEntityTable t = new DBEntityTable(typeof(Document));
-            string select_cmd = $"{t.SelectQuery} WHERE NOT document_id = {this.DocumentId} AND short_name = '{this.ShortName}'";
+            string select_cmd = $"{t.SelectQuery} WHERE NOT {DocumentId_ColumnName} = {this.DocumentId} AND {ShortName} = '{this.ShortName}'";
             t.FillByQuery(select_cmd);
             if (t.Rows.Count > 0)
             {
@@ -59,7 +59,7 @@ namespace NormaMeasure.DBControl.Tables
         public static Document find_by_document_id(uint id)
         {
             DBEntityTable t = new DBEntityTable(typeof(Document));
-            string select_cmd = $"{t.SelectQuery} WHERE document_id = {id}";
+            string select_cmd = $"{t.SelectQuery} WHERE {DocumentId_ColumnName} = {id}";
             t.FillByQuery(select_cmd);
             if (t.Rows.Count > 0) return (Document)t.Rows[0];
             else
@@ -84,44 +84,51 @@ namespace NormaMeasure.DBControl.Tables
             return t;
         }
 
-        [DBColumn("document_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "DocInd", IsPrimaryKey = true, AutoIncrement = true)]
+
+        #region Колонки таблицы
+        [DBColumn(DocumentId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "DocInd", IsPrimaryKey = true, AutoIncrement = true)]
         public uint DocumentId
         {
             get
             {
-                return tryParseUInt("document_id");
+                return tryParseUInt(DocumentId_ColumnName);
             }set
             {
-                this["document_id"] = value;
+                this[DocumentId_ColumnName] = value;
             }
         }
 
-        [DBColumn("short_name", ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "DocNum", Nullable = true)]
+        [DBColumn(ShortName_ColumnName, ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "DocNum", Nullable = true)]
         public string ShortName
         {
             get
             {
-                return this["short_name"].ToString();
+                return this[ShortName_ColumnName].ToString();
             }
             set
             {
-                this["short_name"] = value;
+                this[ShortName_ColumnName] = value;
             }
         }
 
-        [DBColumn("full_name", ColumnDomain.Varchar, Size = 1000, Order = 12, OldDBColumnName = "DocName", Nullable = true)]
+        [DBColumn(FullName_ColumnName, ColumnDomain.Varchar, Size = 1000, Order = 12, OldDBColumnName = "DocName", Nullable = true)]
         public string FullName
         {
             get
             {
-                return this["full_name"].ToString();
+                return this[FullName_ColumnName].ToString();
             }
             set
             {
-                this["full_name"] = value;
+                this[FullName_ColumnName] = value;
             }
         }
 
+        public const string DocumentId_ColumnName = "document_id";
+        public const string ShortName_ColumnName = "short_name";
+        public const string FullName_ColumnName = "full_name";
+
+        #endregion
 
     }
 }

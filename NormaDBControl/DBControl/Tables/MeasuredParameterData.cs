@@ -14,6 +14,23 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        /// <summary>
+        /// Минимальное значение по умолчанию
+        /// </summary>
+        public const float MinValueDefault = -1000000000;
+        /// <summary>
+        /// Максимальное значение по умолчанию
+        /// </summary>
+        public const float MaxValueDefault = 1000000000;
+        /// <summary>
+        /// Длина приведения по умолчанию
+        /// </summary>
+        public const float LengthBringingDefault = 1000;
+        /// <summary>
+        /// Процент годности по умолчанию
+        /// </summary>
+        public const float PercentDefault = 100;
+
         public static MeasuredParameterData GetByParameters(CableStructureMeasuredParameterData cab_struct_data)
         {
             Random r = new Random();
@@ -62,9 +79,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static MeasuredParameterData find_by_id(uint id)
         {
-            DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterData));
-            string select_cmd = $"{t.SelectQuery} WHERE measured_parameter_data_id = {id}";
-            t.FillByQuery(select_cmd);
+            DBEntityTable t = find_by_primary_key(id,typeof(MeasuredParameterData));
             if (t.Rows.Count > 0) return (MeasuredParameterData)t.Rows[0];
             else
             {
@@ -72,113 +87,117 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("measured_parameter_data_id", ColumnDomain.UInt, Order = 10, IsPrimaryKey = true, AutoIncrement = true)]
+        #region Колонки таблицы
+        [DBColumn(DataId_ColumnName, ColumnDomain.UInt, Order = 10, IsPrimaryKey = true, AutoIncrement = true)]
         public uint MeasureParameterDataId
         {
             get
             {
-                return tryParseUInt("measured_parameter_data_id");
+                return tryParseUInt(DataId_ColumnName);
             }
             set
             {
-                this["measured_parameter_data_id"] = value;
+                this[DataId_ColumnName] = value;
             }
         }
 
-        [DBColumn("parameter_type_id", ColumnDomain.UInt, Order = 11, ReferenceTo = "measured_parameter_types(parameter_type_id)")]
+        [DBColumn(MeasuredParameterType.ParameterTypeId_ColumnName, ColumnDomain.UInt, Order = 11, ReferenceTo = "measured_parameter_types(parameter_type_id)")]
         public uint ParameterTypeId
         {
             get
             {
-                return tryParseUInt("parameter_type_id");
+                return tryParseUInt(MeasuredParameterType.ParameterTypeId_ColumnName);
             }
             set
             {
-                this["parameter_type_id"] = value;
+                this[MeasuredParameterType.ParameterTypeId_ColumnName] = value;
             }
         }
 
-        [DBColumn("frequency_range_id", ColumnDomain.UInt, Order = 12, OldDBColumnName = "FreqDiapInd", DefaultValue = 1, ReferenceTo = "frequency_ranges(frequency_range_id)")]
+        [DBColumn(FrequencyRange.FreqRangeId_ColumnName, ColumnDomain.UInt, Order = 12, OldDBColumnName = "FreqDiapInd", DefaultValue = 1, ReferenceTo = "frequency_ranges(frequency_range_id)")]
         public uint FrequencyRangeId
         {
             get
             {
-                return tryParseUInt("frequency_range_id");
+                return tryParseUInt(FrequencyRange.FreqRangeId_ColumnName);
             }
             set
             {
-                this["frequency_range_id"] = value;
+                this[FrequencyRange.FreqRangeId_ColumnName] = value;
             }
         }
 
-        [DBColumn("length_bringing_type_id", ColumnDomain.UInt, Order = 13, DefaultValue = 0, ReferenceTo = "length_bringing_types(length_bringing_type_id)")]
+        [DBColumn(LengthBringingType.BringingId_ColumnName, ColumnDomain.UInt, Order = 13, DefaultValue = 0, ReferenceTo = "length_bringing_types(length_bringing_type_id)")]
         public uint LngthBringingTypeId
         {
             get
             {
-                return tryParseUInt("length_bringing_type_id");
+                return tryParseUInt(LengthBringingType.BringingId_ColumnName);
             }
             set
             {
-                this["length_bringing_type_id"] = value;
+                this[LengthBringingType.BringingId_ColumnName] = value;
             }
         }
 
-        [DBColumn("length_bringing", ColumnDomain.Float, Order = 14, DefaultValue = LengthBringingDefault)]
+        [DBColumn(LengthBringing_ColumnName, ColumnDomain.Float, Order = 14, DefaultValue = LengthBringingDefault)]
         public float LengthBringing
         {
             get
             {
-                return tryParseFloat("length_bringing");
+                return tryParseFloat(LengthBringing_ColumnName);
             }
             set
             {
-                this["length_bringing"] = value;
+                this[LengthBringing_ColumnName] = value;
             }
         }
 
-        [DBColumn("min_value", ColumnDomain.Float, Order = 15, DefaultValue = MinValueDefault)]
+        [DBColumn(MinValue_ColumnName, ColumnDomain.Float, Order = 15, DefaultValue = MinValueDefault)]
         public float MinValue
         {
             get
             {
-                return tryParseFloat("min_value");
+                return tryParseFloat(MinValue_ColumnName);
             }
             set
             {
-                this["min_value"] = value;
+                this[MinValue_ColumnName] = value;
             }
         }
 
-        [DBColumn("max_value", ColumnDomain.Float, Order = 16, DefaultValue = MaxValueDefault)]
+        [DBColumn(MaxValue_ColumnName, ColumnDomain.Float, Order = 16, DefaultValue = MaxValueDefault)]
         public float MaxValue
         {
             get
             {
-                return tryParseFloat("max_value");
+                return tryParseFloat(MaxValue_ColumnName);
             }
             set
             {
-                this["max_value"] = value;
+                this[MaxValue_ColumnName] = value;
             }
         }
 
-        [DBColumn("percent", ColumnDomain.Float, Order = 17, DefaultValue = PercentDefault)]
+        [DBColumn(Percent_ColumnName, ColumnDomain.Float, Order = 17, DefaultValue = PercentDefault)]
         public uint Percent
         {
             get
             {
-                return tryParseUInt("percent");
+                return tryParseUInt(Percent_ColumnName);
             }
             set
             {
-                this["percent"] = value;
+                this[Percent_ColumnName] = value;
             }
         }
 
-        public const float MinValueDefault = -1000000000;
-        public const float MaxValueDefault = 1000000000;
-        public const float LengthBringingDefault = 1000;
-        public const float PercentDefault = 100;
+        public const string DataId_ColumnName = "measured_parameter_data_id";
+        public const string LengthBringing_ColumnName = "length_bringing";
+        public const string MinValue_ColumnName = "min_value";
+        public const string MaxValue_ColumnName = "max_value";
+        public const string Percent_ColumnName = "percent";
+        #endregion
+
     }
 }

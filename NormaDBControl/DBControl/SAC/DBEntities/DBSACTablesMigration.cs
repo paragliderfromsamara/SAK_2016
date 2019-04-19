@@ -127,10 +127,10 @@ namespace NormaMeasure.DBControl.SAC
         private void make_LeadTestStatussTablesSeeds(ref DBEntityTable t)
         {
             string[][] data = {
-                new string[] {"0", "Годна"},
-                new string[] {"1", "Оборвана"},
-                new string[] {"2", "Замкнута"},
-                new string[] {"3", "Пробита"}
+                new string[] {$"{LeadTestStatus.Ok}", "Годна"},
+                new string[] {$"{LeadTestStatus.Ragged}", "Оборвана"},
+                new string[] {$"{LeadTestStatus.Closured}", "Замкнута"},
+                new string[] {$"{LeadTestStatus.Broken}", "Пробита"}
             };
             foreach (string[] rData in data)
             {

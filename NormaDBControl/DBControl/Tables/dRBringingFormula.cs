@@ -16,50 +16,54 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            DBEntityTable t = new DBEntityTable(typeof(dRBringingFormula));
-            string select_cmd = $"{t.SelectQuery}";
-            t.FillByQuery(select_cmd);
-            return t;
+            return get_all(typeof(dRBringingFormula));
         }
 
-        [DBColumn("dr_bringing_formula_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "DRPrivInd", Nullable = true, IsPrimaryKey = true)]
+        #region Колонки таблицы 
+        [DBColumn(FormulaId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "DRPrivInd", Nullable = true, IsPrimaryKey = true)]
         public uint FormulaId
         {
             get
             {
-                return tryParseUInt("dr_bringing_formula_id");
+                return tryParseUInt(FormulaId_ColumnName);
             }
             set
             {
-                this["dr_bringing_formula_id"] = value;
+                this[FormulaId_ColumnName] = value;
             }
         }
 
 
-        [DBColumn("dr_bringing_formula_name", ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "DRPrivName", Nullable = true)]
+        [DBColumn(FormulaName_ColumnName, ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "DRPrivName", Nullable = true)]
         public string FormulaName
         {
             get
             {
-                return this["dr_bringing_formula_name"].ToString();
+                return this[FormulaName_ColumnName].ToString();
             }
             set
             {
-                this["dr_bringing_formula_name"] = value;
+                this[FormulaName_ColumnName] = value;
             }
         }
 
-        [DBColumn("dr_bringing_formula_description", ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "DRPrivOpis", Nullable = true)]
+        [DBColumn(FormulaDescription_ColumnName, ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "DRPrivOpis", Nullable = true)]
         public string Formula
         {
             get
             {
-                return this["dr_bringing_formula_description"].ToString();
+                return this[FormulaDescription_ColumnName].ToString();
             }
             set
             {
-                this["dr_bringing_formula_description"] = value;
+                this[FormulaDescription_ColumnName] = value;
             }
         }
+
+        public const string FormulaId_ColumnName = "dr_bringing_formula_id";
+        public const string FormulaName_ColumnName = "dr_bringing_formula_name";
+        public const string FormulaDescription_ColumnName = "dr_bringing_formula_description";
+
+        #endregion
     }
 }

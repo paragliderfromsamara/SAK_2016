@@ -16,7 +16,7 @@ namespace NormaMeasure.DBControl.Tables
         public static DBEntityTable get_all_including_docs()
         {
             DBEntityTable docsTable = new DBEntityTable(typeof(Document));
-            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE is_draft = 0";
+            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE {IsDraftFlag_ColumnName} = 0";
             return find_by_criteria(select_cmd, typeof(Cable));
         }
 
@@ -104,8 +104,8 @@ namespace NormaMeasure.DBControl.Tables
             DBEntityTable t = new DBEntityTable(typeof(Cable), DBEntityTableMode.NoColumns);
             t.TableName = "cable_marks";
             t.Columns.Add("cable_mark");
-            string q = $"{t.SelectQuery} WHERE is_draft = 0 ORDER BY name ASC";
-            string selectString = " DISTINCT name AS cable_mark ";
+            string q = $"{t.SelectQuery} WHERE {IsDraftFlag_ColumnName} = 0 ORDER BY {CableName_ColumnName} ASC";
+            string selectString = $" DISTINCT {CableName_ColumnName} AS cable_mark ";
             q = q.Replace("*", selectString);
             t.FillByQuery(q);
             return t;    
@@ -149,7 +149,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            return find_by_criteria("is_draft = 0", typeof(Cable));
+            return find_by_criteria($"{IsDraftFlag_ColumnName} = 0", typeof(Cable));
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace NormaMeasure.DBControl.Tables
         /// <returns></returns>
         private static Cable findDraft()
         {
-            DBEntityTable t = find_by_criteria("is_draft = 1", typeof(Cable));
+            DBEntityTable t = find_by_criteria($"{IsDraftFlag_ColumnName} = 1", typeof(Cable));
             if (t.Rows.Count != 0)
             {
                 Cable draft = (Cable)t.Rows[0];
@@ -211,7 +211,7 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-
+        #region Колонки таблицы
         [DBColumn(CableId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName ="CabNum", Nullable =true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint CableId
         {
@@ -239,147 +239,163 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("struct_name", ColumnDomain.Tinytext, OldDBColumnName = "CabNameStruct", Order = 12, DefaultValue = "", Nullable = true)]
+        [DBColumn(StructName_ColumnName, ColumnDomain.Tinytext, OldDBColumnName = "CabNameStruct", Order = 12, DefaultValue = "", Nullable = true)]
         public string StructName
         {
             get
             {
-                return  this["struct_name"].ToString();
+                return  this[StructName_ColumnName].ToString();
             }
             set
             {
-                this["struct_name"] = value;
+                this[StructName_ColumnName] = value;
             }
         }
 
-        [DBColumn("notes", ColumnDomain.Tinytext, OldDBColumnName = "TextPrim", Order = 13, DefaultValue = "", Nullable = true)]
+        [DBColumn(Notes_ColumnName, ColumnDomain.Tinytext, OldDBColumnName = "TextPrim", Order = 13, DefaultValue = "", Nullable = true)]
         public string Notes
         {
             get
             {
-                return this["notes"].ToString();
+                return this[Notes_ColumnName].ToString();
             }
             set
             {
-                this["notes"] = value;
+                this[Notes_ColumnName] = value;
             }
         }
 
-        [DBColumn("code_okp", ColumnDomain.Char, OldDBColumnName = "KodOKP", Nullable =true,Size = 12, Order = 14, DefaultValue = "")]
+        [DBColumn(CodeOKP_ColumnName, ColumnDomain.Char, OldDBColumnName = "KodOKP", Nullable =true,Size = 12, Order = 14, DefaultValue = "")]
         public string CodeOKP
         {
             get
             {
-                return this["code_okp"].ToString();
+                return this[CodeOKP_ColumnName].ToString();
             }set
             {
-                this["code_okp"] = value;
+                this[CodeOKP_ColumnName] = value;
             }
         }
 
-        [DBColumn("code_kch", ColumnDomain.Char, OldDBColumnName = "KodOKP_KCH", Size = 2, Order = 15, DefaultValue = "", Nullable = true)]
+        [DBColumn(CodeKCH_ColumnName, ColumnDomain.Char, OldDBColumnName = "KodOKP_KCH", Size = 2, Order = 15, DefaultValue = "", Nullable = true)]
         public string CodeKCH
         {
             get
             {
-                return this["code_kch"].ToString();
+                return this[CodeKCH_ColumnName].ToString();
             }
             set
             {
-                this["code_kch"] = value;
+                this[CodeKCH_ColumnName] = value;
             }
         }
 
-        [DBColumn("linear_mass", ColumnDomain.Float, OldDBColumnName = "PogMass", Order = 16, DefaultValue = 0, Nullable = true)]
+        [DBColumn(LinearMass_ColumnName, ColumnDomain.Float, OldDBColumnName = "PogMass", Order = 16, DefaultValue = 0, Nullable = true)]
         public float LinearMass
         {
             get
             {
-                return tryParseFloat("linear_mass");
+                return tryParseFloat(LinearMass_ColumnName);
             }
             set
             {
-                this["linear_mass"] = value;
+                this[LinearMass_ColumnName] = value;
             }
         }
 
-        [DBColumn("build_length", ColumnDomain.Float, OldDBColumnName = "StrLengt", Order = 17, DefaultValue = 1000, Nullable = true)]
+        [DBColumn(BuildLength_ColumnName, ColumnDomain.Float, OldDBColumnName = "StrLengt", Order = 17, DefaultValue = 1000, Nullable = true)]
         public float BuildLength
         {
             get
             {
-                return tryParseFloat("build_length");
+                return tryParseFloat(BuildLength_ColumnName);
             }
             set
             {
-                this["build_length"] = value;
+                this[BuildLength_ColumnName] = value;
             }
         }
 
-        [DBColumn("document_id", ColumnDomain.UInt, OldDBColumnName = "DocInd", Order = 18, DefaultValue = 0, Nullable = true)]
+        [DBColumn(Document.DocumentId_ColumnName, ColumnDomain.UInt, OldDBColumnName = "DocInd", Order = 18, DefaultValue = 0, Nullable = true)]
         public uint DocumentId
         {
             get
             {
-                return tryParseUInt("document_id");
+                return tryParseUInt(Document.DocumentId_ColumnName);
             }
             set
             {
-                this["document_id"] = value;
+                this[Document.DocumentId_ColumnName] = value;
             }
         }
 
-        [DBColumn("u_cover", ColumnDomain.UInt, OldDBColumnName = "U_Obol", Order = 19, DefaultValue = 0, Nullable = true)]
+        [DBColumn(UCover_ColumnName, ColumnDomain.UInt, OldDBColumnName = "U_Obol", Order = 19, DefaultValue = 0, Nullable = true)]
         public float UCover
         {
             get
             {
-                return tryParseFloat("u_cover");
+                return tryParseFloat(UCover_ColumnName);
             }
             set
             {
-                this["u_cover"] = value;
+                this[UCover_ColumnName] = value;
             }
         }
 
-        [DBColumn("p_min", ColumnDomain.UInt, OldDBColumnName = "P_min", Order =20, DefaultValue = 2400, Nullable = true)]
+        [DBColumn(PMin_ColumnName, ColumnDomain.UInt, OldDBColumnName = "P_min", Order =20, DefaultValue = 2400, Nullable = true)]
         public float PMin
         {
             get
             {
-                return tryParseFloat("p_min");
+                return tryParseFloat(PMin_ColumnName);
             }
             set
             {
-                this["p_min"] = value;
+                this[PMin_ColumnName] = value;
             }
         }
 
-        [DBColumn("p_max", ColumnDomain.UInt, OldDBColumnName = "P_max", Order = 21, DefaultValue =0, Nullable =true)]
+        [DBColumn(PMax_ColumnName, ColumnDomain.UInt, OldDBColumnName = "P_max", Order = 21, DefaultValue =0, Nullable =true)]
         public float PMax
         {
             get
             {
-                return tryParseFloat("p_max");
+                return tryParseFloat(PMax_ColumnName);
             }
             set
             {
-                this["p_max"] = value;
+                this[PMax_ColumnName] = value;
             }
         }
 
-        [DBColumn("is_draft", ColumnDomain.Boolean, Order = 22, DefaultValue = false)]
+        [DBColumn(IsDraftFlag_ColumnName, ColumnDomain.Boolean, Order = 22, DefaultValue = false)]
         public bool IsDraft
         {
             get
             {
-                return tryParseBoolean("is_draft", false);
+                return tryParseBoolean(IsDraftFlag_ColumnName, false);
             }
             set
             {
-                this["is_draft"] = value;
+                this[IsDraftFlag_ColumnName] = value;
             }
         }
+
+
+
+        public const string CableId_ColumnName = "cable_id";
+        public const string CableName_ColumnName = "name";
+        public const string StructName_ColumnName = "struct_name";
+        public const string Notes_ColumnName = "notes";
+        public const string CodeOKP_ColumnName = "code_okp";
+        public const string CodeKCH_ColumnName = "code_kch";
+        public const string LinearMass_ColumnName = "linear_mass";
+        public const string BuildLength_ColumnName = "build_length";
+        public const string UCover_ColumnName = "u_cover";
+        public const string PMin_ColumnName = "p_min";
+        public const string PMax_ColumnName = "p_max";
+        public const string IsDraftFlag_ColumnName = "is_draft";
+        #endregion
 
         /// <summary>
         /// Выдает нормативный документ по данному кабелю
@@ -437,9 +453,6 @@ namespace NormaMeasure.DBControl.Tables
 
         protected DBEntityTable cableStructures;
 
-
-        public const string CableId_ColumnName = "cable_id";
-        public const string CableName_ColumnName = "name";
     }
 
     
@@ -450,7 +463,7 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 23, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+")")]
+        [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 23, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+ ") ON DELETE CASCADE")]
         public uint TestId
         {
             get

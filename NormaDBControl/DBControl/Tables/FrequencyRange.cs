@@ -37,6 +37,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        #region Колонки таблицы
         [DBColumn(FreqRangeId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "FreqDiapInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint FrequencyRangeId
         {
@@ -50,47 +51,51 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("frequency_min", ColumnDomain.Float, Order = 11, OldDBColumnName = "FreqMin", Nullable = true)]
+        [DBColumn(FreqMin_ColumnName, ColumnDomain.Float, Order = 11, OldDBColumnName = "FreqMin", Nullable = true)]
         public float FrequencyMin
         {
             get
             {
-                return tryParseFloat("frequency_min");
+                return tryParseFloat(FreqMin_ColumnName);
             }
             set
             {
-                this["frequency_min"] = value;
+                this[FreqMin_ColumnName] = value;
             }
         }
 
-        [DBColumn("frequency_max", ColumnDomain.Float, Order = 12, OldDBColumnName = "FreqMax", Nullable = true)]
+        [DBColumn(FreqMax_ColumnName, ColumnDomain.Float, Order = 12, OldDBColumnName = "FreqMax", Nullable = true)]
         public float FrequencyMax
         {
             get
             {
-                return tryParseFloat("frequency_max");
+                return tryParseFloat(FreqMax_ColumnName);
             }
             set
             {
-                this["frequency_max"] = value;
+                this[FreqMax_ColumnName] = value;
             }
         }
 
-        [DBColumn("frequency_step", ColumnDomain.Float, Order = 13, OldDBColumnName = "FreqStep", Nullable = true)]
+        [DBColumn(FreqStep_ColumnName, ColumnDomain.Float, Order = 13, OldDBColumnName = "FreqStep", Nullable = true)]
         public float FrequencyStep
         {
             get
             {
-                return tryParseFloat("frequency_step");
+                return tryParseFloat(FreqStep_ColumnName);
             }
             set
             {
-                this["frequency_step"] = value;
+                this[FreqStep_ColumnName] = value;
             }
         }
 
         public const string FreqRangeId_ColumnName = "frequency_range_id";
+        public const string FreqMin_ColumnName = "frequency_min";
+        public const string FreqMax_ColumnName = "frequency_max";
+        public const string FreqStep_ColumnName = "frequency_step";
 
-        
+        #endregion
+
     }
 }

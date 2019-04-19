@@ -14,7 +14,7 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-
+        #region Колонки таблицы
         [DBColumn(StatusId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "Status", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint StatusId
         {
@@ -44,7 +44,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public const string StatusId_ColumnName = "cable_test_status_id";
         public const string StatusText_ColumnName = "description";
-
+        #endregion
 
         public const uint NotStarted = 1;
         public const uint Started = 2;

@@ -27,33 +27,34 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn("baraban_type_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "TipInd", Nullable = false, IsPrimaryKey = false)]
+        [DBColumn(BarabanType.TypeId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "TipInd", Nullable = false, IsPrimaryKey = false)]
         public uint BarabanTypeId
         {
             get
             {
-                return tryParseUInt("baraban_type_id");
+                return tryParseUInt(BarabanType.TypeId_ColumnName);
             }
             set
             {
-                this["baraban_type_id"] = value;
+                this[BarabanType.TypeId_ColumnName] = value;
             }
         }
 
-        [DBColumn("serial_number", ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "BarabanNum", Nullable = true, IsPrimaryKey = false)]
+        [DBColumn(BarabanSerialNumber_ColumnName, ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "BarabanNum", Nullable = true, IsPrimaryKey = false)]
         public float SerialNumber
         {
             get
             {
-                return tryParseFloat("serial_number");
+                return tryParseFloat(BarabanSerialNumber_ColumnName);
             }
             set
             {
-                this["serial_number"] = value;
+                this[BarabanSerialNumber_ColumnName] = value;
             }
         }
 
 
-        public const string BarabanId_ColumnName = "baraban_id";
+        public const string BarabanId_ColumnName = "serial_number";
+        public const string BarabanSerialNumber_ColumnName = "serial_number";
     }
 }

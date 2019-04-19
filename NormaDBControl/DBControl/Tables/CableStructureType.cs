@@ -26,62 +26,74 @@ namespace NormaMeasure.DBControl.Tables
             return get_all(typeof(CableStructureType));
         }
 
-        [DBColumn("structure_type_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktNum", Nullable = true, IsPrimaryKey = true)]
+        #region Колонки таблицы
+        [DBColumn(TypeId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktNum", Nullable = true, IsPrimaryKey = true)]
         public uint StructureTypeId
         {
             get
             {
-                return tryParseUInt("structure_type_id");
+                return tryParseUInt(TypeId_ColumnName);
             }
             set
             {
-                this["structure_type_id"] = value;
+                this[TypeId_ColumnName] = value;
             }
         }
 
-        [DBColumn("structure_type_name", ColumnDomain.Varchar, Size = 120, Order = 11, OldDBColumnName = "StruktTip", Nullable = true)]
+        /// <summary>
+        /// Название типа структуры: Жила, Пара, Тройка, Четвёрка
+        /// </summary>
+        [DBColumn(TypeName_ColumnName, ColumnDomain.Varchar, Size = 120, Order = 11, OldDBColumnName = "StruktTip", Nullable = true)]
         public string StructureTypeName
         {
             get
             {
-                return this["structure_type_name"].ToString();
+                return this[TypeName_ColumnName].ToString();
             }
             set
             {
-                this["structure_type_name"] = value;
+                this[TypeName_ColumnName] = value;
             }
         }
 
-        [DBColumn("lead_amount", ColumnDomain.Int, Size =3, Order = 12, OldDBColumnName = "ColvoGil", Nullable = true)]
+        /// <summary>
+        /// Количество жил структуры
+        /// </summary>
+        [DBColumn(LeadAmount_ColumnName, ColumnDomain.Int, Size =3, Order = 12, OldDBColumnName = "ColvoGil", Nullable = true)]
         public int StructureLeadsAmount
         {
             get
             {
-                return tryParseInt("lead_amount");
+                return tryParseInt(LeadAmount_ColumnName);
             }
             set
             {
-                this["lead_amount"] = value;
+                this[LeadAmount_ColumnName] = value;
             }
         }
 
         /// <summary>
         /// Список id измеряемых параметров доступных для данного типа структуры, в виде строки
         /// </summary>
-        [DBColumn("structure_measured_parameters", ColumnDomain.Set, SetTypeValue = "'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'", Order = 13, OldDBColumnName = "Set_ParamInd", DefaultValue = "1", Nullable = true)]
+        [DBColumn(MeasuredParametersList_ColumnName, ColumnDomain.Set, SetTypeValue = "'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'", Order = 13, OldDBColumnName = "Set_ParamInd", DefaultValue = "1", Nullable = true)]
         public string StructureMeasuredParameters
         {
             get
             {
 
-                return this["structure_measured_parameters"].ToString();
+                return this[MeasuredParametersList_ColumnName].ToString();
             }
             set
             {
-                this["structure_measured_parameters"] = value;
+                this[MeasuredParametersList_ColumnName] = value;
             }
         }
 
+        public const string TypeId_ColumnName = "structure_type_id";
+        public const string TypeName_ColumnName = "structure_type_name";
+        public const string LeadAmount_ColumnName = "lead_amount";
+        public const string MeasuredParametersList_ColumnName = "structure_measured_parameters";
+        #endregion
 
         public DBEntityTable MeasuredParameterTypes
         {

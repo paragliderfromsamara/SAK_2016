@@ -61,6 +61,8 @@ namespace NormaMeasure.DBControl.Tables
             return find_by_criteria(select_cmd, typeof(CableTest));
         }
 
+
+        #region Колонки таблицы
         [DBColumn(CableTestId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "IspInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint TestId
         {
@@ -203,7 +205,7 @@ namespace NormaMeasure.DBControl.Tables
         public const string VSVILeadShield_ColumnName = "vsvi_lead_shield";
         public const string NettoWeight_ColumnName = "netto_weight";
         public const string BruttoWeight_ColumnName = "brutto_weight";
-
+        #endregion
     }
 
 

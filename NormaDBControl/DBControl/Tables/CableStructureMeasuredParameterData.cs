@@ -89,20 +89,20 @@ namespace NormaMeasure.DBControl.Tables
             {
                 switch (e.Column.ColumnName)
                 {
-                    case "length_bringing_type_id":
+                    case LengthBringingType.BringingId_ColumnName:
                         SetBringingLengthByTypeId();
                         RefreshResultMeasure();
                         break;
-                    case "length_bringing":
+                    case MeasuredParameterData.LengthBringing_ColumnName:
                         RefreshResultMeasure();
                         break;
-                    case "frequency_max":
+                    case FrequencyRange.FreqMax_ColumnName:
                         if (!skipFreqChangeEvent) CheckMaxFreqChange();
                         break;
-                    case "frequency_min":
+                    case FrequencyRange.FreqMin_ColumnName:
                         if (!skipFreqChangeEvent) CheckFreqMinChange();
                         break;
-                    case "frequency_step":
+                    case FrequencyRange.FreqStep_ColumnName:
                         if (!skipFreqChangeEvent) CheckFreqStepChange();
                         break;
                 }
@@ -200,84 +200,84 @@ namespace NormaMeasure.DBControl.Tables
             return t;
         }
 
-        [DBColumn("cable_structure_id", ColumnDomain.UInt, Order = 10, Nullable = false, ReferenceTo = "cable_structures(cable_structure_id) ON DELETE CASCADE")]
+        [DBColumn(CableStructure.StructureId_ColumnName, ColumnDomain.UInt, Order = 10, Nullable = false, ReferenceTo = "cable_structures("+ CableStructure.StructureId_ColumnName + ") ON DELETE CASCADE")]
         public uint CableStructureId
         {
             get
             {
-                return tryParseUInt("cable_structure_id");
+                return tryParseUInt(CableStructure.StructureId_ColumnName);
             }
             set
             {
-                this["cable_structure_id"] = value;
+                this[CableStructure.StructureId_ColumnName] = value;
             }
         }
 
-        [DBColumn("measured_parameter_data_id", ColumnDomain.UInt, Order = 11, Nullable = false, ReferenceTo = "measured_parameter_data(measured_parameter_data_id)")]
+        [DBColumn(MeasuredParameterData.DataId_ColumnName, ColumnDomain.UInt, Order = 11, Nullable = false, ReferenceTo = "measured_parameter_data("+ MeasuredParameterData.DataId_ColumnName + ")")]
         public uint MeasuredParameterDataId
         {
             get
             {
-                return tryParseUInt("measured_parameter_data_id");
+                return tryParseUInt(MeasuredParameterData.DataId_ColumnName);
             }
             set
             {
-                this["measured_parameter_data_id"] = value;
+                this[MeasuredParameterData.DataId_ColumnName] = value;
             }
         }
         #region Колонки типа измеряемого параметра (ParameterType)
 
 
 
-        [DBColumn("parameter_type_id", ColumnDomain.UInt, Order = 12, IsVirtual = true)]
+        [DBColumn(MeasuredParameterType.ParameterTypeId_ColumnName, ColumnDomain.UInt, Order = 12, IsVirtual = true)]
         public uint ParameterTypeId
         {
             get
             {
-                return tryParseUInt("parameter_type_id");
+                return tryParseUInt(MeasuredParameterType.ParameterTypeId_ColumnName);
             }
             set
             {
-                this["parameter_type_id"] = value;
+                this[MeasuredParameterType.ParameterTypeId_ColumnName] = value;
             }
         }
 
-        [DBColumn("parameter_name", ColumnDomain.Tinytext, Order = 13, IsVirtual = true)]
+        [DBColumn(MeasuredParameterType.ParameterName_ColumnName, ColumnDomain.Tinytext, Order = 13, IsVirtual = true)]
         public string ParameterName
         {
             get
             {
-                return this["parameter_name"].ToString();
+                return this[MeasuredParameterType.ParameterName_ColumnName].ToString();
             }
             set
             {
-                this["parameter_name"] = value;
+                this[MeasuredParameterType.ParameterName_ColumnName] = value;
             }
         }
 
-        [DBColumn("parameter_measure", ColumnDomain.Tinytext, Order = 14, IsVirtual = true)]
+        [DBColumn(MeasuredParameterType.ParameterMeasure_ColumnName, ColumnDomain.Tinytext, Order = 14, IsVirtual = true)]
         public string ParameterMeasure
         {
             get
             {
-                return this["parameter_measure"].ToString();
+                return this[MeasuredParameterType.ParameterMeasure_ColumnName].ToString();
             }
             set
             {
-                this["parameter_measure"] = value;
+                this[MeasuredParameterType.ParameterMeasure_ColumnName] = value;
             }
         }
 
-        [DBColumn("parameter_description", ColumnDomain.Tinytext, Nullable = true, Order = 15, IsVirtual = true)]
+        [DBColumn(MeasuredParameterType.ParameterDescription_ColumnName, ColumnDomain.Tinytext, Nullable = true, Order = 15, IsVirtual = true)]
         public string ParameterDescription
         {
             get
             {
-                return this["parameter_description"].ToString();
+                return this[MeasuredParameterType.ParameterDescription_ColumnName].ToString();
             }
             set
             {
-                this["parameter_description"] = value;
+                this[MeasuredParameterType.ParameterDescription_ColumnName] = value;
             }
         }
 
@@ -286,126 +286,126 @@ namespace NormaMeasure.DBControl.Tables
         #region колонки значений измеряемого параметра (MeasuredParameters)
 
 
-        [DBColumn(" ", ColumnDomain.UInt, Order = 16, Nullable = true, DefaultValue =0, IsVirtual = true)]
+        [DBColumn(LengthBringingType.BringingId_ColumnName, ColumnDomain.UInt, Order = 16, Nullable = true, DefaultValue =0, IsVirtual = true)]
         public uint LengthBringingTypeId
         {
             get
             {
-                return tryParseUInt("length_bringing_type_id");
+                return tryParseUInt(LengthBringingType.BringingId_ColumnName);
             }
             set
             {
-                this["length_bringing_type_id"] = value;
+                this[LengthBringingType.BringingId_ColumnName] = value;
 
                 //System.Windows.Forms.MessageBox.Show(value.ToString());
             }
         }
 
-        [DBColumn("length_bringing", ColumnDomain.Float, Nullable = true, Order = 17, DefaultValue = 1000, IsVirtual = true)]
+        [DBColumn(MeasuredParameterData.LengthBringing_ColumnName, ColumnDomain.Float, Nullable = true, Order = 17, DefaultValue = 1000, IsVirtual = true)]
         public float LengthBringing
         {
             get
             {
-                return tryParseFloat("length_bringing");
+                return tryParseFloat(MeasuredParameterData.LengthBringing_ColumnName);
             }
             set
             {
-                this["length_bringing"] = value;
+                this[MeasuredParameterData.LengthBringing_ColumnName] = value;
                 //RefreshResultMeasure();
             }
         }
 
-        [DBColumn("min_value", ColumnDomain.Float, Order = 18, Nullable = true, DefaultValue = float.MinValue, IsVirtual = true)]
+        [DBColumn(MeasuredParameterData.MinValue_ColumnName, ColumnDomain.Float, Order = 18, Nullable = true, DefaultValue = float.MinValue, IsVirtual = true)]
         public float MinValue
         {
             get
             {
-                return tryParseFloat("min_value");
+                return tryParseFloat(MeasuredParameterData.MinValue_ColumnName);
             }
             set
             {
-                this["min_value"] = value;
+                this[MeasuredParameterData.MinValue_ColumnName] = value;
             }
         }
 
-        [DBColumn("max_value", ColumnDomain.Float, Order = 19, Nullable = true, DefaultValue = float.MaxValue, IsVirtual = true)]
+        [DBColumn(MeasuredParameterData.MaxValue_ColumnName, ColumnDomain.Float, Order = 19, Nullable = true, DefaultValue = float.MaxValue, IsVirtual = true)]
         public float MaxValue
         {
             get
             {
-                return tryParseFloat("max_value");
+                return tryParseFloat(MeasuredParameterData.MaxValue_ColumnName);
             }
             set
             {
-                this["max_value"] = value;
+                this[MeasuredParameterData.MaxValue_ColumnName] = value;
             }
         }
 
-        [DBColumn("percent", ColumnDomain.Float, Order = 20, Nullable = true, DefaultValue = 100, IsVirtual = true)]
+        [DBColumn(MeasuredParameterData.Percent_ColumnName, ColumnDomain.Float, Order = 20, Nullable = true, DefaultValue = 100, IsVirtual = true)]
         public uint Percent
         {
             get
             {
-                return tryParseUInt("percent");
+                return tryParseUInt(MeasuredParameterData.Percent_ColumnName);
             }
             set
             {
-                this["percent"] = value;
+                this[MeasuredParameterData.Percent_ColumnName] = value;
             }
         }
         #endregion
 
         #region Парметры частоты 
 
-        [DBColumn("frequency_min", ColumnDomain.Float, Order = 21, Nullable = true, IsVirtual = true)]
+        [DBColumn(FrequencyRange.FreqMin_ColumnName, ColumnDomain.Float, Order = 21, Nullable = true, IsVirtual = true)]
         public float FrequencyMin
         {
             get
             {
-                return tryParseFloat("frequency_min");
+                return tryParseFloat(FrequencyRange.FreqMin_ColumnName);
             }
             set
             {
-                this["frequency_min"] = value;
+                this[FrequencyRange.FreqMin_ColumnName] = value;
             }
         }
 
-        [DBColumn("frequency_max", ColumnDomain.Float, Order = 22,  Nullable = true, IsVirtual = true)]
+        [DBColumn(FrequencyRange.FreqMax_ColumnName, ColumnDomain.Float, Order = 22,  Nullable = true, IsVirtual = true)]
         public float FrequencyMax
         {
             get
             {
-                return tryParseFloat("frequency_max");
+                return tryParseFloat(FrequencyRange.FreqMax_ColumnName);
             }
             set
             {
-                this["frequency_max"] = value;
+                this[FrequencyRange.FreqMax_ColumnName] = value;
             }
         }
 
-        [DBColumn("frequency_step", ColumnDomain.Float, Order = 23, Nullable = true, IsVirtual = true)]
+        [DBColumn(FrequencyRange.FreqStep_ColumnName, ColumnDomain.Float, Order = 23, Nullable = true, IsVirtual = true)]
         public float FrequencyStep
         {
             get
             {
-                return tryParseFloat("frequency_step");
+                return tryParseFloat(FrequencyRange.FreqStep_ColumnName);
             }
             set
             {
-                this["frequency_step"] = value;
+                this[FrequencyRange.FreqStep_ColumnName] = value;
             }
         }
 
-        [DBColumn("frequency_range_id", ColumnDomain.UInt, Nullable = true, Order = 24, DefaultValue = 0, IsVirtual = true)]
+        [DBColumn(FrequencyRange.FreqRangeId_ColumnName, ColumnDomain.UInt, Nullable = true, Order = 24, DefaultValue = 0, IsVirtual = true)]
         public uint FrequencyRangeId
         {
             get
             {
-                return tryParseUInt("frequency_range_id");
+                return tryParseUInt(FrequencyRange.FreqRangeId_ColumnName);
             }
             set
             {
-                this["frequency_range_id"] = value;
+                this[FrequencyRange.FreqRangeId_ColumnName] = value;
             }
         }
 
@@ -414,29 +414,29 @@ namespace NormaMeasure.DBControl.Tables
         #region Тип приведения результата 
 
 
-        [DBColumn("measure_title", ColumnDomain.Tinytext, Order = 25, Nullable = true, IsVirtual = true)]
+        [DBColumn(LengthBringingType.BringingMeasure_ColumnName, ColumnDomain.Tinytext, Order = 25, Nullable = true, IsVirtual = true)]
         public string MeasureLengthTitle
         {
             get
             {
-                return this["measure_title"].ToString();
+                return this[LengthBringingType.BringingMeasure_ColumnName].ToString();
             }
             set
             {
-                this["measure_title"] = value;
+                this[LengthBringingType.BringingMeasure_ColumnName] = value;
             }
         }
 
-        [DBColumn("length_bringing_name", ColumnDomain.Tinytext, Order = 26, Nullable = true, IsVirtual = true)]
+        [DBColumn(LengthBringingType.BringingName_ColumnName, ColumnDomain.Tinytext, Order = 26, Nullable = true, IsVirtual = true)]
         public string LengthBringingName
         {
             get
             {
-                return this["length_bringing_name"].ToString();
+                return this[LengthBringingType.BringingName_ColumnName].ToString();
             }
             set
             {
-                this["length_bringing_name"] = value;
+                this[LengthBringingType.BringingName_ColumnName] = value;
             }
         }
 

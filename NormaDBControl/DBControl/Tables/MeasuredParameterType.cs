@@ -28,58 +28,6 @@ namespace NormaMeasure.DBControl.Tables
             return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < 18 AND {ParameterTypeId_ColumnName} IN ({ids})", typeof(MeasuredParameterType));
         }
 
-        [DBColumn(ParameterTypeId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "ParamInd", Nullable = false, IsPrimaryKey = true)]
-        public uint ParameterTypeId
-        {
-            get
-            {
-                return tryParseUInt(ParameterTypeId_ColumnName);
-            }
-            set
-            {
-                this[ParameterTypeId_ColumnName] = value;
-            }
-        }
-
-
-        [DBColumn("parameter_name", ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "ParamName", Nullable = true)]
-        public string ParameterName
-        {
-            get
-            {
-                return this["parameter_name"].ToString();
-            }
-            set
-            {
-                this["parameter_name"] = value;
-            }
-        }
-
-        [DBColumn("parameter_measure", ColumnDomain.Tinytext, Order = 13, OldDBColumnName = "Ed_izm", Nullable = true)]
-        public string Measure
-        {
-            get
-            {
-                return this["parameter_measure"].ToString();
-            }
-            set
-            {
-                this["parameter_measure"] = value;
-            }
-        }
-
-        [DBColumn("parameter_description", ColumnDomain.Tinytext, Order = 14, OldDBColumnName = "ParamOpis", Nullable = true)]
-        public string Description
-        {
-            get
-            {
-                return this["parameter_description"].ToString();
-            }
-            set
-            {
-                this["parameter_description"] = value;
-            }
-        }
 
         /// <summary>
         /// Возвращает список id типов частотных парметров
@@ -189,7 +137,66 @@ namespace NormaMeasure.DBControl.Tables
         public static uint K12 => 23;
 
 
+        #region Колонки таблицы
+        [DBColumn(ParameterTypeId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "ParamInd", Nullable = false, IsPrimaryKey = true)]
+        public uint ParameterTypeId
+        {
+            get
+            {
+                return tryParseUInt(ParameterTypeId_ColumnName);
+            }
+            set
+            {
+                this[ParameterTypeId_ColumnName] = value;
+            }
+        }
+
+
+        [DBColumn(ParameterName_ColumnName, ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "ParamName", Nullable = true)]
+        public string ParameterName
+        {
+            get
+            {
+                return this[ParameterName_ColumnName].ToString();
+            }
+            set
+            {
+                this[ParameterName_ColumnName] = value;
+            }
+        }
+
+        [DBColumn(ParameterMeasure_ColumnName, ColumnDomain.Tinytext, Order = 13, OldDBColumnName = "Ed_izm", Nullable = true)]
+        public string Measure
+        {
+            get
+            {
+                return this[ParameterMeasure_ColumnName].ToString();
+            }
+            set
+            {
+                this[ParameterMeasure_ColumnName] = value;
+            }
+        }
+
+        [DBColumn(ParameterDescription_ColumnName, ColumnDomain.Tinytext, Order = 14, OldDBColumnName = "ParamOpis", Nullable = true)]
+        public string Description
+        {
+            get
+            {
+                return this[ParameterDescription_ColumnName].ToString();
+            }
+            set
+            {
+                this[ParameterDescription_ColumnName] = value;
+            }
+        }
+
+
         public const string ParameterTypeId_ColumnName = "parameter_type_id";
+        public const string ParameterName_ColumnName = "parameter_name";
+        public const string ParameterMeasure_ColumnName = "parameter_measure";
+        public const string ParameterDescription_ColumnName = "parameter_description";
+        #endregion
     }
 
 

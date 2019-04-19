@@ -16,49 +16,53 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            DBEntityTable t = new DBEntityTable(typeof(LeadMaterial));
-            string select_cmd = $"{t.SelectQuery}";
-            t.FillByQuery(select_cmd);
-            return t;
+            return get_all(typeof(LeadMaterial));
         }
 
-        [DBColumn("lead_material_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "MaterInd", Nullable = false, IsPrimaryKey = true, AutoIncrement = true)]
+        #region Колонки таблицы 
+        [DBColumn(MaterialId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "MaterInd", Nullable = false, IsPrimaryKey = true, AutoIncrement = true)]
         public uint MaterialId
         {
             get
             {
-                return tryParseUInt("lead_material_id");
+                return tryParseUInt(MaterialId_ColumnName);
             }
             set
             {
-                this["lead_material_id"] = value;
+                this[MaterialId_ColumnName] = value;
             }
         }
 
-        [DBColumn("lead_material_name", ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "MaterName", Nullable = true)]
+        [DBColumn(MaterialName_ColumnName, ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "MaterName", Nullable = true)]
         public string MaterialName
         {
             get
             {
-                return this["lead_material_name"].ToString();
+                return this[MaterialName_ColumnName].ToString();
             }
             set
             {
-                this["lead_material_name"] = value;
+                this[MaterialName_ColumnName] = value;
             }
         }
 
-        [DBColumn("lead_material_tkc", ColumnDomain.Float, Order = 13, OldDBColumnName = "TKC_1", Nullable = true)]
+        [DBColumn(MaterialTKC_ColumnName, ColumnDomain.Float, Order = 13, OldDBColumnName = "TKC_1", Nullable = true)]
         public float MaterialTKC
         {
             get
             {
-                return tryParseFloat("lead_material_tkc");
+                return tryParseFloat(MaterialTKC_ColumnName);
             }
             set
             {
-                this["lead_material_tkc"] = value;
+                this[MaterialTKC_ColumnName] = value;
             }
         }
+
+        public const string MaterialId_ColumnName = "lead_material_id";
+        public const string MaterialName_ColumnName = "lead_material_name";
+        public const string MaterialTKC_ColumnName = "lead_material_tkc";
+
+        #endregion
     }
 }

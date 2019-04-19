@@ -14,30 +14,56 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        [DBColumn("status_id", ColumnDomain.UInt, Order = 10, OldDBColumnName = "StatGil", Nullable = true, IsPrimaryKey = true)]
+        /// <summary>
+        /// Годна
+        /// </summary>
+        public const uint Ok = 0;
+        /// <summary>
+        /// Оборвана
+        /// </summary>
+        public const uint Ragged = 1;
+        /// <summary>
+        /// Замкнута
+        /// </summary>
+        public const uint Closured = 2;
+        /// <summary>
+        /// Пробита
+        /// </summary>
+        public const uint Broken = 3;
+
+        #region Колонки таблицы
+        [DBColumn(StatusId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "StatGil", Nullable = true, IsPrimaryKey = true)]
         public uint StatusId
         {
             get
             {
-                return tryParseUInt("status_id");
+                return tryParseUInt(StatusId_ColumnName);
             }
             set
             {
-                this["status_id"] = value;
+                this[StatusId_ColumnName] = value;
             }
         }
 
-        [DBColumn("status_title", ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "StatGilName", Nullable = true)]
+        [DBColumn(StatusTitle_ColumnName, ColumnDomain.Tinytext, Order = 11, OldDBColumnName = "StatGilName", Nullable = true)]
         public string StatusTitle
         {
             get
             {
-                return this["status_title"].ToString();
+                return this[StatusTitle_ColumnName].ToString();
             }
             set
             {
-                this["status_title"] = value;
+                this[StatusTitle_ColumnName] = value;
             }
         }
+
+        public const string StatusId_ColumnName = "status_id";
+        public const string StatusTitle_ColumnName = "status_title";
+
+
+
+
+        #endregion
     }
 }

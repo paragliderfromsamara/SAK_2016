@@ -18,36 +18,39 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            DBEntityTable t = new DBEntityTable(typeof(IsolationMaterial));
-            string select_cmd = $"{t.SelectQuery}";
-            t.FillByQuery(select_cmd);
-            return t;
+            return get_all(typeof(IsolationMaterial));
         }
 
-        [DBColumn("isolation_material_id", ColumnDomain.UInt, Order = 11, OldDBColumnName = "MaterInd", Nullable = false, IsPrimaryKey = true, AutoIncrement = true)]
+        #region Колонки таблицы
+        [DBColumn(MaterialId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "MaterInd", Nullable = false, IsPrimaryKey = true, AutoIncrement = true)]
         public uint MaterialId
         {
             get
             {
-                return tryParseUInt("isolation_material_id");
+                return tryParseUInt(MaterialId_ColumnName);
             }
             set
             {
-                this["isolation_material_id"] = value;
+                this[MaterialId_ColumnName] = value;
             }
         }
 
-        [DBColumn("isolation_material_name", ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "MaterName", Nullable = true)]
+        [DBColumn(MaterialName_ColumnName, ColumnDomain.Tinytext, Order = 12, OldDBColumnName = "MaterName", Nullable = true)]
         public string MaterialName
         {
             get
             {
-                return this["isolation_material_name"].ToString();
+                return this[MaterialName_ColumnName].ToString();
             }
             set
             {
-                this["isolation_material_name"] = value;
+                this[MaterialName_ColumnName] = value;
             }
         }
+
+        public const string MaterialId_ColumnName = "isolation_material_id";
+        public const string MaterialName_ColumnName = "isolation_material_name";
+
+        #endregion
     }
 }

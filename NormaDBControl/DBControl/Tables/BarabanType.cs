@@ -82,7 +82,7 @@ namespace NormaMeasure.DBControl.Tables
             return get_all(typeof(BarabanType));//new DBEntityTable(typeof(BarabanType));
         }
 
-
+        #region Колонки таблицы
         [DBColumn(TypeId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "TipInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint TypeId
         {
@@ -125,6 +125,6 @@ namespace NormaMeasure.DBControl.Tables
         public const string TypeId_ColumnName = "baraban_type_id";
         public const string TypeName_ColumnName = "baraban_type_name";
         public const string BarabanWeight_ColumnName = "baraban_weight";
-
+        #endregion
     }
 }
