@@ -114,16 +114,15 @@ namespace NormaMeasure.DBControl.Tables
         /// <returns></returns>
         public static DBEntityTable get_allowed_for_cable_test()
         {
-            string criteria = $"{UserRole.RoleId_ColumnName} = {UserRole.Operator} AND {IsActiveFlag_ColumnName} = 1 AND NOT {UserId_ColumnName} = 1";
-            return find_by_criteria(criteria, typeof(User));
+            string query = $"SELECT *, {SelectQuery_WithFullNameShort} FROM users WHERE {UserRole.RoleId_ColumnName} = {UserRole.Operator} AND {IsActiveFlag_ColumnName} = 1 AND NOT {UserId_ColumnName} = 1";
+            return find_by_query(query, typeof(User));
         }
 
         public static DBEntityTable get_all_as_table()
         {
             DBEntityTable rolesTable = new DBEntityTable(typeof(UserRole));
-            string firstNameCond = $"IF(TRIM({FirstName_ColumnName}) != '', CONCAT(' ', SUBSTRING({FirstName_ColumnName}, 1, 1), '.'), '')"; //, (IF {FirstName_ColumnName} = '' THEN CONCAT(SUBSTRING('Assd' ,1 , 1), '.') END IF) 
-            string thirdNameCond = $"IF(TRIM({ThirdName_ColumnName}) != '', CONCAT(' ', SUBSTRING({ThirdName_ColumnName}, 1, 1), '.'), '')";
-            string select_cmd = $"SELECT *, CONCAT({LastName_ColumnName}, {firstNameCond}, {thirdNameCond} ) AS {FullName_ColumnName} FROM users LEFT OUTER JOIN {rolesTable.TableName} USING({rolesTable.PrimaryKey[0]}) WHERE {IsActiveFlag_ColumnName} = 1 AND NOT {UserId_ColumnName} = 1"; // 
+
+            string select_cmd = $"SELECT *, {SelectQuery_WithFullNameShort} FROM users LEFT OUTER JOIN {rolesTable.TableName} USING({rolesTable.PrimaryKey[0]}) WHERE {IsActiveFlag_ColumnName} = 1 AND NOT {UserId_ColumnName} = 1"; // 
             DBEntityTable t = find_by_query(select_cmd, typeof(User));//new DBEntityTable(typeof(User));
             return t;
         }
@@ -258,6 +257,18 @@ namespace NormaMeasure.DBControl.Tables
             get
             {
                 return this[FullName_ColumnName].ToString();
+            }
+        }
+
+        public static string SelectQuery_WithFullNameShort
+        {
+            get
+            {
+
+                string firstNameCond = $"IF(TRIM({FirstName_ColumnName}) != '', CONCAT(' ', SUBSTRING({FirstName_ColumnName}, 1, 1), '.'), '')"; //, (IF {FirstName_ColumnName} = '' THEN CONCAT(SUBSTRING('Assd' ,1 , 1), '.') END IF) 
+                string thirdNameCond = $"IF(TRIM({ThirdName_ColumnName}) != '', CONCAT(' ', SUBSTRING({ThirdName_ColumnName}, 1, 1), '.'), '')";
+                string query = $"CONCAT({ LastName_ColumnName}, { firstNameCond}, { thirdNameCond} ) AS { FullName_ColumnName}";
+                return query;
             }
         }
 

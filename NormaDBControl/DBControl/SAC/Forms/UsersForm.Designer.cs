@@ -296,6 +296,7 @@
             this.full_name.DataPropertyName = "full_name";
             this.full_name.HeaderText = "Полное имя";
             this.full_name.Name = "full_name";
+            this.full_name.Visible = false;
             // 
             // last_name
             // 
