@@ -149,7 +149,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            string select_cmd = $"SELECT *, CONCAT({CableName_ColumnName}, ' ', {StructName_ColumnName}) AS {FullCableName_ColumnName} FROM cables";
+            string select_cmd = $"SELECT *, CONCAT({CableName_ColumnName}, ' ', {StructName_ColumnName}) AS {FullCableName_ColumnName} FROM cables WHERE {IsDraftFlag_ColumnName} = 0";
             return find_by_query(select_cmd, typeof(Cable));
            // return find_by_criteria($"{IsDraftFlag_ColumnName} = 0", typeof(Cable));
         }
@@ -445,6 +445,45 @@ namespace NormaMeasure.DBControl.Tables
                 return Document.find_by_document_id(DocumentId);
             }
         }
+
+        /// <summary>
+        /// Находит все типы измеряемых параметров для данного кабеля
+        /// </summary>
+        public DBEntityTable MeasuredParameterTypes
+        {
+            get
+            {
+                if(measured_parameters == null)
+                {
+                    measured_parameters = MeasuredParameterType.get_all_by_ids(MeasuredParameterTypes_IDs);
+                }
+                return measured_parameters;
+            }
+        }
+
+        private DBEntityTable measured_parameters;
+
+        public uint[] MeasuredParameterTypes_IDs
+        {
+            get
+            {
+                if (MeasuredParameterTypes_ids == null)
+                {
+                    List<uint> ids = new List<uint>();
+                    foreach(CableStructure s in CableStructures.Rows)
+                    {
+                        foreach(CableStructureMeasuredParameterData mpd in s.MeasuredParameters.Rows)
+                        {
+                            if (!ids.Contains(mpd.ParameterTypeId)) ids.Add(mpd.ParameterTypeId);
+                        }
+                    }
+                    MeasuredParameterTypes_ids = ids.ToArray();
+                }
+                return MeasuredParameterTypes_ids;
+            }
+        }
+
+        private uint[] MeasuredParameterTypes_ids;
 
 
 

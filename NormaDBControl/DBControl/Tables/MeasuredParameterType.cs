@@ -61,6 +61,16 @@ namespace NormaMeasure.DBControl.Tables
             return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < {K2} AND {ParameterTypeId_ColumnName} IN ({ids})", typeof(MeasuredParameterType));
         }
 
+        public static DBEntityTable get_all_by_ids(uint[] ids)
+        {
+            string idsStr = String.Empty;
+            foreach(uint id in ids)
+            {
+                if (!String.IsNullOrWhiteSpace(idsStr)) idsStr += ", ";
+                idsStr += id.ToString();
+            }
+            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} IN ({idsStr})", typeof(MeasuredParameterType));
+        }
 
         /// <summary>
         /// Возвращает список id типов частотных парметров

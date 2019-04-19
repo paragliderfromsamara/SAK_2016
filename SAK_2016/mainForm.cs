@@ -45,7 +45,7 @@ namespace NormaMeasure.SAC_APP
         private void autoTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CableTestForm = new SACCableTestForm();
-            initChildForm(CableTestForm);
+            if (!CableTestForm.IsDisposed) initChildForm(CableTestForm);
         }
 
         private void manualTestToolStripMenuItem_Click(object sender, EventArgs e)
@@ -142,6 +142,7 @@ namespace NormaMeasure.SAC_APP
         private void ChildForm_Shown(object sender, EventArgs e)
         {
             switchMenuStripItems(false);
+
         }
         private void ChildForm_Closed(object sender, EventArgs e)
         {

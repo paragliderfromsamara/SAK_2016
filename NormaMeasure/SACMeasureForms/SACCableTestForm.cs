@@ -12,7 +12,7 @@ using NormaMeasure.DBControl.Tables;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {
-    
+    public delegate void SACCableTestForm_Handler();
     public partial class SACCableTestForm : Form
     {
         
@@ -20,11 +20,68 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             InitializeComponent();
             InitTestProgamGroupBox();
-            LoadDataFromDB();
+            if (!LoadDataFromDB())
+            {
+                this.Close();
+                return;
+            }
+            InitInputs();
             InitMeasure();
             CurrentTest = CableTest.GetLastOrCreateNew();
         }
 
+        private void InitInputs()
+        {
+            RefreshTableElementsList();
+            RefreshCableMeasuredParams();
+            RefreshRisolSelector();
+        }
+
+        /// <summary>
+        /// Обновляем список измеряемых Сопротивлений изоляции
+        /// </summary>
+        private void RefreshRisolSelector()
+        {
+            RizolSelector_CB.Items.Clear();
+            RizolSelector_CB.ValueMember = MeasuredParameterType.ParameterTypeId_ColumnName;
+            RizolSelector_CB.DisplayMember = MeasuredParameterType.ParameterName_ColumnName;
+            foreach(MeasuredParameterType pType in SelectedCable.MeasuredParameterTypes.Rows)
+            {
+                if (MeasuredParameterType.IsItIsolationaResistance(pType.ParameterTypeId))
+                {
+               
+                    RizolSelector_CB.Items.Add( pType.ParameterName);
+
+                }
+            }
+            RizolSelector_CB.Enabled = RizolSelector_CB.Items.Count > 0;
+            if (RizolSelector_CB.Items.Count > 0) RizolSelector_CB.SelectedIndex = 0;
+        }
+
+        private void RefreshCableMeasuredParams()
+        {
+
+            foreach(MeasuredParameterType mpt in MeasuredParametersTable.Rows)
+            {
+                Control[] cbArr = testProgram_GroupBox.Controls.Find($"{mpt.Table.TableName}_{mpt.ParameterTypeId}", false);
+                if (cbArr.Length == 0) continue;
+                CheckBox cb = cbArr[0] as CheckBox;
+                if (mpt.ParameterTypeId == MeasuredParameterType.Calling) cb.Enabled = true;
+                else if(MeasuredParameterType.IsItIsolationaResistance(mpt.ParameterTypeId))
+                {
+                    cb.Enabled = SelectedCable.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol1) || SelectedCable.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol2) || SelectedCable.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol3) || SelectedCable.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol4);
+                }else
+                {
+                    cb.Enabled = SelectedCable.MeasuredParameterTypes_IDs.Contains(mpt.ParameterTypeId);
+                }
+                cb.Checked = cb.Enabled;
+            }
+
+        }
+
+        /// <summary>
+        /// Заполняет CheckBox ы панели программа испытаний
+        /// </summary>
         private void InitTestProgamGroupBox()
         {
             int onRow = 7;
@@ -38,8 +95,8 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             int startVertOffset = 30;
             int tmpHorOffset = startHorOffset;
             int tmpVertOffset = startVertOffset;
-            DBEntityTable t = MeasuredParameterType.get_for_a_program_test();
-            foreach(MeasuredParameterType pType in t.Rows)
+            MeasuredParametersTable = MeasuredParameterType.get_for_a_program_test();
+            foreach(MeasuredParameterType pType in MeasuredParametersTable.Rows)
             {
                 if (x == onRow)
                 {
@@ -62,7 +119,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                     cb.Text = pType.ParameterName;
                 }
 
-                cb.Name = $"MeasuredParameterType_{pType.ParameterTypeId}";
+                cb.Name = $"{pType.Table.TableName}_{pType.ParameterTypeId}";
                 cb.Width = (pType.ParameterTypeId == MeasuredParameterType.Calling) ? cbWidth : cbWidth*2/3;
                 cb.Height = cbHeight;
                 cb.Location = new Point(tmpHorOffset, tmpVertOffset);
@@ -75,6 +132,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             testProgram_GroupBox.Width = onRow * (horOffset + cbWidth) + horOffset;
             testProgram_GroupBox.Height = (y+1) * (vertOffset + cbHeight) + vertOffset + startVertOffset;
             this.Width = testProgram_GroupBox.Width + 40;
+            this.Height += testProgram_GroupBox.Height;
         }
 
         private void InitMeasure()
@@ -153,42 +211,113 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         }
 
         #region Загрузка необходимых данных из БД
-        private void LoadDataFromDB()
+        private bool LoadDataFromDB()
         {
             LoadOperators();
             LoadCables();
             LoadBarabanTypes();
+
+            return CheckTest_Availability();
+        }
+
+        /// <summary>
+        /// Проверка наличия необходимых для испытания данных
+        /// </summary>
+        private bool CheckTest_Availability()
+        {
+            List < string > errors = new List<string>();
+            if (CablesTable.Rows.Count == 0) errors.Add("В базе данных нет ни одного кабеля!");
+            if (OperatorsTable.Rows.Count == 0) errors.Add("В базе данных нет ни одного оператора!");
+            if (BarabanTypesTable.Rows.Count == 0) errors.Add("В базе данных нет ни одного типа барабана!");
+
+            if(errors.Count > 0)
+            {
+                string t = "Невозможно произвести испытания кабеля: \n";
+                for(int i=0; i<errors.Count; i++)
+                {
+                    t += $"{i+1}) {errors[i]}\n";
+                }
+                MessageBox.Show(t, "Отсутсвуют данные", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            return errors.Count == 0;
         }
 
         private void LoadBarabanTypes()
         {
-            DBEntityTable t = BarabanType.get_all_as_table();
-            CableTestFormDataSet.Tables.Add(t);
-            barabanTypes_CB.DataSource = t;
+            BarabanTypesTable = BarabanType.get_all_as_table();
+            CableTestFormDataSet.Tables.Add(BarabanTypesTable);
+            barabanTypes_CB.DataSource = BarabanTypesTable;
             barabanTypes_CB.DisplayMember = BarabanType.TypeName_ColumnName;
             barabanTypes_CB.ValueMember = BarabanType.TypeId_ColumnName;
         }
 
         private void LoadCables()
         {
-            DBEntityTable t = Cable.get_all_as_table();
-            CableTestFormDataSet.Tables.Add(t);
-            cableForTest_CB.DataSource = t;
+            CablesTable = Cable.get_all_as_table();
+            CableTestFormDataSet.Tables.Add(CablesTable);
+            SelectedCableChanged += SACCableTestForm_SelectedCableChanged;
+            cableForTest_CB.DataSource = CablesTable;
             cableForTest_CB.DisplayMember = Cable.FullCableName_ColumnName;
             cableForTest_CB.ValueMember = Cable.CableId_ColumnName;
         }
 
+        private void SACCableTestForm_SelectedCableChanged()
+        {
+
+            try
+            {
+                SelectedCable = (Cable)(CablesTable.Select($"{Cable.CableId_ColumnName} = {cableForTest_CB.SelectedValue}")[0]);
+                RefreshCableMeasuredParams();
+                RefreshRisolSelector();
+            }
+            catch (System.Data.EvaluateException) { }
+        }
+
         private void LoadOperators()
         {
-            DBEntityTable t = User.get_allowed_for_cable_test();
-            CableTestFormDataSet.Tables.Add(t);
-            operatorsList.DataSource = t;
+            OperatorsTable = User.get_allowed_for_cable_test();
+            CableTestFormDataSet.Tables.Add(OperatorsTable);
+            operatorsList.DataSource = OperatorsTable;
             operatorsList.DisplayMember = User.FullName_ColumnName;
             operatorsList.ValueMember = User.UserId_ColumnName;
         }
         #endregion
 
 
+        private void tableMode_RadioBatton_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshTableElementsList();
+        }
+
+        private void RefreshTableElementsList()
+        {
+            connectedFromTableElement_ComboBox.Items.Clear();
+            int maxRows = (doubleTable_RadioBatton.Checked) ? 104 : 52;
+            for (int i=0; i<maxRows; i++)
+            {
+                connectedFromTableElement_ComboBox.Items.Add(i+1);
+            }
+            connectedFromTableElement_ComboBox.SelectedIndex = 0;
+        }
+
+
+
+
+        private Cable SelectedCable;
         private CableTest CurrentTest;
+
+        private DBEntityTable CablesTable;
+        private DBEntityTable OperatorsTable;
+        private DBEntityTable BarabanTypesTable;
+        private DBEntityTable MeasuredParametersTable;
+
+        public event SACCableTestForm_Handler SelectedCableChanged;
+
+        private void cableForTest_CB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SelectedCableChanged();
+
+        }
     }
 }
