@@ -45,17 +45,13 @@ namespace NormaMeasure.SAC_APP
         private void autoTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CableTestForm = new SACCableTestForm();
-            CableTestForm.MdiParent = this;
-            switchMenuStripItems(false);
-            CableTestForm.Show();
+            initChildForm(CableTestForm);
         }
 
         private void manualTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             manualTestForm = new manualTestForm(this);
-            manualTestForm.MdiParent = this;
-            switchMenuStripItems(false);
-            manualTestForm.Show();
+            initChildForm(manualTestForm);
         }
 
         /// <summary>
