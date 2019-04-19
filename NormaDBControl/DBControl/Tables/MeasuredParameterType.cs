@@ -22,10 +22,18 @@ namespace NormaMeasure.DBControl.Tables
             return parameter_type;
         }
 
+        /// <summary>
+        /// Выборка типов измеряемых параметров для формы испытания кабеля
+        /// </summary>
+        /// <returns></returns>
+        public DBEntityTable get_for_a_program_test()
+        {
+            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} < {K2}", typeof(MeasuredParameterType));
+        }
 
         public static DBEntityTable get_all_as_table_for_cable_structure_form(string ids)
         {
-            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < 18 AND {ParameterTypeId_ColumnName} IN ({ids})", typeof(MeasuredParameterType));
+            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < {K2} AND {ParameterTypeId_ColumnName} IN ({ids})", typeof(MeasuredParameterType));
         }
 
 
@@ -112,29 +120,29 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        public static uint Calling => 1;
-        public static uint Rleads => 2;
-        public static uint dR => 3;
-        public static uint Risol1 => 4;
-        public static uint Risol2 => 5;
-        public static uint Risol3 => 6;
-        public static uint Risol4 => 7;
-        public static uint Cp => 8;
-        public static uint dCp => 9;
-        public static uint Co => 10;
-        public static uint Ea => 11;
-        public static uint K1 => 12;
-        public static uint K23 => 13;
-        public static uint K9_12 => 14;
-        public static uint al => 15;
-        public static uint Ao => 16;
-        public static uint Az => 17;
-        public static uint K2 => 18;
-        public static uint K3 => 19;
-        public static uint K9 => 20;
-        public static uint K10 => 21;
-        public static uint K11 => 22;
-        public static uint K12 => 23;
+        public const uint Calling = 1;
+        public const uint Rleads = 2;
+        public const uint dR = 3;
+        public const uint Risol1 = 4;
+        public const uint Risol2 = 5;
+        public const uint Risol3 = 6;
+        public const uint Risol4 = 7;
+        public const uint Cp = 8;
+        public const uint dCp = 9;
+        public const uint Co = 10;
+        public const uint Ea = 11;
+        public const uint K1 = 12;
+        public const uint K23 = 13;
+        public const uint K9_12 = 14;
+        public const uint al = 15;
+        public const uint Ao = 16;
+        public const uint Az = 17;
+        public const uint K2 = 18;
+        public const uint K3 = 19;
+        public const uint K9 = 20;
+        public const uint K10 = 21;
+        public const uint K11 = 22;
+        public const uint K12 = 23;
 
 
         #region Колонки таблицы
