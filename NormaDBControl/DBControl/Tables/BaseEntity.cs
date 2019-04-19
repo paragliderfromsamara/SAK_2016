@@ -376,14 +376,7 @@ namespace NormaMeasure.DBControl.Tables
 
         protected string dbColumnValue(DataColumn col)
         {
-           if(col.DataType == typeof(string))
-            {
-                return $"'{this[col.ColumnName].ToString()}'";
-            }else
-            {
-                if (String.IsNullOrWhiteSpace(this[col.ColumnName].ToString())) return "NULL";
-                else return this[col.ColumnName].ToString();
-            }
+            return DBEntityTable.DBColumnValue(col, this);
             //return col.DataType == typeof(string) ? $"'{this[col.ColumnName].ToString()}'" : this[col.ColumnName].ToString();
         }
         

@@ -381,7 +381,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(FullCableName_ColumnName, ColumnDomain.Boolean, Order = 23, IsVirtual = true)]
+        [DBColumn(FullCableName_ColumnName, ColumnDomain.Boolean, Order = 23, IsVirtual = true, Nullable = true)]
         public string FullName
         {
             get
@@ -477,7 +477,7 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
-        [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 23, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+ ") ON DELETE CASCADE")]
+        [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 24, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+ ") ON DELETE CASCADE")]
         public uint TestId
         {
             get

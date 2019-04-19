@@ -124,7 +124,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             DBEntityTable t = Cable.get_all_as_table();
             CableTestFormDataSet.Tables.Add(t);
             cableForTest_CB.DataSource = t;
-            cableForTest_CB.DisplayMember = Cable.CableName_ColumnName;
+            cableForTest_CB.DisplayMember = Cable.FullCableName_ColumnName;
             cableForTest_CB.ValueMember = Cable.CableId_ColumnName;
         }
 

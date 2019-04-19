@@ -30,22 +30,30 @@ namespace NormaMeasure.DBControl
         {
             DBTable _table = new DBTable();
             object[] tableAttrs = t.GetCustomAttributes(typeof(DBTableAttribute), true);
-            if (tableAttrs.Length == 1)
+            try
             {
-                DBTableAttribute a = (DBTableAttribute)tableAttrs[0];
-                _table = a.TableStruct;
-                SortedList<int, DBTableColumn> cols = new SortedList<int, DBTableColumn>();
-                foreach (PropertyInfo prop in t.GetProperties())
+                if (tableAttrs.Length == 1)
                 {
-                    object[] columnAttributes = prop.GetCustomAttributes(typeof(DBColumnAttribute), true);
-                    if (columnAttributes.Length == 1)
+                    DBTableAttribute a = (DBTableAttribute)tableAttrs[0];
+                    _table = a.TableStruct;
+                    SortedList<int, DBTableColumn> cols = new SortedList<int, DBTableColumn>();
+                    foreach (PropertyInfo prop in t.GetProperties())
                     {
-                        DBColumnAttribute dca = columnAttributes[0] as DBColumnAttribute;
-                        DBTableColumn col = dca.ColumnStruct;
-                        cols.Add(dca.Order, col);
+                        object[] columnAttributes = prop.GetCustomAttributes(typeof(DBColumnAttribute), true);
+                        if (columnAttributes.Length == 1)
+                        {
+                            DBColumnAttribute dca = columnAttributes[0] as DBColumnAttribute;
+                            DBTableColumn col = dca.ColumnStruct;
+                            cols.Add(dca.Order, col);
+                        }
                     }
+                    _table.columns = cols.Values.ToArray();
                 }
-                _table.columns = cols.Values.ToArray();
+                
+            }
+            catch(System.ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, $"Ошибка при формировании таблицы {t.Name}", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return _table;
         }

@@ -54,7 +54,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        public const string BarabanId_ColumnName = "serial_number";
+        public const string BarabanId_ColumnName = "baraban_id";
         public const string BarabanSerialNumber_ColumnName = "serial_number";
     }
 }

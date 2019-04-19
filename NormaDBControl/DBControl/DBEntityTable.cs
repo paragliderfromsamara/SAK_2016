@@ -82,8 +82,10 @@ namespace NormaMeasure.DBControl
         {
             string vals = String.Empty;
             string keys = String.Empty;
-            foreach (DataColumn col in this.Columns)
+            string[] columns = getNotVirtualColumnNames();
+            foreach (string colName in columns)
             {
+                DataColumn col = this.Columns[colName];
                 if (ignorePrimaryKeys && this.PrimaryKey.Contains(col)) continue;
                 if (!String.IsNullOrEmpty(keys))
                 {
@@ -94,15 +96,12 @@ namespace NormaMeasure.DBControl
             foreach(DataRow row in this.Rows)
             {
                 string rowVals = "";
-                foreach (DataColumn col in this.Columns)
+                foreach (string colName in columns)
                 {
+                    DataColumn col = this.Columns[colName];
                     if (ignorePrimaryKeys && this.PrimaryKey.Contains(col)) continue;
                     if (!String.IsNullOrEmpty(rowVals)) rowVals += ", ";
-                    if (col.DataType == typeof(string))
-                    {
-                        rowVals += $"'{row[col.ColumnName].ToString()}'";
-                    }
-                    else rowVals += $"{row[col.ColumnName].ToString()}";
+                    rowVals += DBColumnValue(col, row);
                 }
                 if (!String.IsNullOrEmpty(vals)) vals += ", ";
                 vals += $"({rowVals})";
@@ -110,11 +109,31 @@ namespace NormaMeasure.DBControl
             return String.Format(InsertQuery, keys, vals); // $"INSERT INTO {this.Table} ({keys}) VALUES ({vals})";
         }
 
+        public static string DBColumnValue(DataColumn col, DataRow row)
+        {
+            if (col.DataType == typeof(string))
+            {
+                return $"'{row[col.ColumnName].ToString()}'";
+            }
+            else
+            {
+                if (String.IsNullOrWhiteSpace(row[col.ColumnName].ToString())) return "NULL";
+                else return row[col.ColumnName].ToString();
+            }
+        }
+
         public void FillByQuery(string select_query)
         {
             MySqlDataAdapter a = new MySqlDataAdapter(select_query, DBConnection);
             OpenDB();
-            a.Fill(this);
+            try
+            {
+                a.Fill(this);
+            }
+            catch(System.Data.ConstraintException ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message + "\n" + select_query, $"Ошибка заполнения таблицы {this.TableName}", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
             CloseDB();
         }
 
