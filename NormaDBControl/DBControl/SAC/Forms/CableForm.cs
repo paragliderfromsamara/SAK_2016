@@ -192,7 +192,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
 
         private void fillFormByCable()
         {
-            this.Text = (cable.IsDraft) ? "Новый кабель" : cable.Name ;
+            this.Text = (cable.IsDraft) ? "Новый кабель" : cable.FullName ;
             CableMark_input.Text = cable.Name;
             CableStructures_input.Text = cable.StructName;
             //DocumentName_input.Text = cable.DocumentName;
@@ -381,6 +381,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             }
             cable.CableStructures.RowDeleted += CableStructures_RowDeleted;
             cable.CableStructures.RowChanged += CableStructures_RowChanged;
+            CableStructureTabs.Visible = CableStructureTabs.TabPages.Count > 0;
            // CableStructureTabs.re
         }
 
@@ -400,6 +401,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
             tp.DeleteStructureButton.Click += DeleteStructureButton_Click;
             CableStructureTabs.TabPages.Add(tp);
             CableStructureTabs.SelectedTab = tp;
+            CableStructureTabs.Visible = true;
         }
 
         /// <summary>
@@ -432,6 +434,7 @@ namespace NormaMeasure.DBControl.SAC.Forms
                 {
                     CableStructureTabs.TabPages[CableStructureTabs.SelectedIndex].Dispose();
                     CableStructureTabs.Refresh();
+                    CableStructureTabs.Visible = CableStructureTabs.TabPages.Count > 0;
                 }
                 else MessageBox.Show("Не удалось удалить структуру кабеля!");
             }
@@ -445,6 +448,21 @@ namespace NormaMeasure.DBControl.SAC.Forms
             //CableStructureTabPage page = e.TabPage as CableStructureTabPage;
             // MessageBox.Show(.CableStructure.StructureType.StructureTypeName);
             e.Cancel = !SaveSelectedStructure();
+        }
+
+        private void CableStructureTabs_VisibleChanged(object sender, EventArgs e)
+        {
+
+            if (CableStructureTabs.Visible)
+            {
+                this.Height = 832;
+            }
+            else
+            {
+                this.Height = 832 - CableStructureTabs.Height;
+            }
+            panel1.Top = this.Height - panel1.Height - 50;
+
         }
     }
 

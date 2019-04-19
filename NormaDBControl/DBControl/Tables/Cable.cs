@@ -123,7 +123,18 @@ namespace NormaMeasure.DBControl.Tables
 
         private void validateStructuresCount()
         {
-            if (CableStructures.Rows.Count == 0) ErrorsList.Add("Не было добавлено ни одной структуры кабеля");
+            bool f = false;
+            if (CableStructures.Rows.Count == 0) f = true;  
+            else
+            {
+                f = true;
+                foreach(CableStructure s in CableStructures.Rows)
+                {
+
+                    f &= (s.RowState == DataRowState.Deleted);
+                }
+            }
+            if (f)ErrorsList.Add("Не было добавлено ни одной структуры кабеля");
         }
 
         private void validateNormDoc()
@@ -388,7 +399,7 @@ namespace NormaMeasure.DBControl.Tables
         {
             get
             {
-                return this[FullCableName_ColumnName].ToString();
+                return String.IsNullOrWhiteSpace(this[FullCableName_ColumnName].ToString()) ? $"{Name} {StructName}" : this[FullCableName_ColumnName].ToString();
             }
             set
             {
