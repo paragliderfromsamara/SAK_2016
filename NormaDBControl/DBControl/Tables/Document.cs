@@ -46,7 +46,7 @@ namespace NormaMeasure.DBControl.Tables
         protected void CheckShortNameUniquiness()
         {
             DBEntityTable t = new DBEntityTable(typeof(Document));
-            string select_cmd = $"{t.SelectQuery} WHERE NOT {DocumentId_ColumnName} = {this.DocumentId} AND {ShortName} = '{this.ShortName}'";
+            string select_cmd = $"{t.SelectQuery} WHERE NOT {DocumentId_ColumnName} = {this.DocumentId} AND {ShortName_ColumnName} = '{this.ShortName}'";
             t.FillByQuery(select_cmd);
             if (t.Rows.Count > 0)
             {

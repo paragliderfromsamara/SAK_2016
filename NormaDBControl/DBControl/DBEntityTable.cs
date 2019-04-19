@@ -134,6 +134,11 @@ namespace NormaMeasure.DBControl
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message + "\n" + select_query, $"Ошибка заполнения таблицы {this.TableName}", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
+            catch(MySql.Data.MySqlClient.MySqlException ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message + "\n" + select_query, $"Ошибка заполнения таблицы {this.TableName}", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+
+            }
             CloseDB();
         }
 
