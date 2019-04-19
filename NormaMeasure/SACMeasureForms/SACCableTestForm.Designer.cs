@@ -51,7 +51,7 @@
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.testProgram_GroupBox = new System.Windows.Forms.GroupBox();
             this.CableTestFormDataSet = new System.Data.DataSet();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -295,14 +295,14 @@
             this.checkBox1.Text = "Использовать термодатчик";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // testProgram_GroupBox
             // 
-            this.groupBox2.Location = new System.Drawing.Point(12, 165);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(567, 113);
-            this.groupBox2.TabIndex = 22;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Программа испытаний";
+            this.testProgram_GroupBox.Location = new System.Drawing.Point(12, 165);
+            this.testProgram_GroupBox.Name = "testProgram_GroupBox";
+            this.testProgram_GroupBox.Size = new System.Drawing.Size(567, 133);
+            this.testProgram_GroupBox.TabIndex = 22;
+            this.testProgram_GroupBox.TabStop = false;
+            this.testProgram_GroupBox.Text = "Программа испытаний";
             // 
             // CableTestFormDataSet
             // 
@@ -313,7 +313,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(592, 392);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.testProgram_GroupBox);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.comboBox4);
@@ -372,7 +372,7 @@
         private System.Windows.Forms.ComboBox comboBox4;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox testProgram_GroupBox;
         private System.Data.DataSet CableTestFormDataSet;
     }
 }

@@ -22,13 +22,38 @@ namespace NormaMeasure.DBControl.Tables
             return parameter_type;
         }
 
+        public const uint Calling = 1;
+        public const uint Rleads = 2;
+        public const uint dR = 3;
+        public const uint Risol1 = 4;
+        public const uint Risol2 = 5;
+        public const uint Risol3 = 6;
+        public const uint Risol4 = 7;
+        public const uint Cp = 8;
+        public const uint dCp = 9;
+        public const uint Co = 10;
+        public const uint Ea = 11;
+        public const uint K1 = 12;
+        public const uint K23 = 13;
+        public const uint K9_12 = 14;
+        public const uint al = 15;
+        public const uint Ao = 16;
+        public const uint Az = 17;
+        public const uint K2 = 18;
+        public const uint K3 = 19;
+        public const uint K9 = 20;
+        public const uint K10 = 21;
+        public const uint K11 = 22;
+        public const uint K12 = 23;
+
+
         /// <summary>
         /// Выборка типов измеряемых параметров для формы испытания кабеля
         /// </summary>
         /// <returns></returns>
-        public DBEntityTable get_for_a_program_test()
+        public static DBEntityTable get_for_a_program_test()
         {
-            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} < {K2}", typeof(MeasuredParameterType));
+            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} < {K2} AND NOT {ParameterTypeId_ColumnName} IN ({Risol2}, {Risol3}, {Risol4}) ", typeof(MeasuredParameterType));
         }
 
         public static DBEntityTable get_all_as_table_for_cable_structure_form(string ids)
@@ -120,29 +145,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
 
-        public const uint Calling = 1;
-        public const uint Rleads = 2;
-        public const uint dR = 3;
-        public const uint Risol1 = 4;
-        public const uint Risol2 = 5;
-        public const uint Risol3 = 6;
-        public const uint Risol4 = 7;
-        public const uint Cp = 8;
-        public const uint dCp = 9;
-        public const uint Co = 10;
-        public const uint Ea = 11;
-        public const uint K1 = 12;
-        public const uint K23 = 13;
-        public const uint K9_12 = 14;
-        public const uint al = 15;
-        public const uint Ao = 16;
-        public const uint Az = 17;
-        public const uint K2 = 18;
-        public const uint K3 = 19;
-        public const uint K9 = 20;
-        public const uint K10 = 21;
-        public const uint K11 = 22;
-        public const uint K12 = 23;
+
 
 
         #region Колонки таблицы

@@ -19,13 +19,63 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         public SACCableTestForm()
         {
             InitializeComponent();
+            InitTestProgamGroupBox();
             LoadDataFromDB();
             InitMeasure();
             CurrentTest = CableTest.GetLastOrCreateNew();
         }
 
+        private void InitTestProgamGroupBox()
+        {
+            int onRow = 7;
+            int x = 0;
+            int y = 0;
+            int vertOffset =10;
+            int horOffset = 5;
+            int cbWidth = 85;
+            int cbHeight = 20;
+            int startHorOffset = 30;
+            int startVertOffset = 30;
+            int tmpHorOffset = startHorOffset;
+            int tmpVertOffset = startVertOffset;
+            DBEntityTable t = MeasuredParameterType.get_for_a_program_test();
+            foreach(MeasuredParameterType pType in t.Rows)
+            {
+                if (x == onRow)
+                {
+                    y++;
+                    x = 0;
+                    tmpHorOffset = startHorOffset;
+                    tmpVertOffset += vertOffset + cbHeight;
+                }
+                CheckBox cb = new CheckBox();
+                cb.Parent = testProgram_GroupBox;
+                if (pType.ParameterTypeId == MeasuredParameterType.Risol1)
+                {
+                    cb.Text = (pType.ParameterTypeId == MeasuredParameterType.Risol1) ? "Rиз" : pType.ParameterName;
+                }else if (pType.ParameterTypeId == MeasuredParameterType.Calling)
+                {
+                    cb.Text = "Прозвонка";
+                }
+                else
+                {
+                    cb.Text = pType.ParameterName;
+                }
 
+                cb.Name = $"MeasuredParameterType_{pType.ParameterTypeId}";
+                cb.Width = (pType.ParameterTypeId == MeasuredParameterType.Calling) ? cbWidth : cbWidth*2/3;
+                cb.Height = cbHeight;
+                cb.Location = new Point(tmpHorOffset, tmpVertOffset);
 
+                x++;
+                tmpHorOffset += (cbWidth + horOffset);
+                
+
+            }
+            testProgram_GroupBox.Width = onRow * (horOffset + cbWidth) + horOffset;
+            testProgram_GroupBox.Height = (y+1) * (vertOffset + cbHeight) + vertOffset + startVertOffset;
+            this.Width = testProgram_GroupBox.Width + 40;
+        }
 
         private void InitMeasure()
         {
