@@ -37,15 +37,14 @@
             this.createFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cable_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.is_test_cable = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CabName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CabNameStruct = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cable_full_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DocNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TextPrim = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.KodOKP = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.KodOKP_KCH = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.is_draft = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.is_deleted = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.p_min = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.p_max = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.document_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -74,15 +73,14 @@
             this.cablesList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.cablesList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.cable_id,
-            this.is_test_cable,
             this.CabName,
             this.CabNameStruct,
+            this.cable_full_name,
             this.DocNum,
             this.TextPrim,
             this.KodOKP,
             this.KodOKP_KCH,
             this.is_draft,
-            this.is_deleted,
             this.p_min,
             this.p_max,
             this.document_id,
@@ -108,7 +106,7 @@
             this.createFromToolStripMenuItem,
             this.deleteToolStripMenuItem});
             this.cableListContextMenu.Name = "cableListContextMenu";
-            this.cableListContextMenu.Size = new System.Drawing.Size(155, 92);
+            this.cableListContextMenu.Size = new System.Drawing.Size(155, 70);
             // 
             // editToolStripMenuItem
             // 
@@ -133,17 +131,13 @@
             // 
             // cable_id
             // 
+            this.cable_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.cable_id.DataPropertyName = "cable_id";
+            this.cable_id.FillWeight = 75F;
             this.cable_id.HeaderText = "id";
             this.cable_id.Name = "cable_id";
             this.cable_id.ReadOnly = true;
-            // 
-            // is_test_cable
-            // 
-            this.is_test_cable.DataPropertyName = "is_test_cable";
-            this.is_test_cable.HeaderText = "Тест кабель";
-            this.is_test_cable.Name = "is_test_cable";
-            this.is_test_cable.Visible = false;
+            this.cable_id.Width = 75;
             // 
             // CabName
             // 
@@ -151,17 +145,30 @@
             this.CabName.HeaderText = "Марка кабеля";
             this.CabName.Name = "CabName";
             this.CabName.ReadOnly = true;
+            this.CabName.Visible = false;
             // 
             // CabNameStruct
             // 
             this.CabNameStruct.DataPropertyName = "struct_name";
+            this.CabNameStruct.FillWeight = 150F;
             this.CabNameStruct.HeaderText = "Структура кабеля";
+            this.CabNameStruct.MinimumWidth = 150;
             this.CabNameStruct.Name = "CabNameStruct";
             this.CabNameStruct.ReadOnly = true;
+            this.CabNameStruct.Visible = false;
+            // 
+            // cable_full_name
+            // 
+            this.cable_full_name.DataPropertyName = "full_cable_name";
+            this.cable_full_name.FillWeight = 10.3F;
+            this.cable_full_name.HeaderText = "Название";
+            this.cable_full_name.Name = "cable_full_name";
+            this.cable_full_name.ReadOnly = true;
             // 
             // DocNum
             // 
             this.DocNum.DataPropertyName = "short_name";
+            this.DocNum.FillWeight = 6.543194F;
             this.DocNum.HeaderText = "Норматив";
             this.DocNum.Name = "DocNum";
             this.DocNum.ReadOnly = true;
@@ -169,6 +176,7 @@
             // TextPrim
             // 
             this.TextPrim.DataPropertyName = "notes";
+            this.TextPrim.FillWeight = 6.543194F;
             this.TextPrim.HeaderText = "Примечание";
             this.TextPrim.Name = "TextPrim";
             this.TextPrim.ReadOnly = true;
@@ -176,6 +184,7 @@
             // KodOKP
             // 
             this.KodOKP.DataPropertyName = "code_okp";
+            this.KodOKP.FillWeight = 6.543194F;
             this.KodOKP.HeaderText = "Код ОКП";
             this.KodOKP.Name = "KodOKP";
             this.KodOKP.ReadOnly = true;
@@ -183,6 +192,7 @@
             // KodOKP_KCH
             // 
             this.KodOKP_KCH.DataPropertyName = "code_kch";
+            this.KodOKP_KCH.FillWeight = 6.543194F;
             this.KodOKP_KCH.HeaderText = "КЧ";
             this.KodOKP_KCH.Name = "KodOKP_KCH";
             this.KodOKP_KCH.ReadOnly = true;
@@ -193,13 +203,6 @@
             this.is_draft.HeaderText = "Черновик";
             this.is_draft.Name = "is_draft";
             this.is_draft.Visible = false;
-            // 
-            // is_deleted
-            // 
-            this.is_deleted.DataPropertyName = "is_deleted";
-            this.is_deleted.HeaderText = "Удалён";
-            this.is_deleted.Name = "is_deleted";
-            this.is_deleted.Visible = false;
             // 
             // p_min
             // 
@@ -274,15 +277,14 @@
         private System.Windows.Forms.ToolStripMenuItem createFromToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn cable_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn is_test_cable;
         private System.Windows.Forms.DataGridViewTextBoxColumn CabName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CabNameStruct;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cable_full_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn DocNum;
         private System.Windows.Forms.DataGridViewTextBoxColumn TextPrim;
         private System.Windows.Forms.DataGridViewTextBoxColumn KodOKP;
         private System.Windows.Forms.DataGridViewTextBoxColumn KodOKP_KCH;
         private System.Windows.Forms.DataGridViewTextBoxColumn is_draft;
-        private System.Windows.Forms.DataGridViewTextBoxColumn is_deleted;
         private System.Windows.Forms.DataGridViewTextBoxColumn p_min;
         private System.Windows.Forms.DataGridViewTextBoxColumn p_max;
         private System.Windows.Forms.DataGridViewTextBoxColumn document_id;

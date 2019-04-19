@@ -16,8 +16,8 @@ namespace NormaMeasure.DBControl.Tables
         public static DBEntityTable get_all_including_docs()
         {
             DBEntityTable docsTable = new DBEntityTable(typeof(Document));
-            string select_cmd = $"LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE {IsDraftFlag_ColumnName} = 0";
-            return find_by_criteria(select_cmd, typeof(Cable));
+            string select_cmd = $"SELECT *, CONCAT({CableName_ColumnName}, ' ', {StructName_ColumnName}) AS {FullCableName_ColumnName} FROM cables LEFT OUTER JOIN {docsTable.TableName} USING({docsTable.PrimaryKey[0]}) WHERE {IsDraftFlag_ColumnName} = 0";
+            return find_by_query(select_cmd, typeof(Cable));
         }
 
         public static Cable find_by_cable_id(uint id)
@@ -381,6 +381,18 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        [DBColumn(FullCableName_ColumnName, ColumnDomain.Boolean, Order = 23, IsVirtual = true)]
+        public string FullName
+        {
+            get
+            {
+                return this[FullCableName_ColumnName].ToString();
+            }
+            set
+            {
+                this[FullCableName_ColumnName] = value;
+            }
+        }
 
 
         public const string CableId_ColumnName = "cable_id";
@@ -395,6 +407,8 @@ namespace NormaMeasure.DBControl.Tables
         public const string PMin_ColumnName = "p_min";
         public const string PMax_ColumnName = "p_max";
         public const string IsDraftFlag_ColumnName = "is_draft";
+        public const string FullCableName_ColumnName = "full_cable_name";
+
         #endregion
 
         /// <summary>
