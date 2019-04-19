@@ -149,7 +149,9 @@ namespace NormaMeasure.DBControl.Tables
 
         public static DBEntityTable get_all_as_table()
         {
-            return find_by_criteria($"{IsDraftFlag_ColumnName} = 0", typeof(Cable));
+            string select_cmd = $"SELECT *, CONCAT({CableName_ColumnName}, ' ', {StructName_ColumnName}) AS {FullCableName_ColumnName} FROM cables";
+            return find_by_query(select_cmd, typeof(Cable));
+           // return find_by_criteria($"{IsDraftFlag_ColumnName} = 0", typeof(Cable));
         }
 
         /// <summary>

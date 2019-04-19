@@ -121,10 +121,13 @@ namespace NormaMeasure.DBControl.Tables
         public static DBEntityTable get_all_as_table()
         {
             DBEntityTable rolesTable = new DBEntityTable(typeof(UserRole));
-            string select_cmd = $"LEFT OUTER JOIN {rolesTable.TableName} USING({rolesTable.PrimaryKey[0]}) WHERE {IsActiveFlag_ColumnName} = 1 AND NOT {UserId_ColumnName} = 1"; // 
-            DBEntityTable t = find_by_criteria(select_cmd, typeof(User));//new DBEntityTable(typeof(User));
+            string firstNameCond = $"IF(TRIM({FirstName_ColumnName}) != '', CONCAT(' ', SUBSTRING({FirstName_ColumnName}, 1, 1), '.'), '')"; //, (IF {FirstName_ColumnName} = '' THEN CONCAT(SUBSTRING('Assd' ,1 , 1), '.') END IF) 
+            string thirdNameCond = $"IF(TRIM({ThirdName_ColumnName}) != '', CONCAT(' ', SUBSTRING({ThirdName_ColumnName}, 1, 1), '.'), '')";
+            string select_cmd = $"SELECT *, CONCAT({LastName_ColumnName}, {firstNameCond}, {thirdNameCond} ) AS {FullName_ColumnName} FROM users LEFT OUTER JOIN {rolesTable.TableName} USING({rolesTable.PrimaryKey[0]}) WHERE {IsActiveFlag_ColumnName} = 1 AND NOT {UserId_ColumnName} = 1"; // 
+            DBEntityTable t = find_by_query(select_cmd, typeof(User));//new DBEntityTable(typeof(User));
             return t;
         }
+
 
         public string FullNameShort
         {
@@ -266,5 +269,6 @@ namespace NormaMeasure.DBControl.Tables
         public const string FullName_ColumnName = "full_name";
         public const string EmployeeNumber_ColumnName = "employee_number";
         public const string Password_ColumnName = "password";
+
     }
 }
