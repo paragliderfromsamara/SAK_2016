@@ -125,11 +125,21 @@ namespace NormaMeasure.DBControl.Tables
             {
                 sourceCable = value;
                 SourceCableId = sourceCable.CableId;
-                if (TestedCable != null)
-                {
-                    TestedCable.Destroy();
-                    TestedCable = null;
-                }
+                CleanCableVariables();
+            }
+        }
+
+        /// <summary>
+        /// Очищаем переменные связанные с исходным кабелем
+        /// </summary>
+        private void CleanCableVariables()
+        {
+            measuredParameterTypes = null;
+            measuredParameterTypes_IDs = null;
+            if (TestedCable != null)
+            {
+                TestedCable.Destroy();
+                TestedCable = null;
             }
         }
 
@@ -159,7 +169,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(TestedCable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum")]
+        [DBColumn(TestedCable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, Nullable =true, OldDBColumnName = "CabNum")]
         public uint TestedCableId
         {
             get
@@ -172,7 +182,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(SourceCableId_ColumnName, ColumnDomain.UInt, Order = 12)]
+        [DBColumn(SourceCableId_ColumnName, ColumnDomain.UInt, Order = 12, Nullable = true)]
         public uint SourceCableId
         {
             get
@@ -326,10 +336,21 @@ namespace NormaMeasure.DBControl.Tables
         /// <summary>
         /// Испытание с дальним столом? (true - c ДК, false - без ДК)
         /// </summary>
+        public uint BarabanTypeId;
+        public string BarabanSerial;
+        /// <summary>
+        /// Совмещенный или раздельный стол
+        /// </summary>
         public bool IsSplittedTable = true;
+        /// <summary>
+        /// Флаг использования датчика температуры
+        /// </summary>
         public bool IsUseTermoDetector = false;
+
+
         public MeasuredParameterType[] measuredParameterTypes;
         public uint[] measuredParameterTypes_IDs;
+
 
         private Cable sourceCable;
         private TestedCable testedCable; 

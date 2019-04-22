@@ -43,7 +43,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             if(CurrentTest.IsNotStarted)
             {
                 CurrentTest.SourceCable = (Cable)CablesTable.Rows[0];
-                MessageBox.Show("is_not_started");
+              //  MessageBox.Show("is_not_started");
             }
         }
 
