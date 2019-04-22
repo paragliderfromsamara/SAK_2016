@@ -51,6 +51,7 @@
     <Compile Include="SACMeasureForms\SACCableTestForm.Designer.cs">
       <DependentUpon>SACCableTestForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SAC\CableTestMeasure.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SACMeasureForms\SACCableTestForm.resx">

@@ -39,14 +39,14 @@
             this.label5 = new System.Windows.Forms.Label();
             this.connectedFromTableElement_ComboBox = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.connectionType = new System.Windows.Forms.GroupBox();
             this.doubleTable_RadioBatton = new System.Windows.Forms.RadioButton();
             this.singleTable_RadioBatton = new System.Windows.Forms.RadioButton();
             this.barabanTypes_CB = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.cableLength_NumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.RizolSelector_CB = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -55,8 +55,8 @@
             this.CableTestFormDataSet = new System.Data.DataSet();
             this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            this.connectionType.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cableLength_NumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CableTestFormDataSet)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -93,7 +93,7 @@
             // 
             this.operatorsList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.operatorsList.FormattingEnabled = true;
-            this.operatorsList.Location = new System.Drawing.Point(12, 25);
+            this.operatorsList.Location = new System.Drawing.Point(12, 30);
             this.operatorsList.Name = "operatorsList";
             this.operatorsList.Size = new System.Drawing.Size(142, 21);
             this.operatorsList.TabIndex = 4;
@@ -101,7 +101,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 9);
+            this.label3.Location = new System.Drawing.Point(9, 14);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(56, 13);
             this.label3.TabIndex = 5;
@@ -109,7 +109,7 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(181, 25);
+            this.numericUpDown1.Location = new System.Drawing.Point(181, 30);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             35,
             0,
@@ -132,7 +132,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(178, 9);
+            this.label4.Location = new System.Drawing.Point(178, 14);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(91, 13);
             this.label4.TabIndex = 7;
@@ -142,7 +142,7 @@
             // 
             this.cableForTest_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cableForTest_CB.FormattingEnabled = true;
-            this.cableForTest_CB.Location = new System.Drawing.Point(12, 70);
+            this.cableForTest_CB.Location = new System.Drawing.Point(12, 75);
             this.cableForTest_CB.Name = "cableForTest_CB";
             this.cableForTest_CB.Size = new System.Drawing.Size(289, 21);
             this.cableForTest_CB.TabIndex = 8;
@@ -151,7 +151,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 54);
+            this.label5.Location = new System.Drawing.Point(9, 59);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(44, 13);
             this.label5.TabIndex = 9;
@@ -161,7 +161,7 @@
             // 
             this.connectedFromTableElement_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.connectedFromTableElement_ComboBox.FormattingEnabled = true;
-            this.connectedFromTableElement_ComboBox.Location = new System.Drawing.Point(321, 70);
+            this.connectedFromTableElement_ComboBox.Location = new System.Drawing.Point(321, 75);
             this.connectedFromTableElement_ComboBox.Name = "connectedFromTableElement_ComboBox";
             this.connectedFromTableElement_ComboBox.Size = new System.Drawing.Size(89, 21);
             this.connectedFromTableElement_ComboBox.TabIndex = 10;
@@ -169,22 +169,22 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(318, 54);
+            this.label6.Location = new System.Drawing.Point(318, 59);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(92, 13);
             this.label6.TabIndex = 11;
             this.label6.Text = "Подключен с ПУ";
             // 
-            // groupBox1
+            // connectionType
             // 
-            this.groupBox1.Controls.Add(this.doubleTable_RadioBatton);
-            this.groupBox1.Controls.Add(this.singleTable_RadioBatton);
-            this.groupBox1.Location = new System.Drawing.Point(433, 53);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(146, 47);
-            this.groupBox1.TabIndex = 12;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Способ подключения";
+            this.connectionType.Controls.Add(this.doubleTable_RadioBatton);
+            this.connectionType.Controls.Add(this.singleTable_RadioBatton);
+            this.connectionType.Location = new System.Drawing.Point(433, 58);
+            this.connectionType.Name = "connectionType";
+            this.connectionType.Size = new System.Drawing.Size(146, 47);
+            this.connectionType.TabIndex = 12;
+            this.connectionType.TabStop = false;
+            this.connectionType.Text = "Способ подключения";
             // 
             // doubleTable_RadioBatton
             // 
@@ -214,7 +214,7 @@
             // 
             this.barabanTypes_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.barabanTypes_CB.FormattingEnabled = true;
-            this.barabanTypes_CB.Location = new System.Drawing.Point(12, 127);
+            this.barabanTypes_CB.Location = new System.Drawing.Point(12, 132);
             this.barabanTypes_CB.Name = "barabanTypes_CB";
             this.barabanTypes_CB.Size = new System.Drawing.Size(142, 21);
             this.barabanTypes_CB.TabIndex = 13;
@@ -222,7 +222,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 111);
+            this.label7.Location = new System.Drawing.Point(9, 116);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(50, 13);
             this.label7.TabIndex = 14;
@@ -230,7 +230,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(169, 127);
+            this.textBox1.Location = new System.Drawing.Point(169, 132);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(132, 20);
             this.textBox1.TabIndex = 15;
@@ -238,29 +238,29 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(166, 111);
+            this.label8.Location = new System.Drawing.Point(166, 116);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(92, 13);
             this.label8.TabIndex = 16;
             this.label8.Text = "Номер барабана";
             // 
-            // numericUpDown2
+            // cableLength_NumericUpDown
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(321, 127);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
+            this.cableLength_NumericUpDown.Location = new System.Drawing.Point(321, 132);
+            this.cableLength_NumericUpDown.Maximum = new decimal(new int[] {
             3000,
             0,
             0,
             0});
-            this.numericUpDown2.Minimum = new decimal(new int[] {
+            this.cableLength_NumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
             0,
             0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(89, 20);
-            this.numericUpDown2.TabIndex = 17;
-            this.numericUpDown2.Value = new decimal(new int[] {
+            this.cableLength_NumericUpDown.Name = "cableLength_NumericUpDown";
+            this.cableLength_NumericUpDown.Size = new System.Drawing.Size(89, 20);
+            this.cableLength_NumericUpDown.TabIndex = 17;
+            this.cableLength_NumericUpDown.Value = new decimal(new int[] {
             1000,
             0,
             0,
@@ -269,7 +269,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(318, 111);
+            this.label9.Location = new System.Drawing.Point(318, 116);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(93, 13);
             this.label9.TabIndex = 18;
@@ -280,7 +280,7 @@
             this.RizolSelector_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.RizolSelector_CB.Enabled = false;
             this.RizolSelector_CB.FormattingEnabled = true;
-            this.RizolSelector_CB.Location = new System.Drawing.Point(433, 126);
+            this.RizolSelector_CB.Location = new System.Drawing.Point(433, 131);
             this.RizolSelector_CB.Name = "RizolSelector_CB";
             this.RizolSelector_CB.Size = new System.Drawing.Size(146, 21);
             this.RizolSelector_CB.TabIndex = 19;
@@ -288,7 +288,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(430, 111);
+            this.label10.Location = new System.Drawing.Point(430, 116);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(138, 13);
             this.label10.TabIndex = 20;
@@ -297,7 +297,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(321, 25);
+            this.checkBox1.Location = new System.Drawing.Point(321, 30);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(167, 17);
             this.checkBox1.TabIndex = 21;
@@ -308,7 +308,7 @@
             // 
             this.testProgram_GroupBox.BackColor = System.Drawing.SystemColors.Control;
             this.testProgram_GroupBox.ForeColor = System.Drawing.Color.Navy;
-            this.testProgram_GroupBox.Location = new System.Drawing.Point(12, 165);
+            this.testProgram_GroupBox.Location = new System.Drawing.Point(12, 170);
             this.testProgram_GroupBox.Name = "testProgram_GroupBox";
             this.testProgram_GroupBox.Size = new System.Drawing.Size(567, 18);
             this.testProgram_GroupBox.TabIndex = 22;
@@ -328,37 +328,37 @@
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(12, 184);
+            this.panel1.Location = new System.Drawing.Point(12, 194);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(568, 210);
+            this.panel1.Size = new System.Drawing.Size(567, 210);
             this.panel1.TabIndex = 23;
             // 
             // SACCableTestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(592, 450);
+            this.ClientSize = new System.Drawing.Size(590, 450);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.testProgram_GroupBox);
-            this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.RizolSelector_CB);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.numericUpDown2);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.barabanTypes_CB);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.connectedFromTableElement_ComboBox);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.cableForTest_CB);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.operatorsList);
             this.Controls.Add(this.measureControlButton);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.barabanTypes_CB);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.operatorsList);
+            this.Controls.Add(this.RizolSelector_CB);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.cableLength_NumericUpDown);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.cableForTest_CB);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.connectedFromTableElement_ComboBox);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.connectionType);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -366,9 +366,9 @@
             this.Text = "Испытание кабеля";
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            this.connectionType.ResumeLayout(false);
+            this.connectionType.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cableLength_NumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CableTestFormDataSet)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -390,14 +390,14 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox connectedFromTableElement_ComboBox;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox connectionType;
         private System.Windows.Forms.RadioButton doubleTable_RadioBatton;
         private System.Windows.Forms.RadioButton singleTable_RadioBatton;
         private System.Windows.Forms.ComboBox barabanTypes_CB;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.NumericUpDown cableLength_NumericUpDown;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox RizolSelector_CB;
         private System.Windows.Forms.Label label10;

@@ -529,6 +529,16 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static new TestedCable find_by_cable_id(uint id)
+        {
+            DBEntityTable t = find_by_primary_key(id, typeof(Cable));//new DBEntityTable(typeof(Cable));
+            if (t.Rows.Count > 0) return (TestedCable)t.Rows[0];
+            else
+            {
+                return null;
+            }
+        }
+
         [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 24, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+ ") ON DELETE CASCADE")]
         public uint TestId
         {

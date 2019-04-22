@@ -61,6 +61,89 @@ namespace NormaMeasure.DBControl.Tables
             return find_by_criteria(select_cmd, typeof(CableTest));
         }
 
+        public bool IsNotStarted => StatusId == CableTestStatus.NotStarted;
+        public bool IsInterrupted => StatusId == CableTestStatus.StopedByOperator || StatusId == CableTestStatus.StopedOutOfNorma;
+
+        public MeasuredParameterType[] MeasuredParameterTypes
+        {
+            get
+            {
+                if (measuredParameterTypes == null)
+                {
+                    measuredParameterTypes = getFromTestedCable();
+                }
+                return measuredParameterTypes;
+            }
+            set
+            {
+                measuredParameterTypes = value;
+            }
+        }
+
+        public uint[] MeasuredParameterTypes_IDs
+        {
+            get
+            {
+                if(measuredParameterTypes_IDs == null)
+                {
+                    List<uint> ids = new List<uint>();
+                    foreach (MeasuredParameterType type in MeasuredParameterTypes) ids.Add(type.ParameterTypeId);
+                    if (ids.Count > 0) measuredParameterTypes_IDs = ids.ToArray();
+                }
+                return measuredParameterTypes_IDs;
+            }
+        }
+
+        public TestedCable TestedCable
+        {
+            get
+            {
+                if (testedCable == null)
+                {
+                    testedCable = TestedCable.find_by_cable_id(TestedCableId);
+                }
+                return testedCable;
+            }
+            set
+            {
+                testedCable = value;
+            }
+        }
+
+
+        public Cable SourceCable
+        {
+            get
+            {
+                if (sourceCable == null)
+                {
+                    sourceCable = Cable.find_by_cable_id(SourceCableId);
+                }
+                return sourceCable;
+            }
+            set
+            {
+                sourceCable = value;
+                SourceCableId = sourceCable.CableId;
+                if (TestedCable != null)
+                {
+                    TestedCable.Destroy();
+                    TestedCable = null;
+                }
+            }
+        }
+
+        private MeasuredParameterType[] getFromTestedCable()
+        {
+            
+            List<uint> ids = new List<uint>();
+            if (SourceCable == null && TestedCable == null) return null;
+            ids.Add(MeasuredParameterType.Calling);
+            uint[] idsFromCable = TestedCable == null ? SourceCable.MeasuredParameterTypes_IDs : TestedCable.MeasuredParameterTypes_IDs;
+            foreach (uint id in idsFromCable) ids.Add(id);
+            return MeasuredParameterType.get_all_by_ids_as_array(ids.ToArray());
+        }
+
 
         #region Колонки таблицы
         [DBColumn(CableTestId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "IspInd", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
@@ -75,8 +158,35 @@ namespace NormaMeasure.DBControl.Tables
                 this[CableTestId_ColumnName] = value;
             }
         }
-        
-        [DBColumn(ReleasedBaraban.BarabanId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "BarabanInd", Nullable = true)]
+
+        [DBColumn(TestedCable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum")]
+        public uint TestedCableId
+        {
+            get
+            {
+                return tryParseUInt(TestedCable.CableId_ColumnName);
+            }
+            set
+            {
+                this[TestedCable.CableId_ColumnName] = value;
+            }
+        }
+
+        [DBColumn(SourceCableId_ColumnName, ColumnDomain.UInt, Order = 12)]
+        public uint SourceCableId
+        {
+            get
+            {
+                return tryParseUInt(SourceCableId_ColumnName);
+            }
+            set
+            {
+                this[SourceCableId_ColumnName] = value;
+            }
+        }
+
+
+        [DBColumn(ReleasedBaraban.BarabanId_ColumnName, ColumnDomain.UInt, Order = 13, OldDBColumnName = "BarabanInd", Nullable = true)]
         public uint BarabanId
         {
             get
@@ -89,7 +199,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(OperatorId_ColumnName, ColumnDomain.UInt, Order = 12, OldDBColumnName = "Operator", Nullable = true)]
+        [DBColumn(OperatorId_ColumnName, ColumnDomain.UInt, Order = 14, OldDBColumnName = "Operator", Nullable = true)]
         public uint OperatorId
         {
             get
@@ -102,7 +212,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(CableTestStatus.StatusId_ColumnName, ColumnDomain.UInt, Order = 13, OldDBColumnName = "Status", Nullable = false)]
+        [DBColumn(CableTestStatus.StatusId_ColumnName, ColumnDomain.UInt, Order = 15, OldDBColumnName = "Status", Nullable = false)]
         public uint StatusId
         {
             get
@@ -115,7 +225,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(Temperature_ColumnName, ColumnDomain.Float, Order = 14, OldDBColumnName = "Temperetur", Nullable = true)]
+        [DBColumn(Temperature_ColumnName, ColumnDomain.Float, Order = 16, OldDBColumnName = "Temperetur", Nullable = true)]
         public float Temperature
         {
             get
@@ -128,7 +238,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(CableLength_ColumnName, ColumnDomain.Float, Order = 15, OldDBColumnName = "CabelLengt", Nullable = true)]
+        [DBColumn(CableLength_ColumnName, ColumnDomain.Float, Order = 17, OldDBColumnName = "CabelLengt", Nullable = true)]
         public float CableLength
         {
             get
@@ -141,7 +251,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(VSVILeadLead_ColumnName, ColumnDomain.Boolean, Order = 16, OldDBColumnName = "Vsvi", Nullable = true)]
+        [DBColumn(VSVILeadLead_ColumnName, ColumnDomain.Boolean, Order = 18, OldDBColumnName = "Vsvi", Nullable = true)]
         public bool VSVILeadLeadResult
         {
             get
@@ -154,7 +264,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(VSVILeadShield_ColumnName, ColumnDomain.Boolean, Order = 17, OldDBColumnName = "Vsvi_Obol", Nullable = true)]
+        [DBColumn(VSVILeadShield_ColumnName, ColumnDomain.Boolean, Order = 19, OldDBColumnName = "Vsvi_Obol", Nullable = true)]
         public bool VSVILeadShieldResult
         {
             get
@@ -167,7 +277,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(NettoWeight_ColumnName, ColumnDomain.Float, Order = 18, OldDBColumnName = "Netto", Nullable = true)]
+        [DBColumn(NettoWeight_ColumnName, ColumnDomain.Float, Order = 20, OldDBColumnName = "Netto", Nullable = true)]
         public float NettoWeight
         {
             get
@@ -180,7 +290,7 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        [DBColumn(BruttoWeight_ColumnName, ColumnDomain.Float, Order = 19, OldDBColumnName = "Brutto", Nullable = true)]
+        [DBColumn(BruttoWeight_ColumnName, ColumnDomain.Float, Order = 21, OldDBColumnName = "Brutto", Nullable = true)]
         public float BruttoWeight
         {
             get
@@ -193,11 +303,14 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+
         
 
 
 
         public const string CableTestId_ColumnName = "cable_test_id";
+        public const string TestedCableId_ColumnName = "cable_id";
+        public const string SourceCableId_ColumnName = "source_cable_id";
         public const string OperatorId_ColumnName = "operator_id";
         public const string Temperature_ColumnName = "temperature";
         public const string CableLength_ColumnName = "cable_length";
@@ -206,6 +319,21 @@ namespace NormaMeasure.DBControl.Tables
         public const string NettoWeight_ColumnName = "netto_weight";
         public const string BruttoWeight_ColumnName = "brutto_weight";
         #endregion
+
+
+
+        public int ConnectedFrom = 1;
+        /// <summary>
+        /// Испытание с дальним столом? (true - c ДК, false - без ДК)
+        /// </summary>
+        public bool IsSplittedTable = true;
+        public bool IsUseTermoDetector = false;
+        public MeasuredParameterType[] measuredParameterTypes;
+        public uint[] measuredParameterTypes_IDs;
+
+        private Cable sourceCable;
+        private TestedCable testedCable; 
+        
     }
 
 

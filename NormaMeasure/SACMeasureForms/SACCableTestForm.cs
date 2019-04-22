@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NormaMeasure.DBControl;
 using NormaMeasure.DBControl.Tables;
+using NormaMeasure.MeasureControl.SAC;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {
@@ -19,15 +20,40 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         public SACCableTestForm()
         {
             InitializeComponent();
+            CurrentTest = CableTest.GetLastOrCreateNew();
             InitTestProgamGroupBox();
             if (!LoadDataFromDB())
             {
                 this.Close();
                 return;
+            }else
+            {
+                
+                InitCableTest();
+                InitInputs();
             }
-            InitInputs();
-            InitMeasure();
-            CurrentTest = CableTest.GetLastOrCreateNew();
+
+
+
+        }
+
+        private void InitCableTest()
+        {
+            SwitchEnablingFields(CurrentTest.IsNotStarted);
+            if(CurrentTest.IsNotStarted)
+            {
+                CurrentTest.SourceCable = (Cable)CablesTable.Rows[0];
+                MessageBox.Show("is_not_started");
+            }
+        }
+
+        private void SwitchEnablingFields(bool is_enabled)
+        {
+            cableForTest_CB.Enabled = is_enabled;
+            cableLength_NumericUpDown.Enabled = is_enabled;
+            //connectionType.Enabled = is_enabled;
+
+
         }
 
         private void InitInputs()
@@ -45,7 +71,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             RizolSelector_CB.Items.Clear();
             RizolSelector_CB.ValueMember = MeasuredParameterType.ParameterTypeId_ColumnName;
             RizolSelector_CB.DisplayMember = MeasuredParameterType.ParameterName_ColumnName;
-            foreach(MeasuredParameterType pType in SelectedCable.MeasuredParameterTypes.Rows)
+            foreach(MeasuredParameterType pType in CurrentTest.MeasuredParameterTypes)
             {
                 if (MeasuredParameterType.IsItIsolationaResistance(pType.ParameterTypeId))
                 {
@@ -63,20 +89,25 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
             foreach(MeasuredParameterType mpt in MeasuredParametersTable.Rows)
             {
-                Control[] cbArr = testProgram_GroupBox.Controls.Find($"{mpt.Table.TableName}_{mpt.ParameterTypeId}", false);
-                if (cbArr.Length == 0) continue;
-                CheckBox cb = cbArr[0] as CheckBox;
+                CheckBox cb = getParameterTypeCheckBox(mpt);
+                if (cb == null) continue;
                 if (mpt.ParameterTypeId == MeasuredParameterType.Calling) cb.Enabled = true;
                 else if(MeasuredParameterType.IsItIsolationaResistance(mpt.ParameterTypeId))
                 {
-                    cb.Enabled = SelectedCable.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol1) || SelectedCable.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol2) || SelectedCable.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol3) || SelectedCable.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol4);
+                    cb.Enabled = CurrentTest.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol1) || CurrentTest.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol2) || CurrentTest.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol3) || CurrentTest.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol4);
                 }else
                 {
-                    cb.Enabled = SelectedCable.MeasuredParameterTypes_IDs.Contains(mpt.ParameterTypeId);
+                    cb.Enabled = CurrentTest.MeasuredParameterTypes_IDs.Contains(mpt.ParameterTypeId);
                 }
                 cb.Checked = cb.Enabled;
             }
+        }
 
+        private CheckBox getParameterTypeCheckBox(MeasuredParameterType p_type)
+        {
+            Control[] cbArr = testProgram_GroupBox.Controls.Find($"{p_type.Table.TableName}_{p_type.ParameterTypeId}", false);
+            if (cbArr.Length == 0) return null;
+            return cbArr[0] as CheckBox;
         }
 
         /// <summary>
@@ -135,14 +166,9 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             this.Height += testProgram_GroupBox.Height;
         }
 
-        private void InitMeasure()
-        {
-            Measure = new MeasureBase();
-            Measure.OnOverallMeasureTimerTick += Measure_OnOverallMeasureTimerTick;
-            Measure.OnMeasureStart += Measure_SwitchMeasureButton;
-            Measure.OnMeasureStop += Measure_SwitchMeasureButton;
-            Measure.OnMeasure += Measure_OnMeasure;
-            Measure_SwitchMeasureButton(Measure);
+        private void InitMeasure(CableTest test)
+        { 
+            Measure = new CableTestMeasure();
         }
 
         private void Measure_OnMeasure(object _measure)
@@ -203,7 +229,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             Measure.Start();
         }
 
-        private MeasureBase Measure;
+
 
         private void stopMeasure_Click(object sender, EventArgs e)
         {
@@ -264,10 +290,9 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void SACCableTestForm_SelectedCableChanged()
         {
-
             try
             {
-                SelectedCable = (Cable)(CablesTable.Select($"{Cable.CableId_ColumnName} = {cableForTest_CB.SelectedValue}")[0]);
+                CurrentTest.SourceCable = (Cable)(CablesTable.Select($"{Cable.CableId_ColumnName} = {cableForTest_CB.SelectedValue}")[0]);
                 RefreshCableMeasuredParams();
                 RefreshRisolSelector();
             }
@@ -294,6 +319,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             connectedFromTableElement_ComboBox.Items.Clear();
             int maxRows = (doubleTable_RadioBatton.Checked) ? 104 : 52;
+            isSplittedTable = doubleTable_RadioBatton.Checked;
             for (int i=0; i<maxRows; i++)
             {
                 connectedFromTableElement_ComboBox.Items.Add(i+1);
@@ -301,18 +327,31 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             connectedFromTableElement_ComboBox.SelectedIndex = 0;
         }
 
+        private MeasuredParameterType[] getSelectedParameterTypes()
+        {
+            List<MeasuredParameterType> pTypes = new List<MeasuredParameterType>();
+            foreach(MeasuredParameterType pType in MeasuredParametersTable.Rows)
+            {
+                CheckBox cb = getParameterTypeCheckBox(pType);
+                if (cb == null) continue;
+                if (cb.Checked) pTypes.Add(pType);
+            }
+            return pTypes.ToArray();
+        }
 
 
-
-        private Cable SelectedCable;
         private CableTest CurrentTest;
 
         private DBEntityTable CablesTable;
         private DBEntityTable OperatorsTable;
         private DBEntityTable BarabanTypesTable;
         private DBEntityTable MeasuredParametersTable;
+        private bool isSplittedTable;
 
         public event SACCableTestForm_Handler SelectedCableChanged;
+
+        private CableTestMeasure Measure;
+
 
         private void cableForTest_CB_SelectedIndexChanged(object sender, EventArgs e)
         {

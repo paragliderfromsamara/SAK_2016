@@ -61,6 +61,15 @@ namespace NormaMeasure.DBControl.Tables
             return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < {K2} AND {ParameterTypeId_ColumnName} IN ({ids})", typeof(MeasuredParameterType));
         }
 
+        public static MeasuredParameterType[] get_all_by_ids_as_array(uint[] ids)
+        {
+            List<MeasuredParameterType> types = new List<MeasuredParameterType>();
+            DBEntityTable t = get_all_by_ids(ids);
+            foreach (MeasuredParameterType type in t.Rows) types.Add(type);
+            return types.ToArray();
+
+        }
+
         public static DBEntityTable get_all_by_ids(uint[] ids)
         {
             string idsStr = String.Empty;
