@@ -521,7 +521,31 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        /// <summary>
+        /// Тип измеряемого сопротивления изоляции
+        /// </summary>
+        public uint RisolTypeFavourTypeId
+        {
+            get
+            {
+                uint val = 0;
+                if (!TestFile.IsExists_TestSettings(RisolFavourTypeId_iniKeyName))
+                {
+                    TestFile.Write_TestSettings(RisolFavourTypeId_iniKeyName, val);
+                }
+                else
+                {
+                    uint.TryParse(TestFile.Read_TestSettings(RisolFavourTypeId_iniKeyName), out val);
+                }
+                return val;
+            }
+            set
+            {
+                TestFile.Write_TestSettings(RisolFavourTypeId_iniKeyName, value);
+            }
+        }
 
+        private const string RisolFavourTypeId_iniKeyName = "RisolFavourId";
         private const string CableConnectedFrom_iniKeyName = "cable_connected_from";
         private const string UseTermoSensor_iniKeyName = "using_termo_sensor";
         private const string IsSplittedTable_iniKeyName = "is_splitted_table";

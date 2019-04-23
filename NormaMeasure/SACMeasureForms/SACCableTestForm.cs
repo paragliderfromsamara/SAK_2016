@@ -79,6 +79,14 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             FillTableSettings();
         }
 
+        private void FillRisolType()
+        {
+            if (CurrentTest.RisolTypeFavourTypeId == 0)
+            {
+                CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
+            }
+        }
+
         private void FillTableSettings()
         {
             mergedTable_RadioBatton.Checked = !CurrentTest.IsSplittedTable;
@@ -127,6 +135,12 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             connectedFromTableElement_ComboBox.SelectedIndexChanged += ConnectedFromTableElement_ComboBox_SelectedIndexChanged;
             SelectedCableChanged += SACCableTestForm_SelectedCableChanged;
             this.cableForTest_CB.SelectedValueChanged += new System.EventHandler(this.cableForTest_CB_SelectedIndexChanged);
+            RizolSelector_CB.SelectedValueChanged += RizolSelector_CB_SelectedValueChanged;
+        }
+
+        private void RizolSelector_CB_SelectedValueChanged(object sender, EventArgs e)
+        {
+            CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
         }
 
         private void ConnectedFromTableElement_ComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -173,18 +187,31 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         /// </summary>
         private void RefreshRisolSelector()
         {
-            RizolSelector_CB.Items.Clear();
+
+            DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
             RizolSelector_CB.ValueMember = MeasuredParameterType.ParameterTypeId_ColumnName;
             RizolSelector_CB.DisplayMember = MeasuredParameterType.ParameterName_ColumnName;
+            
             foreach(MeasuredParameterType pType in CurrentTest.MeasuredParameterTypes)
             {
                 if (MeasuredParameterType.IsItIsolationaResistance(pType.ParameterTypeId))
                 {
-                    RizolSelector_CB.Items.Add( pType.ParameterName);
+                    MeasuredParameterType type = (MeasuredParameterType)t.NewRow();
+                    type.FillColsFromEntity(pType);
+                    type.ParameterTypeId = pType.ParameterTypeId;
+                    t.Rows.Add(type);
                 }
             }
-            RizolSelector_CB.Enabled = RizolSelector_CB.Items.Count > 0;
-            if (RizolSelector_CB.Items.Count > 0) RizolSelector_CB.SelectedIndex = 0;
+            RizolSelector_CB.DataSource = t;
+            RizolSelector_CB.Enabled = t.Rows.Count > 0;
+            if (t.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {CurrentTest.RisolTypeFavourTypeId}").Length > 0)
+            {
+                RizolSelector_CB.SelectedValue = CurrentTest.RisolTypeFavourTypeId;
+            }else
+            {
+                RizolSelector_CB.SelectedIndex = 0;
+                CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
+            }
         }
 
         private void RefreshCableMeasuredParams()
