@@ -163,7 +163,7 @@ namespace NormaMeasure.DBControl.Tables
             return AllowBringingLength(parameter_type.ParameterTypeId);
         }
 
-
+        public string RefText => $"parameter_{ParameterTypeId}";
 
 
 

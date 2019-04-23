@@ -19,22 +19,27 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         
         public SACCableTestForm()
         {
-            InitializeComponent();
-            CurrentTest = CableTest.GetLastOrCreateNew();
-            InitTestProgamGroupBox();
-            if (!LoadDataFromDB())
+            InitializeComponent();   
+            if (!LoadBaseDataFromDB())
             {
                 this.Close();
                 return;
             }else
             {
-                
+                CurrentTest = CableTest.GetLastOrCreateNew();
+                if (!CurrentTest.HasSourceCable) CurrentTest.SourceCable = GetCableFromCableComboBox();
+                InitTestProgamGroupBox();
                 InitCableTest();
                 InitInputs();
             }
 
 
 
+        }
+
+        private Cable GetCableFromCableComboBox()
+        {
+           return (Cable)(CablesTable.Select($"{Cable.CableId_ColumnName} = {cableForTest_CB.SelectedValue}")[0]);
         }
 
         private void InitCableTest()
@@ -58,10 +63,57 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void InitInputs()
         {
+            FillFromCableTest();
             RefreshTableElementsList();
             RefreshCableMeasuredParams();
             RefreshRisolSelector();
             InitInputHandlers();
+
+        }
+
+        private void FillFromCableTest()
+        {
+            FillOperatorId();
+            FillBarabanInfo();
+            FillTemperature();
+            FillTableSettings();
+        }
+
+        private void FillTableSettings()
+        {
+            mergedTable_RadioBatton.Checked = !CurrentTest.IsSplittedTable;
+            RefreshTableElementsList();
+        }
+
+        private void FillTemperature()
+        {
+            temperature_NumericUpDown.Value = (uint)CurrentTest.Temperature;
+            useTemperatureSensor_CheckBox.Checked = CurrentTest.IsUseTermoSensor;
+        }
+
+        private void FillBarabanInfo()
+        {
+            if(CurrentTest.BarabanTypeId > 0)
+            {
+                barabanTypes_CB.SelectedValue = CurrentTest.BarabanTypeId;
+                barabanSerial_TextBox.Text = CurrentTest.BarabanSerial;
+            }
+            else
+            {
+                CurrentTest.BarabanTypeId = (uint)barabanTypes_CB.SelectedValue;
+                CurrentTest.BarabanSerial = barabanSerial_TextBox.Text;
+            }
+        }
+
+        private void FillOperatorId()
+        {
+            if(CurrentTest.HasOperator)
+            {
+                operatorsList.SelectedValue = CurrentTest.OperatorId;
+            }else
+            {
+                CurrentTest.OperatorId = (uint)operatorsList.SelectedValue;
+            }
         }
 
         private void InitInputHandlers()
@@ -72,6 +124,14 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             temperature_NumericUpDown.ValueChanged += Temperature_NumericUpDown_ValueChanged;
             useTemperatureSensor_CheckBox.CheckedChanged += UseTemperatureSensor_CheckBox_CheckedChanged;
             cableLength_NumericUpDown.ValueChanged += CableLength_NumericUpDown_ValueChanged;
+            connectedFromTableElement_ComboBox.SelectedIndexChanged += ConnectedFromTableElement_ComboBox_SelectedIndexChanged;
+            SelectedCableChanged += SACCableTestForm_SelectedCableChanged;
+            this.cableForTest_CB.SelectedValueChanged += new System.EventHandler(this.cableForTest_CB_SelectedIndexChanged);
+        }
+
+        private void ConnectedFromTableElement_ComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CurrentTest.CableConnectedFrom = Convert.ToUInt16(connectedFromTableElement_ComboBox.Text);
         }
 
         private void CableLength_NumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -81,7 +141,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void UseTemperatureSensor_CheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CurrentTest.IsUseTermoDetector = useTemperatureSensor_CheckBox.Checked;
+            CurrentTest.IsUseTermoSensor = useTemperatureSensor_CheckBox.Checked;
         }
 
         private void Temperature_NumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -120,9 +180,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             {
                 if (MeasuredParameterType.IsItIsolationaResistance(pType.ParameterTypeId))
                 {
-               
                     RizolSelector_CB.Items.Add( pType.ParameterName);
-
                 }
             }
             RizolSelector_CB.Enabled = RizolSelector_CB.Items.Count > 0;
@@ -131,7 +189,6 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void RefreshCableMeasuredParams()
         {
-
             foreach(MeasuredParameterType mpt in MeasuredParametersTable.Rows)
             {
                 CheckBox cb = getParameterTypeCheckBox(mpt);
@@ -144,13 +201,13 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 {
                     cb.Enabled = CurrentTest.MeasuredParameterTypes_IDs.Contains(mpt.ParameterTypeId);
                 }
-                cb.Checked = cb.Enabled;
+                cb.Checked = CurrentTest.IsOnTestProgram(mpt);
             }
         }
 
         private CheckBox getParameterTypeCheckBox(MeasuredParameterType p_type)
         {
-            Control[] cbArr = testProgram_GroupBox.Controls.Find($"{p_type.Table.TableName}_{p_type.ParameterTypeId}", false);
+            Control[] cbArr = testProgram_GroupBox.Controls.Find($"{p_type.RefText}", false);
             if (cbArr.Length == 0) return null;
             return cbArr[0] as CheckBox;
         }
@@ -171,7 +228,6 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             int startVertOffset = 30;
             int tmpHorOffset = startHorOffset;
             int tmpVertOffset = startVertOffset;
-            MeasuredParametersTable = MeasuredParameterType.get_for_a_program_test();
             foreach(MeasuredParameterType pType in MeasuredParametersTable.Rows)
             {
                 if (x == onRow)
@@ -195,11 +251,11 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                     cb.Text = pType.ParameterName;
                 }
 
-                cb.Name = $"{pType.Table.TableName}_{pType.ParameterTypeId}";
+                cb.Name = $"{pType.RefText}";
                 cb.Width = (pType.ParameterTypeId == MeasuredParameterType.Calling) ? cbWidth : cbWidth*2/3;
                 cb.Height = cbHeight;
                 cb.Location = new Point(tmpHorOffset, tmpVertOffset);
-
+                cb.CheckedChanged += Cb_CheckedChanged;
                 x++;
                 tmpHorOffset += (cbWidth + horOffset);
                 
@@ -209,6 +265,13 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             testProgram_GroupBox.Height = (y+1) * (vertOffset + cbHeight) + vertOffset + startVertOffset;
             this.Width = testProgram_GroupBox.Width + 40;
             this.Height += testProgram_GroupBox.Height;
+        }
+
+        private void Cb_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+            CurrentTest.SetParameterTypeFlagInTestProgram(cb.Name, cb.Checked);
+           // MessageBox.Show(cb.Name);
         }
 
         private void InitMeasure(CableTest test)
@@ -254,13 +317,19 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
 
         #region Загрузка необходимых данных из БД
-        private bool LoadDataFromDB()
+        private bool LoadBaseDataFromDB()
         {
             LoadOperators();
             LoadCables();
             LoadBarabanTypes();
+            LoadMeasuredParameterTypes();
 
             return CheckTest_Availability();
+        }
+
+        private void LoadMeasuredParameterTypes()
+        {
+            MeasuredParametersTable = MeasuredParameterType.get_for_a_program_test();
         }
 
         /// <summary>
@@ -299,7 +368,6 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             CablesTable = Cable.get_all_as_table();
             CableTestFormDataSet.Tables.Add(CablesTable);
-            SelectedCableChanged += SACCableTestForm_SelectedCableChanged;
             cableForTest_CB.DataSource = CablesTable;
             cableForTest_CB.DisplayMember = Cable.FullCableName_ColumnName;
             cableForTest_CB.ValueMember = Cable.CableId_ColumnName;
@@ -309,7 +377,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             try
             {
-                CurrentTest.SourceCable = (Cable)(CablesTable.Select($"{Cable.CableId_ColumnName} = {cableForTest_CB.SelectedValue}")[0]);
+                CurrentTest.SourceCable = GetCableFromCableComboBox();
                 RefreshCableMeasuredParams();
                 RefreshRisolSelector();
             }
@@ -335,13 +403,13 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         private void RefreshTableElementsList()
         {
             connectedFromTableElement_ComboBox.Items.Clear();
-            int maxRows = (doubleTable_RadioBatton.Checked) ? 104 : 52;
-            isSplittedTable = doubleTable_RadioBatton.Checked;
+            int maxRows = (mergedTable_RadioBatton.Checked) ? 104 : 52;
+            CurrentTest.IsSplittedTable = !mergedTable_RadioBatton.Checked;
             for (int i=0; i<maxRows; i++)
             {
                 connectedFromTableElement_ComboBox.Items.Add(i+1);
             }
-            connectedFromTableElement_ComboBox.SelectedIndex = 0;
+            connectedFromTableElement_ComboBox.SelectedIndex = (CurrentTest.CableConnectedFrom <= connectedFromTableElement_ComboBox.Items.Count) ? (int)(CurrentTest.CableConnectedFrom-1) : 0;
         }
 
         private MeasuredParameterType[] getSelectedParameterTypes()
@@ -363,7 +431,6 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         private DBEntityTable OperatorsTable;
         private DBEntityTable BarabanTypesTable;
         private DBEntityTable MeasuredParametersTable;
-        private bool isSplittedTable;
 
         public event SACCableTestForm_Handler SelectedCableChanged;
 
@@ -372,18 +439,17 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void cableForTest_CB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectedCableChanged();
-
+             SelectedCableChanged();
         }
 
         private void measureControlButton_Click(object sender, EventArgs e)
         {
             string txt = String.Empty;
             txt += $"Барабан {CurrentTest.BarabanTypeId} {CurrentTest.BarabanSerial} \n";
-            txt += $"Температура {CurrentTest.Temperature} {CurrentTest.IsUseTermoDetector} \n";
+            txt += $"Температура {CurrentTest.Temperature} {CurrentTest.IsUseTermoSensor} \n";
             txt += $"Оператор {CurrentTest.OperatorId} \n";
             txt += $"Кабель {CurrentTest.SourceCable.Name} {CurrentTest.CableLength}м \n";
-            txt += $"Тип подключения с ДК? {CurrentTest.IsSplittedTable}; Подключен с ПУ {CurrentTest.ConnectedFrom}\n";
+            txt += $"Тип подключения с ДК? {CurrentTest.IsSplittedTable}; Подключен с ПУ {CurrentTest.CableConnectedFrom}\n";
             MessageBox.Show(txt);
         }
     }

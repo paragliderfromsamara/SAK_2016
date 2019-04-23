@@ -14,6 +14,18 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static BarabanType find_by_id(uint id)
+        {
+            DBEntityTable t = find_by_primary_key(id, typeof(BarabanType));
+            if (t.Rows.Count>0)
+            {
+                return (BarabanType)t.Rows[0];
+            }else
+            {
+                return null;
+            }
+        }
+
         public static BarabanType build()
         {
             DBEntityTable t = new DBEntityTable(typeof(BarabanType));

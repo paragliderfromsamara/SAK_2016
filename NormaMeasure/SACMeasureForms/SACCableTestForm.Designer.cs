@@ -40,8 +40,8 @@
             this.connectedFromTableElement_ComboBox = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.connectionType = new System.Windows.Forms.GroupBox();
-            this.doubleTable_RadioBatton = new System.Windows.Forms.RadioButton();
-            this.singleTable_RadioBatton = new System.Windows.Forms.RadioButton();
+            this.mergedTable_RadioBatton = new System.Windows.Forms.RadioButton();
+            this.splittedTable_RadioBatton = new System.Windows.Forms.RadioButton();
             this.barabanTypes_CB = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.barabanSerial_TextBox = new System.Windows.Forms.TextBox();
@@ -147,7 +147,6 @@
             this.cableForTest_CB.Name = "cableForTest_CB";
             this.cableForTest_CB.Size = new System.Drawing.Size(289, 21);
             this.cableForTest_CB.TabIndex = 8;
-            this.cableForTest_CB.SelectedValueChanged += new System.EventHandler(this.cableForTest_CB_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -178,8 +177,8 @@
             // 
             // connectionType
             // 
-            this.connectionType.Controls.Add(this.doubleTable_RadioBatton);
-            this.connectionType.Controls.Add(this.singleTable_RadioBatton);
+            this.connectionType.Controls.Add(this.mergedTable_RadioBatton);
+            this.connectionType.Controls.Add(this.splittedTable_RadioBatton);
             this.connectionType.Location = new System.Drawing.Point(433, 58);
             this.connectionType.Name = "connectionType";
             this.connectionType.Size = new System.Drawing.Size(146, 47);
@@ -187,29 +186,29 @@
             this.connectionType.TabStop = false;
             this.connectionType.Text = "Способ подключения";
             // 
-            // doubleTable_RadioBatton
+            // mergedTable_RadioBatton
             // 
-            this.doubleTable_RadioBatton.AutoSize = true;
-            this.doubleTable_RadioBatton.Location = new System.Drawing.Point(75, 19);
-            this.doubleTable_RadioBatton.Name = "doubleTable_RadioBatton";
-            this.doubleTable_RadioBatton.Size = new System.Drawing.Size(62, 17);
-            this.doubleTable_RadioBatton.TabIndex = 13;
-            this.doubleTable_RadioBatton.Text = "без ДК";
-            this.doubleTable_RadioBatton.UseVisualStyleBackColor = true;
-            this.doubleTable_RadioBatton.CheckedChanged += new System.EventHandler(this.tableMode_RadioBatton_CheckedChanged);
+            this.mergedTable_RadioBatton.AutoSize = true;
+            this.mergedTable_RadioBatton.Location = new System.Drawing.Point(75, 19);
+            this.mergedTable_RadioBatton.Name = "mergedTable_RadioBatton";
+            this.mergedTable_RadioBatton.Size = new System.Drawing.Size(62, 17);
+            this.mergedTable_RadioBatton.TabIndex = 13;
+            this.mergedTable_RadioBatton.Text = "без ДК";
+            this.mergedTable_RadioBatton.UseVisualStyleBackColor = true;
+            this.mergedTable_RadioBatton.CheckedChanged += new System.EventHandler(this.tableMode_RadioBatton_CheckedChanged);
             // 
-            // singleTable_RadioBatton
+            // splittedTable_RadioBatton
             // 
-            this.singleTable_RadioBatton.AutoSize = true;
-            this.singleTable_RadioBatton.Checked = true;
-            this.singleTable_RadioBatton.Location = new System.Drawing.Point(8, 19);
-            this.singleTable_RadioBatton.Name = "singleTable_RadioBatton";
-            this.singleTable_RadioBatton.Size = new System.Drawing.Size(50, 17);
-            this.singleTable_RadioBatton.TabIndex = 0;
-            this.singleTable_RadioBatton.TabStop = true;
-            this.singleTable_RadioBatton.Text = "с ДК";
-            this.singleTable_RadioBatton.UseVisualStyleBackColor = true;
-            this.singleTable_RadioBatton.CheckedChanged += new System.EventHandler(this.tableMode_RadioBatton_CheckedChanged);
+            this.splittedTable_RadioBatton.AutoSize = true;
+            this.splittedTable_RadioBatton.Checked = true;
+            this.splittedTable_RadioBatton.Location = new System.Drawing.Point(8, 19);
+            this.splittedTable_RadioBatton.Name = "splittedTable_RadioBatton";
+            this.splittedTable_RadioBatton.Size = new System.Drawing.Size(50, 17);
+            this.splittedTable_RadioBatton.TabIndex = 0;
+            this.splittedTable_RadioBatton.TabStop = true;
+            this.splittedTable_RadioBatton.Text = "с ДК";
+            this.splittedTable_RadioBatton.UseVisualStyleBackColor = true;
+            this.splittedTable_RadioBatton.CheckedChanged += new System.EventHandler(this.tableMode_RadioBatton_CheckedChanged);
             // 
             // barabanTypes_CB
             // 
@@ -392,8 +391,8 @@
         private System.Windows.Forms.ComboBox connectedFromTableElement_ComboBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox connectionType;
-        private System.Windows.Forms.RadioButton doubleTable_RadioBatton;
-        private System.Windows.Forms.RadioButton singleTable_RadioBatton;
+        private System.Windows.Forms.RadioButton mergedTable_RadioBatton;
+        private System.Windows.Forms.RadioButton splittedTable_RadioBatton;
         private System.Windows.Forms.ComboBox barabanTypes_CB;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox barabanSerial_TextBox;

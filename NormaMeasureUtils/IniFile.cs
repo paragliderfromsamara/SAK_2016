@@ -6,7 +6,7 @@ using System.Text;
 // Change this to match your program's normal namespace
 namespace NormaMeasure.Utils
 {
-    class IniFile   // revision 10
+    public class IniFile   // revision 10
     {
         string Path;
         string EXE = Assembly.GetExecutingAssembly().GetName().Name;
