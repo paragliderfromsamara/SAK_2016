@@ -33,7 +33,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.operatorsList = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.temperature_NumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.cableForTest_CB = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -44,17 +44,17 @@
             this.singleTable_RadioBatton = new System.Windows.Forms.RadioButton();
             this.barabanTypes_CB = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.barabanSerial_TextBox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.cableLength_NumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.RizolSelector_CB = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.useTemperatureSensor_CheckBox = new System.Windows.Forms.CheckBox();
             this.testProgram_GroupBox = new System.Windows.Forms.GroupBox();
             this.CableTestFormDataSet = new System.Data.DataSet();
             this.panel1 = new System.Windows.Forms.Panel();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.temperature_NumericUpDown)).BeginInit();
             this.connectionType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cableLength_NumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CableTestFormDataSet)).BeginInit();
@@ -70,6 +70,7 @@
             this.measureControlButton.TabIndex = 0;
             this.measureControlButton.Text = "СТАРТ";
             this.measureControlButton.UseVisualStyleBackColor = true;
+            this.measureControlButton.Click += new System.EventHandler(this.measureControlButton_Click);
             // 
             // label1
             // 
@@ -107,23 +108,23 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "Оператор";
             // 
-            // numericUpDown1
+            // temperature_NumericUpDown
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(181, 30);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.temperature_NumericUpDown.Location = new System.Drawing.Point(181, 30);
+            this.temperature_NumericUpDown.Maximum = new decimal(new int[] {
             35,
             0,
             0,
             0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.temperature_NumericUpDown.Minimum = new decimal(new int[] {
             5,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 6;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.temperature_NumericUpDown.Name = "temperature_NumericUpDown";
+            this.temperature_NumericUpDown.Size = new System.Drawing.Size(120, 20);
+            this.temperature_NumericUpDown.TabIndex = 6;
+            this.temperature_NumericUpDown.Value = new decimal(new int[] {
             20,
             0,
             0,
@@ -228,12 +229,12 @@
             this.label7.TabIndex = 14;
             this.label7.Text = "Барабан";
             // 
-            // textBox1
+            // barabanSerial_TextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(169, 132);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(132, 20);
-            this.textBox1.TabIndex = 15;
+            this.barabanSerial_TextBox.Location = new System.Drawing.Point(169, 132);
+            this.barabanSerial_TextBox.Name = "barabanSerial_TextBox";
+            this.barabanSerial_TextBox.Size = new System.Drawing.Size(132, 20);
+            this.barabanSerial_TextBox.TabIndex = 15;
             // 
             // label8
             // 
@@ -294,15 +295,15 @@
             this.label10.TabIndex = 20;
             this.label10.Text = "Способ измерения Rизол";
             // 
-            // checkBox1
+            // useTemperatureSensor_CheckBox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(321, 30);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(167, 17);
-            this.checkBox1.TabIndex = 21;
-            this.checkBox1.Text = "Использовать термодатчик";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.useTemperatureSensor_CheckBox.AutoSize = true;
+            this.useTemperatureSensor_CheckBox.Location = new System.Drawing.Point(321, 30);
+            this.useTemperatureSensor_CheckBox.Name = "useTemperatureSensor_CheckBox";
+            this.useTemperatureSensor_CheckBox.Size = new System.Drawing.Size(167, 17);
+            this.useTemperatureSensor_CheckBox.TabIndex = 21;
+            this.useTemperatureSensor_CheckBox.Text = "Использовать термодатчик";
+            this.useTemperatureSensor_CheckBox.UseVisualStyleBackColor = true;
             // 
             // testProgram_GroupBox
             // 
@@ -341,19 +342,19 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.testProgram_GroupBox);
             this.Controls.Add(this.measureControlButton);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.useTemperatureSensor_CheckBox);
             this.Controls.Add(this.barabanTypes_CB);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.operatorsList);
             this.Controls.Add(this.RizolSelector_CB);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.temperature_NumericUpDown);
             this.Controls.Add(this.cableLength_NumericUpDown);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.cableForTest_CB);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.barabanSerial_TextBox);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.connectedFromTableElement_ComboBox);
@@ -365,7 +366,7 @@
             this.Name = "SACCableTestForm";
             this.Text = "Испытание кабеля";
             this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.temperature_NumericUpDown)).EndInit();
             this.connectionType.ResumeLayout(false);
             this.connectionType.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cableLength_NumericUpDown)).EndInit();
@@ -384,7 +385,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox operatorsList;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown temperature_NumericUpDown;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cableForTest_CB;
         private System.Windows.Forms.Label label5;
@@ -395,13 +396,13 @@
         private System.Windows.Forms.RadioButton singleTable_RadioBatton;
         private System.Windows.Forms.ComboBox barabanTypes_CB;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox barabanSerial_TextBox;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown cableLength_NumericUpDown;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox RizolSelector_CB;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox useTemperatureSensor_CheckBox;
         private System.Windows.Forms.GroupBox testProgram_GroupBox;
         private System.Data.DataSet CableTestFormDataSet;
         private System.Windows.Forms.Panel panel1;

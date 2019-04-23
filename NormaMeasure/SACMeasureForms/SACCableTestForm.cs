@@ -61,7 +61,52 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             RefreshTableElementsList();
             RefreshCableMeasuredParams();
             RefreshRisolSelector();
+            InitInputHandlers();
         }
+
+        private void InitInputHandlers()
+        {
+            barabanTypes_CB.SelectedValueChanged += BarabanTypes_CB_SelectedValueChanged;
+            barabanSerial_TextBox.TextChanged += BarabanSerial_TextBox_TextChanged;
+            operatorsList.SelectedValueChanged += OperatorsList_SelectedValueChanged;
+            temperature_NumericUpDown.ValueChanged += Temperature_NumericUpDown_ValueChanged;
+            useTemperatureSensor_CheckBox.CheckedChanged += UseTemperatureSensor_CheckBox_CheckedChanged;
+            cableLength_NumericUpDown.ValueChanged += CableLength_NumericUpDown_ValueChanged;
+        }
+
+        private void CableLength_NumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            CurrentTest.CableLength = (float)cableLength_NumericUpDown.Value;
+        }
+
+        private void UseTemperatureSensor_CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CurrentTest.IsUseTermoDetector = useTemperatureSensor_CheckBox.Checked;
+        }
+
+        private void Temperature_NumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            CurrentTest.Temperature = (uint)temperature_NumericUpDown.Value;
+        }
+
+        private void OperatorsList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            CurrentTest.OperatorId = (uint)operatorsList.SelectedValue;
+        }
+
+        
+
+        private void BarabanSerial_TextBox_TextChanged(object sender, EventArgs e)
+        {
+            CurrentTest.BarabanSerial = barabanSerial_TextBox.Text;
+        }
+
+        private void BarabanTypes_CB_SelectedValueChanged(object sender, EventArgs e)
+        {
+            CurrentTest.BarabanTypeId = (uint)barabanTypes_CB.SelectedValue;
+        }
+
+
 
         /// <summary>
         /// Обновляем список измеряемых Сопротивлений изоляции
@@ -185,30 +230,6 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             }
         }
 
-        private void Measure_SwitchMeasureButton(object _measure)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new MeasureHandler(Measure_SwitchMeasureButton), new object[] { _measure });
-                return;
-            }
-            else
-            {
-                MeasureBase meas = _measure as MeasureBase;
-                if (meas.IsStart)
-                {
-                    measureControlButton.Text = "СТОП";
-                    measureControlButton.Click -= startMeasure_Click;
-                    measureControlButton.Click += stopMeasure_Click;
-                }
-                else
-                {
-                    measureControlButton.Text = "СТАРТ";
-                    measureControlButton.Click -= stopMeasure_Click;
-                    measureControlButton.Click += startMeasure_Click;
-                }
-            }
-        }
 
         private void Measure_OnOverallMeasureTimerTick(object measObj)
         {
@@ -226,15 +247,11 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void startMeasure_Click(object sender, EventArgs e)
         {
-            Measure.Start();
+            //Measure.Start();
+
         }
 
 
-
-        private void stopMeasure_Click(object sender, EventArgs e)
-        {
-            Measure.Stop();
-        }
 
         #region Загрузка необходимых данных из БД
         private bool LoadDataFromDB()
@@ -357,6 +374,17 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             SelectedCableChanged();
 
+        }
+
+        private void measureControlButton_Click(object sender, EventArgs e)
+        {
+            string txt = String.Empty;
+            txt += $"Барабан {CurrentTest.BarabanTypeId} {CurrentTest.BarabanSerial} \n";
+            txt += $"Температура {CurrentTest.Temperature} {CurrentTest.IsUseTermoDetector} \n";
+            txt += $"Оператор {CurrentTest.OperatorId} \n";
+            txt += $"Кабель {CurrentTest.SourceCable.Name} {CurrentTest.CableLength}м \n";
+            txt += $"Тип подключения с ДК? {CurrentTest.IsSplittedTable}; Подключен с ПУ {CurrentTest.ConnectedFrom}\n";
+            MessageBox.Show(txt);
         }
     }
 }

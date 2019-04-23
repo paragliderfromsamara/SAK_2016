@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NormaMeasure.Utils;
 
 namespace NormaMeasure.DBControl.Tables
 {
@@ -50,6 +51,8 @@ namespace NormaMeasure.DBControl.Tables
             CableTest test = (CableTest)t.NewRow();
             test.StatusId = CableTestStatus.NotStarted;
             test.TestId = 0;
+            test.CableLength = 1000;
+            test.Temperature = 20;
             t.Rows.Add(test);
             test.Save();
             return test;
@@ -336,8 +339,8 @@ namespace NormaMeasure.DBControl.Tables
         /// <summary>
         /// Испытание с дальним столом? (true - c ДК, false - без ДК)
         /// </summary>
-        public uint BarabanTypeId;
-        public string BarabanSerial;
+        public uint BarabanTypeId = 0;
+        public string BarabanSerial = String.Empty;
         /// <summary>
         /// Совмещенный или раздельный стол
         /// </summary>

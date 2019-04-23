@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NormaMeasure.SAC_APP</RootNamespace>
     <AssemblyName>SAC_APP</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -118,7 +118,6 @@
     <Compile Include="dbForms\dbTestsForm.Designer.cs">
       <DependentUpon>dbTestsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="IniFile.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
     </Compile>
