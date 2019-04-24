@@ -54,6 +54,7 @@
             this.testProgram_GroupBox = new System.Windows.Forms.GroupBox();
             this.CableTestFormDataSet = new System.Data.DataSet();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.resetCurrentTest_Button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.temperature_NumericUpDown)).BeginInit();
             this.connectionType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cableLength_NumericUpDown)).BeginInit();
@@ -66,11 +67,10 @@
             this.measureControlButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.measureControlButton.Location = new System.Drawing.Point(12, 410);
             this.measureControlButton.Name = "measureControlButton";
-            this.measureControlButton.Size = new System.Drawing.Size(111, 28);
+            this.measureControlButton.Size = new System.Drawing.Size(112, 28);
             this.measureControlButton.TabIndex = 0;
             this.measureControlButton.Text = "СТАРТ";
             this.measureControlButton.UseVisualStyleBackColor = true;
-            this.measureControlButton.Click += new System.EventHandler(this.measureControlButton_Click);
             // 
             // label1
             // 
@@ -333,11 +333,23 @@
             this.panel1.Size = new System.Drawing.Size(567, 210);
             this.panel1.TabIndex = 23;
             // 
+            // resetCurrentTest_Button
+            // 
+            this.resetCurrentTest_Button.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.resetCurrentTest_Button.Location = new System.Drawing.Point(138, 410);
+            this.resetCurrentTest_Button.Name = "resetCurrentTest_Button";
+            this.resetCurrentTest_Button.Size = new System.Drawing.Size(92, 28);
+            this.resetCurrentTest_Button.TabIndex = 24;
+            this.resetCurrentTest_Button.Text = "ОТКАТИТЬ";
+            this.resetCurrentTest_Button.UseVisualStyleBackColor = true;
+            this.resetCurrentTest_Button.Click += new System.EventHandler(this.resetCurrentTest_Button_Click);
+            // 
             // SACCableTestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 450);
+            this.Controls.Add(this.resetCurrentTest_Button);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.testProgram_GroupBox);
             this.Controls.Add(this.measureControlButton);
@@ -405,5 +417,6 @@
         private System.Windows.Forms.GroupBox testProgram_GroupBox;
         private System.Data.DataSet CableTestFormDataSet;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button resetCurrentTest_Button;
     }
 }

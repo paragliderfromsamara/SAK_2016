@@ -31,6 +31,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 InitTestProgamGroupBox();
                 InitCableTest();
                 InitInputs();
+                InitMeasure();
             }
 
 
@@ -302,9 +303,40 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         }
 
         private void InitMeasure()
-        { 
+        {
+
             Measure = new CableTestMeasure(CurrentTest);
-            Measure.Start();
+            Measure.OnMeasureStart += Measure_SwitchMeasureControlButton;
+            Measure.OnMeasureStop += Measure_SwitchMeasureControlButton;
+            Measure.OnOverallMeasureTimerTick += Measure_OnOverallMeasureTimerTick;
+
+            measureControlButton.Click += startMeasure_Click;
+
+        }
+
+        private void Measure_SwitchMeasureControlButton(object _measure)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new MeasureHandler(Measure_SwitchMeasureControlButton), new object[] { _measure });
+                return;
+            }
+            else
+            {
+                if (Measure.IsStart)
+                {
+                    measureControlButton.Click -= startMeasure_Click;
+                    measureControlButton.Click += stopMeasure_Click;
+                    measureControlButton.Text = "СТОП";
+                }
+                else
+                {
+                    measureControlButton.Click -= stopMeasure_Click;
+                    measureControlButton.Click += startMeasure_Click;
+                    measureControlButton.Text = "СТАРТ";
+                }
+
+            }
         }
 
         private void Measure_OnMeasure(object _measure)
@@ -338,8 +370,15 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void startMeasure_Click(object sender, EventArgs e)
         {
-            //Measure.Start();
+            CurrentTest.SetStarted();
+            Measure.Start();
 
+        }
+
+        private void stopMeasure_Click(object sender, EventArgs e)
+        {
+            Measure.Stop();
+            CurrentTest.SetStoppedByOperator();
         }
 
 
@@ -470,10 +509,17 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
              SelectedCableChanged();
         }
 
+        private void resetCurrentTest_Button_Click(object sender, EventArgs e)
+        {
+            CurrentTest.SetNotStarted();
+        }
+
+        /*
         private void measureControlButton_Click(object sender, EventArgs e)
         {
+            /*
             string txt = String.Empty;
-            CurrentTest.SetStarted();
+            
             txt += $"Барабан {CurrentTest.BarabanTypeId} {CurrentTest.BarabanSerial} \n";
             txt += $"Температура {CurrentTest.Temperature} {CurrentTest.IsUseTermoSensor} \n";
             txt += $"Оператор {CurrentTest.OperatorId} \n";
@@ -481,7 +527,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             txt += $"Тип подключения с ДК? {CurrentTest.IsSplittedTable}; Подключен с ПУ {CurrentTest.CableConnectedFrom}\n";
 
             MessageBox.Show(txt);
-            InitMeasure();
-        }
+            
+        } */
     }
 }

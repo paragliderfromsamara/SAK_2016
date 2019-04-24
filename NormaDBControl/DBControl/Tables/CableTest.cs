@@ -69,13 +69,38 @@ namespace NormaMeasure.DBControl.Tables
             return test;
         }
 
+
+        public void SetNotStarted()
+        {
+            SetStatus(CableTestStatus.NotStarted);
+            if (HasTestedCable)
+            {
+                TestedCable.Destroy();
+                testedCable = null;
+            }
+        }
+
         public void SetStarted()
         {
             GetTestedCable();
-            this.StatusId = CableTestStatus.Started;
-            this.Save();
+            SetStatus(CableTestStatus.Started);
         }
 
+        public void SetFinished()
+        {
+            SetStatus(CableTestStatus.Finished);
+        }
+
+        public void SetStoppedByOperator()
+        {
+            SetStatus(CableTestStatus.StopedByOperator);
+        }
+
+        private void SetStatus(uint status_id)
+        {
+            this.StatusId = status_id;
+            this.Save();
+        }
 
         private void GetTestedCable()
         {

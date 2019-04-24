@@ -16,37 +16,40 @@ namespace NormaMeasure.MeasureControl.SAC
         public CableTestMeasure(CableTest test) : base()
         {
             cableTest = test;
-            MeasureBody = doMeasure;
+            MeasureBody = measureFunction;
 
         }
 
-        private void doMeasure()
+        private void measureFunction()
         {
            currentTableConnector = cableTest.CableConnectedFrom;
-           foreach (MeasuredParameterType pType in cableTest.measuredParameterTypes)
+         
+            foreach (MeasuredParameterType pType in cableTest.MeasuredParameterTypes)
             {
-                if (cableTest.IsOnTestProgram(pType))
+                currentParameter = pType;
+
+                foreach (TestedCableStructure structure in cableTest.TestedCable.CableStructures.Rows)
                 {
-                    currentParameter = pType;
-                    foreach(TestedCableStructure structure in cableTest.TestedCable.CableStructures.Rows)
-                    {
-                        if (structure.MeasuredParameters_ids.Contains(pType.ParameterTypeId))
-                        {
-                            currentStructure = structure;
-                            measureCurrentStructure();
-                        }else
-                        {
-                            //currentTableConnector += structure.StructureType;
-                        }
-                    }
+                    currentStructure = structure;
+                    measureCurrentStructure();
+                    // if (structure.MeasuredParameters_ids.Contains(pType.ParameterTypeId))
+                    // {
+                    //     currentStructure = structure;
+                    //     measureCurrentStructure();
+                    // }else
+                    // {
+                    //currentTableConnector += structure.StructureType;
+                    // }
                 }
+
             }
         }
 
         private void measureCurrentStructure()
         {
             Random rnd = new Random();
-            for(uint element=0; element < currentStructure.RealAmount; element++)
+            System.Windows.Forms.MessageBox.Show("measureCurrentStructure");
+            for (uint element=0; element < currentStructure.RealAmount; element++)
             {
                 for (uint subElement = 0; subElement < currentStructure.StructureType.StructureLeadsAmount; subElement++)
                 {
@@ -55,6 +58,7 @@ namespace NormaMeasure.MeasureControl.SAC
                     cableTest.AddResult(r);
                     lastResult = r;
                     Thread.Sleep(800);
+
                     //currentStructure
                 }
                 /*
