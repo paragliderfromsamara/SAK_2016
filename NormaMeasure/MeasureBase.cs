@@ -42,7 +42,7 @@ namespace NormaMeasure.MeasureControl
 
         private void RefreshTimer(object obj)
         {
-            OnOverallMeasureTimerTick(this);
+            OnOverallMeasureTimerTick?.Invoke(this);
             overallMeasureTime++;
         }
 
@@ -61,11 +61,11 @@ namespace NormaMeasure.MeasureControl
         private void MeasureMainFunction()
         {
             InitOverAllMeasureTimer();
-            OnMeasureStart(this);
+            OnMeasureStart?.Invoke(this);
             MeasureBody();
             OverallMeasureTimer.Dispose();
             isStarted = false;
-            OnMeasureStop(this);
+            OnMeasureStop?.Invoke(this);
         }
 
 
@@ -78,7 +78,7 @@ namespace NormaMeasure.MeasureControl
                 OverallMeasureTimer.Dispose();
             }
             isStarted = false;
-            OnMeasureStop(this);
+            OnMeasureStop?.Invoke(this);
         }
 
     

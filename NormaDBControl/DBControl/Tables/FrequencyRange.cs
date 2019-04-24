@@ -25,6 +25,19 @@ namespace NormaMeasure.DBControl.Tables
             return fr;
         }
 
+        public static FrequencyRange find_by_id(uint id)
+        {
+            DBEntityTable t = find_by_primary_key(id, typeof(FrequencyRange));
+            if (t.Rows.Count > 0)
+            {
+                return (t.Rows[0] as FrequencyRange);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         protected void find_or_create()
         {
             DBEntityTable t = find_by_criteria(makeWhereQueryForAllColumns(), typeof(FrequencyRange));

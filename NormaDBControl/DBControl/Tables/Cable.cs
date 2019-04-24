@@ -78,7 +78,7 @@ namespace NormaMeasure.DBControl.Tables
             return draft;
         }
 
-        public CableStructure AddCableStructure(CableStructure copied_structure)
+        public virtual CableStructure AddCableStructure(CableStructure copied_structure)
         {
             CableStructure structure = AddCableStructure(copied_structure.StructureTypeId);
             structure.CopyFromStructure(copied_structure);
@@ -529,6 +529,18 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        protected override void ValidateActions()
+        {
+            
+        }
+
+        public static TestedCable find_by_test_id(uint test_id)
+        {
+            DBEntityTable t = find_by_criteria($"{CableTest.CableTestId_ColumnName} = {test_id}", typeof(TestedCable));
+            if (t.Rows.Count == 0) return null;
+            else return (TestedCable)t.Rows[0];
+        }
+
         public static new TestedCable find_by_cable_id(uint id)
         {
             DBEntityTable t = find_by_primary_key(id, typeof(Cable));//new DBEntityTable(typeof(Cable));
@@ -538,6 +550,58 @@ namespace NormaMeasure.DBControl.Tables
                 return null;
             }
         }
+
+        public static TestedCable create_for_test(CableTest test)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(TestedCable));
+            TestedCable tCable = (TestedCable)t.NewRow();
+            tCable.TestId = test.TestId;
+            tCable.FillColsFromEntity(test.SourceCable);
+            tCable.Save();
+            t.Rows.Add(tCable);
+            tCable.AddStructuresFromCable(test.SourceCable);
+            return tCable; 
+            //return (TestedCable)GetCableCopy(source_cable);
+        }
+
+        private void AddStructuresFromCable(Cable copiedCable)
+        {
+            foreach (CableStructure cabStruct in copiedCable.CableStructures.Rows)
+            {
+                AddCableStructure(cabStruct);
+            }
+        }
+
+        private new TestedCableStructure AddCableStructure(uint cable_structure_type_id)
+        {
+            Random r = new Random();
+            TestedCableStructure draft = (TestedCableStructure)CableStructures.NewRow();
+            //draft.CableStructureId = (uint)r.Next(9000000, 10000000); //(cable.CableStructures.Rows.Count > 0) ? ((CableStructure)cable.CableStructures.Rows[cable.CableStructures.Rows.Count-1]).CableStructureId + 1 : CableStructure.get_last_structure_id() + 1;
+            draft.StructureTypeId = cable_structure_type_id;
+            draft.OwnCable = this;
+            draft.LeadMaterialTypeId = 1;
+            draft.IsolationMaterialId = 1;
+            draft.LeadDiameter = 0.1f;
+            draft.WaveResistance = 0;
+            draft.LeadToLeadTestVoltage = 0;
+            draft.LeadToShieldTestVoltage = 0;
+            draft.DRBringingFormulaId = 1;
+            draft.DRFormulaId = 1;
+            draft.Create();
+            CableStructures.Rows.Add(draft);
+            draft.AcceptChanges();
+            return draft;
+        }
+
+        private new TestedCableStructure AddCableStructure(CableStructure copied_structure)
+        {
+            TestedCableStructure structure = AddCableStructure(copied_structure.StructureTypeId);
+            structure.CopyFromStructure(copied_structure);
+            structure.OwnCable = this;
+            structure.Save();
+            return structure;
+        }
+
 
         [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 24, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+ ") ON DELETE CASCADE")]
         public uint TestId

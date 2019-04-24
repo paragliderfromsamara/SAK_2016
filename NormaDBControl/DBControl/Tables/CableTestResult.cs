@@ -179,5 +179,81 @@ namespace NormaMeasure.DBControl.Tables
         public const string PairNumberOnGenerator_ColumnName = "generator_pair_number";
         #endregion
 
+        public string IniFileKey
+        {
+            get
+            {
+                string keyName = $"rslt_{this.ElementNumber}_{this.MeasureNumber}";
+                if (MeasuredParameterType.IsItFreqParameter(ParameterTypeId)) keyName += $"_{GeneratorElementNumber}_{GeneratorPairNumber}";
+                return keyName;
+            }
+        }
+
+        public string IniFileSection
+        {
+            get
+            {
+                string sectName = $"results_{this.ParameterTypeId}_{this.CableStructureId}";
+                if (MeasuredParameterType.IsItFreqParameter(ParameterTypeId)) sectName += $"_{FrequencyRangeId}";
+                return sectName;
+            }
+        }
+
+
+        public TestedCableStructure TestedCableStructure
+        {
+            get
+            {
+                if (cableStructure == null)
+                {
+                    cableStructure = TestedCableStructure.find_by_structure_id(CableStructureId);
+                }
+                return cableStructure;
+            }
+            set
+            {
+                cableStructure = value;
+                CableStructureId = cableStructure.CableStructureId;
+            }
+        }
+
+        public MeasuredParameterType ParameterType
+        {
+            get
+            {
+                if(parameterType== null)
+                {
+                    parameterType = MeasuredParameterType.find_by_id(ParameterTypeId);
+                }
+                return parameterType;
+            }set
+            {
+                parameterType = value;
+                ParameterTypeId = parameterType.ParameterTypeId;
+            }
+        }
+
+        public FrequencyRange FrequencyRange
+        {
+            get
+            {
+                if (frequencyRange == null)
+                {
+                    frequencyRange = FrequencyRange.find_by_id(FrequencyRangeId);
+                }
+                return frequencyRange;
+            }
+            set
+            {
+                frequencyRange = value;
+                FrequencyRangeId = frequencyRange.FrequencyRangeId;
+            }
+        }
+
+
+        private TestedCableStructure cableStructure;
+        private MeasuredParameterType parameterType;
+        private FrequencyRange frequencyRange;
+
     }
 }

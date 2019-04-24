@@ -443,7 +443,7 @@ namespace NormaMeasure.DBControl.Tables
         }
 
         public DBEntityTable MeasuredParameters_was => measuredParameters_was;
-        public DBEntityTable MeasuredParameters
+        public virtual DBEntityTable MeasuredParameters
         {
             get
             {
@@ -562,6 +562,14 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public new static TestedCableStructure find_by_structure_id(uint structure_id)
+        {
+            DBEntityTable t = find_by_primary_key(structure_id, typeof(TestedCableStructure));
+            TestedCableStructure structure = null;
+            if (t.Rows.Count > 0) structure = (TestedCableStructure)t.Rows[0];
+            return structure;
+        }
+
         public static DBEntityTable get_by_cable(TestedCable cable)
         {
             DBEntityTable t = new DBEntityTable(typeof(TestedCable));
@@ -569,6 +577,26 @@ namespace NormaMeasure.DBControl.Tables
             foreach (TestedCableStructure cs in cabStructures.Rows) cs.OwnCable = cable;
 
             return cabStructures;
+        }
+
+        public new void CopyFromStructure(CableStructure structure)
+        {
+            this.FillColsFromEntity(structure);
+            this.AddMeasuredParameterDataFromStructure(structure);
+        }
+
+        private void AddMeasuredParameterDataFromStructure(CableStructure structure)
+        {
+            this.MeasuredParameters.Clear();
+            foreach (CableStructureMeasuredParameterData data in structure.MeasuredParameters.Rows)
+            {
+                TestedStructureMeasuredParameterData dta = (TestedStructureMeasuredParameterData)MeasuredParameters.NewRow();
+                dta.FillColsFromEntity(data);
+                dta.CableStructureId = this.CableStructureId;
+
+                this.MeasuredParameters.Rows.Add(dta);
+            }
+
         }
 
         [DBColumn(Cable.CableId_ColumnName, ColumnDomain.UInt, Order = 11, OldDBColumnName = "CabNum", Nullable = false, ReferenceTo = "tested_cables("+ Cable.CableId_ColumnName +") ON DELETE CASCADE")]
@@ -584,25 +612,29 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
-        public new DBEntityTable MeasuredParameters
+        public override DBEntityTable MeasuredParameters
         {
             get
             {
+
                 if (measuredParameters == null)
                 {
                     if (IsNewRecord())
                     {
-                        measuredParameters = TestedStructureMeasuredParameterData.get_structure_measured_parameters(0);
+                        measuredParameters = TestedStructureMeasuredParameterData.get_tested_structure_measured_parameters(0);
+
                     }
                     else
                     {
-                        measuredParameters = TestedStructureMeasuredParameterData.get_structure_measured_parameters(this);
+                        measuredParameters = TestedStructureMeasuredParameterData.get_tested_structure_measured_parameters(this);
+                        
                     }
-                    measuredParameters_was = measuredParameters.Clone() as DBEntityTable;
                 }
                 return measuredParameters;
             }
         }
+
+
     }
 
 

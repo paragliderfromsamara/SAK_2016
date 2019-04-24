@@ -301,9 +301,10 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
            // MessageBox.Show(cb.Name);
         }
 
-        private void InitMeasure(CableTest test)
+        private void InitMeasure()
         { 
-            Measure = new CableTestMeasure();
+            Measure = new CableTestMeasure(CurrentTest);
+            Measure.Start();
         }
 
         private void Measure_OnMeasure(object _measure)
@@ -472,12 +473,15 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         private void measureControlButton_Click(object sender, EventArgs e)
         {
             string txt = String.Empty;
+            CurrentTest.SetStarted();
             txt += $"Барабан {CurrentTest.BarabanTypeId} {CurrentTest.BarabanSerial} \n";
             txt += $"Температура {CurrentTest.Temperature} {CurrentTest.IsUseTermoSensor} \n";
             txt += $"Оператор {CurrentTest.OperatorId} \n";
             txt += $"Кабель {CurrentTest.SourceCable.Name} {CurrentTest.CableLength}м \n";
             txt += $"Тип подключения с ДК? {CurrentTest.IsSplittedTable}; Подключен с ПУ {CurrentTest.CableConnectedFrom}\n";
+
             MessageBox.Show(txt);
+            InitMeasure();
         }
     }
 }

@@ -5,34 +5,98 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.MeasureControl;
 using NormaMeasure.DBControl.Tables;
+using System.Threading;
 
 namespace NormaMeasure.MeasureControl.SAC
 {
-    class CableTestMeasure : MeasureBase
+    public delegate void CableTestMeasure_Handler(CableTestMeasure measure);
+    public class CableTestMeasure : MeasureBase
     {
          
-        public CableTestMeasure() : base()
+        public CableTestMeasure(CableTest test) : base()
         {
-            
+            cableTest = test;
+            MeasureBody = doMeasure;
+
+        }
+
+        private void doMeasure()
+        {
+           currentTableConnector = cableTest.CableConnectedFrom;
+           foreach (MeasuredParameterType pType in cableTest.measuredParameterTypes)
+            {
+                if (cableTest.IsOnTestProgram(pType))
+                {
+                    currentParameter = pType;
+                    foreach(TestedCableStructure structure in cableTest.TestedCable.CableStructures.Rows)
+                    {
+                        if (structure.MeasuredParameters_ids.Contains(pType.ParameterTypeId))
+                        {
+                            currentStructure = structure;
+                            measureCurrentStructure();
+                        }else
+                        {
+                            //currentTableConnector += structure.StructureType;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void measureCurrentStructure()
+        {
+            Random rnd = new Random();
+            for(uint element=0; element < currentStructure.RealAmount; element++)
+            {
+                for (uint subElement = 0; subElement < currentStructure.StructureType.StructureLeadsAmount; subElement++)
+                {
+                    CableTestResult r = cableTest.BuildTestResult(currentParameter, currentStructure, element, subElement);
+                    r.Result = rnd.Next(10, 50);
+                    cableTest.AddResult(r);
+                    lastResult = r;
+                    Thread.Sleep(800);
+                    //currentStructure
+                }
+                /*
+                switch(currentStructure.StructureTypeId)
+                {
+                    case CableStructureType.Lead:
+                        break;
+                    case CableStructureType.Pair:
+                        break;
+                    case CableStructureType.Triplet:
+                        break;
+                    case CableStructureType.Quattro:
+                    case CableStructureType.HightFreqQuattro:
+                        break;
+                } */
+            }
         }
 
 
+       
 
 
-        /// <summary>
-        /// Кабель который планируется протестировать
-        /// </summary>
-        public Cable SelectedCable
+        private void measureLead(uint elNumber)
         {
-            get
-            {
-                return selectedCable;
-            }
-            set
-            {
-                selectedCable = value;
-            }
+
         }
+
+        private void measurePair(uint elNumber)
+        {
+
+        }
+
+        private void measureTriplet(uint elNumber)
+        {
+
+        }
+
+        private void measureQuattro(uint elNumber)
+        {
+
+        }
+
 
         /// <summary>
         /// Испытание кабеля из БД
@@ -49,24 +113,31 @@ namespace NormaMeasure.MeasureControl.SAC
             }
         }
 
-
-        /// <summary>
-        /// Кабель который планируется протестировать
-        /// </summary>
-        protected Cable selectedCable;
-        /// <summary>
-        /// Тестируемый кабель, создается из selectedCable в процессе испытаний
-        /// </summary>
-        protected TestedCable testedCable;
-
         /// <summary>
         /// Испытание кабеля
         /// </summary>
         public CableTest cableTest;
 
-        public int tableCapacity;
-        public int cableConnectedFrom_ElementNumber;
-        public bool isSplittedTable;
+        private TestedCableStructure currentStructure;
+        private MeasuredParameterType currentParameter;
+        private uint structureElementNumber;
+        private uint currentTableConnector;
+        private uint cableMeasureCycle;
 
+        public CableTestResult LastResult => lastResult;
+        private CableTestResult lastResult
+        {
+            set
+            {
+                lastResult = value;
+            }
+            get
+            {
+                return lastResult;
+            }
+        }
+
+
+        private event CableTestMeasure_Handler Result_Gotten;
     }
 }

@@ -109,10 +109,10 @@ namespace NormaMeasure.DBControl.Tables
 
         private DBEntityTable measuredParameterTypes;
 
-        public static uint Lead => 1;
-        public static uint Pair => 2;
-        public static uint Triplet => 3;
-        public static uint Quattro => 4;
-        public static uint HightFreqQuattro => 5; 
+        public const uint Lead = 1;
+        public const uint Pair = 2;
+        public const uint Triplet = 3;
+        public const uint Quattro = 4;
+        public const uint HightFreqQuattro = 5; 
     }
 }

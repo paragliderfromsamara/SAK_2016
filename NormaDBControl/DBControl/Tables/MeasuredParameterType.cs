@@ -81,6 +81,14 @@ namespace NormaMeasure.DBControl.Tables
             return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} IN ({idsStr})", typeof(MeasuredParameterType));
         }
 
+
+        public static MeasuredParameterType find_by_id(uint id)
+        {
+            DBEntityTable t = find_by_primary_key(id, typeof(MeasuredParameterType));
+            if (t.Rows.Count > 0) return (MeasuredParameterType)t.Rows[0];
+            else return null;
+        }
+
         /// <summary>
         /// Возвращает список id типов частотных парметров
         /// </summary>
