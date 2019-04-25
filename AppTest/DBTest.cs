@@ -27,6 +27,8 @@ namespace AppTest
             TestInsertCable();
         }
 
+
+
         private static void outputTable(DBTable d)
         {
             Console.WriteLine(d.AddTableQuery);

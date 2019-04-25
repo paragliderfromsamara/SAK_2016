@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8B6C462D-FDEF-469B-A603-5B25BC9CA316}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{95C559B4-3DD7-471E-A601-E464BD041336}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AppTest</RootNamespace>
-    <AssemblyName>AppTest</AssemblyName>
+    <RootNamespace>NormaMeasure.Devices</RootNamespace>
+    <AssemblyName>NormaMeasureDevices</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,7 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,30 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DBTest.cs" />
-    <Compile Include="DeviceTest.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="DeviceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SAC\SAC.cs" />
+    <Compile Include="SAC\SACCPS.cs" />
+    <Compile Include="SAC\SACTable.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">
-      <Project>{6828dd40-1488-46d6-8f70-db5ef38c463f}</Project>
-      <Name>NormaDBControl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NormaMeasureDevices\NormaMeasureDevices.csproj">
-      <Project>{95c559b4-3dd7-471e-a601-e464bd041336}</Project>
-      <Name>NormaMeasureDevices</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NormaMeasureUtils\NormaMeasureUtils.csproj">
       <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
       <Name>NormaMeasureUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NormaMeasure\NormaMeasureControl.csproj">
-      <Project>{2c7874cb-f87f-4e63-89c3-b45ffb6a245e}</Project>
-      <Name>NormaMeasureControl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
