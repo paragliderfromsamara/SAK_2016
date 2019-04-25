@@ -179,6 +179,8 @@ namespace NormaMeasure.DBControl.Tables
         public const string PairNumberOnGenerator_ColumnName = "generator_pair_number";
         #endregion
 
+
+
         public string IniFileKey
         {
             get

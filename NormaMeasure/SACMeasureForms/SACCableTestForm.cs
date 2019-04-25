@@ -310,8 +310,24 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             Measure.OnMeasureStop += Measure_SwitchMeasureControlButton;
             Measure.OnOverallMeasureTimerTick += Measure_OnOverallMeasureTimerTick;
             Measure.Result_Gotten += Measure_Result_Gotten;
+            Measure.MeasurePointChanged += Measure_MeasurePointChanged;
             measureControlButton.Click += startMeasure_Click;
 
+        }
+
+
+        #region Обработчики событий измерения
+        private void Measure_MeasurePointChanged(CableTestMeasure measure)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new CableTestMeasure_Handler(Measure_MeasurePointChanged), new object[] { measure });
+                return;
+            }
+            else
+            {
+                CurrentElement_Label.Text = $"Параметр: {measure.CurrentMeasurePoint.ParameterType.ParameterName}\n{measure.CurrentMeasurePoint.TestedCableStructure.StructureType.StructureTypeName}: {measure.CurrentMeasurePoint.ElementNumber}; Жила: {measure.CurrentMeasurePoint.MeasureNumber}"; 
+            }
         }
 
         private void Measure_Result_Gotten(CableTestMeasure measure)
@@ -380,6 +396,8 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 label2.Text = meas.OverallMeasTime.ToString();
             }
         }
+        #endregion
+
 
         private void startMeasure_Click(object sender, EventArgs e)
         {

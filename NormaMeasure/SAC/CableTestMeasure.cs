@@ -55,16 +55,14 @@ namespace NormaMeasure.MeasureControl.SAC
             {
                 for (uint subElement = 0; subElement < currentStructure.StructureType.StructureLeadsAmount; subElement++)
                 {
-                    
-                    CableTestResult r = cableTest.BuildTestResult(currentParameter, currentStructure, element, subElement);
-                    
-                    r.Result = rnd.Next(10, 50);
-                    
-                    cableTest.AddResult(r);
 
-                    lastResult = r;
-                    Result_Gotten?.Invoke(this);
-                    Thread.Sleep(800);
+                    CurrentMeasurePoint = cableTest.BuildTestResult(currentParameter, currentStructure, element, subElement);
+                    CurrentMeasurePoint.Result = rnd.Next(10, 50);
+                    
+                    cableTest.AddResult(CurrentMeasurePoint);
+
+                    //Result_Gotten?.Invoke(this);
+                    Thread.Sleep(300);
                     
                     //currentStructure
                 }
@@ -140,6 +138,7 @@ namespace NormaMeasure.MeasureControl.SAC
             set
             {
                 lastResult = value;
+                if (lastResult != null)Result_Gotten?.Invoke(this);
             }
             get
             {
@@ -147,9 +146,24 @@ namespace NormaMeasure.MeasureControl.SAC
             }
         }
 
+        public CableTestResult CurrentMeasurePoint
+        {
+            get
+            {
+                return currentResult;
+            }set
+            {
+                if (currentResult != null) LastResult = currentResult;
+                currentResult = value;
+                MeasurePointChanged?.Invoke(this);
+            }
+        }
+
+        private CableTestResult currentResult;
         private CableTestResult lastResult;
 
 
         public event CableTestMeasure_Handler Result_Gotten;
+        public event CableTestMeasure_Handler MeasurePointChanged;
     }
 }

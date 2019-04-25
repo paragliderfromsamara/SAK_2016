@@ -109,6 +109,7 @@ namespace NormaMeasure.DBControl.Tables
 
         private DBEntityTable measuredParameterTypes;
 
+
         public const uint Lead = 1;
         public const uint Pair = 2;
         public const uint Triplet = 3;

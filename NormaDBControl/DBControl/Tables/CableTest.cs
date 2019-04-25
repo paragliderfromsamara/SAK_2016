@@ -724,6 +724,18 @@ namespace NormaMeasure.DBControl.Tables
 
         #region Результаты испытаний
 
+        public void WriteCurrentPoint(CableTestResult testResult)
+        {
+            file.Write(MeasuredParameterType.ParameterTypeId_ColumnName, testResult.ParameterTypeId.ToString(), LastMeasurePoint_iniSectionName);
+            file.Write(TestedCableStructure.StructureId_ColumnName, testResult.CableStructureId.ToString(), LastMeasurePoint_iniSectionName);
+            file.Write(CableTestResult.StructElementNumber_ColumnName, testResult.ElementNumber.ToString(), LastMeasurePoint_iniSectionName);
+            file.Write(CableTestResult.MeasureOnElementNumber_ColumnName, testResult.MeasureNumber.ToString(), LastMeasurePoint_iniSectionName);
+            file.Write(CableTestResult.ElementNumberOnGenerator_ColumnName, testResult.GeneratorElementNumber.ToString(), LastMeasurePoint_iniSectionName);
+            file.Write(CableTestResult.PairNumberOnGenerator_ColumnName, testResult.GeneratorPairNumber.ToString(), LastMeasurePoint_iniSectionName);
+
+            file.Write(FrequencyRange.FreqRangeId_ColumnName, testResult.FrequencyRangeId.ToString(), LastMeasurePoint_iniSectionName);
+        }
+
         public float Read_TestResult(CableTestResult testResult)
         {
             float r = 0;
@@ -734,6 +746,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public void Write_TestResult(CableTestResult testResult)
         {
+            WriteCurrentPoint(testResult);
             file.Write(testResult.IniFileKey, testResult.Result.ToString(), testResult.IniFileSection);
         }
 
@@ -745,7 +758,7 @@ namespace NormaMeasure.DBControl.Tables
         private const string TestProgram_iniSectionName = "test_program";
 
 
-
+        private const string LastMeasurePoint_iniSectionName = "test_current_point";
         private const string BarabanInfo_iniSectionName = "baraban_info";
         private const string fileNameMask = "CableTest_{0}.ini";
         private const string fileDir = "tmp";
@@ -794,7 +807,6 @@ namespace NormaMeasure.DBControl.Tables
 
         public void Add(CableTestResult result)
         {
-
             results_Table.Rows.Add(result);
             cable_test.TestFile.Write_TestResult(result);
         }
