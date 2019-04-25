@@ -19,7 +19,7 @@ namespace AppTest
 
         public static void TestSAC_cps()
         {
-
+            Program.PrintTitle("Тест ЦПС");
             SACCPS cps = new SACCPS();
             cps.Device_Connected += Cps_Device_Connected;
             cps.Device_LostConnection += Cps_Device_LostConnection;
@@ -27,7 +27,12 @@ namespace AppTest
             cps.Device_Finding += Cps_Device_Finding;
             cps.OnFindingException += Cps_OnFindingException;
             cps.Find();
-            Program.PrintTitle("Тест ЦПС");
+            cps.LedLineTest();
+            if (cps.IsConnected)
+            {
+                cps.LedLineTest();
+            }
+            
 
         }
 

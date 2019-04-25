@@ -8,6 +8,7 @@ using System.IO.Ports;
 namespace NormaMeasure.Devices
 {
     public delegate void Device_Handler(DeviceBase device);
+
     public delegate void Device_HandlerExceptions(DeviceBase device, Exception ex);
 
     public class DeviceBase : IDisposable
@@ -20,6 +21,12 @@ namespace NormaMeasure.Devices
             FillDeviceCommands(); //Заполняем команды устройства
             ConfigureDevicePort(); //Конфигурируем устройство
             deviceTypeName = "DeviceBase";
+            device_port.DataReceived += Device_port_DataReceived;
+        }
+
+        private void Device_port_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            
         }
 
         protected virtual void FillDeviceCommands()
@@ -36,10 +43,10 @@ namespace NormaMeasure.Devices
         public void Write(byte[] command, bool needToCheckConnection = true, bool needToClosePort = true)
         {
             bool flag = true;
-           // if (needToCheckConnection) flag = CheckCurrentConnection();
+            if (needToCheckConnection) flag = CheckCurrentConnection();
             if (flag)
             {
-                if (!device_port.IsOpen) device_port.Open();
+                if (!IsOpen) device_port.Open();
 
                 device_port.Write(command, 0, command.Length);
 
@@ -54,10 +61,17 @@ namespace NormaMeasure.Devices
         /// <returns></returns>
         public int ReadBytes(byte[] buffer, int offset, int count, bool needToClosePort = true)
         {
-            int i;
+            int i=0;
             if (!IsOpen) device_port.Open();
-            i = device_port.Read(buffer, offset, count);
-            if (needToClosePort) device_port.Close();
+            try
+            {
+                i = device_port.Read(buffer, offset, count);
+            }
+            catch(TimeoutException)
+            {
+                connected = false;
+            }
+            if (needToClosePort && IsOpen) device_port.Close();
             return i;
         }
 
@@ -97,16 +111,25 @@ namespace NormaMeasure.Devices
             Device_Finding?.Invoke(this);
             foreach (string s in port_list)
             {
+                device_port.PortName = s;
                 try
                 {
-                    device_port.PortName = s;
+                    if (IsOpen) device_port.Close();
+                    device_port.Open();
+                    device_port.Write(FindDevice_cmd, 0, FindDevice_cmd.Length);
+
                     if (CheckConnection())
                     {
                         f = true;
                         break;
                     }
+                    device_port.Close();
                 }
                 catch (TimeoutException)
+                {
+                    if (IsOpen) device_port.Close();
+                    continue;
+                }catch(System.IO.IOException)
                 {
                     if (IsOpen) device_port.Close();
                     continue;
@@ -114,14 +137,37 @@ namespace NormaMeasure.Devices
             }
             if (!f) Device_NotFound?.Invoke(this);
             connected = f;
-
         }
+
 
         /// <summary>
         /// Проверка соединения
         /// </summary>
         /// <returns></returns>
         protected virtual bool CheckConnection()
+        {
+            byte[] buffer = new byte[] { 0x00, 0x00 };
+            bool f = false;
+            try
+            {
+                if (IsOpen) device_port.Close();
+                device_port.Open();
+                device_port.Write(FindDevice_cmd, 0, FindDevice_cmd.Length);
+                device_port.Read(buffer, 0, buffer.Length);
+                f = CheckConnectionResult(buffer);
+                device_port.Close();
+            }
+            catch (TimeoutException)
+            {
+                if (IsOpen) device_port.Close();
+            }catch(System.IO.IOException)
+            {
+                if (IsOpen) device_port.Close();
+            }
+            return f;
+        }
+
+        protected virtual bool CheckConnectionResult(byte[] result)
         {
             return true;
         }
@@ -167,8 +213,6 @@ namespace NormaMeasure.Devices
         private SerialPort device_port;
         protected SerialPort DevicePort => device_port;
 
-        protected byte[] Hello_Cmd = new byte[] { 0x00 };
-
         public bool IsConnected => isConnected;
         private bool isConnected = false;
         private bool connected
@@ -183,15 +227,20 @@ namespace NormaMeasure.Devices
             }
         }
 
-        protected string deviceId;
+        protected string deviceId = string.Empty;
         protected string deviceTypeName;
         public string DeviceId => deviceId;
         public string DeviceType => deviceTypeName;
+
+        protected byte[] FindDevice_cmd = new byte[] {0x00 };
+
+        private byte[] receiverBuffer = new byte[64];
 
         public event Device_Handler Device_Connected;
         public event Device_Handler Device_LostConnection;
         public event Device_Handler Device_NotFound;
         public event Device_Handler Device_Finding;
         public event Device_HandlerExceptions OnFindingException;
+        public event Device_Handler OnDataReceive;
     }
 }
