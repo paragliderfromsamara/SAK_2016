@@ -33,9 +33,6 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 InitInputs();
                 InitMeasure();
             }
-
-
-
         }
 
         private Cable GetCableFromCableComboBox()
@@ -302,16 +299,32 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
            // MessageBox.Show(cb.Name);
         }
 
+        /// <summary>
+        /// Инициализация функции измерения
+        /// Здесь создаётся экземпляр измерения
+        /// </summary>
         private void InitMeasure()
         {
-
             Measure = new CableTestMeasure(CurrentTest);
             Measure.OnMeasureStart += Measure_SwitchMeasureControlButton;
             Measure.OnMeasureStop += Measure_SwitchMeasureControlButton;
             Measure.OnOverallMeasureTimerTick += Measure_OnOverallMeasureTimerTick;
-
+            Measure.Result_Gotten += Measure_Result_Gotten;
             measureControlButton.Click += startMeasure_Click;
 
+        }
+
+        private void Measure_Result_Gotten(CableTestMeasure measure)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new CableTestMeasure_Handler(Measure_Result_Gotten), new object[] { measure });
+                return;
+            }
+            else
+            {
+                measureResultField.Text = measure.LastResult.Result.ToString();
+            }
         }
 
         private void Measure_SwitchMeasureControlButton(object _measure)

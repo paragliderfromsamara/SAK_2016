@@ -45,20 +45,27 @@ namespace NormaMeasure.MeasureControl.SAC
             }
         }
 
+        /// <summary>
+        /// Измерение параметров текущей структуры кабеля
+        /// </summary>
         private void measureCurrentStructure()
         {
             Random rnd = new Random();
-            System.Windows.Forms.MessageBox.Show("measureCurrentStructure");
             for (uint element=0; element < currentStructure.RealAmount; element++)
             {
                 for (uint subElement = 0; subElement < currentStructure.StructureType.StructureLeadsAmount; subElement++)
                 {
+                    
                     CableTestResult r = cableTest.BuildTestResult(currentParameter, currentStructure, element, subElement);
+                    
                     r.Result = rnd.Next(10, 50);
+                    
                     cableTest.AddResult(r);
-                    lastResult = r;
-                    Thread.Sleep(800);
 
+                    lastResult = r;
+                    Result_Gotten?.Invoke(this);
+                    Thread.Sleep(800);
+                    
                     //currentStructure
                 }
                 /*
@@ -128,8 +135,7 @@ namespace NormaMeasure.MeasureControl.SAC
         private uint currentTableConnector;
         private uint cableMeasureCycle;
 
-        public CableTestResult LastResult => lastResult;
-        private CableTestResult lastResult
+        public CableTestResult LastResult
         {
             set
             {
@@ -141,7 +147,9 @@ namespace NormaMeasure.MeasureControl.SAC
             }
         }
 
+        private CableTestResult lastResult;
 
-        private event CableTestMeasure_Handler Result_Gotten;
+
+        public event CableTestMeasure_Handler Result_Gotten;
     }
 }
