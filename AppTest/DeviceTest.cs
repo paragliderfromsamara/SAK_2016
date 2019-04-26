@@ -26,14 +26,21 @@ namespace AppTest
             cps.Device_NotFound += Cps_Device_NotFound;
             cps.Device_Finding += Cps_Device_Finding;
             cps.OnFindingException += Cps_OnFindingException;
+            cps.Commutator.OnCommutator_StateChanged += Commutator_OnCommutator_StateChanged;
             cps.Find();
-            cps.LedLineTest();
+            //cps.LedLineTest();
             if (cps.IsConnected)
             {
-                cps.LedLineTest();
+                //cps.Commutator.Test();
+                //cps.LedLineTest();
             }
             
 
+        }
+
+        private static void Commutator_OnCommutator_StateChanged(NormaMeasure.Devices.SAC.CPSUnits.CPSCommutator commutator)
+        {
+            Console.WriteLine($"{commutator.State[0]} {commutator.State[1]}");
         }
 
         private static void Cps_OnFindingException(DeviceBase device, Exception ex)

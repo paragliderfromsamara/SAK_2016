@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Threading;
+using NormaMeasure.Devices.SAC.CPSUnits;
 
 namespace NormaMeasure.Devices.SAC
 {
@@ -14,27 +15,33 @@ namespace NormaMeasure.Devices.SAC
         /// <summary>
         /// Флаг подразумевающий чтение резульатата
         /// </summary>
-        const byte Read_cmd = 0x80;
+        public const byte Read_cmd = 0x80;
         /// <summary>
         /// Байт характеризующий отправляемую команду как двух байтную
         /// </summary>
-        const byte TwoBytes_cmd = 0x40;
+        public const byte TwoBytes_cmd = 0x40;
         /// <summary>
         /// Байт для считывания результата
         /// </summary>
-        const byte ReadResult = 0x20; 
+        public const byte ReadResult = 0x20;
 
         /// <summary>
         /// Команда запроса номера ЦПС
         /// </summary>
-        const byte GetCPSNumber_cmd = 0xA8;
-        const byte SetRizolLed_cmd = 0x00;
+        public const byte GetCPSNumber_cmd = 0xA8;
+        public const byte SetRizolLed_cmd = 0x00;
 
         #endregion
 
         public SACCPS() : base()
         {
             deviceTypeName = "CPS";
+            InitUnits();
+        }
+
+        protected virtual void InitUnits()
+        {
+            commutator = new CPSCommutator(this);
         }
 
 
@@ -117,5 +124,8 @@ namespace NormaMeasure.Devices.SAC
         }
 
         //
+
+        private CPSCommutator commutator;
+        public CPSCommutator Commutator => commutator;
     }
 }

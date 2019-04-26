@@ -43,6 +43,12 @@
   <ItemGroup>
     <Compile Include="DeviceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SAC\CPSUnits\CPSCommutator.cs" />
+    <Compile Include="SAC\CPSUnits\CPSUnit.cs" />
+    <Compile Include="SAC\CPSUnits\U110.cs" />
+    <Compile Include="SAC\CPSUnits\U120.cs" />
+    <Compile Include="SAC\CPSUnits\U130.cs" />
+    <Compile Include="SAC\CPSUnits\U160.cs" />
     <Compile Include="SAC\SAC.cs" />
     <Compile Include="SAC\SACCPS.cs" />
     <Compile Include="SAC\SACTable.cs" />

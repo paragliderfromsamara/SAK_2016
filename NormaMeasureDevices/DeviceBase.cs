@@ -40,17 +40,24 @@ namespace NormaMeasure.Devices
         /// <param name="command">Отправляемая команда</param>
         /// <param name="needToCheckConnection">Необходима ли проверка подключения перед отправкой</param>
         /// <param name="needToClosePort">Нужно ли закрывать порт после отправки</param>
-        public void Write(byte[] command, bool needToCheckConnection = true, bool needToClosePort = true)
+        public bool Write(byte[] command, bool needToCheckConnection = true, bool needToClosePort = true)
         {
-            bool flag = true;
-            if (needToCheckConnection) flag = CheckCurrentConnection();
-            if (flag)
+            bool flag = false;
+            try
             {
-                if (!IsOpen) device_port.Open();
+                if (needToCheckConnection) flag = CheckCurrentConnection();
+                if (flag)
+                {
+                    if (!IsOpen) device_port.Open();
 
-                device_port.Write(command, 0, command.Length);
+                    device_port.Write(command, 0, command.Length);
 
-                if (needToClosePort) device_port.Close();
+                    if (needToClosePort) device_port.Close();
+                }
+                return flag;
+            }catch(Exception)
+            {
+                return false;
             }
         }
 
