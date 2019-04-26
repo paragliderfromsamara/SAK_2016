@@ -52,18 +52,24 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// <param name="newState"></param>
         public void SetCommutatorState(byte[][] newState)
         {
-            byte[] state = (byte[])ZeroState.Clone(); 
-            for (int i=0; i<newState[0].Length; i++)
-            {
-                for(int j=0; j<newState.Length; j++)
-                {
-                    state[i] |= newState[j][i];
-                }
-            }
+            byte[] state = BuildState(newState); 
             CurrentState = state;
-
         }
 
+        /// <summary>
+        /// Объединяет несколько реле в одно состояние
+        /// </summary>
+        /// <param name="newState"></param>
+        /// <returns></returns>
+        private byte[] BuildState(byte[][] newState)
+        {
+            byte[] state = (byte[])ZeroState.Clone();
+            for (int i = 0; i < newState[0].Length; i++)
+            {
+                for (int j = 0; j < newState.Length; j++) state[i] |= newState[j][i];
+            }
+            return state;
+        }
 
         public void ClearState()
         {
@@ -163,6 +169,91 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 }
             }
         }
+
+
+        #region Коммутация узла 110
+
+
+        private static readonly byte[][] Calling_ReleList = new byte[][] { K39, K43_44, K45 };
+        private static readonly byte[][] Rleads_ReleList = new byte[][] { K43_44, K46 };
+        private static readonly byte[][] Rleads_Etalon_ReleList = new byte[][] { K51_52 };
+
+        /// <summary>
+        /// Коммутация реле для Rжил
+        /// </summary>
+        public byte[] Rleads_ReleState => BuildState(Rleads_ReleList);
+        /// <summary>
+        /// Коммутация реле для измерения эталона Rжил
+        /// </summary>
+        public byte[] RleadsEtalon_ReleState => BuildState(Rleads_Etalon_ReleList);
+        /// <summary>
+        /// Коммутация реле для прозвонки
+        /// </summary>
+        public byte[] Calling_ReleState => BuildState(Calling_ReleList);
+
+        #endregion
+
+        #region Коммутация узла 120
+        private static readonly byte[][] CapacityMeasure_ReleList = new byte[][] { K41_42 };
+        private static readonly byte[][] Cp_Etalon_ReleList = new byte[][] { K47 };
+        private static readonly byte[][] Co_Ea_Etalon_ReleList = new byte[][] { K48 };
+        private static readonly byte[][] K1_12_Etalon_ReleList = new byte[][] { K49 };
+
+        /// <summary>
+        /// Коммутация реле для измерения емкостных параметров CEK
+        /// </summary>
+        public byte[] CapacityMeasure_ReleState => BuildState(CapacityMeasure_ReleList);
+
+        /// <summary>
+        /// Коммутация реле для измерения эталона Cp
+        /// </summary>
+        public byte[] Cp_Etalon_ReleState => BuildState(Cp_Etalon_ReleList);
+        /// <summary>
+        /// Коммутация реле для измерения эталона Co и Ea
+        /// </summary>
+        public byte[] Co_Ea_Etalon_ReleState => BuildState(Co_Ea_Etalon_ReleList);
+        /// <summary>
+        /// Коммутация реле для измерения эталона К параметров
+        /// </summary>
+        public byte[] K1_12_Etalon_ReleState => BuildState(K1_12_Etalon_ReleList);
+
+        #endregion
+
+        #region Коммутация узла 130
+
+        private static readonly byte[][] Risol_A_ReleList = new byte[][] { K35, K36, K39 };
+        private static readonly byte[][] Risol_B_ReleList = new byte[][] { K35, K37, K39 };
+        private static readonly byte[][] Risol_AB_ReleList = new byte[][] { K35, K50, K39 };
+        private static readonly byte[][] Risol_Etalon_ReleList = new byte[][] { K38 };
+
+        /// <summary>
+        /// Коммутация реле для измерения Rиз жилы А
+        /// </summary>
+        public byte[] Risol_A_ReleState => BuildState(Risol_A_ReleList);
+
+        /// <summary>
+        ///  Коммутация реле для измерения Rиз жилы B
+        /// </summary>
+        public byte[] Risol_B_ReleState => BuildState(Risol_B_ReleList);
+
+        /// <summary>
+        /// Коммутация реле для измерения Rиз между АB
+        /// </summary>
+        public byte[] Risol_AB_ReleState => BuildState(Risol_AB_ReleList);
+
+        /// <summary>
+        /// Коммутация реле для измерения эталона Rиз 
+        /// </summary>
+        public byte[] Risol_Etalon_ReleState => BuildState(Risol_Etalon_ReleList);
+        #endregion
+
+        #region Коммутация узла 160
+        private static readonly byte[][] PVMeasure_ReleList = new byte[][] { K40};
+        /// <summary>
+        /// Коммутация реле для αl, Ао, Аз и эталона
+        /// </summary>
+        public byte[] PVUnit_ReleState => BuildState(PVMeasure_ReleList);
+        #endregion
 
         public event CPSCommutator_Handler OnCommutator_StateChanged;
     }

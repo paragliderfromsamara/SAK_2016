@@ -6,18 +6,12 @@ using System.Threading.Tasks;
 
 namespace NormaMeasure.Devices.SAC.CPSUnits
 {
-    public class U110 : CPSMeasureUnit
+    public class CPSMeasureUnit : CPSUnit
     {
-        public U110(SACCPS _cps) : base(_cps)
+        public CPSMeasureUnit(SACCPS _cps) : base(_cps)
         {
-
         }
-
-        protected override void SetUnitAddress()
-        {
-            unitCMD_Address = 0x01;
-        }
-
+        
 
     }
 }
