@@ -11,6 +11,7 @@ using System.Threading;
 using NormaMeasure.DBControl.SAC.DBEntities;
 using NormaMeasure.DBControl.SAC.Forms;
 using NormaMeasure.MeasureControl.SACMeasureForms;
+using NormaMeasure.Devices.SAC;
 
 namespace NormaMeasure.SAC_APP
 {
@@ -34,13 +35,48 @@ namespace NormaMeasure.SAC_APP
 
         public dbForms.oldDbDataMigration oldDbDataMigrationForm = null;
 
+        private SAC sacDevice;
+
         public mainForm()
         {
             InitializeComponent();
+            InitCulture();
+            InitSAC();
             if (isTestApp) this.Text += " (Тестовый режим)";
+
+        }
+
+        private void InitSAC()
+        {
+            sacDevice = new SAC();
+            CPSStatusLabel.Text = "Крейт не найден";
+            sacDevice.OnCPSFound += SacDevice_OnCPSFound;
+            sacDevice.OnCPSLost += SacDevice_OnCPSLost;
+            sacDevice.FindCPS();
+        }
+
+        private void CheckSACLink()
+        {
+            sacDevice.FindCPS();
+        }
+        
+
+        private void SacDevice_OnCPSLost(SAC sac, SACCPS cps)
+        {
+            CPSStatusLabel.Text = $"Крейт №{cps.DeviceId}";
+        }
+
+        private void SacDevice_OnCPSFound(SAC sac, SACCPS cps)
+        {
+            CPSStatusLabel.Text = "Крейт не найден";
+        }
+
+        private void InitCulture()
+        {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("my");
             Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
         }
+
         //Управление дочерними окнами
         private void autoTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -155,6 +191,11 @@ namespace NormaMeasure.SAC_APP
         {
             oldDbDataMigrationForm = new dbForms.oldDbDataMigration(this);
             oldDbDataMigrationForm.Show();
+        }
+
+        private void CPSStatusLabel_Click(object sender, EventArgs e)
+        {
+            CheckSACLink();
         }
     }
 }

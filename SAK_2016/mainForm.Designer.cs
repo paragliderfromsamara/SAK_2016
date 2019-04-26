@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.sacMenuStrip = new System.Windows.Forms.MenuStrip();
             this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manualTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,20 +42,22 @@
             this.sesUserName = new System.Windows.Forms.ToolStripStatusLabel();
             this.sesTabNum = new System.Windows.Forms.ToolStripStatusLabel();
             this.sesRole = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip1.SuspendLayout();
+            this.CPSStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tableStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.sacMenuStrip.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // sacMenuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sacMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.testsToolStripMenuItem,
             this.dbControlToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(981, 24);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.sacMenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.sacMenuStrip.Name = "sacMenuStrip";
+            this.sacMenuStrip.Size = new System.Drawing.Size(981, 24);
+            this.sacMenuStrip.TabIndex = 1;
+            this.sacMenuStrip.Text = "menuStrip1";
             // 
             // testsToolStripMenuItem
             // 
@@ -133,7 +135,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sesUserName,
             this.sesTabNum,
-            this.sesRole});
+            this.sesRole,
+            this.CPSStatusLabel,
+            this.tableStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 454);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(981, 22);
@@ -158,21 +162,33 @@
             this.sesRole.Size = new System.Drawing.Size(69, 17);
             this.sesRole.Text = "Должность";
             // 
+            // CPSStatusLabel
+            // 
+            this.CPSStatusLabel.Name = "CPSStatusLabel";
+            this.CPSStatusLabel.Size = new System.Drawing.Size(97, 17);
+            this.CPSStatusLabel.Text = "Крейт не найден";
+            this.CPSStatusLabel.Click += new System.EventHandler(this.CPSStatusLabel_Click);
+            // 
+            // tableStatusLabel
+            // 
+            this.tableStatusLabel.Name = "tableStatusLabel";
+            this.tableStatusLabel.Size = new System.Drawing.Size(0, 17);
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(981, 476);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.sacMenuStrip);
             this.IsMdiContainer = true;
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.sacMenuStrip;
             this.Name = "mainForm";
             this.Text = "САК 2016";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainForm_FormClosing);
             this.Load += new System.EventHandler(this.mainForm_Load);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.sacMenuStrip.ResumeLayout(false);
+            this.sacMenuStrip.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -182,7 +198,7 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip sacMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem testsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem autoTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manualTestToolStripMenuItem;
@@ -196,6 +212,8 @@
         private System.Windows.Forms.ToolStripMenuItem dbCableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dbBarabanToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem oldDbMigrationStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel CPSStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel tableStatusLabel;
     }
 }
 

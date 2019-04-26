@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using NormaMeasure.DBControl.Tables;
 
 namespace NormaMeasure.Devices.SAC.CPSUnits
 {
@@ -76,22 +77,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             CurrentState = ZeroState;
         }
 
-        public static readonly byte[] ZeroState = new byte[] { 0x00, 0x00 };
-        public static readonly byte[] K35 = new byte[] { 0x01, 0x00 };
-        public static readonly byte[] K36 = new byte[] { 0x02, 0x00 };
-        public static readonly byte[] K37 = new byte[] { 0x04, 0x00 };
-        public static readonly byte[] K38 = new byte[] { 0x08, 0x00 };
-        public static readonly byte[] K39 = new byte[] { 0x10, 0x00 };
-        public static readonly byte[] K40 = new byte[] { 0x20, 0x00 };
-        public static readonly byte[] K41_42 = new byte[] { 0x40, 0x00 };
-        public static readonly byte[] K43_44 = new byte[] { 0x80, 0x00 };
-        public static readonly byte[] K45 = new byte[] { 0x00, 0x01 };
-        public static readonly byte[] K46 = new byte[] { 0x00, 0x02 };
-        public static readonly byte[] K47 = new byte[] { 0x00, 0x04 };
-        public static readonly byte[] K48 = new byte[] { 0x00, 0x08 };
-        public static readonly byte[] K49 = new byte[] { 0x00, 0x10 };
-        public static readonly byte[] K50 = new byte[] { 0x00, 0x20 };
-        public static readonly byte[] K51_52 = new byte[] { 0x00, 0x40 };
+
 
 
 
@@ -122,8 +108,8 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 }
                 ClearState();
             }
-
         }
+
 
         /// <summary>
         /// Формирует команду коммутатора в ЦПС
@@ -167,6 +153,73 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                         Thread.Sleep(300);
                     }
                 }
+            }
+        }
+
+
+        /// <summary>
+        /// Задаёт состояние коммутатора по типу измеряемого параметра
+        /// </summary>
+        /// <param name="pTypeId"></param>
+        /// <param name="isEtalon"></param>
+        /// <param name="RisolType"></param>
+        public virtual void SetCommutatorByParameterType(uint pTypeId, bool isEtalon = false, RisolCommutationType RisolType = RisolCommutationType.A)
+        {
+            switch (pTypeId)
+            {
+                case MeasuredParameterType.Calling:
+                    CurrentState = Calling_ReleState;
+                    break;
+                case MeasuredParameterType.Rleads:
+                    CurrentState = isEtalon ? RleadsEtalon_ReleState : Rleads_ReleState;
+                    break;
+                case MeasuredParameterType.Cp:
+                    CurrentState = isEtalon ? Cp_Etalon_ReleState : CapacityMeasure_ReleState;
+                    break;
+                case MeasuredParameterType.Co:
+                case MeasuredParameterType.Ea:
+                    CurrentState = isEtalon ? Co_Ea_Etalon_ReleState : CapacityMeasure_ReleState;
+                    break;
+                case MeasuredParameterType.K1:
+                case MeasuredParameterType.K2:
+                case MeasuredParameterType.K3:
+                case MeasuredParameterType.K23:
+                case MeasuredParameterType.K9:
+                case MeasuredParameterType.K10:
+                case MeasuredParameterType.K11:
+                case MeasuredParameterType.K12:
+                case MeasuredParameterType.K9_12:
+                    CurrentState = isEtalon ? K1_12_Etalon_ReleState : CapacityMeasure_ReleState;
+                    break;
+                case MeasuredParameterType.Risol1:
+                case MeasuredParameterType.Risol2:
+                case MeasuredParameterType.Risol3:
+                case MeasuredParameterType.Risol4:
+                    if (!isEtalon)
+                    {
+                        switch(RisolType)
+                        {
+                            case RisolCommutationType.A:
+                                CurrentState = Risol_A_ReleState;
+                                break;
+                            case RisolCommutationType.B:
+                                CurrentState = Risol_B_ReleState;
+                                break;
+                            case RisolCommutationType.AB:
+                                CurrentState = Risol_AB_ReleState;
+                                break;
+                        }
+                    }
+                    else CurrentState = Risol_Etalon_ReleState;
+                    break;
+                case MeasuredParameterType.al:
+                case MeasuredParameterType.Ao:
+                case MeasuredParameterType.Az:
+                    CurrentState = PVUnit_ReleState;
+                    break;
+                default:
+                    CurrentState = ZeroState;
+                    break;
             }
         }
 
@@ -253,6 +306,25 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// Коммутация реле для αl, Ао, Аз и эталона
         /// </summary>
         public byte[] PVUnit_ReleState => BuildState(PVMeasure_ReleList);
+        #endregion
+
+        #region Карта реле
+        public static readonly byte[] ZeroState = new byte[] { 0x00, 0x00 };
+        public static readonly byte[] K35 = new byte[] { 0x01, 0x00 };
+        public static readonly byte[] K36 = new byte[] { 0x02, 0x00 };
+        public static readonly byte[] K37 = new byte[] { 0x04, 0x00 };
+        public static readonly byte[] K38 = new byte[] { 0x08, 0x00 };
+        public static readonly byte[] K39 = new byte[] { 0x10, 0x00 };
+        public static readonly byte[] K40 = new byte[] { 0x20, 0x00 };
+        public static readonly byte[] K41_42 = new byte[] { 0x40, 0x00 };
+        public static readonly byte[] K43_44 = new byte[] { 0x80, 0x00 };
+        public static readonly byte[] K45 = new byte[] { 0x00, 0x01 };
+        public static readonly byte[] K46 = new byte[] { 0x00, 0x02 };
+        public static readonly byte[] K47 = new byte[] { 0x00, 0x04 };
+        public static readonly byte[] K48 = new byte[] { 0x00, 0x08 };
+        public static readonly byte[] K49 = new byte[] { 0x00, 0x10 };
+        public static readonly byte[] K50 = new byte[] { 0x00, 0x20 };
+        public static readonly byte[] K51_52 = new byte[] { 0x00, 0x40 };
         #endregion
 
         public event CPSCommutator_Handler OnCommutator_StateChanged;

@@ -11,13 +11,31 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         public CPSUnit(SACCPS _cps)
         {
             cps = _cps;
-            SetUnitAddress();
+            InitUnit();
         }
+
+        protected virtual void InitUnit()
+        {
+            SetUnitAddress();
+            SetUnitInfo();
+        }
+
         /// <summary>
         /// Установка адреса узла
         /// </summary>
         protected virtual void SetUnitAddress() { }
+
+        protected virtual void SetUnitInfo() { }
+
         protected byte unitCMD_Address;
         protected SACCPS cps;
+
+        protected string unitName;
+        protected string unitTitle;
+        protected int unitId;
+
+        public string UnitName => unitName;
+        public string UnitTitle => unitTitle;
+        public int UnitId => unitId;
     }
 }

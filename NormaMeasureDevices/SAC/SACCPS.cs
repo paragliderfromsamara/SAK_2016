@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Threading;
 using NormaMeasure.Devices.SAC.CPSUnits;
+using NormaMeasure.DBControl.Tables;
 
 namespace NormaMeasure.Devices.SAC
 {
@@ -40,8 +41,47 @@ namespace NormaMeasure.Devices.SAC
         }
 
         protected virtual void InitUnits()
-        {
+        { 
             commutator = new CPSCommutator(this);
+            InitMeasureUnits();
+        }
+
+        protected virtual void InitMeasureUnits()
+        {
+            unit110 = new U110(this);
+            unit120 = new U120(this);
+            unit130 = new U130(this, 1);
+            unit160 = new U160(this);
+            measureUnits.Add(unit110);
+            measureUnits.Add(unit120);
+            measureUnits.Add(unit130);
+            measureUnits.Add(unit160);
+        }
+
+        public virtual double MakeMeasureParameter(MeasuredParameterType pType, bool isEtalon, RisolCommutationType RisolMode = RisolCommutationType.A)
+        {
+            bool f = false;
+            double value = 0;
+            CPSMeasureUnit unit = getMeasureUnit(pType);
+            if (unit != null)
+            {
+                commutator.SetCommutatorByParameterType(pType.ParameterTypeId, isEtalon, RisolMode);
+                unit.MakeMeasure(ref value, pType, isEtalon);
+            }
+            
+
+            
+
+            return value;
+        }
+
+        private CPSMeasureUnit getMeasureUnit(MeasuredParameterType type)
+        {
+            foreach(CPSMeasureUnit unit in measureUnits)
+            {
+                if (unit.IsAllowedParameter(type.ParameterTypeId)) return unit;
+            }
+            return null;
         }
 
 
@@ -73,9 +113,6 @@ namespace NormaMeasure.Devices.SAC
         }
 
         #endregion
-
-
-
 
         /// <summary>
         /// Проверка номера ЦПС
@@ -126,6 +163,21 @@ namespace NormaMeasure.Devices.SAC
         //
 
         private CPSCommutator commutator;
+
+        private U110 unit110;
+        private U120 unit120;
+        private U130 unit130;
+        private U160 unit160;
+
         public CPSCommutator Commutator => commutator;
+
+        private List<CPSMeasureUnit> measureUnits = new List<CPSMeasureUnit>();
+        public U110 Unit110 => unit110;
+        public U120 Unit120 => unit120;
+        public U130 Unit130 => unit130;
+        public U160 Unit160 => unit160;
+
+
+
     }
 }
