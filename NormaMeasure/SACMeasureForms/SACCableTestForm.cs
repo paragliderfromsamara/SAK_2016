@@ -190,7 +190,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             RizolSelector_CB.ValueMember = MeasuredParameterType.ParameterTypeId_ColumnName;
             RizolSelector_CB.DisplayMember = MeasuredParameterType.ParameterName_ColumnName;
             
-            foreach(MeasuredParameterType pType in CurrentTest.MeasuredParameterTypes)
+            foreach(MeasuredParameterType pType in CurrentTest.AllowedMeasuredParameterTypes)
             {
                 if (MeasuredParameterType.IsItIsolationaResistance(pType.ParameterTypeId))
                 {
@@ -202,14 +202,20 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             }
             RizolSelector_CB.DataSource = t;
             RizolSelector_CB.Enabled = t.Rows.Count > 0;
-            if (t.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {CurrentTest.RisolTypeFavourTypeId}").Length > 0)
+            if (RizolSelector_CB.Enabled)
             {
-                RizolSelector_CB.SelectedValue = CurrentTest.RisolTypeFavourTypeId;
-            }else
-            {
-                RizolSelector_CB.SelectedIndex = 0;
-                CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
+                if (t.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {CurrentTest.RisolTypeFavourTypeId}").Length > 0)
+                {
+                    RizolSelector_CB.SelectedValue = CurrentTest.RisolTypeFavourTypeId;
+                }
+                else
+                {
+                    RizolSelector_CB.SelectedIndex = 0;
+                    CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
+                }
+
             }
+
         }
 
         private void RefreshCableMeasuredParams()
@@ -312,7 +318,14 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             Measure.Result_Gotten += Measure_Result_Gotten;
             Measure.MeasurePointChanged += Measure_MeasurePointChanged;
             measureControlButton.Click += startMeasure_Click;
+            Measure.CableTestFinished += Measure_CableTestFinished;
 
+        }
+
+        private void Measure_CableTestFinished(CableTestMeasure measure)
+        {
+            CurrentTest.SetFinished();
+            MessageBox.Show($"Испытание кабеля \"{CurrentTest.TestedCable.FullName}\" успешно завершено!", "Испытание завершено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
 

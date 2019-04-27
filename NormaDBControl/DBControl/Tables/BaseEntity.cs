@@ -46,6 +46,19 @@ namespace NormaMeasure.DBControl.Tables
             }
         }
 
+        /// <summary>
+        /// Удаление из БД по заданному критерию
+        /// </summary>
+        /// <param name="criteria">Критерий удаления</param>
+        /// <param name="entity_type">Тип сущности</param>
+        public static void delete_by_criteria(string criteria, Type entity_type)
+        {
+            DBEntityTable t = new DBEntityTable(entity_type);
+            string query = $"{t.DeleteQuery} WHERE {criteria}";
+            t.WriteSingleQuery(query);
+
+        }
+
 
 
         protected static DBEntityTable find_by_primary_key(uint primary_key_value, Type type)

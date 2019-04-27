@@ -86,10 +86,14 @@ namespace NormaMeasure.DBControl.Tables
             SetStatus(CableTestStatus.Started);
         }
 
+        /// <summary>
+        /// Устанавливает статус испытания в Finished если оно соханено в БД
+        /// </summary>
         public void SetFinished()
         {
-            SetStatus(CableTestStatus.Finished);
+            if (testResults.SaveToDB()) SetStatus(CableTestStatus.Finished);
         }
+
 
         public void SetStoppedByOperator()
         {
@@ -120,7 +124,22 @@ namespace NormaMeasure.DBControl.Tables
         public bool IsNotStarted => StatusId == CableTestStatus.NotStarted;
         public bool IsInterrupted => StatusId == CableTestStatus.StopedByOperator || StatusId == CableTestStatus.StopedOutOfNorma;
 
-        public MeasuredParameterType[] MeasuredParameterTypes
+        public MeasuredParameterType[] TestProgramMeasuredParameterTypes
+        {
+            get
+            {
+                List<MeasuredParameterType> types = new List<MeasuredParameterType>();
+                foreach (MeasuredParameterType type in AllowedMeasuredParameterTypes) if (IsOnTestProgram(type)) types.Add(type);
+                return types.ToArray();
+            }
+        }
+
+
+
+        /// <summary>
+        /// Все доступные измеряемые параметры для данного кабеля
+        /// </summary>
+        public MeasuredParameterType[] AllowedMeasuredParameterTypes
         {
             get
             {
@@ -143,7 +162,7 @@ namespace NormaMeasure.DBControl.Tables
                 if(measuredParameterTypes_IDs == null)
                 {
                     List<uint> ids = new List<uint>();
-                    foreach (MeasuredParameterType type in MeasuredParameterTypes) ids.Add(type.ParameterTypeId);
+                    foreach (MeasuredParameterType type in AllowedMeasuredParameterTypes) ids.Add(type.ParameterTypeId);
                     if (ids.Count > 0) measuredParameterTypes_IDs = ids.ToArray();
                 }
                 return measuredParameterTypes_IDs;
@@ -411,6 +430,7 @@ namespace NormaMeasure.DBControl.Tables
             {
                 if (keyExists)
                 {
+
                     bool.TryParse(TestFile.Read_TestProgram(pKey), out defVal);
                 }
                 else
@@ -672,7 +692,7 @@ namespace NormaMeasure.DBControl.Tables
 
         public bool IsExists_OnTestProgram(string key)
         {
-            return Exists(key, TestSettings_iniSectionName);
+            return Exists(key, TestProgram_iniSectionName);
         }
         #endregion
 
@@ -732,7 +752,6 @@ namespace NormaMeasure.DBControl.Tables
             file.Write(CableTestResult.MeasureOnElementNumber_ColumnName, testResult.MeasureNumber.ToString(), LastMeasurePoint_iniSectionName);
             file.Write(CableTestResult.ElementNumberOnGenerator_ColumnName, testResult.GeneratorElementNumber.ToString(), LastMeasurePoint_iniSectionName);
             file.Write(CableTestResult.PairNumberOnGenerator_ColumnName, testResult.GeneratorPairNumber.ToString(), LastMeasurePoint_iniSectionName);
-
             file.Write(FrequencyRange.FreqRangeId_ColumnName, testResult.FrequencyRangeId.ToString(), LastMeasurePoint_iniSectionName);
         }
 
@@ -772,13 +791,11 @@ namespace NormaMeasure.DBControl.Tables
         public CableTestResultCollection(CableTest test)
         {
             cable_test = test;
-            System.Windows.Forms.MessageBox.Show("Constructor");
             Init();
         }
 
         private void Init()
         {
-            System.Windows.Forms.MessageBox.Show("Init");
             switch (cable_test.StatusId)
             {
                 case CableTestStatus.NotStarted:
@@ -791,6 +808,17 @@ namespace NormaMeasure.DBControl.Tables
                     LoadFromIniFile();
                     break;
             }
+        }
+
+        public bool SaveToDB()
+        {
+            ClearResultsOnDB();
+            return results_Table.CreateRowsToDB();
+        }
+
+        private void ClearResultsOnDB()
+        {
+            CableTestResult.delete_all_from_cable_test(cable_test.TestId);
         }
 
         private void LoadFromDB()
@@ -835,21 +863,20 @@ namespace NormaMeasure.DBControl.Tables
             {
                 foreach(TestedCableStructure structure in cable_test.TestedCable.CableStructures.Rows)
                 {
-            
                     if (pType.IsFreqParameter)
                     {
 
                     }else
                     {
-                        for(uint i = 0; i<structure.RealAmount; i++)
+                        for(uint i = 1; i<=structure.RealAmount; i++)
                         {
-                            for(uint j = 0; j<structure.StructureType.StructureLeadsAmount; j++)
+                            for(uint j = 1; j<=structure.StructureType.StructureLeadsAmount; j++)
                             {
                                 CableTestResult r = (CableTestResult)results_Table.NewRow();
                                 r.ParameterType = pType;
                                 r.TestedCableStructure = structure;
-                                r.ElementNumber = i+1;
-                                r.MeasureNumber = j + 1;
+                                r.ElementNumber = i;
+                                r.MeasureNumber = j;
                                 r.Result = cable_test.TestFile.Read_TestResult(r);
                                 r.TestId = cable_test.TestId;
                                 results_Table.Rows.Add(r);

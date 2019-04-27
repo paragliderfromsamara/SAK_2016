@@ -14,6 +14,12 @@ namespace NormaMeasure.DBControl.Tables
         {
         }
 
+        public static void delete_all_from_cable_test(uint cable_test_id)
+        {
+            delete_by_criteria($"{CableTest.CableTestId_ColumnName} = {cable_test_id}", typeof(CableTestResult));
+        }
+
+
         #region Колонки таблицы
         [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "IspInd", ReferenceTo = "cable_tests(cable_test_id) ON DELETE CASCADE", Nullable = true)]
         public uint TestId

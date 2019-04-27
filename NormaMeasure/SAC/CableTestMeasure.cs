@@ -24,10 +24,9 @@ namespace NormaMeasure.MeasureControl.SAC
         {
            currentTableConnector = cableTest.CableConnectedFrom;
          
-            foreach (MeasuredParameterType pType in cableTest.MeasuredParameterTypes)
+            foreach (MeasuredParameterType pType in cableTest.TestProgramMeasuredParameterTypes)
             {
                 currentParameter = pType;
-
                 foreach (TestedCableStructure structure in cableTest.TestedCable.CableStructures.Rows)
                 {
                     currentStructure = structure;
@@ -41,8 +40,8 @@ namespace NormaMeasure.MeasureControl.SAC
                     //currentTableConnector += structure.StructureType;
                     // }
                 }
-
             }
+            CableTestFinished?.Invoke(this);
         }
 
         /// <summary>
@@ -51,9 +50,9 @@ namespace NormaMeasure.MeasureControl.SAC
         private void measureCurrentStructure()
         {
             Random rnd = new Random();
-            for (uint element=0; element < currentStructure.RealAmount; element++)
+            for (uint element=1; element <= currentStructure.RealAmount; element++)
             {
-                for (uint subElement = 0; subElement < currentStructure.StructureType.StructureLeadsAmount; subElement++)
+                for (uint subElement = 1; subElement <= currentStructure.StructureType.StructureLeadsAmount; subElement++)
                 {
 
                     CurrentMeasurePoint = cableTest.BuildTestResult(currentParameter, currentStructure, element, subElement);
@@ -127,12 +126,6 @@ namespace NormaMeasure.MeasureControl.SAC
         /// </summary>
         public CableTest cableTest;
 
-        private TestedCableStructure currentStructure;
-        private MeasuredParameterType currentParameter;
-        private uint structureElementNumber;
-        private uint currentTableConnector;
-        private uint cableMeasureCycle;
-
         public CableTestResult LastResult
         {
             set
@@ -162,8 +155,52 @@ namespace NormaMeasure.MeasureControl.SAC
         private CableTestResult currentResult;
         private CableTestResult lastResult;
 
+        private TestedCableStructure currentStructure
+        {
+            get
+            {
+                return _currentStructure;
+            }
+            set
+            {
+                if (_currentStructure != value)
+                {
+                    _currentStructure = value;
+                    CurrentStructureChanged?.Invoke(this);
+                }
+            }
+        }
+
+        private MeasuredParameterType currentParameter
+        {
+            get
+            {
+                return _currentParameter;
+            }
+            set
+            {
+                if (_currentParameter != value)
+                {
+                    _currentParameter = value;
+                    CurrentParameterChanged?.Invoke(this);
+                }
+            }
+        }
+
+
+        private TestedCableStructure _currentStructure;
+        private MeasuredParameterType _currentParameter;
+
+        private uint structureElementNumber;
+        private uint currentTableConnector;
+        private uint cableMeasureCycle;
+
+
 
         public event CableTestMeasure_Handler Result_Gotten;
         public event CableTestMeasure_Handler MeasurePointChanged;
+        public event CableTestMeasure_Handler CurrentParameterChanged;
+        public event CableTestMeasure_Handler CurrentStructureChanged;
+        public event CableTestMeasure_Handler CableTestFinished;
     }
 }

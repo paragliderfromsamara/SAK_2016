@@ -70,15 +70,49 @@ namespace NormaMeasure.DBControl
             }
         }
         
-        internal bool CreateRowsToDB(bool ignorePrimaryKeys)
+        public DataRow[] RowsAsArray()
         {
-            string query = fillInsertQueryForAllRows(ignorePrimaryKeys);
-            return WriteSingleQuery(query);
+            List<DataRow> rowsList = new List<DataRow>();
+            foreach (DataRow row in Rows) rowsList.Add(row);
+            return rowsList.ToArray();
         }
 
+        /// <summary>
+        /// Созда
+        /// </summary>
+        /// <param name="ignorePrimaryKeys"></param>
+        /// <returns></returns>
+        internal bool CreateRowsToDB(bool ignorePrimaryKeys = false)
+        {
+            //string query = fillInsertQueryForAllRows(ignorePrimaryKeys);
+            //return WriteSingleQuery(query);
+            //DataRow[] rowsArray = RowsAsArray();
+            bool flag = true;
+            int butchSize = 100;
+            List<DataRow> rowsTMPList = new List<DataRow>();
+            int notSavedAmount = Rows.Count;
+            for(int idx = 0, butchTmp = butchSize; idx < Rows.Count; idx++, butchSize--)
+            {
+                rowsTMPList.Add(Rows[idx]);
+                if (butchTmp == 0 || idx == Rows.Count-1)
+                {
+                    butchTmp = butchSize;
+                    flag &= CreateRowsToDB(rowsTMPList.ToArray(), ignorePrimaryKeys);
+                    rowsTMPList.Clear();
+                }
+            }
+            return flag;
+        }
+
+
+        internal bool CreateRowsToDB(DataRow[] rows, bool ignorePrimaryKeys)
+        {
+            string query = fillInsertQueryForAllRows(ignorePrimaryKeys, rows);
+            return WriteSingleQuery(query);
+        } 
         
 
-        private string fillInsertQueryForAllRows(bool ignorePrimaryKeys)
+        private string fillInsertQueryForAllRows(bool ignorePrimaryKeys, DataRow[] rowsList)
         {
             string vals = String.Empty;
             string keys = String.Empty;
