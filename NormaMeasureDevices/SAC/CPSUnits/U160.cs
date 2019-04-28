@@ -31,9 +31,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
         protected override void SetUnitInfo()
         {
-            base.SetUnitInfo();
             unitName = "U160";
-            unitTitle = "Узел параметров влияния";
+            unitTitle = "Узел измерения параметров влияния";
+            base.SetUnitInfo();
         }
     }
 }

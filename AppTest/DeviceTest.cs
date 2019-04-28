@@ -20,7 +20,8 @@ namespace AppTest
         public static void TestSAC_cps()
         {
             Program.PrintTitle("Тест ЦПС");
-            SACCPS cps = new SACCPS();
+            SAC_Device sac = new SAC_Device();
+            SACCPS cps = sac.CentralSysPult;
             cps.Device_Connected += Cps_Device_Connected;
             cps.Device_LostConnection += Cps_Device_LostConnection;
             cps.Device_NotFound += Cps_Device_NotFound;

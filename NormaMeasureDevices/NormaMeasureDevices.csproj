@@ -52,7 +52,7 @@
     <Compile Include="SAC\CPSUnits\U120.cs" />
     <Compile Include="SAC\CPSUnits\U130.cs" />
     <Compile Include="SAC\CPSUnits\U160.cs" />
-    <Compile Include="SAC\SAC.cs" />
+    <Compile Include="SAC\SAC_Device.cs" />
     <Compile Include="SAC\SACCPS.cs" />
     <Compile Include="SAC\SACTable.cs" />
   </ItemGroup>

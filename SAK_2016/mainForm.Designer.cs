@@ -185,7 +185,6 @@
             this.MainMenuStrip = this.sacMenuStrip;
             this.Name = "mainForm";
             this.Text = "САК 2016";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainForm_FormClosing);
             this.Load += new System.EventHandler(this.mainForm_Load);
             this.sacMenuStrip.ResumeLayout(false);
             this.sacMenuStrip.PerformLayout();

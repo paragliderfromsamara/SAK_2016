@@ -227,9 +227,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         #region Коммутация узла 110
 
 
-        private static readonly byte[][] Calling_ReleList = new byte[][] { K39, K43_44, K45 };
-        private static readonly byte[][] Rleads_ReleList = new byte[][] { K43_44, K46 };
-        private static readonly byte[][] Rleads_Etalon_ReleList = new byte[][] { K51_52 };
+        private readonly byte[][] Calling_ReleList = new byte[][] { K39, K43_44, K45 };
+        private readonly byte[][] Rleads_ReleList = new byte[][] { K43_44, K46 };
+        private readonly byte[][] Rleads_Etalon_ReleList = new byte[][] { K51_52 };
 
         /// <summary>
         /// Коммутация реле для Rжил
@@ -247,10 +247,10 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         #endregion
 
         #region Коммутация узла 120
-        private static readonly byte[][] CapacityMeasure_ReleList = new byte[][] { K41_42 };
-        private static readonly byte[][] Cp_Etalon_ReleList = new byte[][] { K47 };
-        private static readonly byte[][] Co_Ea_Etalon_ReleList = new byte[][] { K48 };
-        private static readonly byte[][] K1_12_Etalon_ReleList = new byte[][] { K49 };
+        private readonly byte[][] CapacityMeasure_ReleList = new byte[][] { K41_42 };
+        private readonly byte[][] Cp_Etalon_ReleList = new byte[][] { K47 };
+        private readonly byte[][] Co_Ea_Etalon_ReleList = new byte[][] { K48 };
+        private readonly byte[][] K1_12_Etalon_ReleList = new byte[][] { K49 };
 
         /// <summary>
         /// Коммутация реле для измерения емкостных параметров CEK
@@ -274,10 +274,10 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
         #region Коммутация узла 130
 
-        private static readonly byte[][] Risol_A_ReleList = new byte[][] { K35, K36, K39 };
-        private static readonly byte[][] Risol_B_ReleList = new byte[][] { K35, K37, K39 };
-        private static readonly byte[][] Risol_AB_ReleList = new byte[][] { K35, K50, K39 };
-        private static readonly byte[][] Risol_Etalon_ReleList = new byte[][] { K38 };
+        private readonly byte[][] Risol_A_ReleList = new byte[][] { K35, K36, K39 };
+        private readonly byte[][] Risol_B_ReleList = new byte[][] { K35, K37, K39 };
+        private readonly byte[][] Risol_AB_ReleList = new byte[][] { K35, K50, K39 };
+        private readonly byte[][] Risol_Etalon_ReleList = new byte[][] { K38 };
 
         /// <summary>
         /// Коммутация реле для измерения Rиз жилы А
@@ -301,7 +301,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         #endregion
 
         #region Коммутация узла 160
-        private static readonly byte[][] PVMeasure_ReleList = new byte[][] { K40};
+        private readonly byte[][] PVMeasure_ReleList = new byte[][] { K40};
         /// <summary>
         /// Коммутация реле для αl, Ао, Аз и эталона
         /// </summary>

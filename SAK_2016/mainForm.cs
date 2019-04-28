@@ -21,11 +21,12 @@ namespace NormaMeasure.SAC_APP
         public bool isTestApp = Properties.Settings.Default.isTestApp;
         public string user_type = "undefined";
         public string user_id = "undefined";
-        public manualTestForm manualTestForm = null;
+
         /// <summary>
         /// 
         /// </summary>
         public SACCableTestForm CableTestForm = null;
+        public SACHandMeasureForm HandMeasureForm = null;
         public dbTestsForm dbTestForm = null;
 
         private UsersForm usersForm;
@@ -35,7 +36,7 @@ namespace NormaMeasure.SAC_APP
 
         public dbForms.oldDbDataMigration oldDbDataMigrationForm = null;
 
-        private SAC sacDevice;
+        private SAC_Device sacDevice;
 
         public mainForm()
         {
@@ -48,7 +49,7 @@ namespace NormaMeasure.SAC_APP
 
         private void InitSAC()
         {
-            sacDevice = new SAC();
+            sacDevice = new SAC_Device();
             CPSStatusLabel.Text = "Крейт не найден";
             sacDevice.OnCPSFound += SacDevice_OnCPSFound;
             sacDevice.OnCPSLost += SacDevice_OnCPSLost;
@@ -61,14 +62,14 @@ namespace NormaMeasure.SAC_APP
         }
         
 
-        private void SacDevice_OnCPSLost(SAC sac, SACCPS cps)
-        {
-            CPSStatusLabel.Text = $"Крейт №{cps.DeviceId}";
-        }
-
-        private void SacDevice_OnCPSFound(SAC sac, SACCPS cps)
+        private void SacDevice_OnCPSLost(SAC_Device sac, SACCPS cps)
         {
             CPSStatusLabel.Text = "Крейт не найден";
+        }
+
+        private void SacDevice_OnCPSFound(SAC_Device sac, SACCPS cps)
+        {
+            CPSStatusLabel.Text = $"Крейт №{cps.DeviceId}";
         }
 
         private void InitCulture()
@@ -86,8 +87,8 @@ namespace NormaMeasure.SAC_APP
 
         private void manualTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            manualTestForm = new manualTestForm(this);
-            initChildForm(manualTestForm);
+            HandMeasureForm = new SACHandMeasureForm(sacDevice);
+            if (!HandMeasureForm.IsDisposed) initChildForm(HandMeasureForm);
         }
 
         /// <summary>
@@ -97,14 +98,6 @@ namespace NormaMeasure.SAC_APP
         public void switchMenuStripItems(bool v)
         {
            autoTestToolStripMenuItem.Enabled = manualTestToolStripMenuItem.Enabled = testsToolStripMenuItem.Enabled = dbControlToolStripMenuItem.Enabled = v;
-        }
-
-        private void mainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (this.manualTestForm != null)
-            {
-                this.manualTestForm.closeThread();
-            }
         }
 
         private void dbUsersToolStripMenuItem_Click(object sender, EventArgs e)

@@ -51,17 +51,30 @@
     <Compile Include="SACMeasureForms\SACCableTestForm.Designer.cs">
       <DependentUpon>SACCableTestForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SACMeasureForms\SACHandMeasureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SACMeasureForms\SACHandMeasureForm.Designer.cs">
+      <DependentUpon>SACHandMeasureForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SAC\CableTestMeasure.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SACMeasureForms\SACCableTestForm.resx">
       <DependentUpon>SACCableTestForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SACMeasureForms\SACHandMeasureForm.resx">
+      <DependentUpon>SACHandMeasureForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">
       <Project>{6828dd40-1488-46d6-8f70-db5ef38c463f}</Project>
       <Name>NormaDBControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NormaMeasureDevices\NormaMeasureDevices.csproj">
+      <Project>{95c559b4-3dd7-471e-a601-e464bd041336}</Project>
+      <Name>NormaMeasureDevices</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

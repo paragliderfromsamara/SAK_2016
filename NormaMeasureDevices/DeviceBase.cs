@@ -140,6 +140,10 @@ namespace NormaMeasure.Devices
                 {
                     if (IsOpen) device_port.Close();
                     continue;
+                }catch(System.UnauthorizedAccessException)
+                {
+                    if (IsOpen) device_port.Close();
+                    continue;
                 }
             }
             if (!f) Device_NotFound?.Invoke(this);

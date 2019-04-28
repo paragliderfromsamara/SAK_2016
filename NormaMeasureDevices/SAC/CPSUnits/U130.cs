@@ -33,9 +33,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
         protected override void SetUnitInfo()
         {
-            base.SetUnitInfo();
             unitName = "U130";
             unitTitle = "Узел измерения сопротивления изоляции";
+            base.SetUnitInfo();
         }
 
         public byte RizolUnitNumber => unitNumber;

@@ -41,9 +41,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
         protected override void SetUnitInfo()
         {
-            base.SetUnitInfo();
             unitName = "U120";
             unitTitle = "Узел емкостных параметров CEK";
+            base.SetUnitInfo();
         }
     }
 }

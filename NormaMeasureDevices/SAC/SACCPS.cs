@@ -34,13 +34,26 @@ namespace NormaMeasure.Devices.SAC
 
         #endregion
 
-        public SACCPS() : base()
+        public SACCPS(SAC_Device _sac) : base()
         {
+            sac = _sac;
             deviceTypeName = "CPS";
-            InitUnits();
+            //InitUnits();
         }
 
-        protected virtual void InitUnits()
+        public void MeasureParameter(MeasuredParameterType pType)
+        {
+            CPSMeasureUnit unit = getMeasureUnit(pType);
+            double r = 0;
+            if (unit != null)
+            {
+                commutator.SetCommutatorByParameterType(pType.ParameterTypeId, true);
+                //unit.MakeMeasure(ref value, pType, isEtalon);
+            }
+            unit.MakeMeasure(ref r, pType);
+        }
+
+        public virtual void InitUnits()
         { 
             commutator = new CPSCommutator(this);
             InitMeasureUnits();
@@ -60,18 +73,13 @@ namespace NormaMeasure.Devices.SAC
 
         public virtual double MakeMeasureParameter(MeasuredParameterType pType, bool isEtalon, RisolCommutationType RisolMode = RisolCommutationType.A)
         {
-            bool f = false;
             double value = 0;
             CPSMeasureUnit unit = getMeasureUnit(pType);
             if (unit != null)
             {
                 commutator.SetCommutatorByParameterType(pType.ParameterTypeId, isEtalon, RisolMode);
-                unit.MakeMeasure(ref value, pType, isEtalon);
+                //unit.MakeMeasure(ref value, pType, isEtalon);
             }
-            
-
-            
-
             return value;
         }
 
@@ -163,6 +171,8 @@ namespace NormaMeasure.Devices.SAC
         //
 
         private CPSCommutator commutator;
+
+        public SAC_Device sac;
 
         private U110 unit110;
         private U120 unit120;
