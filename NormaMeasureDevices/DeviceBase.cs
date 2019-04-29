@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
+using System.Threading;
 
 namespace NormaMeasure.Devices
 {
@@ -34,31 +35,27 @@ namespace NormaMeasure.Devices
            // throw new NotImplementedException();
         }
 
+
         /// <summary>
-        /// Отправляет команду в серийный порт
+        /// Отправка команды с открытием/закрытием порта
         /// </summary>
-        /// <param name="command">Отправляемая команда</param>
-        /// <param name="needToCheckConnection">Необходима ли проверка подключения перед отправкой</param>
-        /// <param name="needToClosePort">Нужно ли закрывать порт после отправки</param>
-        public bool Write(byte[] command, bool needToCheckConnection = true, bool needToClosePort = true)
+        /// <param name="command">Передаваемая команда</param>
+        /// <returns></returns>
+        public void WriteBytes(byte[] command, bool needToClose = false)
         {
-            bool flag = false;
-            try
-            {
-                if (needToCheckConnection) flag = CheckCurrentConnection();
-                if (flag)
-                {
-                    if (!IsOpen) device_port.Open();
+            OpenPort();
+            device_port.Write(command, 0, command.Length);
+            if (needToClose) ClosePort();
+        }
 
-                    device_port.Write(command, 0, command.Length);
+        public void OpenPort()
+        {
+            if (!IsOpen) device_port.Open();
+        }
 
-                    if (needToClosePort) device_port.Close();
-                }
-                return flag;
-            }catch(Exception)
-            {
-                return false;
-            }
+        public void ClosePort()
+        {
+            if (IsOpen) device_port.Close();
         }
 
         /// <summary>
@@ -66,20 +63,22 @@ namespace NormaMeasure.Devices
         /// </summary>
         /// <param name="bufferSize">Размер буфера</param>
         /// <returns></returns>
-        public int ReadBytes(byte[] buffer, int offset, int count, bool needToClosePort = true)
+        public bool ReadBytes(byte[] buffer, bool needToClose = false)
         {
-            int i=0;
-            if (!IsOpen) device_port.Open();
+            bool f = true;
+            device_port.ReadTimeout = 500;
+            OpenPort();
             try
             {
-                i = device_port.Read(buffer, offset, count);
+                device_port.Read(buffer, 0, buffer.Length);
             }
-            catch(TimeoutException)
+            catch (TimeoutException)
             {
-                connected = false;
+                f = false;
             }
-            if (needToClosePort && IsOpen) device_port.Close();
-            return i;
+            if (!needToClose) ClosePort();
+            return f;
+
         }
 
         /// <summary>
@@ -91,10 +90,12 @@ namespace NormaMeasure.Devices
         /// <param name="offset">Отступ в массиве</param>
         /// <param name="count">Принимаемое количество байт</param>
         /// <returns></returns>
-        public int WriteCmdAndReadBytesArr(byte[] cmd, byte[] buffer, int offset, int count, bool needToCheckConnection = true)
+        public void WriteCmdAndReadBytesArr(byte[] cmd, byte[] buffer)
         {
-            Write(cmd, needToCheckConnection, false);
-            return ReadBytes(buffer, offset, count);
+            OpenPort();
+            WriteBytes(cmd);
+            ReadBytes(buffer);
+            ClosePort();
         }
 
         
@@ -118,31 +119,27 @@ namespace NormaMeasure.Devices
             Device_Finding?.Invoke(this);
             foreach (string s in port_list)
             {
+                ClosePort();
                 device_port.PortName = s;
                 try
                 {
-                    if (IsOpen) device_port.Close();
-                    device_port.Open();
-                    device_port.Write(FindDevice_cmd, 0, FindDevice_cmd.Length);
-
                     if (CheckConnection())
                     {
                         f = true;
                         break;
                     }
-                    device_port.Close();
                 }
                 catch (TimeoutException)
                 {
-                    if (IsOpen) device_port.Close();
+                    ClosePort();
                     continue;
                 }catch(System.IO.IOException)
                 {
-                    if (IsOpen) device_port.Close();
+                    ClosePort();
                     continue;
                 }catch(System.UnauthorizedAccessException)
                 {
-                    if (IsOpen) device_port.Close();
+                    ClosePort();
                     continue;
                 }
             }
@@ -161,19 +158,17 @@ namespace NormaMeasure.Devices
             bool f = false;
             try
             {
-                if (IsOpen) device_port.Close();
-                device_port.Open();
-                device_port.Write(FindDevice_cmd, 0, FindDevice_cmd.Length);
-                device_port.Read(buffer, 0, buffer.Length);
+                ClosePort();
+                WriteCmdAndReadBytesArr(FindDevice_cmd, buffer);
                 f = CheckConnectionResult(buffer);
-                device_port.Close();
             }
             catch (TimeoutException)
             {
-                if (IsOpen) device_port.Close();
-            }catch(System.IO.IOException)
+                ClosePort();
+            }
+            catch(System.IO.IOException)
             {
-                if (IsOpen) device_port.Close();
+                ClosePort();
             }
             return f;
         }

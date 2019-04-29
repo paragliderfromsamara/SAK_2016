@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl.Tables;
+using System.Threading;
 
 namespace NormaMeasure.Devices.SAC.CPSUnits
 {
@@ -11,6 +12,13 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
     {
         public U110(SACCPS _cps) : base(_cps)
         {
+        }
+
+        protected override void SetMeasureModeCMDParameterType(uint parameterTypeId)
+        {
+            base.SetMeasureModeCMDParameterType(parameterTypeId);
+            if (parameterTypeId == MeasuredParameterType.Rleads) MeasureMode_CMD = 0x00;
+            else if (parameterTypeId == MeasuredParameterType.Calling) MeasureMode_CMD = 0x20;
         }
 
         protected override void SetAllowedMeasuredParameters()
@@ -42,6 +50,55 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
         }
 
+        public override bool MakeMeasure(ref double result, MeasuredParameterType pType)
+        {
+            base.MakeMeasure(ref result, pType);
+            if (pType.ParameterTypeId == MeasuredParameterType.Rleads)
+            {
+                result = RleadsMeasure();
+            }
+            return true;
+        }
+
+        private double RleadsMeasure()
+        {
+            double result = 0;
+            if (currentRangeId == -1) currentRangeId = 1;
+
+            result = ExecuteElementaryMeasure();
+
+
+            return result;
+        }
+
+        private void SetRange(int rangeId)
+        {
+            UnitMeasureRange curRange = currentRanges[rangeId];
+            byte[] cmd = new byte[] { (byte)SetMode_CMDHeader, 0x00, curRange.RangeCommand };
+            cps.WriteBytes(cmd);
+            Thread.Sleep(20);
+        }
+
+        private double GetResultByRangeId(int rangeId)
+        {
+            double r = 0;
+            byte[] rsltArr = new byte[] { 0x00, 0x00};
+            //SetRange(rangeId);
+            cps.OpenPort();
+            cps.WriteBytes(new byte[] { 0x21, 0x40});
+            Thread.Sleep(200);
+            repeat:
+            cps.WriteCmdAndReadBytesArr(new byte[] { 0xE1 } , rsltArr);
+            Thread.Sleep(100);
+
+            r = rsltArr[1] * 256 + rsltArr[0];
+            if (r == 0xfffe) goto repeat;
+            cps.ClosePort();
+            r = r/currentRanges[rangeId].KK + currentRanges[rangeId].BV;
+            return r;
+        }
+
+
         #region Список диапазонов
         protected UnitMeasureRange Rleads_MeasureRange_1
         {
@@ -55,8 +112,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 range.MinValue = 0;
                 range.MaxValue = 90;
                 range.RangeTitle = "Диапазон 1";
-                range.RangeCommand = new byte[] { 0x40, 0x00};//, 0x60
+                range.RangeCommand = 0x40;//, 0x60
                 range.UnitId = UnitSerialNumber.ToString();
+                range.NeedConvertResult = true;
                 return range;
             }
         }
@@ -74,10 +132,13 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 range.MinValue = 80;
                 range.MaxValue = 1300;
                 range.RangeTitle = "Диапазон 2";
-                range.RangeCommand = new byte[] { 0x60, 0x00 };//, 0x60
+                range.RangeCommand = 0x00;//, 0x60
+                range.NeedConvertResult = true;
                 return range;
             }
         }
+
+
         #endregion
     }
 }

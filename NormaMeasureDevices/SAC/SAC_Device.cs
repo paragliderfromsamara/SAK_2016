@@ -99,9 +99,9 @@ namespace NormaMeasure.Devices.SAC
             centralSysPult.Find();
         }
 
-        public void MeasureParameter(MeasuredParameterType pType)
+        public void MeasureParameter(MeasuredParameterType pType, ref double value)
         {
-            centralSysPult.MeasureParameter(pType);
+            centralSysPult.MeasureParameter(pType, ref value);
         }
 
         /// <summary>
@@ -268,5 +268,14 @@ namespace NormaMeasure.Devices.SAC
         {
             file = new IniFile(fileName);
         }
+
+
+    }
+
+    public struct SACMeasureSettings
+    {
+        public MeasuredParameterType parameterType;
+        public int rangeId;
+        public bool isSplittedTable;
     }
 }

@@ -41,16 +41,15 @@ namespace NormaMeasure.Devices.SAC
             //InitUnits();
         }
 
-        public void MeasureParameter(MeasuredParameterType pType)
+        public void MeasureParameter(MeasuredParameterType pType, ref double result)
         {
             CPSMeasureUnit unit = getMeasureUnit(pType);
-            double r = 0;
             if (unit != null)
             {
                 commutator.SetCommutatorByParameterType(pType.ParameterTypeId, true);
                 //unit.MakeMeasure(ref value, pType, isEtalon);
             }
-            unit.MakeMeasure(ref r, pType);
+            unit.MakeMeasure(ref result, pType);
         }
 
         public virtual void InitUnits()
@@ -146,7 +145,7 @@ namespace NormaMeasure.Devices.SAC
             if (led_1) cmd[1] |= 0x01;
             if (led_2) cmd[1] |= 0x02;
             if (led_3) cmd[1] |= 0x03;
-            Write(cmd, true);
+            WriteBytes(cmd, true);
         }
 
         /// <summary>

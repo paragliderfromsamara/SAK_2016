@@ -46,9 +46,10 @@ namespace NormaMeasure.MeasureControl
             overallMeasureTime++;
         }
 
-        public virtual void Start()
+        public virtual void Start(int cycles_limit = 1)
         {
             cycleNumber = 0;
+            cycleLimit = cycles_limit;
             if (!isStarted)
             {
                 this.MeasureThread = new Thread(this.MeasureMainFunction);
@@ -58,11 +59,17 @@ namespace NormaMeasure.MeasureControl
         }
 
 
+
+
         private void MeasureMainFunction()
         {
             InitOverAllMeasureTimer();
             OnMeasureStart?.Invoke(this);
-            MeasureBody();
+            do
+            {
+                MeasureBody();
+                cycleNumber++;
+            } while (cycleNumber < CycleLimit);
             OverallMeasureTimer.Dispose();
             isStarted = false;
             OnMeasureStop?.Invoke(this);

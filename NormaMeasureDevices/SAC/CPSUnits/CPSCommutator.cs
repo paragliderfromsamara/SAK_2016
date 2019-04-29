@@ -13,7 +13,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         public delegate void CPSCommutator_Handler(CPSCommutator commutator);
         public CPSCommutator(SACCPS _cps) : base(_cps)
         {
-            ClearState();
+            SetOnGroundState();
         }
 
         /// <summary>
@@ -77,7 +77,13 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             CurrentState = ZeroState;
         }
 
-
+        /// <summary>
+        /// Замыкание дополнительной шины на землю
+        /// </summary>
+        public void SetOnGroundState()
+        {
+            CurrentState = OnGround_ReleState;
+        }
 
 
 
@@ -146,12 +152,10 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 if (curState != value)
                 {
                     byte[] cmd = BuildCommandByState(value);
-                    if (cps.Write(cmd))
-                    {
-                        curState = value;
-                        OnCommutator_StateChanged?.Invoke(this);
-                        Thread.Sleep(300);
-                    }
+                    cps.WriteBytes(cmd);
+                    curState = value;
+                    OnCommutator_StateChanged?.Invoke(this);
+                    Thread.Sleep(300);
                 }
             }
         }
@@ -223,6 +227,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             }
         }
 
+        private byte[] OnGround_ReleState => BuildState(ReleToGround);
+
+        private readonly byte[][] ReleToGround = new byte[][] { K39 };
 
         #region Коммутация узла 110
 
