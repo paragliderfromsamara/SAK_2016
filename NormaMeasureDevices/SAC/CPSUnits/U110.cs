@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl.Tables;
 using System.Threading;
+using System.Diagnostics;
+
+
 
 namespace NormaMeasure.Devices.SAC.CPSUnits
 {
@@ -60,14 +63,15 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             return true;
         }
 
+        /// <summary>
+        /// Измерение Rжил
+        /// </summary>
+        /// <returns></returns>
         private double RleadsMeasure()
         {
             double result = 0;
-            if (currentRangeId == -1) currentRangeId = 1;
-
+            SelectDefaultRange(0);
             result = ExecuteElementaryMeasure();
-
-
             return result;
         }
 
@@ -110,9 +114,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 range.KK = 409.6f;
                 range.BV = 0;
                 range.MinValue = 0;
-                range.MaxValue = 90;
+                range.MaxValue = 49152;
                 range.RangeTitle = "Диапазон 1";
-                range.RangeCommand = 0x40;//, 0x60
+                range.RangeCommand = 0x20;//, 0x60
                 range.UnitId = UnitSerialNumber.ToString();
                 range.NeedConvertResult = true;
                 return range;
@@ -129,8 +133,8 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 range.parameterTypeId = MeasuredParameterType.Rleads;
                 range.KK = 40.96f;
                 range.BV = 0;
-                range.MinValue = 80;
-                range.MaxValue = 1300;
+                range.MinValue = 2600;
+                range.MaxValue = 0;
                 range.RangeTitle = "Диапазон 2";
                 range.RangeCommand = 0x00;//, 0x60
                 range.NeedConvertResult = true;

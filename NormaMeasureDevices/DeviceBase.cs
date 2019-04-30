@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Threading;
+using System.Diagnostics;
 
 namespace NormaMeasure.Devices
 {
@@ -77,6 +78,7 @@ namespace NormaMeasure.Devices
                 f = false;
             }
             if (!needToClose) ClosePort();
+
             return f;
 
         }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl.Tables;
 using System.Threading;
+using System.Diagnostics;
 
 namespace NormaMeasure.Devices.SAC.CPSUnits
 {
@@ -29,10 +30,18 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         {
             byte header = (byte)(unitCMD_Address | SACCPS.ReadResult);
             byte mode = (byte)(MeasureMode_CMD);
-            if (HasRange) mode |= currentRanges[currentRangeId].RangeCommand;
+            if (HasRange) mode |= currentRanges[selectedRangeIdx].RangeCommand;
             cps.WriteBytes(new byte[] { header, mode });
             //System.Windows.Forms.MessageBox.Show($"header - {header.ToString("X")}; mode-{mode.ToString("X")} ");
             Thread.Sleep(250);
+        }
+
+        /// <summary>
+        /// Установка начального диапазона измерения
+        /// </summary>
+        protected virtual void SelectDefaultRange(int defaultIdx = 0)
+        {
+            if (HasMeasureRanges && !HasSelectedRange) selectedRangeIdx = defaultIdx;
         }
 
         /// <summary>
@@ -46,10 +55,36 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             double r = 0;
             cps.WriteCmdAndReadBytesArr(new byte[] { header }, result);
             r = result[0] * 256 + result[1];
-
             return r;
         }
 
+        /// <summary>
+        /// Применяет коэффициенты для результата
+        /// </summary>
+        /// <param name="result"></param>
+        protected void ApplyCoeffs(ref double result)
+        {
+            Debug.WriteLine($"ApplyCoeffs перед проверкой HasRange; HasMeasureRanges {HasMeasureRanges}; HasSelectedRange {HasSelectedRange};");
+            if (HasRange)
+            {
+                UnitMeasureRange range = currentRanges[selectedRangeIdx];
+                if (range.NeedConvertResult)
+                {
+                    Debug.WriteLine("ApplyCoeffs перед конвертацией после проверки HasRange");
+                    ConvertResult(ref result, range);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Конвертация результата в соответствии с коэффициентами
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="range"></param>
+        protected virtual void ConvertResult(ref double result, UnitMeasureRange range)
+        {
+            result = (result / range.KK) + range.BV;
+        }
 
         /// <summary>
         /// Производит одиночное измерение на узле
@@ -68,7 +103,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 if (result == (double)CPSMeasureUnit_Status.NOT_USED) goto set_mode_again;
                 Thread.Sleep(20);
             } while (result == (double)CPSMeasureUnit_Status.InProcess);
+            if (CheckRange(result)) goto set_mode_again;
             cps.ClosePort();
+            ApplyCoeffs(ref result);
             return result;
         }
 
@@ -94,13 +131,6 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 SetMeasureRangesForParameterType(curParameterType.ParameterTypeId); //Инициализация диапазонов
             }
         }
-
-
-
-
-
-
-        protected int currentRangeId;
 
         public CPSMeasureUnit(SACCPS _cps) : base(_cps)
         { 
@@ -172,17 +202,25 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
 
 
-        protected bool CheckRange(double value)
+        /// <summary>
+        /// Проверка и изменение текущего значения диапазона измерения
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        protected bool CheckRange(double result)
         {
             bool wasChanged = false;
-            if (value > currentRanges[selectedRangeIdx].MaxValue && (selectedRangeIdx + 1) < currentRanges.Length)
+            Debug.WriteLine($"CPSMeasureUnit.CheckRange: result = {result}");
+            if (result > currentRanges[selectedRangeIdx].MaxValue && (selectedRangeIdx + 1) < currentRanges.Length)
             {
                 selectedRangeIdx++;
                 wasChanged = true;
-            } else if (value < currentRanges[selectedRangeIdx].MinValue && (selectedRangeIdx - 1) >= 0)
+                Debug.WriteLine("CPSMeasureUnit.CheckRange: Смена диапазона вверх");
+            } else if (result < currentRanges[selectedRangeIdx].MinValue && (selectedRangeIdx - 1) >= 0)
             {
                 selectedRangeIdx--;
                 wasChanged = true;
+                Debug.WriteLine("CPSMeasureUnit.CheckRange: Смена диапазона вниз");
             }
             return wasChanged;
         }

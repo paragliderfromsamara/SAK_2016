@@ -41,6 +41,11 @@ namespace NormaMeasure.Devices.SAC
             //InitUnits();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pType"></param>
+        /// <param name="result"></param>
         public void MeasureParameter(MeasuredParameterType pType, ref double result)
         {
             CPSMeasureUnit unit = getMeasureUnit(pType);
@@ -48,8 +53,9 @@ namespace NormaMeasure.Devices.SAC
             {
                 commutator.SetCommutatorByParameterType(pType.ParameterTypeId, true);
                 //unit.MakeMeasure(ref value, pType, isEtalon);
+                unit.MakeMeasure(ref result, pType);
             }
-            unit.MakeMeasure(ref result, pType);
+
         }
 
         public virtual void InitUnits()
