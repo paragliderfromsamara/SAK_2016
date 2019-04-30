@@ -128,7 +128,6 @@
             this.oldDbMigrationStripMenuItem.Name = "oldDbMigrationStripMenuItem";
             this.oldDbMigrationStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.oldDbMigrationStripMenuItem.Text = "Загрузка данных из старой БД";
-            this.oldDbMigrationStripMenuItem.Click += new System.EventHandler(this.oldDbMigrationStripMenuItem_Click);
             // 
             // statusStrip1
             // 

@@ -13,38 +13,51 @@ using NormaMeasure.DBControl.SAC.Forms;
 using NormaMeasure.MeasureControl.SACMeasureForms;
 using NormaMeasure.Devices.SAC;
 
+
+
 namespace NormaMeasure.SAC_APP
 {
 
     public partial class mainForm : Form
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public bool isTestApp = Properties.Settings.Default.isTestApp;
+        /// <summary>
+        /// 
+        /// </summary>
         public string user_type = "undefined";
+        /// <summary>
+        /// 
+        /// </summary>
         public string user_id = "undefined";
 
         /// <summary>
         /// 
         /// </summary>
         public SACCableTestForm CableTestForm = null;
+        /// <summary>
+        /// 
+        /// </summary>
         public SACHandMeasureForm HandMeasureForm = null;
-        public dbTestsForm dbTestForm = null;
+
 
         private UsersForm usersForm;
         private CablesListForm cablesListForm;
         private BarabanTypesControlForm barabanTypesControlForm;
 
-
-        public dbForms.oldDbDataMigration oldDbDataMigrationForm = null;
-
         private SAC_Device sacDevice;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public mainForm()
         {
             InitializeComponent();
             InitCulture();
             InitSAC();
             if (isTestApp) this.Text += " (Тестовый режим)";
-
         }
 
         private void InitSAC()
@@ -54,10 +67,12 @@ namespace NormaMeasure.SAC_APP
             sacDevice.OnCPSFound += SacDevice_OnCPSFound;
             sacDevice.OnCPSLost += SacDevice_OnCPSLost;
             sacDevice.FindCPS();
+         
         }
 
         private void CheckSACLink()
         {
+
             sacDevice.FindCPS();
         }
         
@@ -179,12 +194,6 @@ namespace NormaMeasure.SAC_APP
         }
 
 
-
-        private void oldDbMigrationStripMenuItem_Click(object sender, EventArgs e)
-        {
-            oldDbDataMigrationForm = new dbForms.oldDbDataMigration(this);
-            oldDbDataMigrationForm.Show();
-        }
 
         private void CPSStatusLabel_Click(object sender, EventArgs e)
         {

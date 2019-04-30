@@ -91,19 +91,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="dbForms\oldDbDataMigration.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="dbForms\oldDbDataMigration.Designer.cs">
-      <DependentUpon>oldDbDataMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="dbSakModels\CableStructuresList.cs" />
-    <Compile Include="dbSakModels\dataMigration.cs" />
-    <Compile Include="dbSakModels\Cable.cs" />
-    <Compile Include="dbSakModels\CableStructure.cs" />
-    <Compile Include="dbSakModels\dbCableStructureType.cs" />
-    <Compile Include="DBControl.cs" />
-    <Compile Include="dbSakModels\dbBase.cs" />
     <Compile Include="Properties\dbSakQueries.cs" />
     <Compile Include="Properties\dbSakQueries.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -112,12 +99,6 @@
     </Compile>
     <Compile Include="ServiceFunctions.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="dbForms\dbTestsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="dbForms\dbTestsForm.Designer.cs">
-      <DependentUpon>dbTestsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,9 +114,6 @@
       <DependentUpon>Signin.cs</DependentUpon>
     </Compile>
     <Compile Include="userControl\UserGrants.cs" />
-    <EmbeddedResource Include="dbForms\oldDbDataMigration.resx">
-      <DependentUpon>oldDbDataMigration.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -153,7 +131,6 @@
       <DependentUpon>Signin.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="dbSakModels\SakDBModelsDiagram.cd" />
     <None Include="Properties\dbSakQueries.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>dbSakQueries.Designer.cs</LastGenOutput>
@@ -194,12 +171,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="sql_queries.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">

@@ -8,9 +8,12 @@ namespace NormaMeasure.Devices.SAC
 {
     public class SACTable : DeviceBase
     {
-        public SACTable() : base()
+        int tableNumber;
+        public SACTable(int table_number) : base()
         {
-            deviceTypeName = "Table";
+            deviceTypeName = "Стол";
+            tableNumber = table_number;
+            deviceId = table_number.ToString();
         }
 
         protected override void ConfigureDevicePort()
@@ -18,7 +21,7 @@ namespace NormaMeasure.Devices.SAC
             base.ConfigureDevicePort();
             DevicePort.StopBits = System.IO.Ports.StopBits.One;
             DevicePort.Parity = System.IO.Ports.Parity.None;
-            DevicePort.BaudRate = 9600;
+            DevicePort.BaudRate = 115200;
             DevicePort.DataBits = 8;
             DevicePort.PortName = "COM1";
         }
