@@ -76,7 +76,7 @@ namespace NormaMeasure.Devices.SAC
             measureUnits.Add(unit160);
         }
 
-        public virtual double MakeMeasureParameter(MeasuredParameterType pType, bool isEtalon, RisolCommutationType RisolMode = RisolCommutationType.A)
+        public virtual double MakeMeasureParameter(MeasuredParameterType pType, bool isEtalon, LeadCommutationType RisolMode = LeadCommutationType.A)
         {
             double value = 0;
             CPSMeasureUnit unit = getMeasureUnit(pType);
@@ -194,5 +194,10 @@ namespace NormaMeasure.Devices.SAC
 
 
 
+    }
+
+    public enum LeadCommutationType
+    {
+        A, B, AB
     }
 }

@@ -24,7 +24,7 @@ namespace NormaMeasure.MeasureControl.SAC
         public SAC_HandMeasure(SAC_Device sac)
         {
             sacDevice = sac;
-            parameterType = MeasuredParameterType.find_by_id(MeasuredParameterType.Rleads);
+            parameterType = MeasuredParameterType.find_by_id(MeasuredParameterType.Co);
             MeasureBody = HandMeasureFunction;
 
         }

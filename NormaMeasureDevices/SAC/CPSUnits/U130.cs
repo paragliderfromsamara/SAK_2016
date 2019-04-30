@@ -42,8 +42,5 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         private byte unitNumber;
     }
 
-    public enum RisolCommutationType
-    {
-        A, B, AB
-    }
+
 }

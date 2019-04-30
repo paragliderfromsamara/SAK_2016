@@ -17,17 +17,24 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         {
         }
 
-        protected override void SetMeasureModeCMDParameterType(uint parameterTypeId)
+        protected override void SetMeasureModeCMDByParameterType()
         {
-            base.SetMeasureModeCMDParameterType(parameterTypeId);
-            if (parameterTypeId == MeasuredParameterType.Rleads) MeasureMode_CMD = 0x00;
-            else if (parameterTypeId == MeasuredParameterType.Calling) MeasureMode_CMD = 0x20;
+            base.SetMeasureModeCMDByParameterType();
+            switch (CurrentParameterType.ParameterTypeId)
+            {
+                case MeasuredParameterType.Rleads:
+                    MeasureMode_CMD = 0x00;
+                    break;
+                case MeasuredParameterType.Calling:
+                    MeasureMode_CMD = 0x40;
+                    break;
+            }
         }
 
         protected override void SetAllowedMeasuredParameters()
         {
             base.SetAllowedMeasuredParameters();
-            allowedMeasuredParameters = new uint[] { MeasuredParameterType.Calling, MeasuredParameterType.Rleads};
+            this.allowedMeasuredParameters = new uint[] { MeasuredParameterType.Calling, MeasuredParameterType.Rleads};
         }
         protected override void SetUnitAddress()
         {
@@ -41,9 +48,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             base.SetUnitInfo();
         }
 
-        protected override UnitMeasureRange[] GetDefaultRanges(uint pTypeId)
+        protected override UnitMeasureRange[] GetDefaultRanges()
         {
-            if (pTypeId == MeasuredParameterType.Rleads)
+            if (CurrentParameterType.ParameterTypeId == MeasuredParameterType.Rleads)
             {
                 return new UnitMeasureRange[] { Rleads_MeasureRange_1, Rleads_MeasureRange_2 };
             }else
@@ -53,7 +60,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
         }
 
-        public override bool MakeMeasure(ref double result, MeasuredParameterType pType)
+        public override bool MakeMeasure(ref double result, MeasuredParameterType pType, LeadCommutationType leadCommType = LeadCommutationType.AB)
         {
             base.MakeMeasure(ref result, pType);
             if (pType.ParameterTypeId == MeasuredParameterType.Rleads)
@@ -103,7 +110,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         }
 
 
-        #region Список диапазонов
+        #region Список диапазонов Rжил
         protected UnitMeasureRange Rleads_MeasureRange_1
         {
             get

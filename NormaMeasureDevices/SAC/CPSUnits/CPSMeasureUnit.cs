@@ -11,10 +11,15 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 {
     public class CPSMeasureUnit : CPSUnit
     {
+        protected LeadCommutationType LeadCommType = LeadCommutationType.AB;
         protected uint[] allowedMeasuredParameters;
         private MeasuredParameterType curParameterType;
         protected int unitSerialNumber;
         protected byte MeasureMode_CMD = 0x00;
+        /// <summary>
+        /// Дополнительные настройки команды запуска измерения
+        /// </summary>
+        protected byte MeasureMode_CMD_Addiction = 0x00;
         /// <summary>
         /// Серийный номер узла установленного в систему
         /// </summary>
@@ -29,7 +34,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         protected void SetMeasureMode()
         {
             byte header = (byte)(unitCMD_Address | SACCPS.ReadResult);
-            byte mode = (byte)(MeasureMode_CMD);
+            byte mode = (byte)(MeasureMode_CMD | MeasureMode_CMD_Addiction);
             if (HasRange) mode |= currentRanges[selectedRangeIdx].RangeCommand;
             cps.WriteBytes(new byte[] { header, mode });
             //System.Windows.Forms.MessageBox.Show($"header - {header.ToString("X")}; mode-{mode.ToString("X")} ");
@@ -105,6 +110,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             } while (result == (double)CPSMeasureUnit_Status.InProcess);
             if (CheckRange(result)) goto set_mode_again;
             cps.ClosePort();
+            Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure():result {result}");
             ApplyCoeffs(ref result);
             return result;
         }
@@ -127,8 +133,8 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             set
             {
                 curParameterType = value; 
-                SetMeasureModeCMDParameterType(curParameterType.ParameterTypeId); //Установка команды задания режима
-                SetMeasureRangesForParameterType(curParameterType.ParameterTypeId); //Инициализация диапазонов
+                SetMeasureModeCMDByParameterType(); //Установка команды задания режима
+                SetMeasureRangesForParameterType(); //Инициализация диапазонов
             }
         }
 
@@ -163,15 +169,16 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// <param name="result"></param>
         /// <param name="pType"></param>
         /// <param name="isEtalonMeasure">true - измеряется эталон, false - измеряется стол</param>
+        /// <param name="leadCommType"> Тип пожильного измерения</param>
         /// <returns></returns>
-        public virtual bool MakeMeasure(ref double result, MeasuredParameterType pType)
+        public virtual bool MakeMeasure(ref double result, MeasuredParameterType pType, LeadCommutationType leadCommType = LeadCommutationType.AB)
         {
 
             //if (IsAllowedParameter(pType.ParameterTypeId)) return false;
             CurrentParameterType = pType;
-            
+            LeadCommType = leadCommType;
             //PrepareCommutator(isEtalonMeasure);
-           // result = 
+            // result = 
             return true;
         }
 
@@ -195,9 +202,10 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
         protected int selectedRangeIdx = -1;
 
-        protected virtual void SetMeasureModeCMDParameterType(uint parameterTypeId)
+        protected virtual void SetMeasureModeCMDByParameterType()
         {
             MeasureMode_CMD = 0x00;
+            MeasureMode_CMD_Addiction = 0x00;
         }
 
 
@@ -207,7 +215,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
-        protected bool CheckRange(double result)
+        protected virtual bool CheckRange(double result)
         {
             bool wasChanged = false;
             Debug.WriteLine($"CPSMeasureUnit.CheckRange: result = {result}");
@@ -244,9 +252,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// Установка диапазонов измерений для текущего типа параметра
         /// </summary>
         /// <param name="pTypeId"></param>
-        private void SetMeasureRangesForParameterType(uint pTypeId)
+        private void SetMeasureRangesForParameterType()
         {
-            UnitMeasureRange[] defaultRanges = GetDefaultRanges(pTypeId);
+            UnitMeasureRange[] defaultRanges = GetDefaultRanges();
             if (defaultRanges.Length>0)
             {
                 for(int i=0; i< defaultRanges.Length; i++)
@@ -262,7 +270,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// </summary>
         /// <param name="pTypeId"></param>
         /// <returns></returns>
-        protected virtual UnitMeasureRange[] GetDefaultRanges(uint pTypeId)
+        protected virtual UnitMeasureRange[] GetDefaultRanges()
         {
             return new UnitMeasureRange[0];
         }

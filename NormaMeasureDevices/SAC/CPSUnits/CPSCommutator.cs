@@ -167,7 +167,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// <param name="pTypeId"></param>
         /// <param name="isEtalon"></param>
         /// <param name="RisolType"></param>
-        public virtual void SetCommutatorByParameterType(uint pTypeId, bool isEtalon = false, RisolCommutationType RisolType = RisolCommutationType.A)
+        public virtual void SetCommutatorByParameterType(uint pTypeId, bool isEtalon = false, LeadCommutationType RisolType = LeadCommutationType.A)
         {
             switch (pTypeId)
             {
@@ -203,13 +203,13 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                     {
                         switch(RisolType)
                         {
-                            case RisolCommutationType.A:
+                            case LeadCommutationType.A:
                                 CurrentState = Risol_A_ReleState;
                                 break;
-                            case RisolCommutationType.B:
+                            case LeadCommutationType.B:
                                 CurrentState = Risol_B_ReleState;
                                 break;
-                            case RisolCommutationType.AB:
+                            case LeadCommutationType.AB:
                                 CurrentState = Risol_AB_ReleState;
                                 break;
                         }
@@ -256,8 +256,8 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         #region Коммутация узла 120
         private readonly byte[][] CapacityMeasure_ReleList = new byte[][] { K41_42 };
         private readonly byte[][] Cp_Etalon_ReleList = new byte[][] { K47 };
-        private readonly byte[][] Co_Ea_Etalon_ReleList = new byte[][] { K48 };
-        private readonly byte[][] K1_12_Etalon_ReleList = new byte[][] { K49 };
+        private readonly byte[][] Co_Ea_Etalon_ReleList = new byte[][] { K49 };
+        private readonly byte[][] K1_12_Etalon_ReleList = new byte[][] { K48 };
 
         /// <summary>
         /// Коммутация реле для измерения емкостных параметров CEK

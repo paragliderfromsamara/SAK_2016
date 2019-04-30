@@ -143,14 +143,29 @@ namespace NormaMeasure.DBControl.Tables
            
         }
 
+        /// <summary>
+        /// Относится ли параметр с указанным id к параметрам Ea, K1, K2, K3, K9-K12
+        /// </summary>
+        /// <param name="parameter_type_id"></param>
+        /// <returns></returns>
+        public static bool IsEKParameter(uint parameter_type_id)
+        {
+            uint[] parameters = new uint[]
+            {
+                K1, K2, K3, K23, K9, K10, K11, K12, Ea
+            };
+            return parameters.Contains(parameter_type_id);
+        }
+
+        public bool IsEK()
+        {
+            return IsEKParameter(this.ParameterTypeId);
+        }
+
         public static bool IsHasMinLimit(uint parameter_type_id)
         {
             uint[] notAllowed = new uint[] { Calling, Risol2, Risol4, al, dCp, dR };
-            foreach (uint v in notAllowed)
-            {
-                if (v == parameter_type_id) return false;
-            }
-            return true;
+            return !notAllowed.Contains(parameter_type_id);
         }
 
         public static bool AllowBringingLength(uint parameter_type_id)
