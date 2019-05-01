@@ -37,12 +37,9 @@ namespace NormaMeasure.Devices.SAC
             //InitTables();
         }
 
-
-
         private void InitSettingsFile()
         {
             settingsFile = new SACIniFile(this);
-
         }
 
         /// <summary>
@@ -85,12 +82,6 @@ namespace NormaMeasure.Devices.SAC
             OnCPSFound?.Invoke(this, device as SACCPS);
         }
 
-        public double MakeEtalonMeasure(MeasuredParameterType parameter_type)
-        {
-            double value = centralSysPult.MakeMeasureParameter(parameter_type, true);
-            return value;
-        }
-
         /// <summary>
         /// Поиск пультов системы
         /// </summary>
@@ -99,9 +90,31 @@ namespace NormaMeasure.Devices.SAC
             centralSysPult.Find();
         }
 
-        public void MeasureParameter(MeasuredParameterType pType, ref double value)
+        /// <summary>
+        /// Установка коммутации и поиск узла для измерения
+        /// </summary>
+        /// <param name="point"></param>
+        public CPSMeasureUnit SetMeasurePoint(SACMeasurePoint point)
         {
-            centralSysPult.MeasureParameter(pType, ref value);
+            CPSMeasureUnit unit = centralSysPult.GetMeasureUnit(point);
+            if (unit != null)
+            {
+                centralSysPult.Commutator.SetCommutatorByParameterType(point);
+                return unit;
+            }
+            else
+            {
+                SetDefaultSACState();
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Устанавливает состояние по умолчанию
+        /// </summary>
+        public void SetDefaultSACState()
+        {
+            centralSysPult.Commutator.SetOnGroundState();
         }
 
         /// <summary>
@@ -272,10 +285,45 @@ namespace NormaMeasure.Devices.SAC
 
     }
 
-    public struct SACMeasureSettings
+    public class SACMeasurePoint
     {
+        /// <summary>
+        /// Тип измеряемого параметра
+        /// </summary>
         public MeasuredParameterType parameterType;
-        public int rangeId;
-        public bool isSplittedTable;
+        /// <summary>
+        /// Результат с АЦП
+        /// </summary>
+        public double RawResult;
+        /// <summary>
+        /// Результат после применения коэффициентов коррекции
+        /// </summary>
+        public double ConvertedResult;
+        /// <summary>
+        /// Тип коммутации
+        /// </summary>
+        public SACCommutationType CommutationType = SACCommutationType.MergedTable;
+        public LeadCommutationType LeadCommType = LeadCommutationType.A;
+        public CableStructureType structureType;
+        public int StartElementPair=0;
+        public int StartElementLead;
+        public int EndElementPair;
+        public int EndElementLead;
+        public int FreqMin;
+        public int FreqMax;
+        public int FreqStep;
+    }
+
+    /// <summary>
+    /// Тип коммутации системы 
+    /// Для измерения эталона
+    /// Без дальнего конца (1-104)
+    /// С Дальним концом 
+    /// </summary>
+    public enum SACCommutationType
+    {
+        MergedTable,
+        SplittedTable,
+        Etalon
     }
 }

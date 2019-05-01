@@ -37,7 +37,7 @@ namespace NormaMeasure.MeasureControl
             do
             {
                 cycleNumber++;
-                OnMeasure(this);
+                OnMeasure?.Invoke(this);
                 Thread.Sleep(1000);
             } while (WillMeasureContinue());
         }
@@ -69,13 +69,21 @@ namespace NormaMeasure.MeasureControl
         /// <param name="cycles_limit">Количество циклов измерения</param>
         public virtual void Start(int cycles_limit = 1)
         {
-            cycleNumber = 0;
-            cycleLimit = cycles_limit;
-            if (!IsStarted)
-            { 
-                this.MeasureThread = new Thread(this.MeasureMainFunction);
-                MeasureThread.Start();
+            if (MeasureBody != null)
+            {
+                cycleNumber = 0;
+                cycleLimit = cycles_limit;
+                if (!IsStarted)
+                {
+                    this.MeasureThread = new Thread(this.MeasureMainFunction);
+                    MeasureThread.Start();
+                }
             }
+            else
+            {
+                throw new MeasureException("Не задана функция для измерения в поле MeasureBody!!!");
+            }
+
         }
 
 
@@ -180,7 +188,8 @@ namespace NormaMeasure.MeasureControl
             }
         }
 
-        private int cycleNumber = 0;
+        public int PauseBetweenMeasure = 10;
+        protected int cycleNumber = 0;
         private int cycleLimit = 5;
         public int CycleNumber => cycleNumber;
         public int CycleLimit
@@ -205,6 +214,13 @@ namespace NormaMeasure.MeasureControl
         
     }
 
+    public class MeasureException : Exception
+    {
+        public MeasureException(string message) : base(message)
+        {
+
+        }
+    }
 
 
     public enum MeasureCycleStatus

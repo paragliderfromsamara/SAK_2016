@@ -167,22 +167,23 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// <param name="pTypeId"></param>
         /// <param name="isEtalon"></param>
         /// <param name="RisolType"></param>
-        public virtual void SetCommutatorByParameterType(uint pTypeId, bool isEtalon = false, LeadCommutationType RisolType = LeadCommutationType.A)
+        public virtual void SetCommutatorByParameterType(SACMeasurePoint point)
         {
-            switch (pTypeId)
+            bool is_etalon = point.CommutationType == SACCommutationType.Etalon;
+            switch (point.parameterType.ParameterTypeId)
             {
                 case MeasuredParameterType.Calling:
                     CurrentState = Calling_ReleState;
                     break;
                 case MeasuredParameterType.Rleads:
-                    CurrentState = isEtalon ? RleadsEtalon_ReleState : Rleads_ReleState;
+                    CurrentState = is_etalon ? RleadsEtalon_ReleState : Rleads_ReleState;
                     break;
                 case MeasuredParameterType.Cp:
-                    CurrentState = isEtalon ? Cp_Etalon_ReleState : CapacityMeasure_ReleState;
+                    CurrentState = is_etalon ? Cp_Etalon_ReleState : CapacityMeasure_ReleState;
                     break;
                 case MeasuredParameterType.Co:
                 case MeasuredParameterType.Ea:
-                    CurrentState = isEtalon ? Co_Ea_Etalon_ReleState : CapacityMeasure_ReleState;
+                    CurrentState = is_etalon ? Co_Ea_Etalon_ReleState : CapacityMeasure_ReleState;
                     break;
                 case MeasuredParameterType.K1:
                 case MeasuredParameterType.K2:
@@ -193,15 +194,15 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 case MeasuredParameterType.K11:
                 case MeasuredParameterType.K12:
                 case MeasuredParameterType.K9_12:
-                    CurrentState = isEtalon ? K1_12_Etalon_ReleState : CapacityMeasure_ReleState;
+                    CurrentState = is_etalon ? K1_12_Etalon_ReleState : CapacityMeasure_ReleState;
                     break;
                 case MeasuredParameterType.Risol1:
                 case MeasuredParameterType.Risol2:
                 case MeasuredParameterType.Risol3:
                 case MeasuredParameterType.Risol4:
-                    if (!isEtalon)
+                    if (!is_etalon)
                     {
-                        switch(RisolType)
+                        switch(point.LeadCommType)
                         {
                             case LeadCommutationType.A:
                                 CurrentState = Risol_A_ReleState;

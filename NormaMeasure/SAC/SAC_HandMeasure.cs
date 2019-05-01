@@ -10,7 +10,7 @@ using System.Threading;
 namespace NormaMeasure.MeasureControl.SAC
 {
     public delegate void SAC_HandMeasure_Handler(SAC_HandMeasure measure);
-    public class SAC_HandMeasure : MeasureBase
+    public class SAC_HandMeasure : SACMeasure
     {
 
         public double Result => _resultValue;
@@ -18,32 +18,54 @@ namespace NormaMeasure.MeasureControl.SAC
         private void RefreshResult(double r)
         {
             _resultValue = r;
-            Result_Gotten?.Invoke(this);
         }
 
-        public SAC_HandMeasure(SAC_Device sac)
+        public SAC_HandMeasure(SAC_Device _sac) : base(_sac)
         {
-            sacDevice = sac;
-            parameterType = MeasuredParameterType.find_by_id(MeasuredParameterType.Co);
-            MeasureBody = HandMeasureFunction;
 
         }
 
         private void HandMeasureFunction()
         {
             double result = 0;
-            sacDevice.MeasureParameter(parameterType, ref result);
+           // sacDevice.MeasureParameter(parameterType, ref result);
             RefreshResult(result);
             Thread.Sleep(500);
-
         }
 
 
+        /// <summary>
+        /// Запуск измерения для выбранных настроек
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="_cycleLimit"></param>
+        public void StartMeasureForPoint(SACMeasurePoint point, int _cycleLimit = 1)
+        {
+            currentMeasurePoint = point;
+            switch(point.parameterType.ParameterTypeId)
+            {
+                case MeasuredParameterType.al:
+                case MeasuredParameterType.Ao:
+                case MeasuredParameterType.Az:
+                case MeasuredParameterType.Risol1:
+                case MeasuredParameterType.Risol2:
+                case MeasuredParameterType.Risol3:
+                case MeasuredParameterType.Risol4:
+                case MeasuredParameterType.Calling:
+                    break;
+                default:
+                    MeasureBody = Rleads_AND_CEK_Measure;
+                    break;
+            }
+            Start(_cycleLimit);
+        }
+
 
         private SAC_Device sacDevice;
-        private MeasuredParameterType parameterType;
         private double _resultValue;
 
-        public event SAC_HandMeasure_Handler Result_Gotten;
+
+        SACMeasurePoint _measurePoint;
     }
+
 }

@@ -95,7 +95,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// Производит одиночное измерение на узле
         /// </summary>
         /// <returns></returns>
-        protected virtual double ExecuteElementaryMeasure()
+        protected virtual void ExecuteElementaryMeasure(ref SACMeasurePoint point)
         {
             double result = (double)CPSMeasureUnit_Status.InProcess;
             cps.OpenPort();
@@ -111,8 +111,9 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             if (CheckRange(result)) goto set_mode_again;
             cps.ClosePort();
             Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure():result {result}");
+            point.RawResult = result;
             ApplyCoeffs(ref result);
-            return result;
+            point.ConvertedResult = result;
         }
 
         protected void CheckResult(double r)
@@ -171,12 +172,12 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// <param name="isEtalonMeasure">true - измеряется эталон, false - измеряется стол</param>
         /// <param name="leadCommType"> Тип пожильного измерения</param>
         /// <returns></returns>
-        public virtual bool MakeMeasure(ref double result, MeasuredParameterType pType, LeadCommutationType leadCommType = LeadCommutationType.AB)
+        public virtual bool MakeMeasure(ref SACMeasurePoint point)
         {
 
             //if (IsAllowedParameter(pType.ParameterTypeId)) return false;
-            CurrentParameterType = pType;
-            LeadCommType = leadCommType;
+            CurrentParameterType = point.parameterType;
+            LeadCommType = point.LeadCommType;
             //PrepareCommutator(isEtalonMeasure);
             // result = 
             return true;
@@ -246,7 +247,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// <summary>
         /// Выбран диапазон
         /// </summary>
-        protected bool HasSelectedRange => selectedRangeIdx >= 0;
+        protected bool HasSelectedRange => selectedRangeIdx >= 0 && currentRanges.Length > selectedRangeIdx;
 
         /// <summary>
         /// Установка диапазонов измерений для текущего типа параметра

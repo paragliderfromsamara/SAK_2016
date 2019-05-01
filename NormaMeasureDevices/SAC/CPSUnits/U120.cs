@@ -30,7 +30,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             Debug.WriteLine($"U120.MakeMeasure():result {result}");
         }
 
-        //режимы 0,0x40,0x04,0x44,0x80,0xC0,
+
         public U120(SACCPS _cps) : base(_cps)
         {
         }
@@ -45,13 +45,13 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             return base.CheckRange(result);
         }
 
-        public override bool MakeMeasure(ref double result, MeasuredParameterType pType, LeadCommutationType leadCommType = LeadCommutationType.AB)
+        public override bool MakeMeasure(ref SACMeasurePoint point)
         {
-            base.MakeMeasure(ref result, pType, leadCommType);
+            base.MakeMeasure(ref point);
             int defaultRangeIdx = CurrentParameterType.IsEK() ? 0 : 2;
             Debug.WriteLine($"U120.MakeMeasure():defaultRangeIdx {defaultRangeIdx}");
             SelectDefaultRange(defaultRangeIdx);
-            result = ExecuteElementaryMeasure();
+            ExecuteElementaryMeasure(ref point);
             return true;
         }
 

@@ -15,10 +15,10 @@ using NormaMeasure.Devices.SAC;
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {
     public delegate void SACCableTestForm_Handler();
-    public partial class SACCableTestForm : SACMeasureForm
+    public partial class SACCableTestForm : Form
     {
-        
-        public SACCableTestForm(SAC_Device device) : base(device)
+        private SAC_Device sac_device;
+        public SACCableTestForm(SAC_Device device)
         {
             InitializeComponent();   
             if (!LoadBaseDataFromDB())
@@ -27,6 +27,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 return;
             }else
             {
+                sac_device = device;
                 CurrentTest = CableTest.GetLastOrCreateNew();
                 if (!CurrentTest.HasSourceCable) CurrentTest.SourceCable = GetCableFromCableComboBox();
                 InitTestProgamGroupBox();

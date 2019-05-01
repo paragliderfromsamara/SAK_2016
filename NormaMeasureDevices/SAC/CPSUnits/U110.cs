@@ -60,12 +60,12 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
         }
 
-        public override bool MakeMeasure(ref double result, MeasuredParameterType pType, LeadCommutationType leadCommType = LeadCommutationType.AB)
+        public override bool MakeMeasure(ref SACMeasurePoint point)
         {
-            base.MakeMeasure(ref result, pType);
-            if (pType.ParameterTypeId == MeasuredParameterType.Rleads)
+            base.MakeMeasure(ref point);
+            if (point.parameterType.ParameterTypeId == MeasuredParameterType.Rleads)
             {
-                result = RleadsMeasure();
+                RleadsMeasure(ref point);
             }
             return true;
         }
@@ -74,12 +74,10 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         /// Измерение Rжил
         /// </summary>
         /// <returns></returns>
-        private double RleadsMeasure()
+        private void RleadsMeasure(ref SACMeasurePoint point)
         {
-            double result = 0;
             SelectDefaultRange(0);
-            result = ExecuteElementaryMeasure();
-            return result;
+            ExecuteElementaryMeasure(ref point);
         }
 
         private void SetRange(int rangeId)

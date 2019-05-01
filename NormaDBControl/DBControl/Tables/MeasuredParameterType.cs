@@ -48,6 +48,16 @@ namespace NormaMeasure.DBControl.Tables
 
 
         /// <summary>
+        /// Выборка для ручных испытаний
+        /// </summary>
+        /// <returns></returns>
+        public static DBEntityTable for_a_manual_test_form()
+        {
+            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} < {K2} AND NOT {ParameterTypeId_ColumnName} IN ({Risol2}, {Risol3}, {Risol4}, {Calling}, {dCp}, {dR}) ", typeof(MeasuredParameterType));
+
+        }
+
+        /// <summary>
         /// Выборка типов измеряемых параметров для формы испытания кабеля
         /// </summary>
         /// <returns></returns>

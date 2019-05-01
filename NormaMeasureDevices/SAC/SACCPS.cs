@@ -41,22 +41,6 @@ namespace NormaMeasure.Devices.SAC
             //InitUnits();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pType"></param>
-        /// <param name="result"></param>
-        public void MeasureParameter(MeasuredParameterType pType, ref double result)
-        {
-            CPSMeasureUnit unit = getMeasureUnit(pType);
-            if (unit != null)
-            {
-                commutator.SetCommutatorByParameterType(pType.ParameterTypeId, true);
-                //unit.MakeMeasure(ref value, pType, isEtalon);
-                unit.MakeMeasure(ref result, pType);
-            }
-
-        }
 
         public virtual void InitUnits()
         { 
@@ -76,23 +60,12 @@ namespace NormaMeasure.Devices.SAC
             measureUnits.Add(unit160);
         }
 
-        public virtual double MakeMeasureParameter(MeasuredParameterType pType, bool isEtalon, LeadCommutationType RisolMode = LeadCommutationType.A)
-        {
-            double value = 0;
-            CPSMeasureUnit unit = getMeasureUnit(pType);
-            if (unit != null)
-            {
-                commutator.SetCommutatorByParameterType(pType.ParameterTypeId, isEtalon, RisolMode);
-                //unit.MakeMeasure(ref value, pType, isEtalon);
-            }
-            return value;
-        }
 
-        private CPSMeasureUnit getMeasureUnit(MeasuredParameterType type)
+        public CPSMeasureUnit GetMeasureUnit(SACMeasurePoint point)
         {
             foreach(CPSMeasureUnit unit in measureUnits)
             {
-                if (unit.IsAllowedParameter(type.ParameterTypeId)) return unit;
+                if (unit.IsAllowedParameter(point.parameterType.ParameterTypeId)) return unit;
             }
             return null;
         }
