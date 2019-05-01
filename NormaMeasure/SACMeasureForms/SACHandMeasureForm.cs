@@ -14,23 +14,20 @@ using NormaMeasure.MeasureControl.SAC;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {
-    public partial class SACHandMeasureForm : Form
+    public partial class SACHandMeasureForm : SACMeasureForm
     {
-        private SAC_Device sac_device;
         private SAC_HandMeasure HandMeasure;
-        public SACHandMeasureForm(SAC_Device sac)
+        public SACHandMeasureForm(SAC_Device sac) : base(sac)
         {
             InitializeComponent();
-
-            sac_device = sac;
             InitMeasure();
         }
 
         private void InitMeasure()
         {
             HandMeasure = new SAC_HandMeasure(sac_device);
-            HandMeasure.OnMeasureStart += Measure_SwitchMeasureControlButton;
-            HandMeasure.OnMeasureStop += Measure_SwitchMeasureControlButton;
+            HandMeasure.OnMeasureThread_Started += Measure_SwitchMeasureControlButton;
+            HandMeasure.OnMeasureThread_Finished += Measure_SwitchMeasureControlButton;
             // HandMeasure.OnOverallMeasureTimerTick += Measure_OnOverallMeasureTimerTick;
             measureControlButton.Click += startMeasure_Click;
             HandMeasure.Result_Gotten += HandMeasure_Result_Gotten;
@@ -70,7 +67,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             }
             else
             {
-                if (HandMeasure.IsStart)
+                if (HandMeasure.IsStarted)
                 {
                     measureControlButton.Click -= startMeasure_Click;
                     measureControlButton.Click += stopMeasure_Click;

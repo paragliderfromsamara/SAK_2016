@@ -10,14 +10,15 @@ using System.Windows.Forms;
 using NormaMeasure.DBControl;
 using NormaMeasure.DBControl.Tables;
 using NormaMeasure.MeasureControl.SAC;
+using NormaMeasure.Devices.SAC;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {
     public delegate void SACCableTestForm_Handler();
-    public partial class SACCableTestForm : Form
+    public partial class SACCableTestForm : SACMeasureForm
     {
         
-        public SACCableTestForm()
+        public SACCableTestForm(SAC_Device device) : base(device)
         {
             InitializeComponent();   
             if (!LoadBaseDataFromDB())
@@ -312,8 +313,8 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         private void InitMeasure()
         {
             Measure = new CableTestMeasure(CurrentTest);
-            Measure.OnMeasureStart += Measure_SwitchMeasureControlButton;
-            Measure.OnMeasureStop += Measure_SwitchMeasureControlButton;
+            Measure.OnMeasureThread_Started += Measure_SwitchMeasureControlButton;
+            Measure.OnMeasureThread_Finished += Measure_SwitchMeasureControlButton;
             Measure.OnOverallMeasureTimerTick += Measure_OnOverallMeasureTimerTick;
             Measure.Result_Gotten += Measure_Result_Gotten;
             Measure.MeasurePointChanged += Measure_MeasurePointChanged;
@@ -365,7 +366,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             }
             else
             {
-                if (Measure.IsStart)
+                if (Measure.IsStarted)
                 {
                     measureControlButton.Click -= startMeasure_Click;
                     measureControlButton.Click += stopMeasure_Click;
@@ -557,6 +558,8 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             CurrentTest.SetNotStarted();
         }
+
+
 
         /*
         private void measureControlButton_Click(object sender, EventArgs e)

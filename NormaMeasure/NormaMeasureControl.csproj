@@ -58,6 +58,12 @@
       <DependentUpon>SACHandMeasureForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SAC\CableTestMeasure.cs" />
+    <Compile Include="SACMeasureForms\SACMeasureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SACMeasureForms\SACMeasureForm.Designer.cs">
+      <DependentUpon>SACMeasureForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SAC\SAC_HandMeasure.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +72,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SACMeasureForms\SACHandMeasureForm.resx">
       <DependentUpon>SACHandMeasureForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SACMeasureForms\SACMeasureForm.resx">
+      <DependentUpon>SACMeasureForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

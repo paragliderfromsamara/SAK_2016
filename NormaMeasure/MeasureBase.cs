@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Diagnostics;
 
 namespace NormaMeasure.MeasureControl
 {
+    public delegate void MeasureStatus_Handler(object _measure, MeasureCycleStatus new_status);
     public delegate void MeasureHandler(object _measure);
     public delegate void MeasureFunction();
 
@@ -18,11 +20,18 @@ namespace NormaMeasure.MeasureControl
             MeasureBody = defaultMeasureThreadFunc;
         }
 
+        /// <summary>
+        /// Проверка продолжения измерения
+        /// </summary>
+        /// <returns></returns>
         protected virtual bool WillMeasureContinue()
         {
-            return (cycleLimit > cycleNumber);
+            return (cycleLimit > cycleNumber && !IsWillFinished && !IsFinished);
         }
 
+        /// <summary>
+        /// Функция произвольного измерения
+        /// </summary>
         private void defaultMeasureThreadFunc()
         {
             do
@@ -33,6 +42,9 @@ namespace NormaMeasure.MeasureControl
             } while (WillMeasureContinue());
         }
         
+        /// <summary>
+        /// Инициализация таймера измерения
+        /// </summary>
         private void InitOverAllMeasureTimer()
         {
             TimerCallback tm = new TimerCallback(RefreshTimer);
@@ -40,70 +52,133 @@ namespace NormaMeasure.MeasureControl
             OverallMeasureTimer = new Timer(tm, 0, 0, 1000);
         }
 
+        /// <summary>
+        /// Обновление таймера измерения
+        /// </summary>
+        /// <param name="obj"></param>
         private void RefreshTimer(object obj)
         {
             OnOverallMeasureTimerTick?.Invoke(this);
             overallMeasureTime++;
         }
 
+
+        /// <summary>
+        /// Запуск измерения
+        /// </summary>
+        /// <param name="cycles_limit">Количество циклов измерения</param>
         public virtual void Start(int cycles_limit = 1)
         {
             cycleNumber = 0;
             cycleLimit = cycles_limit;
-            if (!isStarted)
-            {
+            if (!IsStarted)
+            { 
                 this.MeasureThread = new Thread(this.MeasureMainFunction);
                 MeasureThread.Start();
-                isStarted = true; 
             }
         }
 
 
-
-
+        /// <summary>
+        /// Основной цикл измерения загружаемый в поток измерения
+        /// </summary>
         private void MeasureMainFunction()
         {
             InitOverAllMeasureTimer();
-            OnMeasureStart?.Invoke(this);
+            Status = MeasureCycleStatus.Started;
             do
             {
                 MeasureBody();
                 cycleNumber++;
-            } while (cycleNumber < CycleLimit);
+            } while (WillMeasureContinue());
             OverallMeasureTimer.Dispose();
-            isStarted = false;
-            OnMeasureStop?.Invoke(this);
+            Status = MeasureCycleStatus.Finished;
+
         }
 
 
+        /// <summary>
+        /// Остановка измерения
+        /// </summary>
         public virtual void Stop()
         {
             if (MeasureThread != null)
             {
-                MeasureThread.Abort();
-                MeasureThread = null;
-                OverallMeasureTimer.Dispose();
+                Status = MeasureCycleStatus.WillFinished;
+                //MeasureThread.Abort();
+                //MeasureThread = null;
+                //OverallMeasureTimer.Dispose();
+            }else
+            {
+                Status = MeasureCycleStatus.Finished;
             }
-            isStarted = false;
-            OnMeasureStop?.Invoke(this);
         }
 
     
 
-        public event MeasureHandler OnMeasureStart;
+        public event MeasureHandler OnMeasureThread_Started;
         public event MeasureHandler OnMeasure;
-        public event MeasureHandler OnMeasureStop;
+        public event MeasureHandler OnMeasureThread_Finished;
         public event MeasureHandler OnOverallMeasureTimerTick;
+        public event MeasureStatus_Handler OnStatusChanged;
 
         protected MeasureFunction MeasureBody;
 
         private Thread MeasureThread;
         private Timer OverallMeasureTimer;
 
-        private bool isStarted = false;
+        private MeasureCycleStatus status = MeasureCycleStatus.NotStarted;
+        private MeasureCycleStatus status_was = MeasureCycleStatus.NotStarted;
 
-        public bool IsStart => isStarted;
+        /// <summary>
+        /// Измерение начато
+        /// </summary>
+        public bool IsStarted => Status == MeasureCycleStatus.Started;
 
+        /// <summary>
+        /// Флаг выхода из потока измерения
+        /// </summary>
+        public bool IsWillFinished => Status == MeasureCycleStatus.WillFinished;
+
+        /// <summary>
+        /// Флаг окончания результата 
+        /// </summary>
+        public bool IsFinished => Status == MeasureCycleStatus.Finished;
+
+        /// <summary>
+        /// Статус измерения
+        /// </summary>
+        public MeasureCycleStatus Status
+        {
+            get
+            {
+                return status;
+            }
+            set
+            {
+                status_was = status;
+                status = value;
+
+                if (status_was != status)
+                {
+                    OnStatusChanged?.Invoke(this, status);
+                    switch (status)
+                    {
+                        case MeasureCycleStatus.Started:
+                            OnMeasureThread_Started?.Invoke(this);
+                            Debug.WriteLine($"MeasureBase.Status.Set(Started)");
+                            break;
+                        case MeasureCycleStatus.WillFinished:
+                            Debug.WriteLine($"MeasureBase.Status.Set(WillFinished)");
+                            break;
+                        case MeasureCycleStatus.Finished:
+                            OnMeasureThread_Finished?.Invoke(this);
+                            Debug.WriteLine($"MeasureBase.Status.Set(Finished)");
+                            break;
+                    }
+                }
+            }
+        }
 
         private int cycleNumber = 0;
         private int cycleLimit = 5;
@@ -130,5 +205,14 @@ namespace NormaMeasure.MeasureControl
         
     }
 
+
+
+    public enum MeasureCycleStatus
+    {
+        NotStarted,
+        Started,
+        Finished,
+        WillFinished
+    }
 
 }

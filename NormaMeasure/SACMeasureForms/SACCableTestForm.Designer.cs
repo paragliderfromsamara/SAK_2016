@@ -54,9 +54,9 @@
             this.testProgram_GroupBox = new System.Windows.Forms.GroupBox();
             this.CableTestFormDataSet = new System.Data.DataSet();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.CurrentElement_Label = new System.Windows.Forms.Label();
             this.measureResultField = new System.Windows.Forms.Label();
             this.resetCurrentTest_Button = new System.Windows.Forms.Button();
-            this.CurrentElement_Label = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.temperature_NumericUpDown)).BeginInit();
             this.connectionType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cableLength_NumericUpDown)).BeginInit();
@@ -337,6 +337,16 @@
             this.panel1.Size = new System.Drawing.Size(567, 210);
             this.panel1.TabIndex = 23;
             // 
+            // CurrentElement_Label
+            // 
+            this.CurrentElement_Label.AutoSize = true;
+            this.CurrentElement_Label.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CurrentElement_Label.Location = new System.Drawing.Point(11, 11);
+            this.CurrentElement_Label.Name = "CurrentElement_Label";
+            this.CurrentElement_Label.Size = new System.Drawing.Size(153, 25);
+            this.CurrentElement_Label.TabIndex = 5;
+            this.CurrentElement_Label.Text = "пара 1 жила A";
+            // 
             // measureResultField
             // 
             this.measureResultField.AutoSize = true;
@@ -358,16 +368,6 @@
             this.resetCurrentTest_Button.Text = "ОТКАТИТЬ";
             this.resetCurrentTest_Button.UseVisualStyleBackColor = true;
             this.resetCurrentTest_Button.Click += new System.EventHandler(this.resetCurrentTest_Button_Click);
-            // 
-            // CurrentElement_Label
-            // 
-            this.CurrentElement_Label.AutoSize = true;
-            this.CurrentElement_Label.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.CurrentElement_Label.Location = new System.Drawing.Point(11, 11);
-            this.CurrentElement_Label.Name = "CurrentElement_Label";
-            this.CurrentElement_Label.Size = new System.Drawing.Size(153, 25);
-            this.CurrentElement_Label.TabIndex = 5;
-            this.CurrentElement_Label.Text = "пара 1 жила A";
             // 
             // SACCableTestForm
             // 

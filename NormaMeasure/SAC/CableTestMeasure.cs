@@ -30,7 +30,7 @@ namespace NormaMeasure.MeasureControl.SAC
                 foreach (TestedCableStructure structure in cableTest.TestedCable.CableStructures.Rows)
                 {
                     currentStructure = structure;
-                    measureCurrentStructure();
+                    if (!measureCurrentStructure()) goto finish;
                     // if (structure.MeasuredParameters_ids.Contains(pType.ParameterTypeId))
                     // {
                     //     currentStructure = structure;
@@ -41,20 +41,21 @@ namespace NormaMeasure.MeasureControl.SAC
                     // }
                 }
             }
+            finish:
             CableTestFinished?.Invoke(this);
         }
 
         /// <summary>
         /// Измерение параметров текущей структуры кабеля
         /// </summary>
-        private void measureCurrentStructure()
+        private bool measureCurrentStructure()
         {
             Random rnd = new Random();
             for (uint element=1; element <= currentStructure.RealAmount; element++)
             {
                 for (uint subElement = 1; subElement <= currentStructure.StructureType.StructureLeadsAmount; subElement++)
                 {
-
+                    if (IsWillFinished) return false;
                     CurrentMeasurePoint = cableTest.BuildTestResult(currentParameter, currentStructure, element, subElement);
                     CurrentMeasurePoint.Result = rnd.Next(10, 50);
                     
@@ -79,6 +80,7 @@ namespace NormaMeasure.MeasureControl.SAC
                         break;
                 } */
             }
+            return true;
         }
 
 
@@ -201,6 +203,7 @@ namespace NormaMeasure.MeasureControl.SAC
         public event CableTestMeasure_Handler MeasurePointChanged;
         public event CableTestMeasure_Handler CurrentParameterChanged;
         public event CableTestMeasure_Handler CurrentStructureChanged;
+
         public event CableTestMeasure_Handler CableTestFinished;
     }
 }

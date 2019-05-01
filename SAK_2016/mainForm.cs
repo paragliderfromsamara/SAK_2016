@@ -96,7 +96,7 @@ namespace NormaMeasure.SAC_APP
         //Управление дочерними окнами
         private void autoTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CableTestForm = new SACCableTestForm();
+            CableTestForm = new SACCableTestForm(sacDevice);
             if (!CableTestForm.IsDisposed) initChildForm(CableTestForm);
         }
 
