@@ -98,7 +98,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
         protected virtual void ExecuteElementaryMeasure(ref SACMeasurePoint point)
         {
             double result = (double)CPSMeasureUnit_Status.InProcess;
-            cps.OpenPort();
+            //cps.OpenPort();
             set_mode_again:
             SetMeasureMode();
             do
@@ -109,7 +109,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
                 Thread.Sleep(20);
             } while (result == (double)CPSMeasureUnit_Status.InProcess);
             if (CheckRange(result)) goto set_mode_again;
-            cps.ClosePort();
+            //cps.ClosePort();
             Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure():result {result}");
             point.RawResult = result;
             ApplyCoeffs(ref result);

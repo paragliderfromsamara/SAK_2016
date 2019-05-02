@@ -13,7 +13,7 @@ namespace NormaMeasure.Devices.SAC
     public delegate void SAC_CPS_EventHandler(SAC_Device sac, SACCPS cps);
     public delegate void SAC_Table_EventHandler(SAC_Device sac, SACTable table);
 
-    public class SAC_Device
+    public class SAC_Device : IDisposable
     {
         private bool isOnMeasure = false;
         public bool IsOnMeasure => isOnMeasure;
@@ -34,6 +34,7 @@ namespace NormaMeasure.Devices.SAC
         public SAC_Device()
         {
             InitCps();
+            InitTables();
             //InitTables();
         }
 
@@ -47,8 +48,7 @@ namespace NormaMeasure.Devices.SAC
         /// </summary>
         protected virtual void InitTables()
         {
-
-            throw new NotImplementedException();
+            table = new SACTable(1);
         }
 
         /// <summary>
@@ -82,13 +82,6 @@ namespace NormaMeasure.Devices.SAC
             OnCPSFound?.Invoke(this, device as SACCPS);
         }
 
-        /// <summary>
-        /// Поиск пультов системы
-        /// </summary>
-        protected virtual void FindCps()
-        {
-            centralSysPult.Find();
-        }
 
         /// <summary>
         /// Установка коммутации и поиск узла для измерения
@@ -129,13 +122,18 @@ namespace NormaMeasure.Devices.SAC
         /// </summary>
         protected virtual void FindTables()
         {
-
+            
         }
 
-
+        public void Dispose()
+        {
+            centralSysPult?.Dispose();
+            table?.Dispose();
+        }
 
         private Dictionary<string, SACTable> comTablesList;
         private SACCPS centralSysPult;
+        public SACTable table;
         public SACCPS CentralSysPult => centralSysPult;
 
         public event SAC_CPS_EventHandler OnCPSFound;

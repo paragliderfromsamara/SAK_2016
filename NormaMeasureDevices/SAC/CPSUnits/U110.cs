@@ -93,7 +93,6 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
             double r = 0;
             byte[] rsltArr = new byte[] { 0x00, 0x00};
             //SetRange(rangeId);
-            cps.OpenPort();
             cps.WriteBytes(new byte[] { 0x21, 0x40});
             Thread.Sleep(200);
             repeat:
@@ -102,7 +101,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
             r = rsltArr[1] * 256 + rsltArr[0];
             if (r == 0xfffe) goto repeat;
-            cps.ClosePort();
+            //cps.ClosePort();
             r = r/currentRanges[rangeId].KK + currentRanges[rangeId].BV;
             return r;
         }

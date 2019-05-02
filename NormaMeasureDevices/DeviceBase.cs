@@ -23,12 +23,6 @@ namespace NormaMeasure.Devices
             FillDeviceCommands(); //Заполняем команды устройства
             ConfigureDevicePort(); //Конфигурируем COM порт устройства
             deviceTypeName = "DeviceBase";
-            device_port.DataReceived += Device_port_DataReceived;
-        }
-
-        private void Device_port_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            
         }
 
         protected virtual void FillDeviceCommands()
@@ -36,25 +30,33 @@ namespace NormaMeasure.Devices
            // throw new NotImplementedException();
         }
 
+        
+
 
         /// <summary>
         /// Отправка команды с открытием/закрытием порта
         /// </summary>
         /// <param name="command">Передаваемая команда</param>
         /// <returns></returns>
-        public void WriteBytes(byte[] command, bool needToClose = false)
+        public void WriteBytes(byte[] command)
         {
             OpenPort();
             device_port.Write(command, 0, command.Length);
-            if (needToClose) ClosePort();
         }
 
         public void OpenPort()
         {
-            if (!IsOpen) device_port.Open();
+            try
+            {
+                if (!IsOpen) device_port.Open();
+            }
+            catch(System.UnauthorizedAccessException)
+            {
+               
+            }
         }
 
-        public void ClosePort()
+        private void ClosePort()
         {
             if (IsOpen) device_port.Close();
         }
@@ -77,11 +79,30 @@ namespace NormaMeasure.Devices
             {
                 f = false;
             }
-            if (!needToClose) ClosePort();
             _RxFlag = false;
             return f;
-
         }
+
+        public bool ReadByte(ref byte dataByte)
+        {
+            try
+            {
+                OpenPort();
+                dataByte = (byte)device_port.ReadByte();
+                return true;
+            }
+            catch (TimeoutException)
+            {
+                return false;
+            }catch(System.IO.IOException)
+            {
+                return false;
+            }catch(System.InvalidOperationException)
+            {
+                return false;
+            }
+        }
+
 
         /// <summary>
         /// Отправляет и принимает данные с порта
@@ -94,10 +115,8 @@ namespace NormaMeasure.Devices
         /// <returns></returns>
         public virtual void WriteCmdAndReadBytesArr(byte[] cmd, byte[] buffer)
         {
-            OpenPort();
             WriteBytes(cmd);
             ReadBytes(buffer);
-            ClosePort();
         }
 
 
@@ -123,15 +142,15 @@ namespace NormaMeasure.Devices
                 }
                 catch (TimeoutException)
                 {
-                    ClosePort();
+                    //ClosePort();
                     continue;
                 }catch(System.IO.IOException)
                 {
-                    ClosePort();
+                    //ClosePort();
                     continue;
                 }catch(System.UnauthorizedAccessException)
                 {
-                    ClosePort();
+                    //ClosePort();
                     continue;
                 }
             }
@@ -150,17 +169,17 @@ namespace NormaMeasure.Devices
             bool f = false;
             try
             {
-                ClosePort();
+                //ClosePort();
                 WriteCmdAndReadBytesArr(FindDevice_cmd, buffer);
                 f = CheckConnectionResult(buffer);
             }
             catch (TimeoutException)
             {
-                ClosePort();
+                //ClosePort();
             }
             catch(System.IO.IOException)
             {
-                ClosePort();
+                //ClosePort();
             }
             return f;
         }
@@ -189,13 +208,8 @@ namespace NormaMeasure.Devices
             DevicePort.Parity = Parity.None;
             DevicePort.DataBits = 8;
             DevicePort.PortName = "COM1";
-            DevicePort.DataReceived += DevicePort_DataReceived;
         }
 
-        protected virtual void DevicePort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            
-        }
 
         ~DeviceBase()
         {
@@ -215,7 +229,7 @@ namespace NormaMeasure.Devices
         public string PortName => device_port.PortName;
         public bool IsOpen => device_port.IsOpen;
         private SerialPort device_port;
-        protected SerialPort DevicePort => device_port;
+        public SerialPort DevicePort => device_port;
 
         public bool IsConnected => isConnected;
         private bool isConnected = false;
@@ -235,6 +249,8 @@ namespace NormaMeasure.Devices
         protected string deviceTypeName;
         public string DeviceId => deviceId;
         public string DeviceType => deviceTypeName;
+
+        protected bool _RxFlag = false;
 
         protected byte[] FindDevice_cmd = new byte[] {0x00 };
 

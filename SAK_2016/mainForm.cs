@@ -67,7 +67,7 @@ namespace NormaMeasure.SAC_APP
             sacDevice.OnCPSFound += SacDevice_OnCPSFound;
             sacDevice.OnCPSLost += SacDevice_OnCPSLost;
             sacDevice.FindCPS();
-         
+
         }
 
         private void CheckSACLink()
@@ -198,6 +198,21 @@ namespace NormaMeasure.SAC_APP
         private void CPSStatusLabel_Click(object sender, EventArgs e)
         {
             CheckSACLink();
+        }
+
+        private void tableToolStripLabel_Click(object sender, EventArgs e)
+        {
+            //sacDevice.table.FindTable();
+        }
+
+        private void Table_OnDataReceive(Devices.DeviceBase device)
+        {
+            MessageBox.Show("Принят номер стола");
+        }
+
+        private void mainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            sacDevice.Dispose();
         }
     }
 }

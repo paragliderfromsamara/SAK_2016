@@ -38,14 +38,15 @@
             this.dbCableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dbBarabanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.oldDbMigrationStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.mainFormToolStripMenu = new System.Windows.Forms.StatusStrip();
             this.sesUserName = new System.Windows.Forms.ToolStripStatusLabel();
             this.sesTabNum = new System.Windows.Forms.ToolStripStatusLabel();
             this.sesRole = new System.Windows.Forms.ToolStripStatusLabel();
             this.CPSStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.tableStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tableToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.sacMenuStrip.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.mainFormToolStripMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // sacMenuStrip
@@ -129,19 +130,19 @@
             this.oldDbMigrationStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.oldDbMigrationStripMenuItem.Text = "Загрузка данных из старой БД";
             // 
-            // statusStrip1
+            // mainFormToolStripMenu
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mainFormToolStripMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sesUserName,
             this.sesTabNum,
             this.sesRole,
             this.CPSStatusLabel,
-            this.tableStatusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 454);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(981, 22);
-            this.statusStrip1.TabIndex = 3;
-            this.statusStrip1.Text = "statusStrip1";
+            this.tableStatusLabel,
+            this.tableToolStripLabel});
+            this.mainFormToolStripMenu.Location = new System.Drawing.Point(0, 454);
+            this.mainFormToolStripMenu.Name = "mainFormToolStripMenu";
+            this.mainFormToolStripMenu.Size = new System.Drawing.Size(981, 22);
+            this.mainFormToolStripMenu.TabIndex = 3;
             // 
             // sesUserName
             // 
@@ -173,22 +174,30 @@
             this.tableStatusLabel.Name = "tableStatusLabel";
             this.tableStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
+            // tableToolStripLabel
+            // 
+            this.tableToolStripLabel.Name = "tableToolStripLabel";
+            this.tableToolStripLabel.Size = new System.Drawing.Size(76, 17);
+            this.tableToolStripLabel.Text = "Поиск стола";
+            this.tableToolStripLabel.Click += new System.EventHandler(this.tableToolStripLabel_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(981, 476);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.mainFormToolStripMenu);
             this.Controls.Add(this.sacMenuStrip);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.sacMenuStrip;
             this.Name = "mainForm";
             this.Text = "САК 2016";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mainForm_FormClosed);
             this.Load += new System.EventHandler(this.mainForm_Load);
             this.sacMenuStrip.ResumeLayout(false);
             this.sacMenuStrip.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.mainFormToolStripMenu.ResumeLayout(false);
+            this.mainFormToolStripMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -202,7 +211,7 @@
         private System.Windows.Forms.ToolStripMenuItem manualTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dbControlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dbUsersToolStripMenuItem;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip mainFormToolStripMenu;
         private System.Windows.Forms.ToolStripStatusLabel sesUserName;
         private System.Windows.Forms.ToolStripStatusLabel sesRole;
         private System.Windows.Forms.ToolStripStatusLabel sesTabNum;
@@ -212,6 +221,7 @@
         private System.Windows.Forms.ToolStripMenuItem oldDbMigrationStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel CPSStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel tableStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel tableToolStripLabel;
     }
 }
 

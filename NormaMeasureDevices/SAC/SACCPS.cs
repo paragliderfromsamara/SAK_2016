@@ -124,7 +124,7 @@ namespace NormaMeasure.Devices.SAC
             if (led_1) cmd[1] |= 0x01;
             if (led_2) cmd[1] |= 0x02;
             if (led_3) cmd[1] |= 0x03;
-            WriteBytes(cmd, true);
+            WriteBytes(cmd);
         }
 
         /// <summary>
