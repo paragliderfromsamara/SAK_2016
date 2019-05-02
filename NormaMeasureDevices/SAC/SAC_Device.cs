@@ -114,7 +114,14 @@ namespace NormaMeasure.Devices.SAC
         /// </summary>
         public void SetDefaultSACState()
         {
-            centralSysPult.Commutator.SetOnGroundState();
+            if (centralSysPult.IsConnected)
+            {
+                centralSysPult.Commutator.SetOnGroundState();
+            }else
+            {
+
+            }
+
         }
 
         /// <summary>

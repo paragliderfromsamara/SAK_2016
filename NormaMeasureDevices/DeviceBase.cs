@@ -21,7 +21,7 @@ namespace NormaMeasure.Devices
             components = new System.ComponentModel.Container();
             device_port = new SerialPort(components);
             FillDeviceCommands(); //Заполняем команды устройства
-            ConfigureDevicePort(); //Конфигурируем устройство
+            ConfigureDevicePort(); //Конфигурируем COM порт устройства
             deviceTypeName = "DeviceBase";
             device_port.DataReceived += Device_port_DataReceived;
         }
@@ -78,7 +78,7 @@ namespace NormaMeasure.Devices
                 f = false;
             }
             if (!needToClose) ClosePort();
-
+            _RxFlag = false;
             return f;
 
         }
@@ -92,7 +92,7 @@ namespace NormaMeasure.Devices
         /// <param name="offset">Отступ в массиве</param>
         /// <param name="count">Принимаемое количество байт</param>
         /// <returns></returns>
-        public void WriteCmdAndReadBytesArr(byte[] cmd, byte[] buffer)
+        public virtual void WriteCmdAndReadBytesArr(byte[] cmd, byte[] buffer)
         {
             OpenPort();
             WriteBytes(cmd);
@@ -100,16 +100,6 @@ namespace NormaMeasure.Devices
             ClosePort();
         }
 
-        
-
-        /// <summary>
-        /// Побайтный прием
-        /// </summary>
-        /// <returns></returns>
-        public byte ReadByte()
-        {
-            return (byte)device_port.ReadByte();
-        } 
 
         /// <summary>
         /// Поиск устройства 
@@ -199,6 +189,12 @@ namespace NormaMeasure.Devices
             DevicePort.Parity = Parity.None;
             DevicePort.DataBits = 8;
             DevicePort.PortName = "COM1";
+            DevicePort.DataReceived += DevicePort_DataReceived;
+        }
+
+        protected virtual void DevicePort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            
         }
 
         ~DeviceBase()
@@ -242,13 +238,12 @@ namespace NormaMeasure.Devices
 
         protected byte[] FindDevice_cmd = new byte[] {0x00 };
 
-        private byte[] receiverBuffer = new byte[64];
-
         public event Device_Handler Device_Connected;
         public event Device_Handler Device_LostConnection;
         public event Device_Handler Device_NotFound;
         public event Device_Handler Device_Finding;
         public event Device_HandlerExceptions OnFindingException;
         public event Device_Handler OnDataReceive;
+
     }
 }

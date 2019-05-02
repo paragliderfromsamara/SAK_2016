@@ -18,6 +18,15 @@ namespace NormaMeasure.MeasureControl.SAC
         {
             SACDevice = _sac;
             OnMeasureThread_Finished += SACMeasure_OnMeasureThread_Finished;
+            resultCollections = new Dictionary<uint, List<SACMeasurePoint>>();
+            Result_Gotten += SACMeasure_Result_Gotten;
+        }
+
+        private void SACMeasure_Result_Gotten(SACMeasure measure, SACMeasurePoint curPoint)
+        {
+            uint key =curPoint.parameterType.ParameterTypeId;
+            if (!resultCollections.ContainsKey(key)) resultCollections.Add(key, new List<SACMeasurePoint>());
+            resultCollections[key].Add(curPoint);
         }
 
         private void SACMeasure_OnMeasureThread_Finished(object _measure)
@@ -35,6 +44,8 @@ namespace NormaMeasure.MeasureControl.SAC
             {
                 do
                 {
+                    currentMeasurePoint.RawResult = 0;
+                    currentMeasurePoint.ConvertedResult = 0;
                     unit.MakeMeasure(ref currentMeasurePoint);
                     Result_Gotten?.Invoke(this, currentMeasurePoint);
                     Thread.Sleep(PauseBetweenMeasure);
@@ -48,5 +59,12 @@ namespace NormaMeasure.MeasureControl.SAC
         public event SACMeasure_Handler Result_Gotten;
         protected SAC_Device SACDevice;
         protected SACMeasurePoint currentMeasurePoint;
+
+        /// <summary>
+        /// Коллекция результатов измерения
+        /// Ключ - ID типа измеряемого параметра
+        /// Значение - список значений соответствующий измеряемому параметру
+        /// </summary>
+        protected Dictionary<uint, List<SACMeasurePoint>> resultCollections;
     }
 }
