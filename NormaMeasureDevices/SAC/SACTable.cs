@@ -22,18 +22,24 @@ namespace NormaMeasure.Devices.SAC
             deviceId = table_number.ToString();
         }
 
-        private void DevicePort_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+        public override void Find()
         {
-            Debug.WriteLine($"SACTable.DevicePort_DataReceived1: DevicePort_ErrorReceived");
+            TableNumberIsValid = false;
+            base.Find();
         }
 
-       
         protected override bool CheckConnection()
         {
-            byte[] RxData = new byte[5];
-            if (!SendCommand(0x00, RxData)) return false;
-            if (RxData[2] != TABLE_NUM_INPUT_CMD) return false;
-            return (RxData[3] == RxData[4] && RxData[3] == tableNumber);
+            int timesForChecking = 10;
+            if (!SendCommand(0x00)) return false;
+
+            do
+            {
+                Thread.Sleep(100);
+                if (TableNumberIsValid) break;
+            } while (timesForChecking-- > 0);
+            Debug.WriteLine($"SACTable.CheckConnection { TableNumberIsValid} {timesForChecking}");
+            return TableNumberIsValid;
         }
 
 
@@ -42,7 +48,7 @@ namespace NormaMeasure.Devices.SAC
             base.ConfigureDevicePort();
             DevicePort.BaudRate = 115200;
             DevicePort.DataBits = 8;
-            DevicePort.PortName = "COM2";
+            DevicePort.PortName = "COM1";
             DevicePort.ReadTimeout = 300;
             Receiver = new TableReceiverControl_Thread(this);
             Receiver.NewCommandReceived += Receiver_NewCommandReceived;
@@ -60,78 +66,60 @@ namespace NormaMeasure.Devices.SAC
                 //Прием серийного номера
                 case TABLE_NUM_INPUT_CMD:
                     OnTableNumber_Received?.Invoke(this);
-                    System.Windows.Forms.MessageBox.Show("Серийный номер");
+                    if (!TableNumberIsValid) TableNumberIsValid = (int)receivedInfo[2] == tableNumber;
+     
+                        
                     Debug.WriteLine($"SACTable.Receiver_NewCommandReceived: принят номер стола {receivedInfo[2]}");
                     break;
                 //Приём информации по ВСВИ
                 case VSVI_INPUT_CMD:
                     OnVSVIInfo_Received?.Invoke(this);
-                    System.Windows.Forms.MessageBox.Show("Для ВСВИ");
+                    //System.Windows.Forms.MessageBox.Show("Для ВСВИ");
                     Debug.WriteLine($"SACTable.Receiver_NewCommandReceived: принята информация для ВСВИ: {receivedInfo[2]}");
                     break;
             }
         }
 
-
-        public bool SendCommand(byte cmd, byte[] RxData = null)
-        {
-            byte[] data = new byte[] { 0x00 };
-            return SendCommand(cmd, data, RxData);
-        }
-
-        private bool WriteBytes(byte[] buildedCmd, byte checkSum, byte[] RxBuffer = null)
+        private bool WriteBytes(byte[] buildedCmd, byte checkSum)
         {
             bool cmdWasSent = false;
+            byte[] tmpRx = new byte[] { 0x00 }; 
             int RepeadSendingTimes = 10;
+
             while (Receiver.RxFlag) ;
 
-            if (RxBuffer == null) RxBuffer = new byte[] { 0x00 }; //так как нам всё равно надо читать команду, создаем массив если он не задан в параметре
-
             Receiver.TxFlag = true; //Чтобы случайно ничего не принять во время отправки
+
             do
             {
-                base.WriteCmdAndReadBytesArr(buildedCmd, RxBuffer);
-                cmdWasSent = RxBuffer[0] == checkSum;
+                base.WriteCmdAndReadBytesArr(buildedCmd, tmpRx);
+                cmdWasSent = tmpRx[0] == checkSum;
             } while (RepeadSendingTimes-- > 0 && !cmdWasSent);
-            Receiver.TxFlag = false;
 
+            Receiver.TxFlag = false;
             return cmdWasSent;
         }
 
-        /// <summary>
-        /// Оправляет и считывает данные 
-        /// </summary>
-        /// <param name="buildedCmd">Подготовленная для отправки в стол команда</param>
-        /// <param name="checkSum">Проверочная сумма</param>
-        /// <param name="RxBuffer">Считываемые данные</param>
-        /// <returns></returns>
-        private bool WriteCmdAndReadBytesArr(byte[] buildedCmd, byte checkSum, byte[] RxBuffer)
-        {
-            return WriteBytes(buildedCmd, checkSum, RxBuffer);
-        }
 
         /// <summary>
         /// Отправляет данные в стол с возможностью получения ответной информации
         /// </summary>
         /// <param name="cmd"></param>
         /// <param name="data"></param>
-        /// <param name="RxBuffer"></param>
         /// <returns></returns>
-        public bool SendCommand(byte cmd, byte[] data, byte[] RxBuffer = null)
+        public bool SendCommand(byte cmd, byte[] data)
         {
             byte[] toSend = new byte[] { };
-            byte checkSum = BuildCommand(cmd, data, toSend);
-            if (RxBuffer == null)
-            {
-                return WriteBytes(toSend, checkSum);
-            }else
-            {
-                return WriteCmdAndReadBytesArr(toSend, checkSum, RxBuffer);
-            }
-
+            byte checkSum = BuildCommand(cmd, data, ref toSend);
+            return WriteBytes(toSend, checkSum);
         }
 
-        protected byte BuildCommand(byte cmdAddr, byte[] data, byte[] TxBuffer)
+        public bool SendCommand(byte cmd)
+        {
+            return SendCommand(cmd, new byte[] { 0x00});
+        }
+
+        protected byte BuildCommand(byte cmdAddr, byte[] data, ref byte[] TxBuffer)
         {
             byte checkSum = 0x00;
             List<byte> cmd = new List<byte>();
@@ -164,6 +152,8 @@ namespace NormaMeasure.Devices.SAC
         public event SACTable_Handler OnTableNumber_Received;
         public event SACTable_Handler OnVSVIInfo_Received;
 
+
+        private bool TableNumberIsValid = false;
         public const byte TABLE_NUM_INPUT_CMD = 0x14;
         public const byte VSVI_INPUT_CMD = 0x10;
     }
@@ -248,4 +238,5 @@ namespace NormaMeasure.Devices.SAC
         private SACTable table;
         public event TableReceiverControl_Thread_Handler NewCommandReceived;
     }
+
 }

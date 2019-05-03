@@ -56,11 +56,15 @@ namespace NormaMeasure.Devices.SAC
         private void Table_Device_LostConnection(DeviceBase device)
         {
             OnTableLost?.Invoke(this, (SACTable)device);
+            throw new NotImplementedException();
+            System.Windows.Forms.MessageBox.Show($"Table_Device_LostConnection ({device.PortName})");
         }
 
         private void Table_Device_Connected(DeviceBase device)
         {
             OnTableFound?.Invoke(this, (SACTable)device);
+            System.Windows.Forms.MessageBox.Show($"Table_Device_Connected  ({device.PortName})");
+            
         }
 
         /// <summary>
@@ -79,8 +83,8 @@ namespace NormaMeasure.Devices.SAC
         /// </summary>
         public void Find()
         {
-            centralSysPult.Find();
-            table.Find();
+            //centralSysPult.Find();
+           // table.Find();
         }
 
         private void Cps_Device_LostConnection(DeviceBase device)

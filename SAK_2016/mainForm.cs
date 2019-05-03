@@ -80,7 +80,7 @@ namespace NormaMeasure.SAC_APP
 
         private void SacDevice_OnTableFound(SAC_Device sac, SACTable table)
         {
-            tableToolStripLabel.Text = $"Стол №{table.DeviceId}";
+            tableToolStripLabel.Text = $"Стол №{table.DeviceId} ({table.PortName})";
         }
 
         private void CheckSACLink()
@@ -210,12 +210,14 @@ namespace NormaMeasure.SAC_APP
 
         private void CPSStatusLabel_Click(object sender, EventArgs e)
         {
-            CheckSACLink();
+            sacDevice.CentralSysPult.Find();
+            //CheckSACLink();
         }
 
         private void tableToolStripLabel_Click(object sender, EventArgs e)
         {
-            sacDevice.table.Find();
+           if (!sacDevice.table.IsConnected) sacDevice.table.Find();
+           else tableToolStripLabel.Text = $"Стол №{sacDevice.table.DeviceId} ({sacDevice.table.PortName})";
         }
 
         private void Table_OnDataReceive(Devices.DeviceBase device)

@@ -22,7 +22,7 @@ namespace NormaMeasure.Devices
             device_port = new SerialPort(components);
             FillDeviceCommands(); //Заполняем команды устройства
             ConfigureDevicePort(); //Конфигурируем COM порт устройства
-            Init_DeviceFounderTimer();
+           // Init_DeviceFounderTimer();
             deviceTypeName = "DeviceBase";
         }
 
@@ -56,7 +56,6 @@ namespace NormaMeasure.Devices
 
         public bool OpenPort()
         {
-            NotUsingTimer = 0;
             bool flag = false;
             try
             {
@@ -73,7 +72,7 @@ namespace NormaMeasure.Devices
             }
             catch (System.UnauthorizedAccessException)
             {
-                connected = false;
+                //connected = false;
             }
             catch (System.IO.IOException)
             {
@@ -158,10 +157,12 @@ namespace NormaMeasure.Devices
         {
             string[] port_list = SerialPort.GetPortNames();
             bool flag = false;
+            if (port_list.Length == 0) return false;
             foreach (string s in port_list)
             {
                 try
                 {
+                   
                     ClosePort();
                     device_port.PortName = s;
                     if (OpenPort())
@@ -186,16 +187,24 @@ namespace NormaMeasure.Devices
                     continue;
                 }
             }
+            Debug.WriteLine($"{DeviceType} status {flag}");
             return flag;
         }
 
         /// <summary>
         /// Поиск устройства 
         /// </summary>
-        public void Find()
+        public virtual void Find()
         {
-            if (!IsConnected) remainConnectionAttempting = TimesAttemptingForConnection;
-            //connected = false;
+            if (!IsConnected)
+            {
+                //Dispose_DeviceFounderTimer();
+                //Init_DeviceFounderTimer();
+                connected = AttemptToConnection();
+            }
+           // connected = AttemptToConnection();// remainConnectionAttempting = TimesAttemptingForConnection;
+           // else System.Windows.Forms.MessageBox.Show($"Уже соединено {DeviceType} {deviceId}");//connected = false;
+           // if (Ch) Init_DeviceFounderTimer();
             /*
             connected = false;
             bool f = false;
@@ -230,33 +239,27 @@ namespace NormaMeasure.Devices
         /// <returns></returns>
         public void CheckCurrentConnection(object obj)
         {
-            if (IsConnected)
+            if (remainConnectionAttempting-- > 0)
             {
-                if (++NotUsingTimer >= CHECK_LINK_INTERVAL) CheckConnection();
-            }else
-            {
-                if (remainConnectionAttempting-- > 0)
+                Device_Finding?.Invoke(this);
+                if (AttemptToConnection())
                 {
-                    Device_Finding?.Invoke(this);
-                    if (AttemptToConnection())
-                    {
-                        connected = true;
-                        Debug.WriteLine($"DeviceBase.CheckCurrentConnection: подключено {DeviceType} {deviceId}");
-                    }
-                    else
-                    {
-                        if (remainConnectionAttempting == 0) Device_NotFound?.Invoke(this);
-                        Debug.WriteLine($"DeviceBase.CheckCurrentConnection: не удалось найти {DeviceType} {deviceId}");
-                    }
+                    connected = true;
+                    Debug.WriteLine($"DeviceBase.CheckCurrentConnection: подключено {DeviceType} {deviceId}");
+                }
+                else
+                {
+                    if (remainConnectionAttempting == 0) Device_NotFound?.Invoke(this);
+                    Debug.WriteLine($"DeviceBase.CheckCurrentConnection: не удалось найти {DeviceType} {deviceId}");
                 }
             }
-
         } 
 
         private void Init_DeviceFounderTimer()
         {
             TimerCallback tm = new TimerCallback(CheckCurrentConnection);
             //overallMeasureTime = 0;
+            remainConnectionAttempting = TimesAttemptingForConnection;
             DeviceFinderTimer = new Timer(tm, 0, 0, 1000);
         }
 
