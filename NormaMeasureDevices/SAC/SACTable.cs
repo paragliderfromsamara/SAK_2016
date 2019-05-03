@@ -184,9 +184,7 @@ namespace NormaMeasure.Devices.SAC
             {
                 if (RxBufferCurPoint == 0) cmdSize = dByte+2;
                 RxBuffer[RxBufferCurPoint++] = dByte;
-                //cmdSize--;
             }
-           
             return (RxBufferCurPoint>0);
         }
 
