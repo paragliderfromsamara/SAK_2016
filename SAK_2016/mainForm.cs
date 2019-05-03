@@ -72,7 +72,7 @@ namespace NormaMeasure.SAC_APP
 
         private void CheckSACLink()
         {
-
+            //throw new NotImplementedException();
             sacDevice.FindCPS();
         }
         
