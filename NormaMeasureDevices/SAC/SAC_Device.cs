@@ -83,8 +83,8 @@ namespace NormaMeasure.Devices.SAC
         /// </summary>
         public void Find()
         {
-            //centralSysPult.Find();
-           // table.Find();
+            centralSysPult.Find();
+            table.Find();
         }
 
         private void Cps_Device_LostConnection(DeviceBase device)

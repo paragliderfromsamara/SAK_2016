@@ -158,6 +158,7 @@ namespace NormaMeasure.Devices
             string[] port_list = SerialPort.GetPortNames();
             bool flag = false;
             if (port_list.Length == 0) return false;
+            isFinding = true;
             foreach (string s in port_list)
             {
                 try
@@ -187,6 +188,7 @@ namespace NormaMeasure.Devices
                     continue;
                 }
             }
+            isFinding = false;
             Debug.WriteLine($"{DeviceType} status {flag}");
             return flag;
         }
@@ -196,7 +198,7 @@ namespace NormaMeasure.Devices
         /// </summary>
         public virtual void Find()
         {
-            if (!IsConnected)
+            if (!IsConnected && !IsFinding)
             {
                 //Dispose_DeviceFounderTimer();
                 //Init_DeviceFounderTimer();
@@ -303,6 +305,28 @@ namespace NormaMeasure.Devices
         public bool IsOpen => device_port.IsOpen;
         private SerialPort device_port;
         public SerialPort DevicePort => device_port;
+
+        private bool findingStatus = false;
+        public bool IsFinding => isFinding;
+        private bool isFinding
+        {
+            set
+            {
+                bool was = findingStatus;
+                findingStatus = value;
+                if (was && !findingStatus)
+                {
+                    if (!IsConnected) Device_NotFound?.Invoke(this);
+                }
+                else if (!was && findingStatus)
+                {
+                    Device_Finding?.Invoke(this);
+                }
+            }get
+            {
+                return findingStatus;
+            }
+        }
 
         public bool IsConnected => isConnected;
         private bool isConnected = false;
