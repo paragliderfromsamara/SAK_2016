@@ -27,14 +27,13 @@ namespace NormaMeasure.Devices.SAC
             Debug.WriteLine($"SACTable.DevicePort_DataReceived1: DevicePort_ErrorReceived");
         }
 
-        public void FindTable()
-        {
-            SendCommand(0x00);
-        }
        
         protected override bool CheckConnection()
         {
-            return true;
+            byte[] RxData = new byte[5];
+            if (!SendCommand(0x00, RxData)) return false;
+            if (RxData[2] != TABLE_NUM_INPUT_CMD) return false;
+            return (RxData[3] == RxData[4] && RxData[3] == tableNumber);
         }
 
 
@@ -59,13 +58,13 @@ namespace NormaMeasure.Devices.SAC
             switch (cmd)
             {
                 //Прием серийного номера
-                case 0x14:
+                case TABLE_NUM_INPUT_CMD:
                     OnTableNumber_Received?.Invoke(this);
                     System.Windows.Forms.MessageBox.Show("Серийный номер");
                     Debug.WriteLine($"SACTable.Receiver_NewCommandReceived: принят номер стола {receivedInfo[2]}");
                     break;
                 //Приём информации по ВСВИ
-                case 0x10:
+                case VSVI_INPUT_CMD:
                     OnVSVIInfo_Received?.Invoke(this);
                     System.Windows.Forms.MessageBox.Show("Для ВСВИ");
                     Debug.WriteLine($"SACTable.Receiver_NewCommandReceived: принята информация для ВСВИ: {receivedInfo[2]}");
@@ -74,29 +73,61 @@ namespace NormaMeasure.Devices.SAC
         }
 
 
-        public bool SendCommand(byte cmd)
+        public bool SendCommand(byte cmd, byte[] RxData = null)
         {
             byte[] data = new byte[] { 0x00 };
-            return SendCommand(cmd, data);
+            return SendCommand(cmd, data, RxData);
         }
-        public bool SendCommand(byte cmd, byte[] data)
+
+        private bool WriteBytes(byte[] buildedCmd, byte checkSum, byte[] RxBuffer = null)
         {
-            byte[] toSend = new byte[] { };
-            byte checkSum = BuildCommand(cmd, data, toSend);
-            byte[] RxBuffer = new byte[] { 0x00 };
-            int RepeadSendingTimes = 10;
             bool cmdWasSent = false;
+            int RepeadSendingTimes = 10;
+            while (Receiver.RxFlag) ;
 
-            while (Receiver.RxFlag);
+            if (RxBuffer == null) RxBuffer = new byte[] { 0x00 }; //так как нам всё равно надо читать команду, создаем массив если он не задан в параметре
 
-            Receiver.TxFlag = true; //Чтобы ничего не принимать во время отправки
+            Receiver.TxFlag = true; //Чтобы случайно ничего не принять во время отправки
             do
             {
-                WriteCmdAndReadBytesArr(toSend, RxBuffer);
+                base.WriteCmdAndReadBytesArr(buildedCmd, RxBuffer);
                 cmdWasSent = RxBuffer[0] == checkSum;
             } while (RepeadSendingTimes-- > 0 && !cmdWasSent);
             Receiver.TxFlag = false;
+
             return cmdWasSent;
+        }
+
+        /// <summary>
+        /// Оправляет и считывает данные 
+        /// </summary>
+        /// <param name="buildedCmd">Подготовленная для отправки в стол команда</param>
+        /// <param name="checkSum">Проверочная сумма</param>
+        /// <param name="RxBuffer">Считываемые данные</param>
+        /// <returns></returns>
+        private bool WriteCmdAndReadBytesArr(byte[] buildedCmd, byte checkSum, byte[] RxBuffer)
+        {
+            return WriteBytes(buildedCmd, checkSum, RxBuffer);
+        }
+
+        /// <summary>
+        /// Отправляет данные в стол с возможностью получения ответной информации
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <param name="data"></param>
+        /// <param name="RxBuffer"></param>
+        /// <returns></returns>
+        public bool SendCommand(byte cmd, byte[] data, byte[] RxBuffer = null)
+        {
+            byte[] toSend = new byte[] { };
+            byte checkSum = BuildCommand(cmd, data, toSend);
+            if (RxBuffer == null)
+            {
+                return WriteBytes(toSend, checkSum);
+            }else
+            {
+                return WriteCmdAndReadBytesArr(toSend, checkSum, RxBuffer);
+            }
 
         }
 
@@ -132,12 +163,14 @@ namespace NormaMeasure.Devices.SAC
 
         public event SACTable_Handler OnTableNumber_Received;
         public event SACTable_Handler OnVSVIInfo_Received;
-        public byte[] RxBuffer = new byte[512] ;
 
-
-        
+        public const byte TABLE_NUM_INPUT_CMD = 0x14;
+        public const byte VSVI_INPUT_CMD = 0x10;
     }
 
+    /// <summary>
+    /// Поток постоянной проверки принимаемой от стола информации
+    /// </summary>
     class TableReceiverControl_Thread : IDisposable
     {
         public bool Terminated = false;
@@ -145,8 +178,6 @@ namespace NormaMeasure.Devices.SAC
         public bool TxFlag = false;
         public int RxBufferCurPoint = 0;
         private byte[] RxBuffer = new byte[512];
-        private byte[] TxBuffer = new byte[512];
-        byte receivedLastTransAction_CheckSum = 0x00;
 
 
 
@@ -162,7 +193,7 @@ namespace NormaMeasure.Devices.SAC
             do
             {
                 RxFlag = false;
-                while (TxFlag) {  }
+                while (TxFlag);
                 RxFlag = true;
                 if (ReadBytes())
                 {

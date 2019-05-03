@@ -34,7 +34,7 @@ namespace NormaMeasure.Devices.SAC
         public SAC_Device()
         {
             InitCps();
-            InitTables();
+            InitTable();
             //InitTables();
         }
 
@@ -46,9 +46,21 @@ namespace NormaMeasure.Devices.SAC
         /// <summary>
         /// Инициализация столов
         /// </summary>
-        protected virtual void InitTables()
+        public virtual void InitTable()
         {
             table = new SACTable(1);
+            table.Device_Connected += Table_Device_Connected;
+            table.Device_LostConnection += Table_Device_LostConnection;
+        }
+
+        private void Table_Device_LostConnection(DeviceBase device)
+        {
+            OnTableLost?.Invoke(this, (SACTable)device);
+        }
+
+        private void Table_Device_Connected(DeviceBase device)
+        {
+            OnTableFound?.Invoke(this, (SACTable)device);
         }
 
         /// <summary>
@@ -65,9 +77,10 @@ namespace NormaMeasure.Devices.SAC
         /// <summary>
         /// Ищем пульт системы
         /// </summary>
-        public void FindCPS()
+        public void Find()
         {
             centralSysPult.Find();
+            table.Find();
         }
 
         private void Cps_Device_LostConnection(DeviceBase device)
@@ -139,8 +152,8 @@ namespace NormaMeasure.Devices.SAC
         public event SAC_CPS_EventHandler OnCPSFound;
         public event SAC_CPS_EventHandler OnCPSLost;
 
-        private event SAC_Table_EventHandler OnTableFound;
-        private event SAC_Table_EventHandler OnTableLost;
+        public event SAC_Table_EventHandler OnTableFound;
+        public event SAC_Table_EventHandler OnTableLost;
     }
 
     public class SACIniFile

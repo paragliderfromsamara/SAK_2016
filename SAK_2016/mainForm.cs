@@ -66,14 +66,27 @@ namespace NormaMeasure.SAC_APP
             CPSStatusLabel.Text = "Крейт не найден";
             sacDevice.OnCPSFound += SacDevice_OnCPSFound;
             sacDevice.OnCPSLost += SacDevice_OnCPSLost;
-            sacDevice.FindCPS();
+            sacDevice.OnTableFound += SacDevice_OnTableFound;
+            sacDevice.OnTableLost += SacDevice_OnTableLost;
+            sacDevice.Find();
 
+
+        }
+
+        private void SacDevice_OnTableLost(SAC_Device sac, SACTable table)
+        {
+            tableToolStripLabel.Text = "Нет связи со столом";
+        }
+
+        private void SacDevice_OnTableFound(SAC_Device sac, SACTable table)
+        {
+            tableToolStripLabel.Text = $"Стол №{table.DeviceId}";
         }
 
         private void CheckSACLink()
         {
             //throw new NotImplementedException();
-            sacDevice.FindCPS();
+            sacDevice.Find();
         }
         
 
@@ -202,7 +215,7 @@ namespace NormaMeasure.SAC_APP
 
         private void tableToolStripLabel_Click(object sender, EventArgs e)
         {
-            //sacDevice.table.FindTable();
+            sacDevice.table.Find();
         }
 
         private void Table_OnDataReceive(Devices.DeviceBase device)

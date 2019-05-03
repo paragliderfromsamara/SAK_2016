@@ -38,18 +38,18 @@ namespace NormaMeasure.Devices
         /// <returns></returns>
         public void WriteBytes(byte[] command)
         {
-            repeat:
+            //repeat:
             OpenPort();
             try
             {
                 device_port.Write(command, 0, command.Length);
             }catch(System.IO.IOException)
             {
-                goto repeat;
+                //goto repeat;
             }
             catch(System.InvalidOperationException)
             {
-                goto repeat;
+               // goto repeat;
             }
 
         }
