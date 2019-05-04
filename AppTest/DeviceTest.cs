@@ -35,8 +35,6 @@ namespace AppTest
                 //cps.Commutator.Test();
                 //cps.LedLineTest();
             }
-            
-
         }
 
         private static void Commutator_OnCommutator_StateChanged(NormaMeasure.Devices.SAC.SACUnits.CPSCommutator commutator)
