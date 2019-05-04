@@ -55,6 +55,12 @@
     <Compile Include="SAC\SAC_Device.cs" />
     <Compile Include="SAC\SACCPS.cs" />
     <Compile Include="SAC\SACTable.cs" />
+    <Compile Include="SAC\TableMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SAC\TableMap.Designer.cs">
+      <DependentUpon>TableMap.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">
@@ -65,6 +71,11 @@
       <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
       <Name>NormaMeasureUtils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SAC\TableMap.resx">
+      <DependentUpon>TableMap.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

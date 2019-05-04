@@ -57,6 +57,9 @@ namespace NormaMeasure.SAC_APP
             InitializeComponent();
             InitCulture();
             InitSAC();
+            TableMap map = new TableMap();
+            map.MdiParent = this;
+            map.Show();
             if (isTestApp) this.Text += " (Тестовый режим)";
         }
 
