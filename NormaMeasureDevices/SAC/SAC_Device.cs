@@ -16,6 +16,10 @@ namespace NormaMeasure.Devices.SAC
 
     public class SAC_Device : IDisposable
     {
+        public const int MIN_FREQ = 10;
+        public const int FREQ_STEP_8KGZ_BEGIN = 40;
+        public const int MAX_FREQ = 2000;
+
         private bool isOnMeasure = false;
         public bool IsOnMeasure => isOnMeasure;
         public SACIniFile SettingsFile
@@ -335,13 +339,13 @@ namespace NormaMeasure.Devices.SAC
         public SACCommutationType CommutationType = SACCommutationType.MergedTable;
         public LeadCommutationType LeadCommType = LeadCommutationType.A;
         public CableStructureType structureType;
-        public int StartElementPair=0;
-        public int StartElementLead;
-        public int EndElementPair;
-        public int EndElementLead;
-        public int FreqMin;
-        public int FreqMax;
-        public int FreqStep;
+        public int CableElementNumber=0;
+        public byte CableCommutatorPosition;
+        public byte CableCommutatorRangePosition;
+        public int FrequencyMin;
+        public int FrequencyMax;
+        public int FrequencyStep;
+        public int WaveResistance = 0;
     }
 
     /// <summary>

@@ -93,8 +93,8 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             MeasurePoint = new SACMeasurePoint();
             MeasurePoint.CommutationType = SACCommutationType.Etalon;
-            MeasurePoint.StartElementPair = 1;
-            MeasurePoint.StartElementLead = 1;
+            //MeasurePoint.StartElementPair = 1;
+            //MeasurePoint.StartElementLead = 1;
             MeasurePoint.RawResult = 0;
             MeasurePoint.ConvertedResult = 0;
         }

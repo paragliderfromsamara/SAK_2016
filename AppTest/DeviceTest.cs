@@ -39,7 +39,7 @@ namespace AppTest
 
         }
 
-        private static void Commutator_OnCommutator_StateChanged(NormaMeasure.Devices.SAC.CPSUnits.CPSCommutator commutator)
+        private static void Commutator_OnCommutator_StateChanged(NormaMeasure.Devices.SAC.SACUnits.CPSCommutator commutator)
         {
             Console.WriteLine($"{commutator.State[0]} {commutator.State[1]}");
         }

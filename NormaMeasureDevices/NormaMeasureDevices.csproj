@@ -52,6 +52,7 @@
     <Compile Include="SAC\SACUnits\U120.cs" />
     <Compile Include="SAC\SACUnits\U130.cs" />
     <Compile Include="SAC\SACUnits\U160.cs" />
+    <Compile Include="SAC\SACUnits\USICommutator.cs" />
     <Compile Include="SAC\SAC_Device.cs" />
     <Compile Include="SAC\SACCPS.cs" />
     <Compile Include="SAC\SACTable.cs" />
