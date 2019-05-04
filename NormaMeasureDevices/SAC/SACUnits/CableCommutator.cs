@@ -8,7 +8,6 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 {
     public class PairCommutator : SACUnit
     {
-
         public PairCommutator(SACTable _table) : base(_table)
         {
             
@@ -18,7 +17,15 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         protected override void InitUnit()
         {
             base.InitUnit();
+        }
 
+        /// <summary>
+        /// Обновляет состояние реле в столах 
+        /// </summary>
+        /// <returns></returns>
+        public bool RefreshAllRele()
+        {
+            return table.SendCommand(0x07);
         }
 
         /// <summary>
@@ -27,15 +34,30 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// <param name="pairNumber">Номер пары (начиная с 1)</param>
         /// <param name="comPairState"></param>
         /// <returns></returns>
-        public bool SetPairTo(int pairNumber, ComTablePairConncectionState comPairState)
+        public bool SetPairTo(byte pairNumber, ComTablePairConncectionState comPairState)
         {
             byte state = (byte)comPairState;
-            return table.SendCommand((byte)(unitCMD_Address), new byte[] { (byte)pairNumber, state });
+            return table.SendCommand(unitCMD_Address, new byte[] { pairNumber, state });
         }
 
 
         /// <summary>
-        /// Задаёт состояние всего стола
+        /// Задаёт состояние диапазона пар стола
+        /// </summary>
+        /// <param name="firstPair">Начальная пара диапазона (минимум 1)</param>
+        /// <param name="lastPair">Конечная пара диапазона (макс 104)</param>
+        /// <param name="state">Состояние</param>
+        /// <returns></returns>
+        public bool SetPairRangeTo(byte firstPair, byte lastPair, ComTablePairConncectionState comPairState)
+        {
+            byte state = (byte)comPairState;
+            return table.SendCommand(0x08, new byte[] { firstPair, lastPair, state });
+        }
+
+
+
+        /// <summary>
+        /// Задаёт состояние пар всего стола
         /// </summary>
         /// <param name="comPairState">Состояние в которое надо ввести реле стола</param>
         public bool SetAllPairTo(ComTablePairConncectionState comPairState)
