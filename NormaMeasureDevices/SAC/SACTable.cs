@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Diagnostics;
 using System.Threading;
+using NormaMeasure.Devices.SAC.SACUnits;
 
 namespace NormaMeasure.Devices.SAC
 {
@@ -15,11 +16,26 @@ namespace NormaMeasure.Devices.SAC
     {
         int tableNumber = 1;
         TableReceiverControl_Thread Receiver;
+
+
+
         public SACTable(int table_number) : base()
         {
             deviceTypeName = "Стол";
             tableNumber = table_number;
             deviceId = table_number.ToString();
+            cableCommutator = new PairCommutator(this);
+        }
+
+        public bool ClearCableCommutator()
+        {
+            cableCommutator.SetAllPairTo(ComTablePairConncectionState.spMASTER);
+            Thread.Sleep(5000);
+            cableCommutator.SetAllPairTo(ComTablePairConncectionState.spSLAVE);
+            Thread.Sleep(5000);
+            cableCommutator.SetAllPairTo(ComTablePairConncectionState.spBOTH);
+            Thread.Sleep(5000);
+            return cableCommutator.SetAllPairTo(ComTablePairConncectionState.spNONE);
         }
 
         public override void Find()
@@ -114,9 +130,14 @@ namespace NormaMeasure.Devices.SAC
             return WriteBytes(toSend, checkSum);
         }
 
+        public bool SendCommand(byte cmd, byte data)
+        {
+            return SendCommand(cmd, new byte[] { data });
+        }
+
         public bool SendCommand(byte cmd)
         {
-            return SendCommand(cmd, new byte[] { 0x00});
+            return SendCommand(cmd, 0x00);
         }
 
         protected byte BuildCommand(byte cmdAddr, byte[] data, ref byte[] TxBuffer)
@@ -152,6 +173,7 @@ namespace NormaMeasure.Devices.SAC
         public event SACTable_Handler OnTableNumber_Received;
         public event SACTable_Handler OnVSVIInfo_Received;
 
+        private PairCommutator cableCommutator;
 
         private bool TableNumberIsValid = false;
         public const byte TABLE_NUM_INPUT_CMD = 0x14;

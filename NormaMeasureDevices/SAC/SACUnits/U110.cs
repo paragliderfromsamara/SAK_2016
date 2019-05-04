@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 
 
-namespace NormaMeasure.Devices.SAC.CPSUnits
+namespace NormaMeasure.Devices.SAC.SACUnits
 {
     public class U110 : CPSMeasureUnit
     {

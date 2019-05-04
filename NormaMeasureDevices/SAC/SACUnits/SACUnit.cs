@@ -4,11 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NormaMeasure.Devices.SAC.CPSUnits
+namespace NormaMeasure.Devices.SAC.SACUnits
 {
-    public class CPSUnit
+    public class SACUnit
     {
-        public CPSUnit(SACCPS _cps)
+        public SACUnit(SACTable _table)
+        {
+            table = _table;
+            InitUnit();
+        }
+        public SACUnit(SACCPS _cps)
         {
             cps = _cps;
             InitUnit();
@@ -29,6 +34,7 @@ namespace NormaMeasure.Devices.SAC.CPSUnits
 
         protected byte unitCMD_Address;
         protected SACCPS cps;
+        protected SACTable table;
 
         protected string unitName;
         protected string unitTitle;

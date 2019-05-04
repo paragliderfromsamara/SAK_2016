@@ -56,7 +56,7 @@ namespace NormaMeasure.SAC_APP
         {
             InitializeComponent();
             InitCulture();
-            InitSAC();
+
             TableMap map = new TableMap();
             map.MdiParent = this;
             map.Show();
@@ -231,6 +231,11 @@ namespace NormaMeasure.SAC_APP
         private void mainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             sacDevice.Dispose();
+        }
+
+        private void mainForm_Shown(object sender, EventArgs e)
+        {
+            InitSAC();
         }
     }
 }

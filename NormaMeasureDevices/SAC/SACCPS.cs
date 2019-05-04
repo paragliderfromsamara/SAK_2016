@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Threading;
-using NormaMeasure.Devices.SAC.CPSUnits;
+using NormaMeasure.Devices.SAC.SACUnits;
 using NormaMeasure.DBControl.Tables;
 
 namespace NormaMeasure.Devices.SAC

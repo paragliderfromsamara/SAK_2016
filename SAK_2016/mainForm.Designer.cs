@@ -194,6 +194,7 @@
             this.Text = "САК 2016";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mainForm_FormClosed);
             this.Load += new System.EventHandler(this.mainForm_Load);
+            this.Shown += new System.EventHandler(this.mainForm_Shown);
             this.sacMenuStrip.ResumeLayout(false);
             this.sacMenuStrip.PerformLayout();
             this.mainFormToolStripMenu.ResumeLayout(false);

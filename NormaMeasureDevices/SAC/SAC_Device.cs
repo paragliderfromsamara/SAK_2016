@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl.Tables;
 using NormaMeasure.Utils;
-using NormaMeasure.Devices.SAC.CPSUnits;
+using NormaMeasure.Devices.SAC.SACUnits;
+using System.Threading;
 
 namespace NormaMeasure.Devices.SAC
 {
@@ -63,6 +64,7 @@ namespace NormaMeasure.Devices.SAC
         private void Table_Device_Connected(DeviceBase device)
         {
             OnTableFound?.Invoke(this, (SACTable)device);
+            ((SACTable)device).ClearCableCommutator();
             System.Windows.Forms.MessageBox.Show($"Table_Device_Connected  ({device.PortName})");
             
         }
@@ -78,13 +80,19 @@ namespace NormaMeasure.Devices.SAC
             //centralSysPult.Find();
         }
 
+        private void findThread()
+        {
+            centralSysPult.Find();
+            table.Find();
+        }
+
         /// <summary>
         /// Ищем пульт системы
         /// </summary>
         public void Find()
         {
-            centralSysPult.Find();
-            table.Find();
+            Thread th = new Thread(findThread);
+            th.Start();
         }
 
         private void Cps_Device_LostConnection(DeviceBase device)

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using NormaMeasure.DBControl.Tables;
 
-namespace NormaMeasure.Devices.SAC.CPSUnits
+namespace NormaMeasure.Devices.SAC.SACUnits
 {
-    public class CPSCommutator : CPSUnit
+    public class CPSCommutator : SACUnit
     {
         public delegate void CPSCommutator_Handler(CPSCommutator commutator);
         public CPSCommutator(SACCPS _cps) : base(_cps)

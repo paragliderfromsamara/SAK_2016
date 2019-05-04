@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl.Tables;
 
-namespace NormaMeasure.Devices.SAC.CPSUnits
+namespace NormaMeasure.Devices.SAC.SACUnits
 {
     public class U160 : CPSMeasureUnit
     {

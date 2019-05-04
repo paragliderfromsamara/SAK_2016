@@ -7,9 +7,9 @@ using NormaMeasure.DBControl.Tables;
 using System.Threading;
 using System.Diagnostics;
 
-namespace NormaMeasure.Devices.SAC.CPSUnits
+namespace NormaMeasure.Devices.SAC.SACUnits
 {
-    public class CPSMeasureUnit : CPSUnit
+    public class CPSMeasureUnit : SACUnit
     {
         protected LeadCommutationType LeadCommType = LeadCommutationType.AB;
         protected uint[] allowedMeasuredParameters;
