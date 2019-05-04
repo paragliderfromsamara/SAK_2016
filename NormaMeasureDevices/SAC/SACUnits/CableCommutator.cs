@@ -21,6 +21,18 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         }
 
+        /// <summary>
+        /// Устанавливает ПУ стола с номером pairNumber в состояние comPairState
+        /// </summary>
+        /// <param name="pairNumber">Номер пары (начиная с 1)</param>
+        /// <param name="comPairState"></param>
+        /// <returns></returns>
+        public bool SetPairTo(int pairNumber, ComTablePairConncectionState comPairState)
+        {
+            byte state = (byte)comPairState;
+            return table.SendCommand((byte)(unitCMD_Address), new byte[] { (byte)pairNumber, state });
+        }
+
 
         /// <summary>
         /// Задаёт состояние всего стола
