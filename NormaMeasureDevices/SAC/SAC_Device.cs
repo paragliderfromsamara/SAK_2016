@@ -336,7 +336,7 @@ namespace NormaMeasure.Devices.SAC
         /// <summary>
         /// Тип коммутации
         /// </summary>
-        public SACCommutationType CommutationType = SACCommutationType.MergedTable;
+        public SACCommutationType CommutationType = SACCommutationType.WithFarEnd;
         public LeadCommutationType LeadCommType = LeadCommutationType.A;
         public CableStructureType structureType;
         public int CableElementNumber=0;
@@ -346,6 +346,7 @@ namespace NormaMeasure.Devices.SAC
         public int FrequencyMax;
         public int FrequencyStep;
         public int WaveResistance = 0;
+        public CallingSubModes CallingSubMode = CallingSubModes.Short;
     }
 
     /// <summary>
@@ -356,8 +357,8 @@ namespace NormaMeasure.Devices.SAC
     /// </summary>
     public enum SACCommutationType
     {
-        MergedTable,
-        SplittedTable,
+        NoFarEnd,
+        WithFarEnd,
         Etalon
     }
 }

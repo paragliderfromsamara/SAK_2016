@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NormaMeasure.DBControl.Tables;
+
 
 namespace NormaMeasure.Devices.SAC.SACUnits
 {
@@ -33,8 +35,133 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// </summary>
         private void SetCommutatorMode()
         {
-
+            switch(current_point.parameterType.ParameterTypeId)
+            {
+                case MeasuredParameterType.Calling:
+                    SetCommutatorMode_ForCalling();
+                    break;
+                case MeasuredParameterType.Rleads:
+                case MeasuredParameterType.dR:
+                    SetCommtator_For_Rleads_And_dR();
+                    break;
+                case MeasuredParameterType.Co:
+                case MeasuredParameterType.Cp:
+                case MeasuredParameterType.Ea:
+                case MeasuredParameterType.K1:
+                case MeasuredParameterType.K2:
+                case MeasuredParameterType.K3:
+                case MeasuredParameterType.K23:
+                case MeasuredParameterType.K9:
+                case MeasuredParameterType.K10:
+                case MeasuredParameterType.K11:
+                case MeasuredParameterType.K12:
+                case MeasuredParameterType.K9_12:
+                    SetCommtator_For_Cp_And_CoEK();
+                    break;
+                case MeasuredParameterType.Risol1:
+                case MeasuredParameterType.Risol2:
+                case MeasuredParameterType.Risol3:
+                case MeasuredParameterType.Risol4:
+                    SetCommtator_For_Rizol();
+                    break;
+                case MeasuredParameterType.al:
+                case MeasuredParameterType.Ao:
+                case MeasuredParameterType.Az:
+                    SetCommutator_ForPV();
+                    break;
+                default:
+                    CommutatorMode = (byte)USICommutatorModes.CLEAR;
+                    break;
+     
+            }
         }
+
+        private void SetCommutator_ForPV()
+        {
+            if (current_point.CommutationType == SACCommutationType.Etalon)
+            {
+                CommutatorMode = (byte)USICommutatorModes.PV_ETAL;
+            }else
+            {
+                if (current_point.parameterType.ParameterTypeId == MeasuredParameterType.al) CommutatorMode = (byte)USICommutatorModes.al;
+                else if (current_point.parameterType.ParameterTypeId == MeasuredParameterType.Ao) CommutatorMode = (byte)USICommutatorModes.Ao;
+                else if (current_point.parameterType.ParameterTypeId == MeasuredParameterType.Az) CommutatorMode = (byte)USICommutatorModes.Az;
+            }
+        }
+
+        /// <summary>
+        /// Установка режима коммутатора для Rизол
+        /// </summary>
+        private void SetCommtator_For_Rizol()
+        {
+            if (current_point.CommutationType == SACCommutationType.WithFarEnd)
+            {
+                CommutatorMode = (byte)USICommutatorModes.RIZ;
+            }
+            else
+            {
+                CommutatorMode = (byte)USICommutatorModes.RIZ_DT;
+            }
+        }
+
+        /// <summary>
+        /// Установка коммутатора для емкостных параметров
+        /// </summary>
+        private void SetCommtator_For_Cp_And_CoEK()
+        {
+            if (current_point.CommutationType == SACCommutationType.WithFarEnd)
+            {
+                CommutatorMode = (byte)USICommutatorModes.CEK;
+            }else
+            {
+                CommutatorMode = (byte)USICommutatorModes.CEK_DT;
+            }
+        }
+
+        /// <summary>
+        /// Режим коммутатора для Rжил и dR
+        /// </summary>
+        private void SetCommtator_For_Rleads_And_dR()
+        {
+            if (current_point.CommutationType == SACCommutationType.WithFarEnd)
+            {
+                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA : (byte)USICommutatorModes.RGB;
+            }
+            else
+            {
+                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA_DT: (byte)USICommutatorModes.RGB_DT;
+            }
+        }
+
+        /// <summary>
+        /// Режим коммутатора для прозвонки
+        /// </summary>
+        private void SetCommutatorMode_ForCalling()
+        {
+            if (current_point.CallingSubMode == CallingSubModes.Short)
+            {
+                if (current_point.CommutationType == SACCommutationType.WithFarEnd)
+                {
+                    CommutatorMode = (byte)USICommutatorModes.SHORT;
+                }
+                else
+                {
+                    CommutatorMode = (byte)USICommutatorModes.SHORT_DT;
+                }
+            }
+            else
+            {
+                if (current_point.CommutationType == SACCommutationType.WithFarEnd)
+                {
+                    CommutatorMode = (byte)USICommutatorModes.OPEN;
+                }
+                else
+                {
+                    CommutatorMode = (byte)USICommutatorModes.OPEN_DT;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Установка TransformatorMode и WaveResistance в зависимости от current_point 
@@ -106,12 +233,12 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
             get
             {
-                return commutatorMode;
+                return waveRes;
             }
             set
             {
-                WasChanged |= (value != commutatorMode);
-                commutatorMode = value;
+                WasChanged |= (value != waveRes);
+                waveRes = value;
             }
         }
 
@@ -122,7 +249,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
             get
             {
-                return waveRes;
+                return commutatorMode;
             }
             set
             {

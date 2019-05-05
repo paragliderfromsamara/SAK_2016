@@ -162,12 +162,12 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 tableElementsPanel.Enabled = false;
             }else if (withDK_RadioButton.Checked)
             {
-                MeasurePoint.CommutationType = SACCommutationType.SplittedTable;
+                MeasurePoint.CommutationType = SACCommutationType.WithFarEnd;
                 tableElementsPanel.Enabled = true;
             }
             else if (NoDK_RadioButton.Checked)
             {
-                MeasurePoint.CommutationType = SACCommutationType.MergedTable;
+                MeasurePoint.CommutationType = SACCommutationType.NoFarEnd;
                 tableElementsPanel.Enabled = true;
             }
         }
