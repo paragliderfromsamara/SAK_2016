@@ -262,5 +262,10 @@ namespace NormaMeasure.DBControl.Tables
         #endregion
     }
 
-
+    public enum CallingSubModes
+    {
+        Open = 0,
+        Short = 1,
+        BPair = 2
+    }
 }
