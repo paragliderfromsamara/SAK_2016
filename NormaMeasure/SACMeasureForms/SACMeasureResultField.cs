@@ -26,6 +26,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             ResultValue_Label.Location = new System.Drawing.Point((this.Width/2)-(ResultValue_Label.Width/2), ResultValue_Label.Location.Y);
             MeasureCycleCounter_Label.Text = $"Измерение {measure.CycleNumber+1}";
             MeasureParameterType_Label.Text = $"Параметр {point.parameterType.ParameterName}";
+            CommutationMode_Label.Text = point.CommutationTypeText;
         }
 
         #region Инициализация элементов панели
@@ -38,6 +39,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             InitResultLabel();
             InitCycleCounterLabel();
             InitMeasuredParameterTypeLabel();
+            CommutationModeLabel();
         }
 
         private void InitMeasuredParameterTypeLabel()
@@ -80,6 +82,21 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             ResultValue_Label.Location = new System.Drawing.Point(this.Width / 2 - ResultValue_Label.Width/2, this.Height/2 - ResultValue_Label.Height/2);
             ResultValue_Label.TabIndex = 4;
             ResultValue_Label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));// = AnchorStyles.
+
+        }
+
+        private void CommutationModeLabel()
+        {
+            CommutationMode_Label = new Label();
+            CommutationMode_Label.Parent = this;
+            CommutationMode_Label.Text = "";
+            CommutationMode_Label.AutoSize = true;
+            CommutationMode_Label.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            CommutationMode_Label.Name = "MeasureParameterType_Label";
+            CommutationMode_Label.Size = new System.Drawing.Size(170, 58);
+            CommutationMode_Label.Location = new System.Drawing.Point(this.Width-150, 10);
+            CommutationMode_Label.TabIndex = 4;
+            CommutationMode_Label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));// = AnchorStyles.
 
         }
 

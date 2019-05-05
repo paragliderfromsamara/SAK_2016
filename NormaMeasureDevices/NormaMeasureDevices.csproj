@@ -62,7 +62,7 @@
     <Compile Include="SAC\TableMap_testForm.Designer.cs">
       <DependentUpon>TableMap_testForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SAC\SACUnits\CableCommutator.cs" />
+    <Compile Include="SAC\SACUnits\PairCommutator.cs" />
     <Compile Include="TableMap.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -24,18 +24,21 @@ namespace NormaMeasure.Devices.SAC
             deviceTypeName = "Стол";
             tableNumber = table_number;
             deviceId = table_number.ToString();
-            cableCommutator = new PairCommutator(this);
+            PairCommutator = new PairCommutator(this);
+            USICommutator = new USICommutator(this);
+        }
+
+        public bool SetTableForMeasurePoint(SACMeasurePoint current_point)
+        {
+            bool flag = true;
+            flag &= USICommutator.SetUSICommutatorState(current_point);
+            flag &= PairCommutator.SetCableCommutatorState_ForCurrentPoint(current_point);
+            return flag;
         }
 
         public bool ClearCableCommutator()
         {
-            cableCommutator.SetAllPairTo(ComTablePairConncectionState.spMASTER);
-            Thread.Sleep(5000);
-            cableCommutator.SetAllPairTo(ComTablePairConncectionState.spSLAVE);
-            Thread.Sleep(5000);
-            cableCommutator.SetAllPairTo(ComTablePairConncectionState.spBOTH);
-            Thread.Sleep(5000);
-            return cableCommutator.SetAllPairTo(ComTablePairConncectionState.spNONE);
+            return PairCommutator.SetAllPairTo(ComTablePairConncectionState.spNONE);
         }
 
         public override void Find()
@@ -65,7 +68,7 @@ namespace NormaMeasure.Devices.SAC
             DevicePort.BaudRate = 115200;
             DevicePort.DataBits = 8;
             DevicePort.PortName = "COM1";
-            DevicePort.ReadTimeout = 300;
+            DevicePort.ReadTimeout = 1000;
             Receiver = new TableReceiverControl_Thread(this);
             Receiver.NewCommandReceived += Receiver_NewCommandReceived;
         }
@@ -173,7 +176,8 @@ namespace NormaMeasure.Devices.SAC
         public event SACTable_Handler OnTableNumber_Received;
         public event SACTable_Handler OnVSVIInfo_Received;
 
-        private PairCommutator cableCommutator;
+        public PairCommutator PairCommutator;
+        public USICommutator USICommutator;
 
         private bool TableNumberIsValid = false;
         public const byte TABLE_NUM_INPUT_CMD = 0x14;

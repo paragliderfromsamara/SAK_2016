@@ -92,7 +92,9 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         private void InitMeasurePoint()
         {
             MeasurePoint = new SACMeasurePoint();
-            MeasurePoint.CommutationType = SACCommutationType.Etalon;
+            MeasurePoint.CommutationType = SACCommutationType.NoFarEnd;
+            MeasurePoint.LeadCommType = LeadCommutationType.A;
+            MeasurePoint.PairCommutatorPosition = 1;
             //MeasurePoint.StartElementPair = 1;
             //MeasurePoint.StartElementLead = 1;
             MeasurePoint.RawResult = 0;
@@ -102,14 +104,8 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void startMeasure_Click(object sender, EventArgs e)
         {
-            if (MeasurePoint.CommutationType == SACCommutationType.Etalon)
-            {
                 HandMeasure.StartMeasureForPoint(MeasurePoint, (int)measureCycles_NumericUpDown.Value);
-            }
-            else
-            {
-                throw new NotImplementedException("Не реализовано ни одного метода подключения кроме Эталона");
-            }
+
             
         }
 
@@ -170,6 +166,11 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 MeasurePoint.CommutationType = SACCommutationType.NoFarEnd;
                 tableElementsPanel.Enabled = true;
             }
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

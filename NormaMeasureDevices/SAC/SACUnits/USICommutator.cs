@@ -12,6 +12,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
     {
         SACMeasurePoint current_point;
 
+
+
         public USICommutator(SACTable _table) : base(_table)
         {
 
@@ -25,15 +27,15 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public bool SetUSICommutatorState(SACMeasurePoint curPoint)
         {
             current_point = curPoint;
-            SetCommutatorMode();
-            SetPVCommutatorSettings();
+            SelectCommutatorMode();
+            SelectPVCommutatorSettings();
             return SetUSICommutatorState();
         }
 
         /// <summary>
-        /// Установка CommutatorMode в зависимости от current_point 
+        /// Выбор CommutatorMode в зависимости от current_point 
         /// </summary>
-        private void SetCommutatorMode()
+        private void SelectCommutatorMode()
         {
             switch(current_point.parameterType.ParameterTypeId)
             {
@@ -72,7 +74,6 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 default:
                     CommutatorMode = (byte)USICommutatorModes.CLEAR;
                     break;
-     
             }
         }
 
@@ -166,7 +167,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// <summary>
         /// Установка TransformatorMode и WaveResistance в зависимости от current_point 
         /// </summary>
-        private void SetPVCommutatorSettings()
+        private void SelectPVCommutatorSettings()
         {
             if (current_point.parameterType.IsFreqParameter)
             {
@@ -199,12 +200,13 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         public bool SetUSICommutatorState()
         {
+            /*
             if (WasChanged)
             {
-                WasChanged = !table.SendCommand(unitCMD_Address, new byte[] { CommutatorMode, WaveResistance, TransformatorMode });
-            }
-            return !WasChanged;
-                
+                WasChanged = !
+            }*/
+            return table.SendCommand(unitCMD_Address, new byte[] { CommutatorMode, WaveResistance, TransformatorMode });
+
         }
 
         byte transformatorMode = 0x00;
