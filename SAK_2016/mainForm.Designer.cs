@@ -45,6 +45,7 @@
             this.CPSStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.tableStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.tableToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.sacMenuStrip.SuspendLayout();
             this.mainFormToolStripMenu.SuspendLayout();
             this.SuspendLayout();
@@ -138,7 +139,8 @@
             this.sesRole,
             this.CPSStatusLabel,
             this.tableStatusLabel,
-            this.tableToolStripLabel});
+            this.tableToolStripLabel,
+            this.toolStripStatusLabel1});
             this.mainFormToolStripMenu.Location = new System.Drawing.Point(0, 454);
             this.mainFormToolStripMenu.Name = "mainFormToolStripMenu";
             this.mainFormToolStripMenu.Size = new System.Drawing.Size(981, 22);
@@ -180,6 +182,13 @@
             this.tableToolStripLabel.Size = new System.Drawing.Size(76, 17);
             this.tableToolStripLabel.Text = "Поиск стола";
             this.tableToolStripLabel.Click += new System.EventHandler(this.tableToolStripLabel_Click);
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(72, 17);
+            this.toolStripStatusLabel1.Text = "Карта стола";
+            this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // mainForm
             // 
@@ -223,6 +232,7 @@
         private System.Windows.Forms.ToolStripStatusLabel CPSStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel tableStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel tableToolStripLabel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 

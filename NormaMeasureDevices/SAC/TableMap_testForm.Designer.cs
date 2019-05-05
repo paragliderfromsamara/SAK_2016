@@ -1,6 +1,6 @@
 ﻿namespace NormaMeasure.Devices.SAC
 {
-    partial class TableMap
+    partial class TableMap_testForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,14 +30,15 @@
         {
             this.SuspendLayout();
             // 
-            // TableMap
+            // TableMap_testForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClientSize = new System.Drawing.Size(515, 261);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "TableMap";
+            this.Name = "TableMap_testForm";
             this.Text = "TableMap";
             this.ResumeLayout(false);
 

@@ -57,9 +57,7 @@ namespace NormaMeasure.SAC_APP
             InitializeComponent();
             InitCulture();
 
-            TableMap map = new TableMap();
-            map.MdiParent = this;
-            map.Show();
+
             if (isTestApp) this.Text += " (Тестовый режим)";
         }
 
@@ -230,12 +228,19 @@ namespace NormaMeasure.SAC_APP
 
         private void mainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            sacDevice.Dispose();
+            sacDevice?.Dispose();
         }
 
         private void mainForm_Shown(object sender, EventArgs e)
         {
             InitSAC();
+        }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+            TableMap_testForm map = new TableMap_testForm();
+            map.MdiParent = this;
+            map.Show();
         }
     }
 }

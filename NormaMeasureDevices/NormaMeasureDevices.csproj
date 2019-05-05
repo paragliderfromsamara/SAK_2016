@@ -56,13 +56,16 @@
     <Compile Include="SAC\SAC_Device.cs" />
     <Compile Include="SAC\SACCPS.cs" />
     <Compile Include="SAC\SACTable.cs" />
-    <Compile Include="SAC\TableMap.cs">
+    <Compile Include="SAC\TableMap_testForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SAC\TableMap.Designer.cs">
-      <DependentUpon>TableMap.cs</DependentUpon>
+    <Compile Include="SAC\TableMap_testForm.Designer.cs">
+      <DependentUpon>TableMap_testForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SAC\SACUnits\CableCommutator.cs" />
+    <Compile Include="TableMap.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">
@@ -75,8 +78,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SAC\TableMap.resx">
-      <DependentUpon>TableMap.cs</DependentUpon>
+    <EmbeddedResource Include="SAC\TableMap_testForm.resx">
+      <DependentUpon>TableMap_testForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
