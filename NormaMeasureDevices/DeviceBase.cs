@@ -122,8 +122,12 @@ namespace NormaMeasure.Devices
             try
             {
                 OpenPort();
-                dataByte = (byte)device_port.ReadByte();
-                return true;
+                if (DevicePort.BytesToRead > 0)
+                {
+                    dataByte = (byte)device_port.ReadByte();
+                    return true;
+                }
+                else return false;
             }
             catch (TimeoutException)
             {
@@ -155,41 +159,66 @@ namespace NormaMeasure.Devices
 
         private bool AttemptToConnection()
         {
-            string[] port_list = SerialPort.GetPortNames();
+            string[] port_list;
             bool flag = false;
-            if (port_list.Length == 0) return false;
-            isFinding = true;
-            foreach (string s in port_list)
+            string portNameWas = PortName;
+            isOnFinding = true;
+            repeat:
+            port_list = SerialPort.GetPortNames();
+            if (port_list.Length == 0)
             {
-                try
+                System.Windows.Forms.DialogResult r =  System.Windows.Forms.MessageBox.Show("На компьютере отсутствуют доступные COM порты!", "Ошибка связи", System.Windows.Forms.MessageBoxButtons.RetryCancel, System.Windows.Forms.MessageBoxIcon.Information);
+                if (r == System.Windows.Forms.DialogResult.Retry) goto repeat;
+            } else
+            {
+                if (port_list.Contains(PortName)) flag = TryConnectToPort(PortName);
+                if (!flag)
                 {
-                   
-                    ClosePort();
-                    device_port.PortName = s;
-                    if (OpenPort())
+                    foreach (string s in port_list)
                     {
-                        if (flag = CheckConnection()) break;
-                        else ClosePort();
+                        if (s == portNameWas) continue;
+                        if (flag = TryConnectToPort(s)) break;
                     }
                 }
-                catch (System.UnauthorizedAccessException)
+
+            }
+            isOnFinding = false;
+             
+            Debug.WriteLine($"{DeviceType} status {flag}");
+            return flag;
+        }
+
+        private bool TryConnectToPort(string port_name)
+        {
+            bool flag = false;
+            try
+            {
+                ClosePort();
+                device_port.PortName = port_name;
+                if (OpenPort())
                 {
-                    ClosePort();
-                    continue;
-                }
-                catch (System.IO.IOException)
-                {
-                    ClosePort();
-                    continue;
-                }
-                catch (TimeoutException)
-                {
-                    ClosePort();
-                    continue;
+                    if (CheckConnection())
+                    {
+                        flag = true;
+                    }
+                    else
+                    {
+                        ClosePort();
+                    }
                 }
             }
-            isFinding = false;
-            Debug.WriteLine($"{DeviceType} status {flag}");
+            catch (System.UnauthorizedAccessException)
+            {
+                ClosePort();
+            }
+            catch (System.IO.IOException)
+            {
+                ClosePort();
+            }
+            catch (TimeoutException)
+            {
+                ClosePort();
+            }
             return flag;
         }
 
@@ -198,24 +227,10 @@ namespace NormaMeasure.Devices
         /// </summary>
         public virtual void Find()
         {
-            if (!IsConnected && !IsFinding)
+            if (!IsConnected && !IsOnFinding)
             {
-                //Dispose_DeviceFounderTimer();
-                //Init_DeviceFounderTimer();
                 connected = AttemptToConnection();
             }
-           // connected = AttemptToConnection();// remainConnectionAttempting = TimesAttemptingForConnection;
-           // else System.Windows.Forms.MessageBox.Show($"Уже соединено {DeviceType} {deviceId}");//connected = false;
-           // if (Ch) Init_DeviceFounderTimer();
-            /*
-            connected = false;
-            bool f = false;
-
-
-            
-            if (!f) Device_NotFound?.Invoke(this);
-            connected = f;
-            */
         }
 
 
@@ -307,8 +322,8 @@ namespace NormaMeasure.Devices
         public SerialPort DevicePort => device_port;
 
         private bool findingStatus = false;
-        public bool IsFinding => isFinding;
-        private bool isFinding
+        public bool IsOnFinding => isOnFinding;
+        private bool isOnFinding
         {
             set
             {

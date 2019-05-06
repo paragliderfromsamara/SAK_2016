@@ -53,7 +53,7 @@ namespace NormaMeasure.Devices.SAC
         /// </summary>
         public virtual void InitTable()
         {
-            table = new SACTable(1);
+            table = new SACTable(1, this);
             table.Device_Connected += Table_Device_Connected;
             table.Device_LostConnection += Table_Device_LostConnection;
         }
@@ -61,15 +61,16 @@ namespace NormaMeasure.Devices.SAC
         private void Table_Device_LostConnection(DeviceBase device)
         {
             OnTableLost?.Invoke(this, (SACTable)device);
-            throw new NotImplementedException();
-            System.Windows.Forms.MessageBox.Show($"Table_Device_LostConnection ({device.PortName})");
+
+            //throw new NotImplementedException();
+           // System.Windows.Forms.MessageBox.Show($"Table_Device_LostConnection ({device.PortName})");
         }
 
         private void Table_Device_Connected(DeviceBase device)
         {
             OnTableFound?.Invoke(this, (SACTable)device);
             ((SACTable)device).ClearCableCommutator();
-            System.Windows.Forms.MessageBox.Show($"Table_Device_Connected  ({device.PortName})");
+            //System.Windows.Forms.MessageBox.Show($"Table_Device_Connected  ({device.PortName})");
             
         }
 
@@ -190,11 +191,42 @@ namespace NormaMeasure.Devices.SAC
             InitFile();
         }
 
+        public string GetLastCPSPortName()
+        {
+            string port_name = "COM1";
+            if (file.KeyExists("port_name", "LAST CPS"))
+            {
+                port_name = file.Read("port_name", "LAST CPS");
+            }
+            return port_name;
+        }
+
         public void RefreshLastCPSNumber()
         {
             file.Write("device_id", sac.CentralSysPult.DeviceId, "LAST CPS");
             file.Write("port_name", sac.CentralSysPult.PortName, "LAST CPS");
         }
+
+        #region Управление данными стола 
+        public string GetTablePortName(int tableNumber)
+        {
+            string port_name = "COM1";
+            if (file.KeyExists("port_name", $"TABLE:{tableNumber}"))
+            {
+                port_name = file.Read("port_name", $"TABLE:{tableNumber}");
+            }else
+            {
+                SetTablePortName(tableNumber, port_name);
+            }
+            return port_name;
+        }
+
+        public void SetTablePortName(int tableNumber, string port_name)
+        {
+            file.Write("port_name", port_name, $"TABLE:{tableNumber}");
+        }
+
+        #endregion
 
         #region Управление данными по узлам
 

@@ -48,6 +48,7 @@
     <Compile Include="SAC\SACMeasurePoint.cs" />
     <Compile Include="SAC\SACUnits\CPSCommutator.cs" />
     <Compile Include="SAC\SACUnits\CPSMeasureUnit.cs" />
+    <Compile Include="SAC\SACUnits\HightVoltageTestUnit.cs" />
     <Compile Include="SAC\SACUnits\SACUnit.cs" />
     <Compile Include="SAC\SACUnits\U110.cs" />
     <Compile Include="SAC\SACUnits\U120.cs" />

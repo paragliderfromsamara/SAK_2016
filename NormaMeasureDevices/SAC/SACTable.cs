@@ -15,17 +15,27 @@ namespace NormaMeasure.Devices.SAC
     public class SACTable : DeviceBase
     {
         int tableNumber = 1;
+
+        SAC_Device sac;
         TableReceiverControl_Thread Receiver;
 
 
 
-        public SACTable(int table_number) : base()
+        public SACTable(int table_number, SAC_Device _sac) : base()
         {
+            sac = _sac;
             deviceTypeName = "Стол";
             tableNumber = table_number;
             deviceId = table_number.ToString();
             PairCommutator = new PairCommutator(this);
             USICommutator = new USICommutator(this);
+            DevicePort.PortName = _sac.SettingsFile.GetTablePortName(tableNumber);
+            this.Device_Connected += SACTable_Device_Connected;
+        }
+
+        private void SACTable_Device_Connected(DeviceBase device)
+        {
+            sac.SettingsFile.SetTablePortName(this.tableNumber, PortName);
         }
 
         public bool SetTableForMeasurePoint(SACMeasurePoint current_point)
@@ -51,7 +61,6 @@ namespace NormaMeasure.Devices.SAC
         {
             int timesForChecking = 10;
             if (!SendCommand(0x00)) return false;
-
             do
             {
                 Thread.Sleep(100);
@@ -93,8 +102,10 @@ namespace NormaMeasure.Devices.SAC
                 //Приём информации по ВСВИ
                 case VSVI_INPUT_CMD:
                     OnVSVIInfo_Received?.Invoke(this);
+                    s = String.Empty;
                     //System.Windows.Forms.MessageBox.Show("Для ВСВИ");
-                    Debug.WriteLine($"SACTable.Receiver_NewCommandReceived: принята информация для ВСВИ: {receivedInfo[2]}");
+                    for (int i = 0; i < dataLength; i++) s += $"{receivedInfo[i+2].ToString("X")} ";
+                    Debug.WriteLine($"SACTable.Receiver_NewCommandReceived: принята информация для ВСВИ: {s}");
                     break;
             }
         }
