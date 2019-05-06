@@ -319,53 +319,6 @@ namespace NormaMeasure.Devices.SAC
 
     }
 
-    public class SACMeasurePoint
-    {
-        /// <summary>
-        /// Тип измеряемого параметра
-        /// </summary>
-        public MeasuredParameterType parameterType;
-        /// <summary>
-        /// Результат с АЦП
-        /// </summary>
-        public double RawResult;
-        /// <summary>
-        /// Результат после применения коэффициентов коррекции
-        /// </summary>
-        public double ConvertedResult;
-        /// <summary>
-        /// Тип коммутации
-        /// </summary>
-        public SACCommutationType CommutationType = SACCommutationType.WithFarEnd;
-        public LeadCommutationType LeadCommType = LeadCommutationType.A;
-        public CableStructureType structureType;
-        public int CableElementNumber=0;
-        public byte PairCommutatorPosition;
-        public byte CableCommutatorRangePosition;
-        public int FrequencyMin;
-        public int FrequencyMax;
-        public int FrequencyStep;
-        public int WaveResistance = 0;
-        public CallingSubModes CallingSubMode = CallingSubModes.Short;
-
-        public string CommutationTypeText
-        {
-            get
-            {
-                switch(CommutationType)
-                {
-                    case SACCommutationType.Etalon:
-                        return "Эталон";
-                    case SACCommutationType.NoFarEnd:
-                        return "Без ДК";
-                    case SACCommutationType.WithFarEnd:
-                        return "C ДК";
-                    default:
-                        return "Неизвестно";
-                }
-            }
-        }
-    }
 
     /// <summary>
     /// Тип коммутации системы 

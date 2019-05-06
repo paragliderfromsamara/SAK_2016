@@ -42,7 +42,7 @@ namespace NormaMeasure.MeasureControl.SAC
         public void StartMeasureForPoint(SACMeasurePoint point, int _cycleLimit = 1)
         {
             currentMeasurePoint = point;
-            switch(point.parameterType.ParameterTypeId)
+            switch(point.ParameterType.ParameterTypeId)
             {
                 case MeasuredParameterType.al:
                 case MeasuredParameterType.Ao:

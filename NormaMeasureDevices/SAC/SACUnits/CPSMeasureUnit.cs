@@ -176,7 +176,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
 
             //if (IsAllowedParameter(pType.ParameterTypeId)) return false;
-            CurrentParameterType = point.parameterType;
+            CurrentParameterType = point.ParameterType;
             LeadCommType = point.LeadCommType;
             //PrepareCommutator(isEtalonMeasure);
             // result = 

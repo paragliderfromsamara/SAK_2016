@@ -9,6 +9,7 @@ using NormaMeasure.MeasureControl.SAC;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {
+
     internal class SACMeasureResultField : Panel 
     {
         System.Drawing.Color FontColor = System.Drawing.Color.FromArgb(25, 49, 66);
@@ -22,12 +23,30 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         public void RefreshFields(SACMeasurePoint point, SACMeasure measure)
         {
-            ResultValue_Label.Text = $"{Math.Round(point.ConvertedResult, 2) } {point.parameterType.Measure}";
-            ResultValue_Label.Location = new System.Drawing.Point((this.Width/2)-(ResultValue_Label.Width/2), ResultValue_Label.Location.Y);
+
+            RefreshFields(point);
             MeasureCycleCounter_Label.Text = $"Измерение {measure.CycleNumber+1}";
-            MeasureParameterType_Label.Text = $"Параметр {point.parameterType.ParameterName}";
-            CommutationMode_Label.Text = point.CommutationTypeText;
         }
+
+        public void RefreshFields(SACMeasurePoint point)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new SACMeasurePoint_Handler(RefreshFields), new object[] { point });
+                return;
+            }
+            else
+            {
+                ResultValue_Label.Text = $"{Math.Round(point.ConvertedResult, 2) } {point.ParameterType.Measure}";
+                ResultValue_Label.Location = new System.Drawing.Point((this.Width / 2) - (ResultValue_Label.Width / 2), ResultValue_Label.Location.Y);
+                MeasureParameterType_Label.Text = $"Параметр {point.ParameterType.ParameterName}";
+                CommutationMode_Label.Text = point.CommutationTypeText;
+                PairCommutatorPosition_Label.Text = $"ПУ {point.PairCommutatorPosition_1} \n{point.LeadCommTypeText}";
+            }
+
+
+        }
+
 
         #region Инициализация элементов панели
         /// <summary>
@@ -40,6 +59,21 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             InitCycleCounterLabel();
             InitMeasuredParameterTypeLabel();
             CommutationModeLabel();
+            InitPairCommutatorPositionLabel();
+        }
+
+        private void InitPairCommutatorPositionLabel()
+        {
+            PairCommutatorPosition_Label = new Label();
+            PairCommutatorPosition_Label.Parent = this;
+            PairCommutatorPosition_Label.Text = "";
+            PairCommutatorPosition_Label.AutoSize = true;
+            PairCommutatorPosition_Label.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            PairCommutatorPosition_Label.Name = "PairCommutatorPosition_Label";
+            PairCommutatorPosition_Label.Size = new System.Drawing.Size(100, 50);
+            PairCommutatorPosition_Label.Location = new System.Drawing.Point(this.Width - 150, 50);
+            PairCommutatorPosition_Label.TabIndex = 4;
+            PairCommutatorPosition_Label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));// = AnchorStyles.
         }
 
         private void InitMeasuredParameterTypeLabel()
@@ -94,7 +128,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             CommutationMode_Label.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             CommutationMode_Label.Name = "MeasureParameterType_Label";
             CommutationMode_Label.Size = new System.Drawing.Size(170, 58);
-            CommutationMode_Label.Location = new System.Drawing.Point(this.Width-150, 10);
+            CommutationMode_Label.Location = new System.Drawing.Point(this.Width-100, 10);
             CommutationMode_Label.TabIndex = 4;
             CommutationMode_Label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));// = AnchorStyles.
 
@@ -112,6 +146,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         Label MeasureCycleCounter_Label;
         Label MeasureParameterType_Label;
         Label CommutationMode_Label;
+        Label PairCommutatorPosition_Label;
         #endregion
 
     }

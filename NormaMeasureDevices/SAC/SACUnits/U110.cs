@@ -63,7 +63,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public override bool MakeMeasure(ref SACMeasurePoint point)
         {
             base.MakeMeasure(ref point);
-            if (point.parameterType.ParameterTypeId == MeasuredParameterType.Rleads)
+            if (point.ParameterType.ParameterTypeId == MeasuredParameterType.Rleads)
             {
                 RleadsMeasure(ref point);
             }

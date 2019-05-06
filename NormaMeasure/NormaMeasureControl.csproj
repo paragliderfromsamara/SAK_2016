@@ -45,6 +45,9 @@
   <ItemGroup>
     <Compile Include="MeasureBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SACMeasureForms\PairCommutatorPositionSelector.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SACMeasureForms\SACCableTestForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -37,9 +37,8 @@
             this.Etalon_RadioButton = new System.Windows.Forms.RadioButton();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.pair1_Label = new System.Windows.Forms.Label();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.leadCB = new System.Windows.Forms.ComboBox();
             this.pair2OrLead_Label = new System.Windows.Forms.Label();
             this.freqMin_CB = new System.Windows.Forms.ComboBox();
             this.freqStep_CB = new System.Windows.Forms.ComboBox();
@@ -52,6 +51,7 @@
             this.measureResultPanel_Container = new System.Windows.Forms.Panel();
             this.measureCycles_NumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
+            this.pairSelector_ComboBox_1 = new NormaMeasure.MeasureControl.SACMeasureForms.PairSelector_ComboBox();
             this.groupBox1.SuspendLayout();
             this.freqParameters_Panel.SuspendLayout();
             this.tableElementsPanel.SuspendLayout();
@@ -108,7 +108,7 @@
             this.NoDK_RadioButton.TabStop = true;
             this.NoDK_RadioButton.Text = "без ДК";
             this.NoDK_RadioButton.UseVisualStyleBackColor = true;
-            this.NoDK_RadioButton.CheckedChanged += new System.EventHandler(this.CommutationMode_RadioButton_CheckedChanged);
+            this.NoDK_RadioButton.CheckedChanged += new System.EventHandler(this.NoDK_RadioButton_CheckedChanged);
             // 
             // withDK_RadioButton
             // 
@@ -120,7 +120,7 @@
             this.withDK_RadioButton.TabStop = true;
             this.withDK_RadioButton.Text = "с ДК";
             this.withDK_RadioButton.UseVisualStyleBackColor = true;
-            this.withDK_RadioButton.CheckedChanged += new System.EventHandler(this.CommutationMode_RadioButton_CheckedChanged);
+            this.withDK_RadioButton.CheckedChanged += new System.EventHandler(this.withDK_RadioButton_CheckedChanged);
             // 
             // Etalon_RadioButton
             // 
@@ -132,7 +132,7 @@
             this.Etalon_RadioButton.TabStop = true;
             this.Etalon_RadioButton.Text = "Эталон";
             this.Etalon_RadioButton.UseVisualStyleBackColor = true;
-            this.Etalon_RadioButton.CheckedChanged += new System.EventHandler(this.CommutationMode_RadioButton_CheckedChanged);
+            this.Etalon_RadioButton.CheckedChanged += new System.EventHandler(this.Etalon_RadioButton_CheckedChanged);
             // 
             // comboBox1
             // 
@@ -151,15 +151,6 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Нагрузка, Ом";
             // 
-            // comboBox2
-            // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(11, 23);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(88, 21);
-            this.comboBox2.TabIndex = 7;
-            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
-            // 
             // pair1_Label
             // 
             this.pair1_Label.AutoSize = true;
@@ -169,13 +160,18 @@
             this.pair1_Label.TabIndex = 8;
             this.pair1_Label.Text = "Пара";
             // 
-            // comboBox3
+            // leadCB
             // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(127, 23);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(90, 21);
-            this.comboBox3.TabIndex = 9;
+            this.leadCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.leadCB.FormattingEnabled = true;
+            this.leadCB.Items.AddRange(new object[] {
+            "Жила А",
+            "Жила Б"});
+            this.leadCB.Location = new System.Drawing.Point(127, 23);
+            this.leadCB.Name = "leadCB";
+            this.leadCB.Size = new System.Drawing.Size(90, 21);
+            this.leadCB.TabIndex = 9;
+            this.leadCB.SelectedIndexChanged += new System.EventHandler(this.leadCB_SelectedIndexChanged);
             // 
             // pair2OrLead_Label
             // 
@@ -254,9 +250,9 @@
             // 
             // tableElementsPanel
             // 
-            this.tableElementsPanel.Controls.Add(this.comboBox3);
+            this.tableElementsPanel.Controls.Add(this.pairSelector_ComboBox_1);
+            this.tableElementsPanel.Controls.Add(this.leadCB);
             this.tableElementsPanel.Controls.Add(this.pair2OrLead_Label);
-            this.tableElementsPanel.Controls.Add(this.comboBox2);
             this.tableElementsPanel.Controls.Add(this.pair1_Label);
             this.tableElementsPanel.Location = new System.Drawing.Point(1, 129);
             this.tableElementsPanel.Name = "tableElementsPanel";
@@ -301,6 +297,225 @@
             this.label5.TabIndex = 19;
             this.label5.Text = "Измерений";
             // 
+            // pairSelector_ComboBox_1
+            // 
+            this.pairSelector_ComboBox_1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.pairSelector_ComboBox_1.FormattingEnabled = true;
+            this.pairSelector_ComboBox_1.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "60",
+            "61",
+            "62",
+            "63",
+            "64",
+            "65",
+            "66",
+            "67",
+            "68",
+            "69",
+            "70",
+            "71",
+            "72",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90",
+            "91",
+            "92",
+            "93",
+            "94",
+            "95",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100",
+            "101",
+            "102",
+            "103",
+            "104",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "60",
+            "61",
+            "62",
+            "63",
+            "64",
+            "65",
+            "66",
+            "67",
+            "68",
+            "69",
+            "70",
+            "71",
+            "72",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90",
+            "91",
+            "92",
+            "93",
+            "94",
+            "95",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100",
+            "101",
+            "102",
+            "103",
+            "104"});
+            this.pairSelector_ComboBox_1.Location = new System.Drawing.Point(11, 23);
+            this.pairSelector_ComboBox_1.Name = "pairSelector_ComboBox_1";
+            this.pairSelector_ComboBox_1.Size = new System.Drawing.Size(74, 21);
+            this.pairSelector_ComboBox_1.TabIndex = 11;
+            this.pairSelector_ComboBox_1.SelectedIndexChanged += new System.EventHandler(this.pairSelector_ComboBox_1_SelectedIndexChanged);
+            // 
             // SACHandMeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -340,9 +555,9 @@
         private System.Windows.Forms.RadioButton Etalon_RadioButton;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBox2;
+        
         private System.Windows.Forms.Label pair1_Label;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox leadCB;
         private System.Windows.Forms.Label pair2OrLead_Label;
         private System.Windows.Forms.ComboBox freqMin_CB;
         private System.Windows.Forms.ComboBox freqStep_CB;
@@ -355,5 +570,6 @@
         private System.Windows.Forms.Panel measureResultPanel_Container;
         private System.Windows.Forms.NumericUpDown measureCycles_NumericUpDown;
         private System.Windows.Forms.Label label5;
+        private PairSelector_ComboBox pairSelector_ComboBox_1;
     }
 }

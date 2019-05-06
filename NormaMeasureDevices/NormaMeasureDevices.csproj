@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="DeviceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SAC\SACMeasurePoint.cs" />
     <Compile Include="SAC\SACUnits\CPSCommutator.cs" />
     <Compile Include="SAC\SACUnits\CPSMeasureUnit.cs" />
     <Compile Include="SAC\SACUnits\SACUnit.cs" />

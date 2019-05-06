@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl.Tables;
+using System.Diagnostics;
 
 
 namespace NormaMeasure.Devices.SAC.SACUnits
@@ -37,7 +38,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// </summary>
         private void SelectCommutatorMode()
         {
-            switch(current_point.parameterType.ParameterTypeId)
+            switch(current_point.ParameterType.ParameterTypeId)
             {
                 case MeasuredParameterType.Calling:
                     SetCommutatorMode_ForCalling();
@@ -84,9 +85,9 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 CommutatorMode = (byte)USICommutatorModes.PV_ETAL;
             }else
             {
-                if (current_point.parameterType.ParameterTypeId == MeasuredParameterType.al) CommutatorMode = (byte)USICommutatorModes.al;
-                else if (current_point.parameterType.ParameterTypeId == MeasuredParameterType.Ao) CommutatorMode = (byte)USICommutatorModes.Ao;
-                else if (current_point.parameterType.ParameterTypeId == MeasuredParameterType.Az) CommutatorMode = (byte)USICommutatorModes.Az;
+                if (current_point.ParameterType.ParameterTypeId == MeasuredParameterType.al) CommutatorMode = (byte)USICommutatorModes.al;
+                else if (current_point.ParameterType.ParameterTypeId == MeasuredParameterType.Ao) CommutatorMode = (byte)USICommutatorModes.Ao;
+                else if (current_point.ParameterType.ParameterTypeId == MeasuredParameterType.Az) CommutatorMode = (byte)USICommutatorModes.Az;
             }
         }
 
@@ -126,11 +127,17 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
             if (current_point.CommutationType == SACCommutationType.WithFarEnd)
             {
-                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA : (byte)USICommutatorModes.RGB;
+                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA_DT : (byte)USICommutatorModes.RGB_DT;
+                Debug.WriteLine("Установка коммутатора БУСИ: Rжил (С ДК)");
             }
-            else
+            else if (current_point.CommutationType == SACCommutationType.NoFarEnd)
             {
-                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA_DT: (byte)USICommutatorModes.RGB_DT;
+                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA: (byte)USICommutatorModes.RGB;
+                Debug.WriteLine("Установка коммутатора БУСИ: Rжил (без ДК)");
+            }else
+            {
+                CommutatorMode = (byte)USICommutatorModes.CLEAR;
+                Debug.WriteLine("Установка коммутатора БУСИ: Rжил (Эталон)");
             }
         }
 
@@ -169,9 +176,9 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// </summary>
         private void SelectPVCommutatorSettings()
         {
-            if (current_point.parameterType.IsFreqParameter)
+            if (current_point.ParameterType.IsFreqParameter)
             {
-                WaveResistance = (byte)GetWaveResistanceModeFromCurrentPoint();
+                WaveResistance = (byte)GetWaveResistanceModeForCurrentPoint();
                 TransformatorMode = current_point.FrequencyMin < SAC_Device.MIN_FREQ ? (byte)USITransformatorModes.LowFrequency : (byte)USITransformatorModes.HightFrequency;
             }
             else
@@ -181,7 +188,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             }
         }
 
-        private WaveResistanceModes GetWaveResistanceModeFromCurrentPoint()
+        private WaveResistanceModes GetWaveResistanceModeForCurrentPoint()
         {
             switch (current_point.WaveResistance)
             {
@@ -200,11 +207,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         public bool SetUSICommutatorState()
         {
-            /*
-            if (WasChanged)
-            {
-                WasChanged = !
-            }*/
+            Debug.WriteLine($"Установка коммутатора БУСИ: основной режим {CommutatorMode.ToString("X")} Нагрузка {WaveResistance.ToString("X")} Трансформатор {TransformatorMode.ToString("X")}");
             return table.SendCommand(unitCMD_Address, new byte[] { CommutatorMode, WaveResistance, TransformatorMode });
 
         }

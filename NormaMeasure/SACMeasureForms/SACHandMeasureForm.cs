@@ -20,18 +20,35 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         private SAC_HandMeasure HandMeasure;
         private SAC_Device sac_device;
         private DBEntityTable parameterTypes;
-        private MeasuredParameterType selectedParameterType;
-        private SACMeasurePoint MeasurePoint;
+        private SACMeasurePoint measPoint;
+        private SACMeasurePoint MeasurePoint
+        {
+            get
+            {
+                if (measPoint == null)
+                {
+                    measPoint = new SACMeasurePoint();
+                    measPoint.CommutationType = SACCommutationType.NoFarEnd;
+                    measPoint.LeadCommType = LeadCommutationType.A;
+                    measPoint.PairCommutatorPosition_1 = 1;
+                    //MeasurePoint.StartElementPair = 1;
+                    //MeasurePoint.StartElementLead = 1;
+                    measPoint.RawResult = 0;
+                    measPoint.ConvertedResult = 0;
+                }
+                return measPoint;
+            }
+        }
         private SACMeasureResultField ResultField;
         public SACHandMeasureForm(SAC_Device sac)
         {
             InitializeComponent();
             ResultField = new SACMeasureResultField(measureResultPanel_Container);
             sac_device = sac;
-            InitMeasure();
             LoadDataFromDB();
             InitInputs();
-           
+            InitMeasure();
+
         }
 
         private void InitInputs()
@@ -56,13 +73,14 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             ParameterTypes_CB.DisplayMember = MeasuredParameterType.ParameterName_ColumnName;
             ParameterTypes_CB.ValueMember = MeasuredParameterType.ParameterTypeId_ColumnName;
             ParameterTypes_CB.SelectedIndex = 0;
-            ParameterTypes_CB_SelectedIndexChanged(ParameterTypes_CB, new EventArgs());
+            MeasurePoint.ParameterType = SelectedParameterType;
+            //ParameterTypes_CB_SelectedIndexChanged(ParameterTypes_CB, new EventArgs());
         }
 
         private void InitMeasure()
         {
-            InitMeasurePoint();
             InitMeasureThread();
+            measPoint.Changed += MeasurePoint_Changed;
         }
 
         private void InitMeasureThread()
@@ -89,18 +107,12 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         }
 
-        private void InitMeasurePoint()
-        {
-            MeasurePoint = new SACMeasurePoint();
-            MeasurePoint.CommutationType = SACCommutationType.NoFarEnd;
-            MeasurePoint.LeadCommType = LeadCommutationType.A;
-            MeasurePoint.PairCommutatorPosition = 1;
-            //MeasurePoint.StartElementPair = 1;
-            //MeasurePoint.StartElementLead = 1;
-            MeasurePoint.RawResult = 0;
-            MeasurePoint.ConvertedResult = 0;
-        }
 
+        private void MeasurePoint_Changed(SACMeasurePoint point)
+        {
+            ResultField.RefreshFields(point);
+            sac_device.table.SetTableForMeasurePoint(point);
+        }
 
         private void startMeasure_Click(object sender, EventArgs e)
         {
@@ -144,33 +156,92 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void ParameterTypes_CB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            selectedParameterType = (MeasuredParameterType)parameterTypes.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {ParameterTypes_CB.SelectedValue}")[0];
-            this.Text = $"Ручные измерения: {selectedParameterType.ParameterName} ({selectedParameterType.Description})";
-            freqParameters_Panel.Enabled = selectedParameterType.IsFreqParameter;
-            MeasurePoint.parameterType = selectedParameterType;
+            this.Text = $"Ручные измерения: {SelectedParameterType.ParameterName} ({SelectedParameterType.Description})";
+            freqParameters_Panel.Enabled = SelectedParameterType.IsFreqParameter;
+            MeasurePoint.ParameterType = SelectedParameterType;
+            MessageBox.Show(MeasurePoint.ParameterType.ParameterName);
         }
 
+        private MeasuredParameterType SelectedParameterType
+        {
+            get
+            {
+                return (MeasuredParameterType)parameterTypes.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {ParameterTypes_CB.SelectedValue}")[0];
+            }
+        }
+
+        /*
         private void CommutationMode_RadioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (Etalon_RadioButton.Checked)
             {
                 MeasurePoint.CommutationType = SACCommutationType.Etalon;
+                pairSelector_ComboBox_1.CommutationType = SACCommutationType.Etalon;
                 tableElementsPanel.Enabled = false;
             }else if (withDK_RadioButton.Checked)
             {
                 MeasurePoint.CommutationType = SACCommutationType.WithFarEnd;
+                pairSelector_ComboBox_1.CommutationType = SACCommutationType.WithFarEnd;
                 tableElementsPanel.Enabled = true;
             }
             else if (NoDK_RadioButton.Checked)
             {
                 MeasurePoint.CommutationType = SACCommutationType.NoFarEnd;
+                pairSelector_ComboBox_1.CommutationType = SACCommutationType.NoFarEnd;
+                tableElementsPanel.Enabled = true;
+            }
+            
+        }
+        */
+        private void pairSelector_ComboBox_1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            MeasurePoint.PairCommutatorPosition_1 = (byte)(pairSelector_ComboBox_1.SelectedIndex+1);
+        }
+
+        private void Etalon_RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Etalon_RadioButton.Checked)
+            {
+                MeasurePoint.CommutationType = SACCommutationType.Etalon;
+                pairSelector_ComboBox_1.CommutationType = SACCommutationType.Etalon;
+                tableElementsPanel.Enabled = false;
+            }
+        }
+
+        private void withDK_RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (withDK_RadioButton.Checked)
+            {
+                MeasurePoint.CommutationType = SACCommutationType.WithFarEnd;
+                pairSelector_ComboBox_1.CommutationType = SACCommutationType.WithFarEnd;
                 tableElementsPanel.Enabled = true;
             }
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void NoDK_RadioButton_CheckedChanged(object sender, EventArgs e)
         {
+            if (NoDK_RadioButton.Checked)
+            {
+                MeasurePoint.CommutationType = SACCommutationType.NoFarEnd;
+                pairSelector_ComboBox_1.CommutationType = SACCommutationType.NoFarEnd;
+                tableElementsPanel.Enabled = true;
+            }
 
+        }
+
+        private void leadCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (leadCB.SelectedIndex == 0)
+            {
+                MeasurePoint.LeadCommType = LeadCommutationType.A;
+            }else if (leadCB.SelectedIndex == 1)
+            {
+                MeasurePoint.LeadCommType = LeadCommutationType.B;
+            }
+            else if (leadCB.SelectedIndex == 2)
+            {
+                MeasurePoint.LeadCommType = LeadCommutationType.AB;
+            }
         }
     }
 }

@@ -24,7 +24,7 @@ namespace NormaMeasure.MeasureControl.SAC
 
         private void SACMeasure_Result_Gotten(SACMeasure measure, SACMeasurePoint curPoint)
         {
-            uint key =curPoint.parameterType.ParameterTypeId;
+            uint key =curPoint.ParameterType.ParameterTypeId;
             if (!resultCollections.ContainsKey(key)) resultCollections.Add(key, new List<SACMeasurePoint>());
             resultCollections[key].Add(curPoint);
         }
@@ -36,12 +36,9 @@ namespace NormaMeasure.MeasureControl.SAC
 
         protected void Rleads_AND_CEK_Measure()
         {
-            currentMeasurePoint.CommutationType = SACCommutationType.NoFarEnd;
-            currentMeasurePoint.PairCommutatorPosition = 1;
-            currentMeasurePoint.LeadCommType = LeadCommutationType.A;
             CPSMeasureUnit unit = SACDevice.SetMeasurePoint(currentMeasurePoint);
             SACDevice.table.SetTableForMeasurePoint(currentMeasurePoint);
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             if (unit == null)
             {
                 Status = MeasureCycleStatus.WillFinished;
@@ -49,11 +46,9 @@ namespace NormaMeasure.MeasureControl.SAC
             {
                 do
                 {
-                    currentMeasurePoint.RawResult = 0;
-                    currentMeasurePoint.ConvertedResult = 0;
                     unit.MakeMeasure(ref currentMeasurePoint);
                     Result_Gotten?.Invoke(this, currentMeasurePoint);
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                     cycleNumber++;
                 } while (WillMeasureContinue());
             }

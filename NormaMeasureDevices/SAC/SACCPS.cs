@@ -8,6 +8,7 @@ using System.Threading;
 using NormaMeasure.Devices.SAC.SACUnits;
 using NormaMeasure.DBControl.Tables;
 
+
 namespace NormaMeasure.Devices.SAC
 {
     public class SACCPS : DeviceBase
@@ -65,7 +66,7 @@ namespace NormaMeasure.Devices.SAC
         {
             foreach(CPSMeasureUnit unit in measureUnits)
             {
-                if (unit.IsAllowedParameter(point.parameterType.ParameterTypeId)) return unit;
+                if (unit.IsAllowedParameter(point.ParameterType.ParameterTypeId)) return unit;
             }
             return null;
         }

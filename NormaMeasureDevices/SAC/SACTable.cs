@@ -103,17 +103,19 @@ namespace NormaMeasure.Devices.SAC
         {
             bool cmdWasSent = false;
             byte[] tmpRx = new byte[] { 0x00 }; 
-            int RepeadSendingTimes = 10;
-
-            while (Receiver.RxFlag) ;
+            int RepeatSendingTimes = 10;
 
             Receiver.TxFlag = true; //Чтобы случайно ничего не принять во время отправки
+            while (Receiver.RxFlag) ;
+
+
 
             do
             {
                 base.WriteCmdAndReadBytesArr(buildedCmd, tmpRx);
                 cmdWasSent = tmpRx[0] == checkSum;
-            } while (RepeadSendingTimes-- > 0 && !cmdWasSent);
+                Thread.Sleep(200);
+            } while (RepeatSendingTimes-- > 0 && !cmdWasSent);
 
             Receiver.TxFlag = false;
             return cmdWasSent;
@@ -260,6 +262,7 @@ namespace NormaMeasure.Devices.SAC
             thread.Abort();
 
         }
+
         private Thread thread;
         private SACTable table;
         public event TableReceiverControl_Thread_Handler NewCommandReceived;

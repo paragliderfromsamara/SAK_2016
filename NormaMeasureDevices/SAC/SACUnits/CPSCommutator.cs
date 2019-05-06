@@ -170,7 +170,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public virtual void SetCommutatorByParameterType(SACMeasurePoint point)
         {
             bool is_etalon = point.CommutationType == SACCommutationType.Etalon;
-            switch (point.parameterType.ParameterTypeId)
+            switch (point.ParameterType.ParameterTypeId)
             {
                 case MeasuredParameterType.Calling:
                     CurrentState = Calling_ReleState;

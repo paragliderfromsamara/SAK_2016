@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl.Tables;
 using System.Threading;
+using System.Diagnostics;
 
 namespace NormaMeasure.Devices.SAC.SACUnits
 {
@@ -39,7 +40,9 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
             CurrentPoint = curPoint;
             CommutationList_ToSend.Clear();
-            switch (curPoint.parameterType.ParameterTypeId)
+            ClearTable();
+            
+            switch (curPoint.ParameterType.ParameterTypeId)
             {
                 case MeasuredParameterType.Calling:
                     //SetCommutatorMode_ForCalling();
@@ -76,8 +79,9 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         private void SetPairCommutatorFor_Rleads_And_dR()
         {
-            CommutationList_ToSend.Add(CurrentPoint.PairCommutatorPosition, ComTablePairConncectionState.spBOTH);
-            if (CurrentPoint.CommutationType == SACCommutationType.WithFarEnd) CommutationList_ToSend.Add((byte)(CurrentPoint.PairCommutatorPosition + 52), ComTablePairConncectionState.spBOTH);
+            CommutationList_ToSend.Add(CurrentPoint.PairCommutatorPosition_1, ComTablePairConncectionState.spBOTH);
+            if (CurrentPoint.CommutationType == SACCommutationType.WithFarEnd) CommutationList_ToSend.Add((byte)(CurrentPoint.PairCommutatorPosition_1 + 52), ComTablePairConncectionState.spBOTH);
+            Debug.WriteLine("Установка коммутатора пар для стола: Rжил");
         }
 
         private bool SetCommutationTableByList()
