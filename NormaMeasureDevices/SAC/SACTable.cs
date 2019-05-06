@@ -29,8 +29,13 @@ namespace NormaMeasure.Devices.SAC
             deviceId = table_number.ToString();
             PairCommutator = new PairCommutator(this);
             USICommutator = new USICommutator(this);
-            DevicePort.PortName = _sac.SettingsFile.GetTablePortName(tableNumber);
             this.Device_Connected += SACTable_Device_Connected;
+        }
+
+        protected override string GetLastConnectedPortName()
+        {
+            if (sac == null) return "COM1";
+            else return sac.SettingsFile.GetTablePortName(tableNumber);
         }
 
         private void SACTable_Device_Connected(DeviceBase device)
@@ -76,7 +81,6 @@ namespace NormaMeasure.Devices.SAC
             base.ConfigureDevicePort();
             DevicePort.BaudRate = 115200;
             DevicePort.DataBits = 8;
-            DevicePort.PortName = "COM1";
             DevicePort.ReadTimeout = 1000;
             Receiver = new TableReceiverControl_Thread(this);
             Receiver.NewCommandReceived += Receiver_NewCommandReceived;
@@ -102,6 +106,7 @@ namespace NormaMeasure.Devices.SAC
                 //Приём информации по ВСВИ
                 case VSVI_INPUT_CMD:
                     OnVSVIInfo_Received?.Invoke(this);
+                    if (receivedInfo[2] == 0x11) System.Windows.Forms.MessageBox.Show("Система в режиме высоковольтных испытаний!!!", "Высоковольтные испытания", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Exclamation);
                     s = String.Empty;
                     //System.Windows.Forms.MessageBox.Show("Для ВСВИ");
                     for (int i = 0; i < dataLength; i++) s += $"{receivedInfo[i+2].ToString("X")} ";
@@ -118,8 +123,6 @@ namespace NormaMeasure.Devices.SAC
 
             Receiver.TxFlag = true; //Чтобы случайно ничего не принять во время отправки
             while (Receiver.RxFlag) ;
-
-
 
             do
             {

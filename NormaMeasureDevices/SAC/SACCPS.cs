@@ -39,10 +39,13 @@ namespace NormaMeasure.Devices.SAC
         {
             sac = _sac;
             deviceTypeName = "CPS";
-            DevicePort.PortName = sac.SettingsFile.GetLastCPSPortName();
             //InitUnits();
         }
 
+        protected override string GetLastConnectedPortName()
+        {
+            return sac.SettingsFile.GetLastCPSPortName();
+        }
 
         public virtual void InitUnits()
         { 

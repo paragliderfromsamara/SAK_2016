@@ -26,7 +26,7 @@ namespace NormaMeasure.Devices.SAC
         {
             get
             {
-                if (settingsFile == null) InitSettingsFile();
+                if (settingsFile == null) settingsFile = new SACIniFile(this);
                 return settingsFile;
             }
         }
@@ -41,11 +41,6 @@ namespace NormaMeasure.Devices.SAC
             InitCps();
             InitTable();
             //InitTables();
-        }
-
-        private void InitSettingsFile()
-        {
-            settingsFile = new SACIniFile(this);
         }
 
         /// <summary>

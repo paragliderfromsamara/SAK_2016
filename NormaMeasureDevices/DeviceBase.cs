@@ -161,7 +161,7 @@ namespace NormaMeasure.Devices
         {
             string[] port_list;
             bool flag = false;
-            string portNameWas = PortName;
+            string portNameWas = GetLastConnectedPortName();
             isOnFinding = true;
             repeat:
             port_list = SerialPort.GetPortNames();
@@ -171,7 +171,7 @@ namespace NormaMeasure.Devices
                 if (r == System.Windows.Forms.DialogResult.Retry) goto repeat;
             } else
             {
-                if (port_list.Contains(PortName)) flag = TryConnectToPort(PortName);
+                if (port_list.Contains(portNameWas)) flag = TryConnectToPort(portNameWas);
                 if (!flag)
                 {
                     foreach (string s in port_list)
@@ -296,6 +296,15 @@ namespace NormaMeasure.Devices
             DevicePort.Parity = Parity.None;
             DevicePort.DataBits = 8;
             DevicePort.PortName = "COM1";
+        }
+
+        /// <summary>
+        /// Метод для получения последнего успешного PortName для данного устройства
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string GetLastConnectedPortName()
+        {
+            return "COM1";
         }
 
 
