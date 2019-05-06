@@ -26,7 +26,10 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public int UnitSerialNumber => unitSerialNumber;
         public byte ReadResult_CMDHeader => (byte)(SACCPS.Read_cmd | SACCPS.TwoBytes_cmd | unitCMD_Address | SACCPS.ReadResult);
         public byte SetMode_CMDHeader => (byte)(unitCMD_Address | SACCPS.ReadResult);
-
+        /// <summary>
+        /// Количество циклов после установки режима для подавления переходных процессов
+        /// </summary>
+        protected int ChangeRangeCounter = 3;
         /// <summary>
         /// Задаёт режим измерения
         /// </summary>
@@ -38,7 +41,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             if (HasRange) mode |= currentRanges[selectedRangeIdx].RangeCommand;
             cps.WriteBytes(new byte[] { header, mode });
             //System.Windows.Forms.MessageBox.Show($"header - {header.ToString("X")}; mode-{mode.ToString("X")} ");
-            Thread.Sleep(250);
+            Thread.Sleep(500);
         }
 
         /// <summary>
@@ -101,14 +104,27 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             //cps.OpenPort();
             set_mode_again:
             SetMeasureMode();
+            repeat:
             do
             {
+                
                 result = ReadUnitResult();
                 CheckResult(result);
                 if (result == (double)CPSMeasureUnit_Status.NOT_USED) goto set_mode_again;
                 Thread.Sleep(20);
+
             } while (result == (double)CPSMeasureUnit_Status.InProcess);
-            if (CheckRange(result)) goto set_mode_again;
+            if (CheckRange(result))
+            {
+                ChangeRangeCounter = 3;
+                goto set_mode_again;
+            }
+            if (--ChangeRangeCounter > 0)
+            {
+                Thread.Sleep(100);
+                Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure(): counter = {ChangeRangeCounter}");
+                goto repeat;
+            }
             //cps.ClosePort();
             Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure():result {result}");
             point.RawResult = result;

@@ -38,7 +38,7 @@ namespace NormaMeasure.MeasureControl.SAC
         {
             CPSMeasureUnit unit = SACDevice.SetMeasurePoint(currentMeasurePoint);
             SACDevice.table.SetTableForMeasurePoint(currentMeasurePoint);
-            Thread.Sleep(500);
+            Thread.Sleep(150);
             if (unit == null)
             {
                 Status = MeasureCycleStatus.WillFinished;

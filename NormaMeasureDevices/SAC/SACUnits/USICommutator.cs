@@ -208,7 +208,11 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public bool SetUSICommutatorState()
         {
             Debug.WriteLine($"Установка коммутатора БУСИ: основной режим {CommutatorMode.ToString("X")} Нагрузка {WaveResistance.ToString("X")} Трансформатор {TransformatorMode.ToString("X")}");
-            return table.SendCommand(unitCMD_Address, new byte[] { CommutatorMode, WaveResistance, TransformatorMode });
+            if (WasChanged)
+            {
+                WasChanged = !table.SendCommand(unitCMD_Address, new byte[] { CommutatorMode, WaveResistance, TransformatorMode });
+            }
+            return !WasChanged;
 
         }
 
