@@ -42,9 +42,9 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         public override bool MakeMeasure(ref SACMeasurePoint point)
         {
-            BETWEEN_ADC_TIME = 500;
-            AFTER_SET_MODE_DELAY = 2000;
-            ChangeRangeCounterMax = 1;
+            BETWEEN_ADC_TIME = 350;
+            AFTER_SET_MODE_DELAY = 1000;
+            ChangeRangeCounterMax = 0;
             base.MakeMeasure(ref point);
             SelectDefaultRange(0);
             cps.SwitchOnOffLed(unitNumber, true);
