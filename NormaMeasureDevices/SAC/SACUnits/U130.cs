@@ -5,14 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl.Tables;
 using System.Diagnostics;
+using System.Threading;
+
 
 namespace NormaMeasure.Devices.SAC.SACUnits
 {
     public class U130 : CPSMeasureUnit
     {
+        protected byte[] SwitchOffSupplyCMD;
         public U130(SACCPS _cps, byte unit_number) : base(_cps)
         {
             unitNumber = unit_number;
+            SetUnitAddress();
+        }
+
+        /// <summary>
+        /// Устанавливает напряжение источника
+        /// </summary>
+        public void SwitchOffVoltageSource()
+        {
+            cps.WriteBytes(new byte[] { unitCMD_Address, 0x00 });
+            cps.SwitchOnOffLed(unitNumber);
         }
 
         protected override void SetAllowedMeasuredParameters()
@@ -29,7 +42,12 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         public override bool MakeMeasure(ref SACMeasurePoint point)
         {
-            SelectDefaultRange();
+            BETWEEN_ADC_TIME = 500;
+            AFTER_SET_MODE_DELAY = 2000;
+            ChangeRangeCounterMax = 1;
+            base.MakeMeasure(ref point);
+            SelectDefaultRange(0);
+            cps.SwitchOnOffLed(unitNumber, true);
             ExecuteElementaryMeasure(ref point);
             return true;
         }
@@ -41,7 +59,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         protected override void SetMeasureModeCMDByParameterType()
         {
-            MeasureMode_CMD = 0x00;
+            MeasureMode_CMD = 0x04;
         }
 
         protected override UnitMeasureRange[] GetDefaultRanges()
@@ -65,17 +83,38 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
             bool wasChanged = false;
             Debug.WriteLine($"U130.CheckRange: result = {result}");
-            if (result > currentRanges[selectedRangeIdx].MaxValue && (selectedRangeIdx - 1) > 0)
+            switch(selectedRangeIdx)
             {
-                selectedRangeIdx--;
-                wasChanged = true;
-                Debug.WriteLine("U130.CheckRange: Смена диапазона вниз");
-            }
-            else if (result < currentRanges[selectedRangeIdx].MinValue && (selectedRangeIdx + 1) < currentRanges.Length)
-            {
-                selectedRangeIdx++;
-                wasChanged = true;
-                Debug.WriteLine("U130.CheckRange: Смена диапазона вверх");
+                case 0:
+                    if (result <= 300)
+                    {
+                        Debug.WriteLine("U130.CheckRange: Смена диапазона вверх");
+                        selectedRangeIdx++;
+                        wasChanged = true;
+                    }
+                    break;
+                case 1:
+                    if (result<821)
+                    {
+                        Debug.WriteLine("U130.CheckRange: Смена диапазона вверх");
+                        selectedRangeIdx++;
+                        wasChanged = true;
+                    }
+                    else if (result >= 45000)
+                    {
+                        Debug.WriteLine("U130.CheckRange: Смена диапазона вниз");
+                        selectedRangeIdx--;
+                        wasChanged = true;
+                    }
+                    break;
+                case 2:
+                    if (result >= 32768)
+                    {
+                        Debug.WriteLine("U130.CheckRange: Смена диапазона вниз");
+                        selectedRangeIdx--;
+                        wasChanged = true;
+                    }
+                    break;
             }
             return wasChanged;
         }
@@ -87,7 +126,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 UnitMeasureRange range = new UnitMeasureRange();
                 range.RangeId = "0";
                 range.parameterTypeId = CurrentParameterType.ParameterTypeId;
-                range.KK = 163840f;
+                range.KK = 163840;
                 range.BV = 0;
                 range.MinValue = 300;
                 range.MaxValue = 45000;
@@ -106,7 +145,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 range.UnitId = UnitSerialNumber.ToString();
                 range.RangeId = "1";
                 range.parameterTypeId = CurrentParameterType.ParameterTypeId;
-                range.KK = 16384000f;
+                range.KK = 16384000;
                 range.BV = 0;
                 range.MinValue = 820;
                 range.MaxValue = 45000;
@@ -125,12 +164,12 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 range.UnitId = UnitSerialNumber.ToString();
                 range.RangeId = "2";
                 range.parameterTypeId = CurrentParameterType.ParameterTypeId;
-                range.KK = 65536000f;
+                range.KK = 65536000;
                 range.BV = 0;
                 range.MinValue = 0;
                 range.MaxValue = 32768;
                 range.RangeTitle = "Диапазон 3";
-                range.RangeCommand = 0x84;//, 0x60
+                range.RangeCommand = 0x84;
                 range.NeedConvertResult = true;
                 return range;
             }

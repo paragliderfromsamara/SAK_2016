@@ -35,6 +35,8 @@ namespace NormaMeasure.Devices.SAC
 
         #endregion
 
+        private byte LedLinePosition = 0x00;
+
         public SACCPS(SAC_Device _sac) : base()
         {
             sac = _sac;
@@ -123,13 +125,31 @@ namespace NormaMeasure.Devices.SAC
         /// <param name="led_1">1-Диод</param>
         /// <param name="led_2">2-Диод</param>
         /// <param name="led_3">3-Диод</param>
-        protected virtual void SetRizolLedLine(bool led_1, bool led_2, bool led_3)
+        protected virtual void SetRizolLedLine(bool led_1=false, bool led_2=false, bool led_3 = false)
         {
             byte[] cmd = new byte[] { SetRizolLed_cmd, 0x00 };
             if (led_1) cmd[1] |= 0x01;
             if (led_2) cmd[1] |= 0x02;
             if (led_3) cmd[1] |= 0x03;
             WriteBytes(cmd);
+        }
+
+
+        public virtual void SwitchOnOffLed(int ledNumber, bool led_on = false)
+        {
+            byte newLeadState = LedLinePosition;
+            byte leadState = (byte)(1 << ledNumber);
+            if (led_on)
+            {
+                newLeadState |= leadState;
+            }
+            else
+            {
+                newLeadState &= (byte)(0xFF - leadState);
+            }
+            WriteBytes(new byte[] { SetRizolLed_cmd, newLeadState});
+            LedLinePosition = newLeadState;
+
         }
 
         /// <summary>

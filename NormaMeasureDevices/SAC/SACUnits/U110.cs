@@ -44,7 +44,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         protected override void SetUnitInfo()
         {
             unitName = "U110";
-            unitTitle = "Узел произвонки и измерения Rжил";
+            unitTitle = "Узел прозвонки и измерения Rжил";
             base.SetUnitInfo();
         }
 

@@ -100,9 +100,13 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             {
                 CommutatorMode = (byte)USICommutatorModes.RIZ;
             }
-            else
+            else if (current_point.CommutationType == SACCommutationType.NoFarEnd)
             {
                 CommutatorMode = (byte)USICommutatorModes.RIZ_DT;
+            }else
+            {
+                CommutatorMode = (byte)USICommutatorModes.CLEAR;
+                Debug.WriteLine("Установка коммутатора БУСИ: Rizol (Эталон)");
             }
         }
 
@@ -127,12 +131,12 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
             if (current_point.CommutationType == SACCommutationType.WithFarEnd)
             {
-                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA_DT : (byte)USICommutatorModes.RGB_DT;
+                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA : (byte)USICommutatorModes.RGB;
                 Debug.WriteLine("Установка коммутатора БУСИ: Rжил (С ДК)");
             }
             else if (current_point.CommutationType == SACCommutationType.NoFarEnd)
             {
-                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA: (byte)USICommutatorModes.RGB;
+                CommutatorMode = (current_point.LeadCommType == LeadCommutationType.A) ? (byte)USICommutatorModes.RGA_DT : (byte)USICommutatorModes.RGB_DT;
                 Debug.WriteLine("Установка коммутатора БУСИ: Rжил (без ДК)");
             }else
             {

@@ -231,8 +231,8 @@ namespace NormaMeasure.Devices.SAC
         /// <param name="range"></param>
         public void GetOrSet_UnitMeasureParameterRange(ref UnitMeasureRange range)
         {
-            float BV = range.BV;
-            float KK = range.KK;
+            double BV = range.BV;
+            double KK = range.KK;
             string pKey = GetParameterKeyTitle(range.parameterTypeId);
             string sectionName = $"{pKey}:{range.UnitId}";
             string KK_Key = $"KK<{range.RangeId}>";
@@ -242,7 +242,7 @@ namespace NormaMeasure.Devices.SAC
 
             if (doesKKExist)
             {
-                float.TryParse(file.Read(KK_Key, sectionName), out KK);
+                double.TryParse(file.Read(KK_Key, sectionName), out KK);
             }
             else
             {
@@ -250,7 +250,7 @@ namespace NormaMeasure.Devices.SAC
             }
             if (doesBVExist)
             {
-                float.TryParse(file.Read(BV_Key, sectionName), out BV);
+                double.TryParse(file.Read(BV_Key, sectionName), out BV);
             } else
             {
                 file.Write(BV_Key, BV.ToString(), sectionName);

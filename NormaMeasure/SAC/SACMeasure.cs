@@ -34,6 +34,29 @@ namespace NormaMeasure.MeasureControl.SAC
             SACDevice.SetDefaultSACState();
         }
 
+        protected void Rizol_Measure()
+        {
+            CPSMeasureUnit unit = SACDevice.SetMeasurePoint(currentMeasurePoint);
+            SACDevice.table.SetTableForMeasurePoint(currentMeasurePoint);
+            Thread.Sleep(150);
+            if (unit == null)
+            {
+                Status = MeasureCycleStatus.DeviceNotFound;
+            }
+            else
+            {
+                ((U130)unit).SwitchOffVoltageSource();
+                do
+                {
+                    unit.MakeMeasure(ref currentMeasurePoint);
+                    Result_Gotten?.Invoke(this, currentMeasurePoint);
+                    cycleNumber++;
+                } while (WillMeasureContinue());
+                ((U130)unit).SwitchOffVoltageSource();
+                SACDevice.CentralSysPult.Commutator.SetOnGroundState();
+            }
+        }
+
         protected void Rleads_AND_CEK_Measure()
         {
             CPSMeasureUnit unit = SACDevice.SetMeasurePoint(currentMeasurePoint);
@@ -41,7 +64,7 @@ namespace NormaMeasure.MeasureControl.SAC
             Thread.Sleep(150);
             if (unit == null)
             {
-                Status = MeasureCycleStatus.WillFinished;
+                Status = MeasureCycleStatus.DeviceNotFound;
             }else
             {
                 do
@@ -51,6 +74,7 @@ namespace NormaMeasure.MeasureControl.SAC
                     Thread.Sleep(500);
                     cycleNumber++;
                 } while (WillMeasureContinue());
+                SACDevice.CentralSysPult.Commutator.SetOnGroundState();
             }
         }
 

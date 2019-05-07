@@ -112,6 +112,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             ResultField.RefreshFields(point);
             sac_device.table.SetTableForMeasurePoint(point);
+            sac_device.SetMeasurePoint(point);
         }
 
         private void startMeasure_Click(object sender, EventArgs e)
@@ -159,7 +160,6 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             this.Text = $"Ручные измерения: {SelectedParameterType.ParameterName} ({SelectedParameterType.Description})";
             freqParameters_Panel.Enabled = SelectedParameterType.IsFreqParameter;
             MeasurePoint.ParameterType = SelectedParameterType;
-            MessageBox.Show(MeasurePoint.ParameterType.ParameterName);
         }
 
         private MeasuredParameterType SelectedParameterType

@@ -47,10 +47,13 @@ namespace NormaMeasure.MeasureControl.SAC
                 case MeasuredParameterType.al:
                 case MeasuredParameterType.Ao:
                 case MeasuredParameterType.Az:
+                    break;
                 case MeasuredParameterType.Risol1:
                 case MeasuredParameterType.Risol2:
                 case MeasuredParameterType.Risol3:
                 case MeasuredParameterType.Risol4:
+                    MeasureBody = Rizol_Measure;
+                    break;
                 case MeasuredParameterType.Calling:
                     break;
                 default:

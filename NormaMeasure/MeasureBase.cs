@@ -26,7 +26,7 @@ namespace NormaMeasure.MeasureControl
         /// <returns></returns>
         protected virtual bool WillMeasureContinue()
         {
-            return (cycleLimit > cycleNumber && !IsWillFinished && !IsFinished);
+            return (cycleLimit > cycleNumber && !IsWillFinished && !IsFinished && IsDeviceFound);
         }
 
         /// <summary>
@@ -153,6 +153,8 @@ namespace NormaMeasure.MeasureControl
         /// </summary>
         public bool IsFinished => Status == MeasureCycleStatus.Finished;
 
+        public bool IsDeviceFound => Status != MeasureCycleStatus.DeviceNotFound;
+
         /// <summary>
         /// Статус измерения
         /// </summary>
@@ -178,6 +180,9 @@ namespace NormaMeasure.MeasureControl
                             break;
                         case MeasureCycleStatus.WillFinished:
                             Debug.WriteLine($"MeasureBase.Status.Set(WillFinished)");
+                            break;
+                        case MeasureCycleStatus.DeviceNotFound:
+                            Debug.WriteLine($"MeasureBase.Status.Set(DeviceNotFound)");
                             break;
                         case MeasureCycleStatus.Finished:
                             OnMeasureThread_Finished?.Invoke(this);
@@ -228,7 +233,8 @@ namespace NormaMeasure.MeasureControl
         NotStarted,
         Started,
         Finished,
-        WillFinished
+        WillFinished,
+        DeviceNotFound
     }
 
 }

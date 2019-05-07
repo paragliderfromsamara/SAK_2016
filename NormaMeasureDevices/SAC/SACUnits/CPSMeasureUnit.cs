@@ -26,10 +26,12 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public int UnitSerialNumber => unitSerialNumber;
         public byte ReadResult_CMDHeader => (byte)(SACCPS.Read_cmd | SACCPS.TwoBytes_cmd | unitCMD_Address | SACCPS.ReadResult);
         public byte SetMode_CMDHeader => (byte)(unitCMD_Address | SACCPS.ReadResult);
+
+        protected int ChangeRangeCounterMax = 3;
         /// <summary>
         /// Количество циклов после установки режима для подавления переходных процессов
         /// </summary>
-        protected int ChangeRangeCounter = 3;
+        protected int ChangeRangeCounter;
         /// <summary>
         /// Задаёт режим измерения
         /// </summary>
@@ -40,8 +42,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             byte mode = (byte)(MeasureMode_CMD | MeasureMode_CMD_Addiction);
             if (HasRange) mode |= currentRanges[selectedRangeIdx].RangeCommand;
             cps.WriteBytes(new byte[] { header, mode });
-            //System.Windows.Forms.MessageBox.Show($"header - {header.ToString("X")}; mode-{mode.ToString("X")} ");
-            Thread.Sleep(500);
+            Debug.WriteLine($"CPSMeasureUnit.SetMeasureMode(): Узел {unitName} {UnitId}; Команда {header.ToString("X")} {mode.ToString("X")}");
+            Thread.Sleep(AFTER_SET_MODE_DELAY);
         }
 
         /// <summary>
@@ -104,24 +106,38 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             //cps.OpenPort();
             set_mode_again:
             SetMeasureMode();
+            int waitingForAUnitTimes = 10;
             repeat:
             do
             {
-                
                 result = ReadUnitResult();
-                CheckResult(result);
+                try
+                {
+                    CheckResult(result);
+                }
+                catch(SACMeasureUnit_Exception ex)
+                {
+                    if (ex.ErrStatus == CPSMeasureUnit_Status.NotAnswer && waitingForAUnitTimes > 0) 
+                    {
+                        waitingForAUnitTimes--;
+                        Thread.Sleep(BETWEEN_ADC_TIME);
+                        goto repeat;
+                    }else
+                    {
+                        throw new SACMeasureUnit_Exception(ex.ErrStatus, ex.Message);
+                    }
+                }
                 if (result == (double)CPSMeasureUnit_Status.NOT_USED) goto set_mode_again;
-                Thread.Sleep(20);
-
+                Thread.Sleep(BETWEEN_ADC_TIME);
             } while (result == (double)CPSMeasureUnit_Status.InProcess);
             if (CheckRange(result))
             {
-                ChangeRangeCounter = 3;
+                ChangeRangeCounter = ChangeRangeCounterMax;
                 goto set_mode_again;
             }
             if (--ChangeRangeCounter > 0)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(BETWEEN_ADC_TIME/2);
                 Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure(): counter = {ChangeRangeCounter}");
                 goto repeat;
             }
@@ -136,7 +152,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
 
             if (r == (double)CPSMeasureUnit_Status.GTVLineInNull) throw new SACMeasureUnit_Exception(CPSMeasureUnit_Status.GTVLineInNull, "Измерительный узел не подключен, либо не исправен");
-            else if (r == (double)CPSMeasureUnit_Status.NotAnswer) throw new SACMeasureUnit_Exception(CPSMeasureUnit_Status.NotAnswer, "Измерительный узел не подключен, либо не исправен");
+            else if (r == (double)CPSMeasureUnit_Status.NotAnswer)  throw new SACMeasureUnit_Exception(CPSMeasureUnit_Status.NotAnswer, "Измерительный узел не подключен, либо не исправен");
             else if (r == (double)CPSMeasureUnit_Status.UnloadReleRizolNotWork) throw new SACMeasureUnit_Exception(CPSMeasureUnit_Status.UnloadReleRizolNotWork, "Не сработало реле разряда узла 130");
         }
 
@@ -289,9 +305,19 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// <returns></returns>
         protected virtual UnitMeasureRange[] GetDefaultRanges()
         {
-            return new UnitMeasureRange[0];
+            throw new NotImplementedException($"Не реализовано в дочернем классе {this.GetType().Name}");
+           // return new UnitMeasureRange[0];
         }
 
+
+        /// <summary>
+        /// Время между измерениями
+        /// </summary>
+        protected int BETWEEN_ADC_TIME = 20;
+        /// <summary>
+        /// Время после смены диапазона/установки режима
+        /// </summary>
+        protected int AFTER_SET_MODE_DELAY = 500;
         #endregion
 
     }
@@ -311,10 +337,10 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public string RangeId;
         public string RangeTitle;
         public UnitMeasureRangeType RangeType;
-        public float MinValue;
-        public float MaxValue;
-        public float KK;
-        public float BV;
+        public double MinValue;
+        public double MaxValue;
+        public double KK;
+        public double BV;
         public byte RangeCommand;
         public uint parameterTypeId;
         public bool NeedConvertResult;
