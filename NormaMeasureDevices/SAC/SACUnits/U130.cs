@@ -40,16 +40,14 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             };
         }
 
-        public override bool MakeMeasure(ref SACMeasurePoint point)
+        public override void SetUnitStateByMeasurePoint(SACMeasurePoint point)
         {
-            BETWEEN_ADC_TIME = 350;
-            AFTER_SET_MODE_DELAY = 1000;
-            ChangeRangeCounterMax = 0;
-            base.MakeMeasure(ref point);
+            base.SetUnitStateByMeasurePoint(point);
+            BETWEEN_ADC_TIME = 1500;
+            AFTER_SET_MODE_DELAY = 2000;
+            ChangeRangeCounterMax = 1;
             SelectDefaultRange(0);
             cps.SwitchOnOffLed(unitNumber, true);
-            ExecuteElementaryMeasure(ref point);
-            return true;
         }
 
         protected override void SetUnitAddress()

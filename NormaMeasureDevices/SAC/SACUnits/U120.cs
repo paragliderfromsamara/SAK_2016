@@ -45,14 +45,15 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             return base.CheckRange(result);
         }
 
-        public override bool MakeMeasure(ref SACMeasurePoint point)
+        public override void SetUnitStateByMeasurePoint(SACMeasurePoint point)
         {
-            base.MakeMeasure(ref point);
+            base.SetUnitStateByMeasurePoint(point);
             int defaultRangeIdx = CurrentParameterType.IsEK() ? 0 : 2;
+            BETWEEN_ADC_TIME = 250;
+            AFTER_SET_MODE_DELAY = 250;
+            ChangeRangeCounterMax = CurrentParameterType.IsEK() ? 0 : 2;
             Debug.WriteLine($"U120.MakeMeasure():defaultRangeIdx {defaultRangeIdx}");
             SelectDefaultRange(defaultRangeIdx);
-            ExecuteElementaryMeasure(ref point);
-            return true;
         }
 
         protected override void SetMeasureModeCMDByParameterType()

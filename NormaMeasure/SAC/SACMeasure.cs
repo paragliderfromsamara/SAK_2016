@@ -46,6 +46,8 @@ namespace NormaMeasure.MeasureControl.SAC
             else
             {
                 ((U130)unit).SwitchOffVoltageSource();
+                unit.SetUnitStateByMeasurePoint(currentMeasurePoint);
+                unit.SetMeasureMode();
                 do
                 {
                     unit.MakeMeasure(ref currentMeasurePoint);
@@ -67,11 +69,13 @@ namespace NormaMeasure.MeasureControl.SAC
                 Status = MeasureCycleStatus.DeviceNotFound;
             }else
             {
+                unit.SetUnitStateByMeasurePoint(currentMeasurePoint);
+               // unit.SetMeasureMode();
                 do
                 {
                     unit.MakeMeasure(ref currentMeasurePoint);
                     Result_Gotten?.Invoke(this, currentMeasurePoint);
-                    Thread.Sleep(500);
+                    Thread.Sleep(250);
                     cycleNumber++;
                 } while (WillMeasureContinue());
                 SACDevice.CentralSysPult.Commutator.SetOnGroundState();

@@ -60,24 +60,16 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         }
 
-        public override bool MakeMeasure(ref SACMeasurePoint point)
+        public override void SetUnitStateByMeasurePoint(SACMeasurePoint point)
         {
-            base.MakeMeasure(ref point);
+            base.SetUnitStateByMeasurePoint(point);
+            BETWEEN_ADC_TIME = 250;
+            AFTER_SET_MODE_DELAY = 250;
+            ChangeRangeCounterMax = 1;
             if (point.ParameterType.ParameterTypeId == MeasuredParameterType.Rleads)
             {
-                RleadsMeasure(ref point);
+                SelectDefaultRange(0);
             }
-            return true;
-        }
-
-        /// <summary>
-        /// Измерение Rжил
-        /// </summary>
-        /// <returns></returns>
-        private void RleadsMeasure(ref SACMeasurePoint point)
-        {
-            SelectDefaultRange(0);
-            ExecuteElementaryMeasure(ref point);
         }
 
         private void SetRange(int rangeId)

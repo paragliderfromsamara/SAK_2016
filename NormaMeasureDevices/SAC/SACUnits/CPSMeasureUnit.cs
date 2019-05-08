@@ -36,7 +36,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// Задаёт режим измерения
         /// </summary>
         /// <returns></returns>
-        protected void SetMeasureMode()
+        public void SetMeasureMode()
         {
             byte header = (byte)(unitCMD_Address | SACCPS.ReadResult);
             byte mode = (byte)(MeasureMode_CMD | MeasureMode_CMD_Addiction);
@@ -100,16 +100,17 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// Производит одиночное измерение на узле
         /// </summary>
         /// <returns></returns>
-        protected virtual void ExecuteElementaryMeasure(ref SACMeasurePoint point)
+        public virtual void MakeMeasure(ref SACMeasurePoint point)
         {
             double result = (double)CPSMeasureUnit_Status.InProcess;
             //cps.OpenPort();
             set_mode_again:
-            SetMeasureMode();
             int waitingForAUnitTimes = 10;
+            SetMeasureMode();
             repeat:
             do
             {
+                Thread.Sleep(BETWEEN_ADC_TIME);
                 result = ReadUnitResult();
                 try
                 {
@@ -120,27 +121,35 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                     if (ex.ErrStatus == CPSMeasureUnit_Status.NotAnswer && waitingForAUnitTimes > 0) 
                     {
                         waitingForAUnitTimes--;
-                        Thread.Sleep(BETWEEN_ADC_TIME);
+                        Debug.WriteLine($"CPSMeasureUnit.MakeMeasure(): status = CPSMeasureUnit_Status.NotAnswer {waitingForAUnitTimes}");
+                        //Thread.Sleep(BETWEEN_ADC_TIME);
                         goto repeat;
                     }else
                     {
                         throw new SACMeasureUnit_Exception(ex.ErrStatus, ex.Message);
                     }
                 }
-                if (result == (double)CPSMeasureUnit_Status.NOT_USED) goto set_mode_again;
-                Thread.Sleep(BETWEEN_ADC_TIME);
+                if (result == (double)CPSMeasureUnit_Status.NOT_USED)
+                {
+                    Debug.WriteLine($"CPSMeasureUnit.MakeMeasure(): status = CPSMeasureUnit_Status.NOT_USED");
+                    //SetMeasureMode();
+                    goto set_mode_again;
+                }
+
             } while (result == (double)CPSMeasureUnit_Status.InProcess);
-            if (CheckRange(result))
+            if (ChangeRangeCounter-- > 0)
             {
-                ChangeRangeCounter = ChangeRangeCounterMax;
-                goto set_mode_again;
-            }
-            if (--ChangeRangeCounter > 0)
-            {
-                Thread.Sleep(BETWEEN_ADC_TIME/2);
+                //Thread.Sleep(BETWEEN_ADC_TIME);
                 Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure(): counter = {ChangeRangeCounter}");
                 goto repeat;
             }
+            if (CheckRange(result))
+            {
+                ChangeRangeCounter = ChangeRangeCounterMax;
+               // SetMeasureMode();
+                goto set_mode_again;
+            }
+
             //cps.ClosePort();
             Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure():result {result}");
             point.RawResult = result;
@@ -204,7 +213,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// <param name="isEtalonMeasure">true - измеряется эталон, false - измеряется стол</param>
         /// <param name="leadCommType"> Тип пожильного измерения</param>
         /// <returns></returns>
-        public virtual bool MakeMeasure(ref SACMeasurePoint point)
+        public virtual void SetUnitStateByMeasurePoint(SACMeasurePoint point)
         {
 
             //if (IsAllowedParameter(pType.ParameterTypeId)) return false;
@@ -212,7 +221,6 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             LeadCommType = point.LeadCommType;
             //PrepareCommutator(isEtalonMeasure);
             // result = 
-            return true;
         }
 
 
@@ -313,11 +321,11 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// <summary>
         /// Время между измерениями
         /// </summary>
-        protected int BETWEEN_ADC_TIME = 20;
+        public int BETWEEN_ADC_TIME = 450;
         /// <summary>
         /// Время после смены диапазона/установки режима
         /// </summary>
-        protected int AFTER_SET_MODE_DELAY = 500;
+        public int AFTER_SET_MODE_DELAY = 450;
         #endregion
 
     }
