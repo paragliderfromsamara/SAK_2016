@@ -154,9 +154,10 @@ namespace NormaMeasure.Devices.SAC
         public CableStructureType structureType;
         public int CableElementNumber = 0;
 
-        public int FrequencyMin;
-        public int FrequencyMax;
-        public int FrequencyStep;
+        public float CurrentFrequency;
+        public float FrequencyMin;
+        public float FrequencyMax;
+        public float FrequencyStep;
         public int WaveResistance = 0;
         public CallingSubModes CallingSubMode = CallingSubModes.Short;
 

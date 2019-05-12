@@ -36,7 +36,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// Задаёт режим измерения
         /// </summary>
         /// <returns></returns>
-        public void SetMeasureMode()
+        public virtual void SetMeasureMode()
         {
             byte header = (byte)(unitCMD_Address | SACCPS.ReadResult);
             byte mode = (byte)(MeasureMode_CMD | MeasureMode_CMD_Addiction);
