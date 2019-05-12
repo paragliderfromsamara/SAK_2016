@@ -158,7 +158,25 @@ namespace NormaMeasure.Devices.SAC
         public float FrequencyMin;
         public float FrequencyMax;
         public float FrequencyStep;
-        public int WaveResistance = 0;
+        private int Wave_Resistance = 0;
+
+        public int WaveResistance
+        {
+            get
+            {
+                return Wave_Resistance;
+            }set
+            {
+                if (value != Wave_Resistance)
+                {
+                    Wave_Resistance = value;
+                    changed = true;
+                }
+            }
+        }
+
+
+
         public CallingSubModes CallingSubMode = CallingSubModes.Short;
 
         public string LeadCommTypeText

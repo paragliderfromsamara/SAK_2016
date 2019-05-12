@@ -7,6 +7,7 @@ using System.IO.Ports;
 using System.Diagnostics;
 using System.Threading;
 using NormaMeasure.Devices.SAC.SACUnits;
+using NormaMeasure.Utils;
 
 namespace NormaMeasure.Devices.SAC
 {
@@ -14,33 +15,35 @@ namespace NormaMeasure.Devices.SAC
     public delegate void TableReceiverControl_Thread_Handler(byte[] receivedInfo);
     public class SACTable : DeviceBase
     {
-        int tableNumber = 1;
+        public int TableNumber = 1;
 
         SAC_Device sac;
         TableReceiverControl_Thread Receiver;
-
+        public SACTableSelfCorrFile SelfCorrFile;
 
 
         public SACTable(int table_number, SAC_Device _sac) : base()
         {
             sac = _sac;
             deviceTypeName = "Стол";
-            tableNumber = table_number;
+            TableNumber = table_number;
+            SelfCorrFile = new SACTableSelfCorrFile(this);
             deviceId = table_number.ToString();
             PairCommutator = new PairCommutator(this);
             USICommutator = new USICommutator(this);
+            DDSGenerator = new FrequencyGenerator(this);
             this.Device_Connected += SACTable_Device_Connected;
         }
 
         protected override string GetLastConnectedPortName()
         {
             if (sac == null) return "COM1";
-            else return sac.SettingsFile.GetTablePortName(tableNumber);
+            else return sac.SettingsFile.GetTablePortName(TableNumber);
         }
 
         private void SACTable_Device_Connected(DeviceBase device)
         {
-            sac.SettingsFile.SetTablePortName(this.tableNumber, PortName);
+            sac.SettingsFile.SetTablePortName(this.TableNumber, PortName);
         }
 
         public bool SetTableForMeasurePoint(SACMeasurePoint current_point)
@@ -98,7 +101,7 @@ namespace NormaMeasure.Devices.SAC
                 //Прием серийного номера
                 case TABLE_NUM_INPUT_CMD:
                     OnTableNumber_Received?.Invoke(this);
-                    if (!TableNumberIsValid) TableNumberIsValid = (int)receivedInfo[2] == tableNumber;
+                    if (!TableNumberIsValid) TableNumberIsValid = (int)receivedInfo[2] == TableNumber;
      
                         
                     Debug.WriteLine($"SACTable.Receiver_NewCommandReceived: принят номер стола {receivedInfo[2]}");
@@ -194,6 +197,7 @@ namespace NormaMeasure.Devices.SAC
 
         public PairCommutator PairCommutator;
         public USICommutator USICommutator;
+        public FrequencyGenerator DDSGenerator;
 
         private bool TableNumberIsValid = false;
         public const byte TABLE_NUM_INPUT_CMD = 0x14;
@@ -271,6 +275,7 @@ namespace NormaMeasure.Devices.SAC
             Terminated = true;
         }
 
+
         ~TableReceiverControl_Thread()
         {
             thread.Abort();
@@ -280,6 +285,38 @@ namespace NormaMeasure.Devices.SAC
         private Thread thread;
         private SACTable table;
         public event TableReceiverControl_Thread_Handler NewCommandReceived;
+    }
+
+    public class SACTableSelfCorrFile
+    {
+        private SACTable table;
+        private IniFile file;
+        public SACTableSelfCorrFile(SACTable _table)
+        {
+            table = _table;
+            InitFile();
+        }
+
+        public double GetInfluenceCoeff(int int_freq, int wave_res, double defaultValue = 45)
+        {
+            string section = $"al<{wave_res.ToString()}>";
+            string key = $"N{int_freq}";
+            double val = defaultValue;
+            string strVal = String.Empty;
+            bool flag = false;
+            if (file.KeyExists(key, section))
+            {
+                strVal = file.Read(key, section);
+                flag = double.TryParse(strVal, out val);
+            }
+            if (!flag) file.Write(key, val.ToString(), section);
+            return val;
+        }
+
+        private void InitFile()
+        {
+            file = new IniFile($"SelfCorr(N{table.TableNumber}).ini");
+        }
     }
 
 }

@@ -54,6 +54,20 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         private void InitInputs()
         {
             InitCommModeGroupBoxes();
+            InitFreqList();
+        }
+
+        private void InitFreqList()
+        {
+            freqMin_CB.Items.Clear();
+            freqMax_CB.Items.Clear();
+            waveResistance_CB.SelectedIndex = 0;
+            foreach(float f in FreqList)
+            {
+                freqMin_CB.Items.Add(f.ToString());
+                freqMax_CB.Items.Add(f.ToString());
+            }
+            freqMin_CB.SelectedIndex = 0;
         }
 
         private void InitCommModeGroupBoxes()
@@ -242,6 +256,37 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             {
                 MeasurePoint.LeadCommType = LeadCommutationType.AB;
             }
+        }
+
+        
+
+        private void freqMin_CB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (freqMax_CB.SelectedIndex < freqMin_CB.SelectedIndex)
+            {
+                freqStep_CB.Text = "0";
+                freqMax_CB.SelectedIndex = freqMin_CB.SelectedIndex;
+            }
+            MeasurePoint.FrequencyMin = FreqList[freqMin_CB.SelectedIndex];
+        }
+
+        private void freqMax_CB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (freqMin_CB.SelectedIndex > freqMax_CB.SelectedIndex)
+            {
+                freqMin_CB.SelectedIndex = freqMax_CB.SelectedIndex;
+                freqStep_CB.Text = "0";
+            }
+            MeasurePoint.FrequencyMax = FreqList[freqMax_CB.SelectedIndex];
+        }
+
+        private float[] FreqList = new float[] { 0.8f, 10, 20, 40, 80, 160, 320, 640, 1000, 1500, 2000 };
+
+        private void waveResistance_CB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int wr = 150;
+            int.TryParse(waveResistance_CB.Text, out wr);
+            MeasurePoint.WaveResistance = wr;
         }
     }
 }

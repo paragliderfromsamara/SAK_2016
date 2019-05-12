@@ -35,7 +35,7 @@
             this.NoDK_RadioButton = new System.Windows.Forms.RadioButton();
             this.withDK_RadioButton = new System.Windows.Forms.RadioButton();
             this.Etalon_RadioButton = new System.Windows.Forms.RadioButton();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.waveResistance_CB = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.pair1_Label = new System.Windows.Forms.Label();
             this.leadCB = new System.Windows.Forms.ComboBox();
@@ -48,10 +48,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.freqMin_Label = new System.Windows.Forms.Label();
             this.tableElementsPanel = new System.Windows.Forms.Panel();
+            this.pairSelector_ComboBox_1 = new NormaMeasure.MeasureControl.SACMeasureForms.PairSelector_ComboBox();
             this.measureResultPanel_Container = new System.Windows.Forms.Panel();
             this.measureCycles_NumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.pairSelector_ComboBox_1 = new NormaMeasure.MeasureControl.SACMeasureForms.PairSelector_ComboBox();
             this.groupBox1.SuspendLayout();
             this.freqParameters_Panel.SuspendLayout();
             this.tableElementsPanel.SuspendLayout();
@@ -134,13 +134,20 @@
             this.Etalon_RadioButton.UseVisualStyleBackColor = true;
             this.Etalon_RadioButton.CheckedChanged += new System.EventHandler(this.Etalon_RadioButton_CheckedChanged);
             // 
-            // comboBox1
+            // waveResistance_CB
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(11, 74);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(206, 21);
-            this.comboBox1.TabIndex = 5;
+            this.waveResistance_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.waveResistance_CB.FormattingEnabled = true;
+            this.waveResistance_CB.Items.AddRange(new object[] {
+            "150",
+            "400",
+            "500",
+            "600"});
+            this.waveResistance_CB.Location = new System.Drawing.Point(11, 74);
+            this.waveResistance_CB.Name = "waveResistance_CB";
+            this.waveResistance_CB.Size = new System.Drawing.Size(206, 21);
+            this.waveResistance_CB.TabIndex = 5;
+            this.waveResistance_CB.SelectedIndexChanged += new System.EventHandler(this.waveResistance_CB_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -184,14 +191,17 @@
             // 
             // freqMin_CB
             // 
+            this.freqMin_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.freqMin_CB.FormattingEnabled = true;
             this.freqMin_CB.Location = new System.Drawing.Point(11, 23);
             this.freqMin_CB.Name = "freqMin_CB";
             this.freqMin_CB.Size = new System.Drawing.Size(63, 21);
             this.freqMin_CB.TabIndex = 11;
+            this.freqMin_CB.SelectedIndexChanged += new System.EventHandler(this.freqMin_CB_SelectedIndexChanged);
             // 
             // freqStep_CB
             // 
+            this.freqStep_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.freqStep_CB.FormattingEnabled = true;
             this.freqStep_CB.Location = new System.Drawing.Point(83, 23);
             this.freqStep_CB.Name = "freqStep_CB";
@@ -200,11 +210,13 @@
             // 
             // freqMax_CB
             // 
+            this.freqMax_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.freqMax_CB.FormattingEnabled = true;
             this.freqMax_CB.Location = new System.Drawing.Point(154, 23);
             this.freqMax_CB.Name = "freqMax_CB";
             this.freqMax_CB.Size = new System.Drawing.Size(63, 21);
             this.freqMax_CB.TabIndex = 13;
+            this.freqMax_CB.SelectedIndexChanged += new System.EventHandler(this.freqMax_CB_SelectedIndexChanged);
             // 
             // freqParameters_Panel
             // 
@@ -215,7 +227,7 @@
             this.freqParameters_Panel.Controls.Add(this.freqMax_CB);
             this.freqParameters_Panel.Controls.Add(this.label2);
             this.freqParameters_Panel.Controls.Add(this.freqStep_CB);
-            this.freqParameters_Panel.Controls.Add(this.comboBox1);
+            this.freqParameters_Panel.Controls.Add(this.waveResistance_CB);
             this.freqParameters_Panel.Location = new System.Drawing.Point(1, 189);
             this.freqParameters_Panel.Name = "freqParameters_Panel";
             this.freqParameters_Panel.Size = new System.Drawing.Size(228, 100);
@@ -259,49 +271,323 @@
             this.tableElementsPanel.Size = new System.Drawing.Size(228, 54);
             this.tableElementsPanel.TabIndex = 16;
             // 
-            // measureResultPanel_Container
-            // 
-            this.measureResultPanel_Container.Location = new System.Drawing.Point(235, 30);
-            this.measureResultPanel_Container.Name = "measureResultPanel_Container";
-            this.measureResultPanel_Container.Size = new System.Drawing.Size(453, 165);
-            this.measureResultPanel_Container.TabIndex = 17;
-            // 
-            // measureCycles_NumericUpDown
-            // 
-            this.measureCycles_NumericUpDown.Location = new System.Drawing.Point(612, 222);
-            this.measureCycles_NumericUpDown.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.measureCycles_NumericUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.measureCycles_NumericUpDown.Name = "measureCycles_NumericUpDown";
-            this.measureCycles_NumericUpDown.Size = new System.Drawing.Size(76, 20);
-            this.measureCycles_NumericUpDown.TabIndex = 18;
-            this.measureCycles_NumericUpDown.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(609, 206);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(65, 13);
-            this.label5.TabIndex = 19;
-            this.label5.Text = "Измерений";
-            // 
             // pairSelector_ComboBox_1
             // 
             this.pairSelector_ComboBox_1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.pairSelector_ComboBox_1.FormattingEnabled = true;
             this.pairSelector_ComboBox_1.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "60",
+            "61",
+            "62",
+            "63",
+            "64",
+            "65",
+            "66",
+            "67",
+            "68",
+            "69",
+            "70",
+            "71",
+            "72",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90",
+            "91",
+            "92",
+            "93",
+            "94",
+            "95",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100",
+            "101",
+            "102",
+            "103",
+            "104",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "60",
+            "61",
+            "62",
+            "63",
+            "64",
+            "65",
+            "66",
+            "67",
+            "68",
+            "69",
+            "70",
+            "71",
+            "72",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90",
+            "91",
+            "92",
+            "93",
+            "94",
+            "95",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100",
+            "101",
+            "102",
+            "103",
+            "104",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "60",
+            "61",
+            "62",
+            "63",
+            "64",
+            "65",
+            "66",
+            "67",
+            "68",
+            "69",
+            "70",
+            "71",
+            "72",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90",
+            "91",
+            "92",
+            "93",
+            "94",
+            "95",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100",
+            "101",
+            "102",
+            "103",
+            "104",
             "1",
             "2",
             "3",
@@ -516,6 +802,44 @@
             this.pairSelector_ComboBox_1.TabIndex = 11;
             this.pairSelector_ComboBox_1.SelectedIndexChanged += new System.EventHandler(this.pairSelector_ComboBox_1_SelectedIndexChanged);
             // 
+            // measureResultPanel_Container
+            // 
+            this.measureResultPanel_Container.Location = new System.Drawing.Point(235, 30);
+            this.measureResultPanel_Container.Name = "measureResultPanel_Container";
+            this.measureResultPanel_Container.Size = new System.Drawing.Size(453, 165);
+            this.measureResultPanel_Container.TabIndex = 17;
+            // 
+            // measureCycles_NumericUpDown
+            // 
+            this.measureCycles_NumericUpDown.Location = new System.Drawing.Point(612, 222);
+            this.measureCycles_NumericUpDown.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.measureCycles_NumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.measureCycles_NumericUpDown.Name = "measureCycles_NumericUpDown";
+            this.measureCycles_NumericUpDown.Size = new System.Drawing.Size(76, 20);
+            this.measureCycles_NumericUpDown.TabIndex = 18;
+            this.measureCycles_NumericUpDown.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(609, 206);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(65, 13);
+            this.label5.TabIndex = 19;
+            this.label5.Text = "Измерений";
+            // 
             // SACHandMeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -553,7 +877,7 @@
         private System.Windows.Forms.RadioButton NoDK_RadioButton;
         private System.Windows.Forms.RadioButton withDK_RadioButton;
         private System.Windows.Forms.RadioButton Etalon_RadioButton;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox waveResistance_CB;
         private System.Windows.Forms.Label label2;
         
         private System.Windows.Forms.Label pair1_Label;

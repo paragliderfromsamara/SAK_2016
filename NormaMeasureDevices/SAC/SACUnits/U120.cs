@@ -231,6 +231,89 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         #endregion
 
+        protected override void SetEtalon()
+        {
+            switch (CurrentParameterType.ParameterTypeId)
+            {
+                case MeasuredParameterType.Cp:
+                    Etalon = Etalon_Cp;
+                    break;
+                case MeasuredParameterType.Ea:
+                    Etalon = Etalon_Ea;
+                    break;
+                case MeasuredParameterType.Co:
+                    Etalon = Etalon_Co;
+                    break;
+                case MeasuredParameterType.K1:
+                    Etalon = Etalon_K1;
+                    break;
+                case MeasuredParameterType.K2:
+                case MeasuredParameterType.K3:
+                case MeasuredParameterType.K23:
+                    Etalon = Etalon_K23;
+                    break;
+                case MeasuredParameterType.K9:
+                case MeasuredParameterType.K10:
+                case MeasuredParameterType.K11:
+                case MeasuredParameterType.K12:
+                case MeasuredParameterType.K9_12:
+                    Etalon = Etalon_K9_12;
+                    break;
 
+            }
+        }
+        private MeasureUnitEtalon Etalon_Cp
+        {
+            get
+            {
+                MeasureUnitEtalon e = new MeasureUnitEtalon() { TrueValue = 10, MaxErrorPercent = 0.5, MaxErrorAddictive = 0, EtalonTitle = "Cp" };
+                return e;
+            }
+        }
+
+        private MeasureUnitEtalon Etalon_Co
+        {
+            get
+            {
+                MeasureUnitEtalon e = new MeasureUnitEtalon() { TrueValue = 10, MaxErrorPercent = 0.5, MaxErrorAddictive = 0, EtalonTitle = "Co" };
+                return e;
+            }
+        }
+
+        private MeasureUnitEtalon Etalon_Ea
+        {
+            get
+            {
+                MeasureUnitEtalon e = new MeasureUnitEtalon() { TrueValue = 10000, MaxErrorPercent = 5.0, MaxErrorAddictive = 0, EtalonTitle = "Ea" };
+                return e;
+            }
+        }
+
+        private MeasureUnitEtalon Etalon_K1
+        {
+            get
+            {
+                MeasureUnitEtalon e = new MeasureUnitEtalon() { TrueValue = 10000, MaxErrorPercent = 5.0, MaxErrorAddictive = 0, EtalonTitle = "K1" };
+                return e;
+            }
+        }
+
+        private MeasureUnitEtalon Etalon_K23
+        {
+            get
+            {
+                MeasureUnitEtalon e = new MeasureUnitEtalon() { TrueValue = 10000, MaxErrorPercent = 5.0, MaxErrorAddictive = 0, EtalonTitle = "K2,K3" };
+                return e;
+            }
+        }
+
+        private MeasureUnitEtalon Etalon_K9_12
+        {
+            get
+            {
+                MeasureUnitEtalon e = new MeasureUnitEtalon() { TrueValue = 10000, MaxErrorPercent = 5, MaxErrorAddictive = 0, EtalonTitle = "K9-K12" };
+                return e;
+            }
+        }
     }
 }

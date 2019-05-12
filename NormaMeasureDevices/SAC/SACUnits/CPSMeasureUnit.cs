@@ -11,6 +11,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 {
     public class CPSMeasureUnit : SACUnit
     {
+        protected bool IsEtalonMeasure = false;
         protected LeadCommutationType LeadCommType = LeadCommutationType.AB;
         protected uint[] allowedMeasuredParameters;
         private MeasuredParameterType curParameterType;
@@ -45,6 +46,15 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             Debug.WriteLine($"CPSMeasureUnit.SetMeasureMode(): Узел {unitName} {UnitId}; Команда {header.ToString("X")} {mode.ToString("X")}");
             Thread.Sleep(AFTER_SET_MODE_DELAY);
         }
+
+        /// <summary>
+        /// Устанавливает эталон для данного типа измеряемого параметра
+        /// </summary>
+        protected virtual void SetEtalon()
+        {
+            throw new NotImplementedException($"Не реализовано в дочернем классе {this.GetType().Name}");
+        }
+
 
         /// <summary>
         /// Установка начального диапазона измерения
@@ -154,7 +164,17 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure():result {result}");
             point.RawResult = result;
             ApplyCoeffs(ref result);
+            if (IsEtalonMeasure) CorrectEtalonValue(ref result);
             point.ConvertedResult = result;
+        }
+
+        protected void CorrectEtalonValue(ref double r)
+        {
+            if (Etalon.HasValue)
+            {
+                double measuredVal = cps.sac.SettingsFile.GetEtalonValue(Etalon.Value);
+                r += (Etalon.Value.TrueValue - measuredVal);
+            }
         }
 
         protected void CheckResult(double r)
@@ -177,6 +197,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 curParameterType = value; 
                 SetMeasureModeCMDByParameterType(); //Установка команды задания режима
                 SetMeasureRangesForParameterType(); //Инициализация диапазонов
+                SetEtalon(); //Установка эталона для данного типа параметра
             }
         }
 
@@ -219,6 +240,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             //if (IsAllowedParameter(pType.ParameterTypeId)) return false;
             CurrentParameterType = point.ParameterType;
             LeadCommType = point.LeadCommType;
+            IsEtalonMeasure = point.CommutationType == SACCommutationType.Etalon;
             //PrepareCommutator(isEtalonMeasure);
             // result = 
         }
@@ -328,6 +350,9 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public int AFTER_SET_MODE_DELAY = 450;
         #endregion
 
+
+        public MeasureUnitEtalon ? Etalon;
+
     }
 
     public enum CPSMeasureUnit_Status : Int32
@@ -371,5 +396,31 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
             errStatus = unitStatus;
         }
+    }
+
+    public struct MeasureUnitEtalon
+    {
+        /// <summary>
+        /// Заголовок эталона
+        /// </summary>
+        public string EtalonTitle;
+        /// <summary>
+        /// Значение которое должно быть
+        /// </summary>
+        public double TrueValue;
+        /// <summary>
+        /// Измеренное значение
+        /// </summary>
+        public double MeasuredValue;
+
+        /// <summary>
+        /// Максимальная допустимое отклонение в процентах
+        /// </summary>
+        public double MaxErrorPercent;
+        /// <summary>
+        /// Максимальное допустимое отклонение аддиктивное
+        /// </summary>
+        public double MaxErrorAddictive;
+        
     }
 }

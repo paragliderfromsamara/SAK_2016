@@ -202,6 +202,29 @@ namespace NormaMeasure.Devices.SAC
             file.Write("port_name", sac.CentralSysPult.PortName, "LAST CPS");
         }
 
+        #region Управление картой эталонов
+
+        public double GetEtalonValue(MeasureUnitEtalon etalon)
+        {
+            double val = etalon.TrueValue;
+            string key = etalon.EtalonTitle;
+            string section = $"{EtalonsMap_SectionName}:{sac.CentralSysPult.DeviceId}";
+            bool flag = false;
+            string strValue = String.Empty;
+            if (file.KeyExists(key, section))
+            {
+                strValue = file.Read(key, section);
+                flag = double.TryParse(strValue, out val);
+            }
+            if (!flag)
+            {
+                file.Write(key, val.ToString(), section);
+            }
+            return val;
+        }
+
+        #endregion
+
         #region Управление данными стола 
         public string GetTablePortName(int tableNumber)
         {

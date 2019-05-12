@@ -174,6 +174,20 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         }
 
 
+        protected override void SetEtalon()
+        {
+            Etalon = Etalon_Risol;
+        }
+
+        private MeasureUnitEtalon Etalon_Risol
+        {
+            get
+            {
+                MeasureUnitEtalon e = new MeasureUnitEtalon() { TrueValue = 10000, MaxErrorPercent = 10, MaxErrorAddictive = 0, EtalonTitle = "Risol" };
+                return e;
+            }
+        }
+
         public byte RizolUnitNumber => unitNumber;
         private byte unitNumber;
     }

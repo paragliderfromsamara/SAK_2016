@@ -140,5 +140,19 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
 
         #endregion
+
+        protected override void SetEtalon()
+        {
+            if (CurrentParameterType.ParameterTypeId == MeasuredParameterType.Rleads) Etalon = Etalon_Rleads;
+        }
+
+        private MeasureUnitEtalon Etalon_Rleads
+        {
+            get
+            {
+                MeasureUnitEtalon e = new MeasureUnitEtalon() {TrueValue=1000, MaxErrorPercent = 0.2, MaxErrorAddictive = 0, EtalonTitle = "Rleads" };
+                return e;
+            }
+        }
     }
 }

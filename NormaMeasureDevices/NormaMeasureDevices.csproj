@@ -48,6 +48,7 @@
     <Compile Include="SAC\SACMeasurePoint.cs" />
     <Compile Include="SAC\SACUnits\CPSCommutator.cs" />
     <Compile Include="SAC\SACUnits\CPSMeasureUnit.cs" />
+    <Compile Include="SAC\SACUnits\FrequencyGenerator.cs" />
     <Compile Include="SAC\SACUnits\HightVoltageTestUnit.cs" />
     <Compile Include="SAC\SACUnits\SACUnit.cs" />
     <Compile Include="SAC\SACUnits\U110.cs" />
@@ -84,9 +85,7 @@
       <DependentUpon>TableMap_testForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SAC\TableUnits\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

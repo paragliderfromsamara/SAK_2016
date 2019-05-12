@@ -62,13 +62,13 @@ namespace NormaMeasure.MeasureControl.SAC
         protected void Rleads_AND_CEK_Measure()
         {
             CPSMeasureUnit unit = SACDevice.SetMeasurePoint(currentMeasurePoint);
-            SACDevice.table.SetTableForMeasurePoint(currentMeasurePoint);
-            Thread.Sleep(150);
             if (unit == null)
             {
                 Status = MeasureCycleStatus.DeviceNotFound;
             }else
             {
+                SACDevice.table.SetTableForMeasurePoint(currentMeasurePoint);
+                Thread.Sleep(150);
                 unit.SetUnitStateByMeasurePoint(currentMeasurePoint);
                // unit.SetMeasureMode();
                 do
@@ -82,6 +82,31 @@ namespace NormaMeasure.MeasureControl.SAC
             }
         }
 
+        protected void al_Measure()
+        {
+            CPSMeasureUnit unit = SACDevice.SetMeasurePoint(currentMeasurePoint);
+
+            if (unit == null)
+            {
+                Status = MeasureCycleStatus.DeviceNotFound;
+            }
+            else
+            {
+                currentMeasurePoint.CurrentFrequency = currentMeasurePoint.FrequencyMin;
+                SACDevice.table.SetTableForMeasurePoint(currentMeasurePoint);
+                unit.SetUnitStateByMeasurePoint(currentMeasurePoint);
+                // unit.SetMeasureMode();
+                do
+                {
+                    SACDevice.table.DDSGenerator.SetFrequency(currentMeasurePoint.CurrentFrequency);
+                    Thread.Sleep(250);
+                    unit.MakeMeasure(ref currentMeasurePoint);
+                    Result_Gotten?.Invoke(this, currentMeasurePoint);
+                    //Thread.Sleep(250);
+                    cycleNumber++;
+                } while (WillMeasureContinue());
+            }
+        }
 
         public event SACMeasure_Handler Result_Gotten;
         protected SAC_Device SACDevice;

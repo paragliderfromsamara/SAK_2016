@@ -183,7 +183,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             if (current_point.ParameterType.IsFreqParameter)
             {
                 WaveResistance = (byte)GetWaveResistanceModeForCurrentPoint();
-                TransformatorMode = current_point.FrequencyMin < SAC_Device.MIN_FREQ ? (byte)USITransformatorModes.LowFrequency : (byte)USITransformatorModes.HightFrequency;
+                TransformatorMode = current_point.CurrentFrequency < SAC_Device.MIN_FREQ ? (byte)USITransformatorModes.LowFrequency : (byte)USITransformatorModes.HightFrequency;
             }
             else
             {
