@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NormaMeasure.Devices.SAC;
 using NormaMeasure.MeasureControl.SAC;
+using NormaMeasure.DBControl.Tables;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {
@@ -40,6 +41,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 ResultValue_Label.Text = $"{Math.Round(point.ConvertedResult, 2) } {point.ParameterType.Measure}";
                 ResultValue_Label.Location = new System.Drawing.Point((this.Width / 2) - (ResultValue_Label.Width / 2), ResultValue_Label.Location.Y);
                 MeasureParameterType_Label.Text = $"Параметр {point.ParameterType.ParameterName}";
+                if (point.ParameterType.IsFreqParameter) MeasureParameterType_Label.Text += $"\nЧастота: {point.CurrentFrequency} кГц";
                 CommutationMode_Label.Text = point.CommutationTypeText;
                 PairCommutatorPosition_Label.Text = $"ПУ {point.PairCommutatorPosition_1} \n{point.LeadCommTypeText}";
             }
@@ -71,7 +73,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             PairCommutatorPosition_Label.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             PairCommutatorPosition_Label.Name = "PairCommutatorPosition_Label";
             PairCommutatorPosition_Label.Size = new System.Drawing.Size(100, 50);
-            PairCommutatorPosition_Label.Location = new System.Drawing.Point(this.Width - 150, 50);
+            PairCommutatorPosition_Label.Location = new System.Drawing.Point(this.Width - 70, 35);
             PairCommutatorPosition_Label.TabIndex = 4;
             PairCommutatorPosition_Label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));// = AnchorStyles.
         }

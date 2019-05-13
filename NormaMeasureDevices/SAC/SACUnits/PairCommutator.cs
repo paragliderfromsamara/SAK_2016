@@ -41,7 +41,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             CurrentPoint = curPoint;
             CommutationList_ToSend.Clear();
             ClearTable();
-            
+            if (curPoint.CommutationType == SACCommutationType.Etalon) return true;
             switch (curPoint.ParameterType.ParameterTypeId)
             {
                 case MeasuredParameterType.Calling:
@@ -49,6 +49,9 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                     break;
                 case MeasuredParameterType.Rleads:
                     SetPairCommutatorFor_Rleads_And_dR();
+                    break;
+                case MeasuredParameterType.al:
+                    SetPairCommutatorFor_al();
                     break;
                 case MeasuredParameterType.dR:
                 case MeasuredParameterType.Co:
@@ -67,7 +70,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 case MeasuredParameterType.Risol2:
                 case MeasuredParameterType.Risol3:
                 case MeasuredParameterType.Risol4:
-                case MeasuredParameterType.al:
+                    throw new NotImplementedException();
+
                 case MeasuredParameterType.Ao:
                 case MeasuredParameterType.Az:
                 default:
@@ -75,6 +79,13 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                     break;
             }
             return SetCommutationTableByList();
+        }
+
+        private void SetPairCommutatorFor_al()
+        {
+            CommutationList_ToSend.Add(CurrentPoint.PairCommutatorPosition_1, ComTablePairConncectionState.spMASTER);
+            CommutationList_ToSend.Add((byte)(CurrentPoint.PairCommutatorPosition_1+52), ComTablePairConncectionState.spSLAVE);
+            Debug.WriteLine($"Установка коммутатора пар для стола: al; SLAVE: {CurrentPoint.PairCommutatorPosition_1+52}; MASTER {(byte)(CurrentPoint.PairCommutatorPosition_1)}");
         }
 
         private void SetPairCommutatorFor_Rleads_And_dR()

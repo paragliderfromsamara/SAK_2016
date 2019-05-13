@@ -22,7 +22,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             byte header = (byte)(unitCMD_Address | SACCPS.ReadResult | SACCPS.TwoBytes_cmd);
             byte mode = (byte)(MeasureMode_CMD | currentRanges[selectedRangeIdx].RangeCommand);
             cps.WriteBytes(new byte[] { header, FreqCode, mode });
-            Debug.WriteLine($"U160.SetMeasureMode(): Узел {unitName} {UnitId}; Команда {header.ToString("X")} {FreqCode.ToString("X")} {mode.ToString("X")}");
+            Debug.WriteLine($"U160.SetMeasureMode(): Узел {unitName} {UnitId}; Команда {header.ToString("X")} Частота {FreqCode.ToString("X")} Режим {mode.ToString("X")}");
             Thread.Sleep(AFTER_SET_MODE_DELAY);
         }
 
@@ -60,9 +60,11 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public override void SetUnitStateByMeasurePoint(SACMeasurePoint point)
         {
             base.SetUnitStateByMeasurePoint(point);
+            AFTER_SET_MODE_DELAY = 10;
             WaveResistance = point.WaveResistance;
             CurrentFrequency = point.CurrentFrequency;
             SelectDefaultRange();
+
         }
 
         protected override void SetAllowedMeasuredParameters()
@@ -96,8 +98,48 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         protected override void ConvertResult(ref double result, UnitMeasureRange range)
         {
             base.ConvertResult(ref result, range);
+            if (CurrentParameterType.ParameterTypeId != MeasuredParameterType.al)
+            {
+                if (IsEtalonMeasure)
+                {
+                    result += WaveResistanceCorrCoeff(150);
+                }
+                else
+                {
+                    result += WaveResistanceCorrCoeff();
+                }
+            }
+            result += 32;
             result -= cps.sac.table.SelfCorrFile.GetInfluenceCoeff(CurFrequencyAsInteger, WaveResistance, 45);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="wave_res"></param>
+        /// <returns></returns>
+        protected double WaveResistanceCorrCoeff(int wave_res = 0)
+        {
+            double corr = 45;
+            if (wave_res == 0) wave_res = WaveResistance;
+            switch (WaveResistance)
+            {
+                case 150:
+                    corr = 45.0;
+                    break;
+                case 400:
+                    corr = 41.75;
+                    break;
+                case 500:
+                    corr = 41.25;
+                    break;
+                case 600:
+                    corr = 40.95;
+                    break;
+            }
+            return corr;
+        }
+
 
         protected UnitMeasureRange al_LF
         {
@@ -217,7 +259,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// Текущая частота измерителя. 
         /// Когда задается значение частоты, выбирается диапазон и вычисляется код частоты
         /// </summary>
-        public float CurrentFrequency
+        public double CurrentFrequency
         {
             get
             {
@@ -225,23 +267,26 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             }set
             {
                 CurFrequency = value;
-                if (CurFrequency == 0.8)
+                if (CurFrequency >= 40 && CurFrequency <= 2000)
                 {
-                    FreqCode = 0x05;
-                    CurFrequencyAsInteger = 1;
-                    selectedRangeIdx = 0;
-                }
-                else if (CurFrequency >= 40)
-                {
-                    FreqCode = (byte)(CurFrequency / 8); // 40-2000
                     CurFrequencyAsInteger = ((int)CurFrequency / 8) * 8;
+                    FreqCode = (byte)(CurFrequencyAsInteger / 8); // 40-2000
                     selectedRangeIdx = 2;
+                    Debug.WriteLine($"CurrentFrequency = 40... 2000");
+                }
+                else if (CurFrequency >= 10 && CurFrequency < 40)
+                {
+                    CurFrequencyAsInteger = ((int)CurFrequency / 2) * 2;
+                    FreqCode = (byte)(CurFrequencyAsInteger / 2); // 10-40
+                    selectedRangeIdx = 1;
+                    Debug.WriteLine($"CurrentFrequency = 10... 40");
                 }
                 else
                 {
-                    selectedRangeIdx = 1;
-                    FreqCode = (byte)(CurFrequency / 2); // 10-40
-                    CurFrequencyAsInteger = ((int)CurFrequency / 2) * 2;
+                    FreqCode = 5;
+                    CurFrequencyAsInteger = 1;
+                    selectedRangeIdx = 0;
+                    Debug.WriteLine($"CurrentFrequency = 0.8");
                 }
             }
         }
@@ -292,7 +337,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         private int WaveResistance = 150;
         private byte FreqCode = 0x00;
-        private float CurFrequency;
+        private double CurFrequency;
         public int CurFrequencyAsInteger;
 
     }
