@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace NormaMeasure.Devices.SAC.SACUnits
 {
@@ -13,16 +14,17 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         }
 
-        public void SetFrequency(float frequency)
+        public void SetFrequency(double frequency)
         {
             int intFreq = ConvertFreqToInt(frequency);
             byte lowByte = (byte)(intFreq % 256);
             byte hightByte = (byte)(intFreq / 256);
             byte[] freqCmd = new byte[] { lowByte, hightByte };
             table.SendCommand(unitCMD_Address, freqCmd);
+            //Thread.Sleep(300);
         }
         
-        public int ConvertFreqToInt(float freq)
+        public int ConvertFreqToInt(double freq)
         {
             int intFreq = (int)freq;
             if (freq < 10) return 1;

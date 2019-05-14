@@ -45,9 +45,10 @@ namespace NormaMeasure.MeasureControl.SAC
             switch(point.ParameterType.ParameterTypeId)
             {
                 case MeasuredParameterType.al:
+                    MeasureBody = al_Measure;
+                    break;
                 case MeasuredParameterType.Ao:
                 case MeasuredParameterType.Az:
-                    MeasureBody = al_Measure;
                     break;
                 case MeasuredParameterType.Risol1:
                 case MeasuredParameterType.Risol2:

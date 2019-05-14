@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NormaMeasure.Devices.SAC;
 using NormaMeasure.Devices.SAC.SACUnits;
 using System.Threading;
-
+using System.Diagnostics;
 
 
 namespace NormaMeasure.MeasureControl.SAC
@@ -85,25 +85,40 @@ namespace NormaMeasure.MeasureControl.SAC
         protected void al_Measure()
         {
             CPSMeasureUnit unit = SACDevice.SetMeasurePoint(currentMeasurePoint);
-
+            Dictionary<double, double> Values = new Dictionary<double, double>();
             if (unit == null)
             {
                 Status = MeasureCycleStatus.DeviceNotFound;
             }
             else
             {
-                currentMeasurePoint.CurrentFrequency = currentMeasurePoint.FrequencyMin;
-                SACDevice.table.SetTableForMeasurePoint(currentMeasurePoint);
-                unit.SetUnitStateByMeasurePoint(currentMeasurePoint);
-                // unit.SetMeasureMode();
+                //currentMeasurePoint.CurrentFrequency = currentMeasurePoint.FrequencyMin;
+
+               // unit.SetUnitStateByMeasurePoint(currentMeasurePoint);
+               // unit.SetMeasureMode();
                 do
                 {
-                    SACDevice.table.DDSGenerator.SetFrequency(currentMeasurePoint.CurrentFrequency);
-                    Thread.Sleep(250);
-                    unit.MakeMeasure(ref currentMeasurePoint);
+                    double value = 0;
+                    for (currentMeasurePoint.CurrentFrequency = currentMeasurePoint.FrequencyMin; currentMeasurePoint.CurrentFrequency <= currentMeasurePoint.FrequencyMax; currentMeasurePoint.CurrentFrequency += currentMeasurePoint.FrequencyStep)
+                    {
+                        unit.SetUnitStateByMeasurePoint(currentMeasurePoint);
+                        SACDevice.table.SetTableForMeasurePoint(currentMeasurePoint);
+                        unit.SetMeasureMode();
+                        SACDevice.table.DDSGenerator.SetFrequency(currentMeasurePoint.CurrentFrequency);
+                        unit.MakeMeasure(ref currentMeasurePoint);
+                        if (currentMeasurePoint.ConvertedResult > value)
+                        {
+                            value = currentMeasurePoint.ConvertedResult;
+                        }
+                        Debug.WriteLine($"MeasureBase.MeasureMainFunction() CycleNumber = {CycleNumber}");
+                        if (!WillMeasureContinue()) break;
+                        //Thread.Sleep(200);
+                    }
+                    currentMeasurePoint.ConvertedResult = value;
+                    //unit.MakeMeasure(ref currentMeasurePoint);
                     Result_Gotten?.Invoke(this, currentMeasurePoint);
-                    //Thread.Sleep(250);
                     cycleNumber++;
+                    Debug.WriteLine($"MeasureBase.MeasureMainFunction() CycleNumber = {CycleNumber}");
                 } while (WillMeasureContinue());
             }
         }

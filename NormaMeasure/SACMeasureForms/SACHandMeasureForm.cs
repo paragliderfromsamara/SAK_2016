@@ -61,11 +61,14 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             freqMin_CB.Items.Clear();
             freqMax_CB.Items.Clear();
+            freqStep_CB.Items.Clear();
             waveResistance_CB.SelectedIndex = 0;
-            foreach(float f in FreqList)
+            for(double s=0; s<10; s+=2) freqStep_CB.Items.Add(s.ToString());
+            foreach (double f in FreqList)
             {
                 freqMin_CB.Items.Add(f.ToString());
                 freqMax_CB.Items.Add(f.ToString());
+                if (f >= 10) freqStep_CB.Items.Add(f.ToString());
             }
             freqMin_CB.SelectedIndex = 0;
         }
@@ -280,13 +283,54 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             MeasurePoint.FrequencyMax = FreqList[freqMax_CB.SelectedIndex];
         }
 
-        private float[] FreqList = new float[] { 0.8f, 10, 20, 40, 80, 160, 320, 640, 1000, 1500, 2000 };
+        private double[] _FreqList;// = new double[] { 0.8, 10, 20, 40, 80, 160, 320, 640, 1000, 1500, 2000 };
+        private double[] FreqList
+        {
+            get
+            {
+                if (_FreqList == null)
+                {
+                    List<double> freqs = new List<double>();
+                    freqs.Add(0.8);
+                    for (double f = 10; f < 40; f += 2) freqs.Add(f);
+                    for (double f = 40; f <= 2000; f += 8) freqs.Add(f);
+                    _FreqList = freqs.ToArray();
+                }
+                return _FreqList;
+            }
+        }
+
+
 
         private void waveResistance_CB_SelectedIndexChanged(object sender, EventArgs e)
         {
             int wr = 150;
             int.TryParse(waveResistance_CB.Text, out wr);
             MeasurePoint.WaveResistance = wr;
+        }
+
+        private void freqStep_CB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int maxIdx = freqMax_CB.SelectedIndex;
+            int minIdx = freqMin_CB.SelectedIndex;
+            int stepIdx = freqStep_CB.SelectedIndex;
+            if (stepIdx == 0)
+            {
+                if (maxIdx != minIdx)
+                {
+                    freqMax_CB.SelectedIndex = freqMin_CB.SelectedIndex;
+                }
+            }else
+            {
+                if (maxIdx == minIdx)
+                {
+                    double min = Convert.ToDouble(freqMin_CB.SelectedItem.ToString());
+                    double step = Convert.ToDouble(freqStep_CB.SelectedItem.ToString());
+                    freqMax_CB.SelectedValue = min + step;
+                   // MessageBox.Show($"{min+step}");
+                }
+            }
+            MeasurePoint.FrequencyStep = Convert.ToDouble(freqStep_CB.SelectedItem.ToString());
         }
     }
 }

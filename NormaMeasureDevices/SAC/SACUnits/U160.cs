@@ -60,7 +60,9 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public override void SetUnitStateByMeasurePoint(SACMeasurePoint point)
         {
             base.SetUnitStateByMeasurePoint(point);
-            AFTER_SET_MODE_DELAY = 10;
+            AFTER_SET_MODE_DELAY = 20;
+            BETWEEN_ADC_TIME = 20;
+            ChangeRangeCounter = ChangeRangeCounterMax = 3;
             WaveResistance = point.WaveResistance;
             CurrentFrequency = point.CurrentFrequency;
             SelectDefaultRange();

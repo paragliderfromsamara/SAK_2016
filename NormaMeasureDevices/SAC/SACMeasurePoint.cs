@@ -154,10 +154,10 @@ namespace NormaMeasure.Devices.SAC
         public CableStructureType structureType;
         public int CableElementNumber = 0;
 
-        public float CurrentFrequency;
-        public float FrequencyMin;
-        public float FrequencyMax;
-        public float FrequencyStep;
+        public double CurrentFrequency;
+        public double FrequencyMin;
+        public double FrequencyMax;
+        public double FrequencyStep;
         private int Wave_Resistance = 0;
 
         public int WaveResistance

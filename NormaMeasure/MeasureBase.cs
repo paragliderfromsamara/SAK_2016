@@ -98,6 +98,7 @@ namespace NormaMeasure.MeasureControl
             {
                 MeasureBody();
                 cycleNumber++;
+                Debug.WriteLine($"MeasureBase.MeasureMainFunction() CycleNumber = {CycleNumber}");
             } while (WillMeasureContinue());
             OverallMeasureTimer.Dispose();
             Status = MeasureCycleStatus.Finished;
