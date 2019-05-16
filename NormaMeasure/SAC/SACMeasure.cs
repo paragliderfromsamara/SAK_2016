@@ -70,12 +70,13 @@ namespace NormaMeasure.MeasureControl.SAC
                 SACDevice.table.SetTableForMeasurePoint(currentMeasurePoint);
                 Thread.Sleep(150);
                 unit.SetUnitStateByMeasurePoint(currentMeasurePoint);
-               // unit.SetMeasureMode();
+                //Debug.WriteLine("SACMeasure.Rleads_AND_CEK_Measure(): В глобальном цикле");
+                // unit.SetMeasureMode();
                 do
                 {
+                   // Debug.WriteLine("SACMeasure.Rleads_AND_CEK_Measure(): В локальном цикле");
                     unit.MakeMeasure(ref currentMeasurePoint);
                     Result_Gotten?.Invoke(this, currentMeasurePoint);
-                    Thread.Sleep(250);
                     cycleNumber++;
                 } while (WillMeasureContinue());
                 SACDevice.CentralSysPult.Commutator.SetOnGroundState();

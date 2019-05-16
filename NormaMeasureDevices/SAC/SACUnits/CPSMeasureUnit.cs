@@ -115,7 +115,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             double result = (double)CPSMeasureUnit_Status.InProcess;
             //cps.OpenPort();
             set_mode_again:
-            int waitingForAUnitTimes = 10;
+            int waitingForAUnitTimes = 20;
             SetMeasureMode();
             repeat:
             do
@@ -125,6 +125,12 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 try
                 {
                     CheckResult(result);
+                    if (result == (double)CPSMeasureUnit_Status.NOT_USED)
+                    {
+                        Debug.WriteLine($"CPSMeasureUnit.MakeMeasure(): status = CPSMeasureUnit_Status.NOT_USED");
+                        //SetMeasureMode();
+                        goto set_mode_again;
+                    }
                 }
                 catch(SACMeasureUnit_Exception ex)
                 {
@@ -139,12 +145,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                         throw new SACMeasureUnit_Exception(ex.ErrStatus, ex.Message);
                     }
                 }
-                if (result == (double)CPSMeasureUnit_Status.NOT_USED)
-                {
-                    Debug.WriteLine($"CPSMeasureUnit.MakeMeasure(): status = CPSMeasureUnit_Status.NOT_USED");
-                    //SetMeasureMode();
-                    goto set_mode_again;
-                }
+
 
             } while (result == (double)CPSMeasureUnit_Status.InProcess);
             if (ChangeRangeCounter-- > 0)

@@ -63,9 +63,9 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         public override void SetUnitStateByMeasurePoint(SACMeasurePoint point)
         {
             base.SetUnitStateByMeasurePoint(point);
-            BETWEEN_ADC_TIME = 250;
-            AFTER_SET_MODE_DELAY = 250;
-            ChangeRangeCounterMax = 1;
+            BETWEEN_ADC_TIME = 20;
+            AFTER_SET_MODE_DELAY = 20;
+            ChangeRangeCounter = ChangeRangeCounterMax = 3;
             if (point.ParameterType.ParameterTypeId == MeasuredParameterType.Rleads)
             {
                 SelectDefaultRange(0);
