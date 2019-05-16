@@ -53,9 +53,11 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 case MeasuredParameterType.al:
                     SetPairCommutatorFor_al();
                     break;
+                case MeasuredParameterType.Cp:
+                    SetPairCommutatorFor_Cp();
+                    break;
                 case MeasuredParameterType.dR:
                 case MeasuredParameterType.Co:
-                case MeasuredParameterType.Cp:
                 case MeasuredParameterType.Ea:
                 case MeasuredParameterType.K1:
                 case MeasuredParameterType.K2:
@@ -79,6 +81,12 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                     break;
             }
             return SetCommutationTableByList();
+        }
+
+        private void SetPairCommutatorFor_Cp()
+        {
+            CommutationList_ToSend.Add(CurrentPoint.PairCommutatorPosition_1, ComTablePairConncectionState.spMASTER);
+            Debug.WriteLine($"Установка коммутатора пар для стола: al; MASTER {(byte)(CurrentPoint.PairCommutatorPosition_1)}");
         }
 
         private void SetPairCommutatorFor_al()

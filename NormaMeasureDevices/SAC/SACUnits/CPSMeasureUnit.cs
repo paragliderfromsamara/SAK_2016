@@ -74,6 +74,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             byte[] result = new byte[] { 0x00, 0x00 };
             double r = 0;
             cps.WriteCmdAndReadBytesArr(new byte[] { header }, result);
+            //Thread.Sleep(BETWEEN_ADC_TIME);
+            //cps.DevicePort.DiscardInBuffer();
             r = result[0] * 256 + result[1];
             return r;
         }
@@ -151,18 +153,18 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             if (ChangeRangeCounter-- > 0)
             {
                 //Thread.Sleep(BETWEEN_ADC_TIME);
-                Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure(): counter = {ChangeRangeCounter}");
+                Debug.WriteLine($"CPSMeasureUnit.MakeMeasure(): counter = {ChangeRangeCounter}");
                 goto repeat;
             }
             if (CheckRange(result))
             {
                 ChangeRangeCounter = ChangeRangeCounterMax;
-               // SetMeasureMode();
+                // SetMeasureMode();
                 goto set_mode_again;
             }
 
             //cps.ClosePort();
-            Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure():result {result}");
+            Debug.WriteLine($"CPSMeasureUnit.ExecuteElementaryMeasure(): Range {selectedRangeIdx} result {result}");
             point.RawResult = result;
             ApplyCoeffs(ref result);
             if (IsEtalonMeasure) CorrectEtalonValue(ref result);

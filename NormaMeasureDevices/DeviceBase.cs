@@ -99,7 +99,8 @@ namespace NormaMeasure.Devices
             try
             {
                 device_port.Read(buffer, 0, buffer.Length);
-            }catch(System.IO.IOException)
+            }
+            catch(System.IO.IOException)
             {
                 f = false;
                 //goto repeat;

@@ -37,23 +37,56 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         protected override bool CheckRange(double result)
         {
-            if (result<2 && (CurrentParameterType.IsEK()) && !IsCEKMinus )
+            
+            if (CurrentParameterType.IsEK()) 
             {
-                IsCEKMinus = true;
-                return false;
+                {
+                    if (result < 2 && !IsCEKMinus)
+                    {
+                        IsCEKMinus = true;
+                        return false;
+                    }
+                    else return false;
+                }
+
+            }else
+            {
+                if (selectedRangeIdx == 2)
+                {
+                    if (result <= 4800)
+                    {
+                        selectedRangeIdx--;
+                        if (result < 480) selectedRangeIdx--;
+                        Debug.WriteLine($"U120.CheckRange(): NewRange = {selectedRangeIdx}");
+                        return true;
+                    }
+                }
             }
-            return base.CheckRange(result);
+            return false;
+            //return base.CheckRange(result);
+        }
+
+        public override void MakeMeasure(ref SACMeasurePoint point)
+        {
+            if (!CurrentParameterType.IsEK())
+            {
+                selectedRangeIdx = 2;
+            }else
+            {
+                selectedRangeIdx = 0;
+            }
+            base.MakeMeasure(ref point);
         }
 
         public override void SetUnitStateByMeasurePoint(SACMeasurePoint point)
         {
             base.SetUnitStateByMeasurePoint(point);
             int defaultRangeIdx = CurrentParameterType.IsEK() ? 0 : 2;
-            BETWEEN_ADC_TIME = 250;
-            AFTER_SET_MODE_DELAY = 250;
-            ChangeRangeCounterMax = CurrentParameterType.IsEK() ? 0 : 2;
+            BETWEEN_ADC_TIME = 25;
+            AFTER_SET_MODE_DELAY = 50;
+            ChangeRangeCounter = ChangeRangeCounterMax = CurrentParameterType.IsEK() ? 0 : 5;
             Debug.WriteLine($"U120.MakeMeasure():defaultRangeIdx {defaultRangeIdx}");
-            SelectDefaultRange(defaultRangeIdx);
+            //SelectDefaultRange(defaultRangeIdx);
         }
 
         protected override void SetMeasureModeCMDByParameterType()
@@ -114,6 +147,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             return ranges;
         }
 
+
         protected override void SetAllowedMeasuredParameters()
         {
             base.SetAllowedMeasuredParameters();
@@ -160,7 +194,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 range.KK = 4000f;
                 range.BV = 0;
                 range.MinValue = 0;
-                range.MaxValue = 480;
+                range.MaxValue = 58000;
                 range.RangeTitle = "Диапазон 1";
                 range.RangeCommand = 0x20;//, 0x60
                 range.UnitId = UnitSerialNumber.ToString();
@@ -178,8 +212,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 range.parameterTypeId = CurrentParameterType.ParameterTypeId;
                 range.KK = 400f;
                 range.BV = 0;
-                range.MinValue = 480;
-                range.MaxValue = 4800;
+                range.MinValue = 4800;
+                range.MaxValue = 53000;
                 range.RangeTitle = "Диапазон 2";
                 range.RangeCommand = 0x10;//, 0x60
                 range.NeedConvertResult = true;

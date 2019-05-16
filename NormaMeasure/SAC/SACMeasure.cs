@@ -24,7 +24,7 @@ namespace NormaMeasure.MeasureControl.SAC
 
         private void SACMeasure_Result_Gotten(SACMeasure measure, SACMeasurePoint curPoint)
         {
-            uint key =curPoint.ParameterType.ParameterTypeId;
+            uint key = curPoint.ParameterType.ParameterTypeId;
             if (!resultCollections.ContainsKey(key)) resultCollections.Add(key, new List<SACMeasurePoint>());
             resultCollections[key].Add(curPoint);
         }
@@ -78,6 +78,7 @@ namespace NormaMeasure.MeasureControl.SAC
                     unit.MakeMeasure(ref currentMeasurePoint);
                     Result_Gotten?.Invoke(this, currentMeasurePoint);
                     cycleNumber++;
+                    //Thread.Sleep(500);
                 } while (WillMeasureContinue());
                 SACDevice.CentralSysPult.Commutator.SetOnGroundState();
             }
