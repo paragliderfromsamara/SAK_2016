@@ -47,6 +47,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 case MeasuredParameterType.Calling:
                     //SetCommutatorMode_ForCalling();
                     break;
+                case MeasuredParameterType.dR:
                 case MeasuredParameterType.Rleads:
                     SetPairCommutatorFor_Rleads_And_dR();
                     break;
@@ -58,16 +59,17 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 case MeasuredParameterType.Ea:
                     SetPairCommutatorFor_CpСoEa();
                     break;
-                case MeasuredParameterType.dR:
                 case MeasuredParameterType.K1:
                 case MeasuredParameterType.K2:
                 case MeasuredParameterType.K3:
-                case MeasuredParameterType.K23:
+                //case MeasuredParameterType.K23:
                 case MeasuredParameterType.K9:
                 case MeasuredParameterType.K10:
                 case MeasuredParameterType.K11:
                 case MeasuredParameterType.K12:
-                case MeasuredParameterType.K9_12:
+                //case MeasuredParameterType.K9_12:
+                    SetPairCommutatorFor_K_Parameters();
+                    break;
                 case MeasuredParameterType.Risol1:
                 case MeasuredParameterType.Risol2:
                 case MeasuredParameterType.Risol3:
@@ -79,6 +81,14 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                     break;
             }
             return SetCommutationTableByList();
+        }
+
+        private void SetPairCommutatorFor_K_Parameters()
+        {
+            CommutationList_ToSend.Add(CurrentPoint.PairCommutatorPosition_1, ComTablePairConncectionState.spMASTER);
+            CommutationList_ToSend.Add(CurrentPoint.PairCommutatorPosition_2, ComTablePairConncectionState.spSLAVE);
+            Debug.WriteLine($"Установка коммутатора пар для измерений K1, K2, K3, K9, K10, K11, K12; MASTER {(byte)(CurrentPoint.PairCommutatorPosition_1)}; SLAVE {CurrentPoint.PairCommutatorPosition_2}");
+
         }
 
         private void SetPairCommutatorFor_CpСoEa()

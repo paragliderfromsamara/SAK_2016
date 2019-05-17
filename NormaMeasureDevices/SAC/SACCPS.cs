@@ -194,7 +194,7 @@ namespace NormaMeasure.Devices.SAC
 
     }
 
-    public enum LeadCommutationType
+    public enum LeadCommutationType : int
     {
         A, B, AB
     }
