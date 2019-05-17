@@ -26,7 +26,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
 
             RefreshFields(point);
-            MeasureCycleCounter_Label.Text = $"Измерение {measure.CycleNumber+1}";
+            MeasureCycleCounter_Label.Text = $"Измерение {measure.CycleNumber}";
         }
 
         public void RefreshFields(SACMeasurePoint point)

@@ -26,7 +26,19 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         protected override void ConvertResult(ref double result, UnitMeasureRange range)
         {
             base.ConvertResult(ref result, range);
-            if (IsCEKMinus) result = -result;
+            if (IsCEKMinus)
+            {
+                switch(CurrentParameterType.ParameterTypeId)
+                {
+                    case MeasuredParameterType.K1:
+                    case MeasuredParameterType.K2:
+                    case MeasuredParameterType.K3:
+                    case MeasuredParameterType.K23:
+                    case MeasuredParameterType.Ea:
+                        result = -result;
+                        break;
+                }
+            }
             Debug.WriteLine($"U120.MakeMeasure():result {result}");
         }
 
@@ -37,14 +49,13 @@ namespace NormaMeasure.Devices.SAC.SACUnits
 
         protected override bool CheckRange(double result)
         {
-            
             if (CurrentParameterType.IsEK()) 
             {
                 {
                     if (result < 2 && !IsCEKMinus)
                     {
                         IsCEKMinus = true;
-                        return false;
+                        return true;
                     }
                     else return false;
                 }
@@ -83,8 +94,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
             base.SetUnitStateByMeasurePoint(point);
             int defaultRangeIdx = CurrentParameterType.IsEK() ? 0 : 2;
             BETWEEN_ADC_TIME = 25;
-            AFTER_SET_MODE_DELAY = 50;
-            ChangeRangeCounter = ChangeRangeCounterMax = CurrentParameterType.IsEK() ? 0 : 5;
+            AFTER_SET_MODE_DELAY = 25;
+            ChangeRangeCounter = ChangeRangeCounterMax = CurrentParameterType.IsEK() ? 0 : 3;
             Debug.WriteLine($"U120.MakeMeasure():defaultRangeIdx {defaultRangeIdx}");
             //SelectDefaultRange(defaultRangeIdx);
         }
@@ -92,7 +103,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         protected override void SetMeasureModeCMDByParameterType()
         {
             base.SetMeasureModeCMDByParameterType();
-            IsCEKMinus = (LeadCommType == LeadCommutationType.B);
+            IsCEKMinus = (LeadCommType == LeadCommutationType.B) && (CurrentParameterType.ParameterTypeId == MeasuredParameterType.Co);
             switch (CurrentParameterType.ParameterTypeId)
             {
                 case MeasuredParameterType.Cp:
@@ -142,7 +153,6 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 case MeasuredParameterType.K9_12:
                     ranges = new UnitMeasureRange[] { EK_MeasureRange_1 };
                     break;
-
             }
             return ranges;
         }
@@ -193,8 +203,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 range.parameterTypeId = CurrentParameterType.ParameterTypeId;
                 range.KK = 4000f;
                 range.BV = 0;
-                range.MinValue = 0;
-                range.MaxValue = 58000;
+                range.MinValue = 0;//не используется для выбора диапазона
+                range.MaxValue = 58000;//не используется для выбора диапазона
                 range.RangeTitle = "Диапазон 1";
                 range.RangeCommand = 0x20;//, 0x60
                 range.UnitId = UnitSerialNumber.ToString();
@@ -212,8 +222,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 range.parameterTypeId = CurrentParameterType.ParameterTypeId;
                 range.KK = 400f;
                 range.BV = 0;
-                range.MinValue = 4800;
-                range.MaxValue = 53000;
+                range.MinValue = 4800; //не используется для выбора диапазона
+                range.MaxValue = 53000;//не используется для выбора диапазона
                 range.RangeTitle = "Диапазон 2";
                 range.RangeCommand = 0x10;//, 0x60
                 range.NeedConvertResult = true;
@@ -231,8 +241,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 range.parameterTypeId = CurrentParameterType.ParameterTypeId;
                 range.KK = 40f;
                 range.BV = 0;
-                range.MinValue = 4800;
-                range.MaxValue = 65500;
+                range.MinValue = 4800;//не используется для выбора диапазона
+                range.MaxValue = 65500;//не используется для выбора диапазона
                 range.RangeTitle = "Диапазон 3";
                 range.RangeCommand = 0x00;//, 0x60
                 range.NeedConvertResult = true;
@@ -254,8 +264,8 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 range.parameterTypeId = CurrentParameterType.ParameterTypeId;
                 range.KK = 4f;
                 range.BV = 0;
-                range.MinValue = 0;
-                range.MaxValue = 65500;
+                range.MinValue = 0;//не используется для выбора диапазона
+                range.MaxValue = 65500;//не используется для выбора диапазона
                 range.RangeTitle = "Диапазон 1";
                 range.RangeCommand = 0x20;//, 0x60
                 range.NeedConvertResult = true;

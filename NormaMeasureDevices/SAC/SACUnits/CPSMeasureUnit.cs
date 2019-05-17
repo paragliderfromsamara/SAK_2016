@@ -114,8 +114,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         /// <returns></returns>
         public virtual void MakeMeasure(ref SACMeasurePoint point)
         {
-            double result = (double)CPSMeasureUnit_Status.InProcess;
-            //cps.OpenPort();
+            double result = (double)CPSMeasureUnit_Status.InProcess; 
             set_mode_again:
             int waitingForAUnitTimes = 20;
             SetMeasureMode();
@@ -241,9 +240,10 @@ namespace NormaMeasure.Devices.SAC.SACUnits
         {
 
             //if (IsAllowedParameter(pType.ParameterTypeId)) return false;
-            CurrentParameterType = point.ParameterType;
+            
             LeadCommType = point.LeadCommType;
             IsEtalonMeasure = point.CommutationType == SACCommutationType.Etalon;
+            CurrentParameterType = point.ParameterType;
             //PrepareCommutator(isEtalonMeasure);
             // result = 
         }
