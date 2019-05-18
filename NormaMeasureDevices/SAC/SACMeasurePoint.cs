@@ -154,6 +154,16 @@ namespace NormaMeasure.Devices.SAC
         public CableStructureType structureType;
         public int CableElementNumber = 0;
 
+        public FrequencyRange FreqRange
+        {
+            set
+            {
+                FrequencyMin = value.FrequencyMin;
+                FrequencyMax = value.FrequencyMax;
+                FrequencyStep = value.FrequencyStep;
+            }
+        } 
+
         public double CurrentFrequency;
         public double FrequencyMin;
         public double FrequencyMax;
