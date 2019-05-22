@@ -76,13 +76,31 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                     break;
                 case MeasuredParameterType.Risol3:
                 case MeasuredParameterType.Risol4:
+                    SetPairCommutatorFor_Rizol_by_bunch();
+                    break;
                 case MeasuredParameterType.Ao:
                 case MeasuredParameterType.Az:
+                    SetPairCommutatorFor_AoAz();
+                    break;
                 default:
                     ClearTable();
                     break;
             }
             return SetCommutationTableByList();
+        }
+
+        private void SetPairCommutatorFor_Rizol_by_bunch()
+        {
+            
+        }
+
+        private void SetPairCommutatorFor_AoAz()
+        {
+            CommutationList_ToSend.Add(CurrentPoint.PairCommutatorPosition_1, ComTablePairConncectionState.spMASTER);
+            CommutationList_ToSend.Add((byte)(CurrentPoint.PairCommutatorPosition_1+52), ComTablePairConncectionState.spMASTER);
+
+            CommutationList_ToSend.Add(CurrentPoint.PairCommutatorPosition_2, ComTablePairConncectionState.spSLAVE);
+            CommutationList_ToSend.Add((byte)(CurrentPoint.PairCommutatorPosition_2 + 52), ComTablePairConncectionState.spSLAVE);
         }
 
         private void SetPairCommutatorFor_Rizol_by_pair()

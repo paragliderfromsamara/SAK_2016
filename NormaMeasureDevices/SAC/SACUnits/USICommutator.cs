@@ -52,7 +52,7 @@ namespace NormaMeasure.Devices.SAC.SACUnits
                 case MeasuredParameterType.Ea:
                 case MeasuredParameterType.K1:
                 case MeasuredParameterType.K2:
-                case MeasuredParameterType.K3:
+                case MeasuredParameterType.K    3:
                 case MeasuredParameterType.K23:
                 case MeasuredParameterType.K9:
                 case MeasuredParameterType.K10:
