@@ -16,9 +16,9 @@ namespace AppTest
             Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
             Console.WindowWidth = 100;
             //ExperimentFunc();
-            DBTest.Start();
+            //DBTest.Start();
             //DeviceTest.Start();
-
+            WordProtocolTest.Start();
 
             Console.ReadLine();
             
