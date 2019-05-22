@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="FontSize" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">12</Value>
+      <Value Profile="(Default)">9</Value>
     </Setting>
     <Setting Name="FontName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Times New Roman, 9.75pt</Value>
