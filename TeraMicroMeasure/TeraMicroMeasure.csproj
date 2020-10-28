@@ -90,6 +90,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NormaMeasureUtils\NormaMeasureUtils.csproj">
+      <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
+      <Name>NormaMeasureUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NormaSocketControl\NormaSocketControl.csproj">
       <Project>{8a1d8281-0ac9-4129-8b74-42facbdb47aa}</Project>
       <Name>NormaSocketControl</Name>

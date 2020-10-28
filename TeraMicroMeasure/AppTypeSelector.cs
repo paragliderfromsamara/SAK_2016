@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Diagnostics;
 namespace TeraMicroMeasure
 {
     public partial class AppTypeSelector : Form
@@ -19,13 +19,22 @@ namespace TeraMicroMeasure
 
         private void panel_MouseHover(object sender, EventArgs e)
         {
-            Panel s = sender as Panel;
-            s.BackColor = System.Drawing.SystemColors.HotTrack;
-           
+            Label l = sender as Label;
+            l.BackColor = System.Drawing.SystemColors.Highlight;
+            l.ForeColor = SystemColors.HighlightText;
         }
 
 
-        private void panel1_MouseClick(object sender, MouseEventArgs e)
+
+        private void panel_MouseLeave(object sender, EventArgs e)
+        {
+            Label l = sender as Label;
+            l.BackColor = System.Drawing.SystemColors.HotTrack;
+            l.ForeColor = Color.White;
+        }
+
+
+        private void label1_Click(object sender, EventArgs e)
         {
             // ok.PerformClick();
             DialogResult = DialogResult.OK;
@@ -36,14 +45,7 @@ namespace TeraMicroMeasure
             //this.Dispose();
         }
 
-        private void panel_MouseLeave(object sender, EventArgs e)
-        {
-            Panel s = sender as Panel;
-            s.BackColor = System.Drawing.SystemColors.Highlight;
-         
-        }
-
-        private void panel2_MouseClick(object sender, MouseEventArgs e)
+        private void label2_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Properties.Settings.Default.IsServerApp = false;

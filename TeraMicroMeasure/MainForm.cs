@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NormaSocketControl;
+using System.Globalization;
+using System.Threading;
 
 namespace TeraMicroMeasure
 {
@@ -22,7 +24,9 @@ namespace TeraMicroMeasure
             if (appSel.ShowDialog() == DialogResult.OK)
             {
                 InitializeComponent();
+                InitCulture();
                 initStatusBar();
+                HideLeftPanel();
                 if (Properties.Settings.Default.IsServerApp) InitAsServerApp();
                 else InitAsClientApp();
             }
@@ -138,6 +142,49 @@ namespace TeraMicroMeasure
         private void MainForm_FormClosing_ForClient()
         {
 
+        }
+
+        private void InitCulture()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("my");
+            Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
+        }
+
+        private void HideLeftPanel()
+        {
+            leftPanel.Hide();
+            workSpacePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+        }
+
+        private void ShowLeftPanel()
+        {
+            leftPanel.Show();
+            workSpacePanel.Dock = System.Windows.Forms.DockStyle.None;
+            workSpacePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            workSpacePanel.Width = this.Width - leftPanel.Width;
+            workSpacePanel.Height = this.Height - topPanel.Height;
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (leftPanel.Visible) HideLeftPanel();
+            else ShowLeftPanel();
+        }
+
+
+        private void label1_MouseHover(object sender, EventArgs e)
+        {
+            Label l = sender as Label;
+            l.BackColor = System.Drawing.SystemColors.MenuHighlight;
+        }
+
+        private void label1_MouseLeave(object sender, EventArgs e)
+        {
+            Label l = sender as Label;
+            l.BackColor = System.Drawing.SystemColors.HotTrack;
         }
     }
 }
