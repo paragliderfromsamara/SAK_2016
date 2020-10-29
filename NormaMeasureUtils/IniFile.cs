@@ -17,6 +17,12 @@ namespace NormaMeasure.Utils
         [DllImport("kernel32")]
         static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
 
+        public static IniFile GetAppSettingsFile()
+        {
+            IniFile file = new IniFile("appSettings.ini");
+            return file;
+        }
+
         public IniFile(string IniPath = null)
         {
             Path = new FileInfo(IniPath ?? EXE + ".ini").FullName.ToString();
@@ -32,6 +38,14 @@ namespace NormaMeasure.Utils
         public void Write(string Key, string Value, string Section = null)
         {
             WritePrivateProfileString(Section ?? EXE, Key, Value, Path);
+        }
+
+        public int ReadInt(string Key, string Section = null)
+        {
+            string sv = Read(Key, Section);
+            int v = 0;
+            int.TryParse(sv, out v);
+            return v;
         }
 
         public void DeleteKey(string Key, string Section = null)

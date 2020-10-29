@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.serverSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.clientCounterStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.serverStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -37,6 +37,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.workSpacePanel = new System.Windows.Forms.Panel();
             this.leftPanel = new System.Windows.Forms.Panel();
+            this.настройкиСервераToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -45,7 +46,7 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.настройкиToolStripMenuItem});
+            this.serverSettingsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.MinimumSize = new System.Drawing.Size(600, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -53,11 +54,13 @@
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // настройкиToolStripMenuItem
+            // serverSettingsToolStripMenuItem
             // 
-            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
-            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
-            this.настройкиToolStripMenuItem.Text = "Настройки";
+            this.serverSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.настройкиСервераToolStripMenuItem});
+            this.serverSettingsToolStripMenuItem.Name = "serverSettingsToolStripMenuItem";
+            this.serverSettingsToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
+            this.serverSettingsToolStripMenuItem.Text = "Настройки";
             // 
             // statusStrip
             // 
@@ -81,6 +84,7 @@
             this.serverStatusLabel.Name = "serverStatusLabel";
             this.serverStatusLabel.Size = new System.Drawing.Size(138, 17);
             this.serverStatusLabel.Text = "IP адрес: 192.168.100.220";
+            this.serverStatusLabel.Click += new System.EventHandler(this.настройкиСервераToolStripMenuItem_Click);
             // 
             // topPanel
             // 
@@ -124,6 +128,13 @@
             this.leftPanel.Size = new System.Drawing.Size(180, 514);
             this.leftPanel.TabIndex = 0;
             // 
+            // настройкиСервераToolStripMenuItem
+            // 
+            this.настройкиСервераToolStripMenuItem.Name = "настройкиСервераToolStripMenuItem";
+            this.настройкиСервераToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.настройкиСервераToolStripMenuItem.Text = "Настройки сервера";
+            this.настройкиСервераToolStripMenuItem.Click += new System.EventHandler(this.настройкиСервераToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -151,7 +162,7 @@
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem serverSettingsToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.Panel topPanel;
         private System.Windows.Forms.Panel panel1;
@@ -159,6 +170,7 @@
         private System.Windows.Forms.Panel workSpacePanel;
         private System.Windows.Forms.ToolStripStatusLabel clientCounterStatus;
         private System.Windows.Forms.ToolStripStatusLabel serverStatusLabel;
+        private System.Windows.Forms.ToolStripMenuItem настройкиСервераToolStripMenuItem;
     }
 }
 

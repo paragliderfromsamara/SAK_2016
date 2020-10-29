@@ -10,11 +10,15 @@ using System.Windows.Forms;
 using NormaSocketControl;
 using System.Globalization;
 using System.Threading;
+using NormaMeasure.Utils;
 
 namespace TeraMicroMeasure
 {
     public partial class MainForm : Form
     {
+        WorspaceState currentState;
+        WorkSpaceSubState currentSubState;
+        SortedList<WorspaceState, WorkSpaceSubState[]> ApplicationStateList;
         private SortedList<string, NormaServerClient> clientList = new SortedList<string, NormaServerClient>();
         NormaServer server;
         public MainForm()
@@ -27,6 +31,7 @@ namespace TeraMicroMeasure
                 InitCulture();
                 initStatusBar();
                 HideLeftPanel();
+                InitWorkSpace();
                 if (Properties.Settings.Default.IsServerApp) InitAsServerApp();
                 else InitAsClientApp();
             }
@@ -34,11 +39,72 @@ namespace TeraMicroMeasure
             {
                 Close();
             }
+
+        }
+
+        private void InitWorkSpace()
+        {
+            ApplicationStateList = new SortedList<WorspaceState, WorkSpaceSubState[]>();
+            ApplicationStateList[WorspaceState.SETTINGS] = new WorkSpaceSubState[] { WorkSpaceSubState.CONNECTION_SETTINGS, WorkSpaceSubState.CLIENTS_SETTINGS, WorkSpaceSubState.DATABASE_SETTINGS };
+            ApplicationStateList[WorspaceState.DATABASE] = new WorkSpaceSubState[] { WorkSpaceSubState.DATABASE_USERS, WorkSpaceSubState.DATABASE_CABLES, WorkSpaceSubState.DATABASE_TEST_RESULTS };
+            
+        }
+
+        private void SetWorkSpaceState(WorspaceState state, WorkSpaceSubState subState = WorkSpaceSubState.NONE)
+        {
+            if (subState == WorkSpaceSubState.NONE) subState = ApplicationStateList[state][0];
+            switch(state)
+            {
+                case WorspaceState.SETTINGS:
+                    SetSettingsSubState(subState);
+                    break;
+                case WorspaceState.DATABASE:
+                    break;
+                case WorspaceState.MEASURE:
+                    break;
+            }
+        }
+
+        private void SetWorkSpaceSubState(WorkSpaceSubState subSate)
+        {
+            WorspaceState state = GetStateBySubState(subSate);
+            if (state != WorspaceState.NONE) SetWorkSpaceState(state, subSate);
+        }
+
+        private WorspaceState GetStateBySubState(WorkSpaceSubState subState)
+        {
+            WorspaceState s = WorspaceState.NONE;
+            foreach(var key in ApplicationStateList.Keys)
+            {
+                foreach(var ss in ApplicationStateList[key])
+                {
+                    if (ss == subState) 
+                    { s = key; break; }
+                }
+                if (s != WorspaceState.NONE) break;
+            }
+            return s;
         }
 
         private void InitAsServerApp()
         {
+            retry:
+            string currentIp = SettingsControl.GetServerIp();
+            string[] ipList = NormaServer.GetAvailableIpAddressList();
             this.Text = "Сервер";
+            if (!NormaServer.IncludesIpOnList(currentIp) && !SettingsControl.GetOfflineMode())
+            {
+                if (ipList.Length == 1)
+                {
+                    if(ipList[0] == "127.0.0.1")
+                    {
+                        if (MessageBox.Show("Отсутсвуют доступные подключения!\n\nПри нажатии \"Отмена\" приложение запустится в автономном режиме.\n\nПри нажатии \"Повтор\" будет произведен повторный поиск", "Отсутствуют подключения", MessageBoxButtons.RetryCancel, MessageBoxIcon.Information) == DialogResult.Retry) goto retry;
+                        SettingsControl.SetServerIpAndPort(ipList[0], "8888");
+                    }
+                }
+                SelectServerIpForm ipForm = new SelectServerIpForm();
+                ipForm.ShowDialog();
+            }
             initServer();
         }
 
@@ -49,11 +115,18 @@ namespace TeraMicroMeasure
 
         private void initServer()
         {
-            server = new NormaServer(13389);
-            server.ProcessOnServerConnectionException += onServerException;
-            server.OnClientConnected += OnClientConnected;
-            server.Start();
-            serverStatusLabel.Text = "IP aдрес: " + server.IpAddress;
+            if (!SettingsControl.GetOfflineMode())
+            {
+                server = new NormaServer(SettingsControl.GetServerIp(), SettingsControl.GetServerPort());
+                server.ProcessOnServerConnectionException += onServerException;
+                server.OnClientConnected += OnClientConnected;
+                server.Start();
+                serverStatusLabel.Text = $"IP aдрес: {server.IpAddress}; порт: {server.Port}";
+            }else
+            {
+                serverStatusLabel.Text = "Сервер выключен";
+            }
+
         }
 
 
@@ -71,8 +144,8 @@ namespace TeraMicroMeasure
                 client.ClientConnectionException += OnClientDisconnected;
                 clientList.Add(client.IpAddress, client);
                 refreshClientCounterStatusText();
+                MessageBox.Show(client.IpAddress);
             }
-
         }
 
         private void OnClientDisconnected(string addr, Exception ex)
@@ -106,6 +179,7 @@ namespace TeraMicroMeasure
                 return "";
             }
         }
+
         private void initStatusBar()
         {
             bool isServer = Properties.Settings.Default.IsServerApp;
@@ -186,5 +260,47 @@ namespace TeraMicroMeasure
             Label l = sender as Label;
             l.BackColor = System.Drawing.SystemColors.HotTrack;
         }
+
+        private void настройкиСервераToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetWorkSpaceSubState(WorkSpaceSubState.CONNECTION_SETTINGS);
+        }
+
+
+        #region Управление меню настроек
+
+        private void SetSettingsSubState(WorkSpaceSubState subState)
+        {
+            if (currentState != WorspaceState.SETTINGS) InitSettingsLeftMenu();
+        }
+
+        private void InitSettingsLeftMenu()
+        {
+           
+        }
+        #endregion
+
+
     }
+
+    enum WorspaceState
+    {
+        NONE,
+        SETTINGS,
+        DATABASE,
+        MEASURE
+    }
+
+    enum WorkSpaceSubState
+    {
+        NONE,
+        CONNECTION_SETTINGS,
+        DATABASE_SETTINGS,
+        CLIENTS_SETTINGS,
+        DATABASE_USERS,
+        DATABASE_CABLES,
+        DATABASE_TEST_RESULTS
+    }
+
+
 }

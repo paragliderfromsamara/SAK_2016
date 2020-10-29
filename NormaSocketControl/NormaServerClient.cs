@@ -29,8 +29,9 @@ namespace NormaSocketControl
 
         public NormaServerClient(TcpClient client)
         {
+            string fullAddr = tcpClient.Client.RemoteEndPoint.ToString();
             this.tcpClient = client;
-            this.ip_address = tcpClient.Client.RemoteEndPoint.ToString();
+            this.ip_address = fullAddr.Substring(0, fullAddr.IndexOf(':'));
         }
 
         public void StartThread()

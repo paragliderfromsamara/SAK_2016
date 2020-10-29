@@ -20,13 +20,41 @@ namespace NormaSocketControl
         private Thread serverThread;
         private string ipAddress;
         private int port;
-        private bool isAbort = false;
+
+        public static string[] GetAvailableIpAddressList()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            List<string> addrs = new List<string>();
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    addrs.Add(ip.ToString());
+                }
+            }
+            return addrs.ToArray();
+        }
+
+        public static bool IncludesIpOnList(string ip)
+        {
+            string[] ipList = GetAvailableIpAddressList();
+            if (ipList.Length > 0)
+            {
+                if (ipList[0] == "127.0.0.1" && ipList.Length == 1) return false;
+                foreach(var s in ipList)
+                {
+                    if (s == ip) return true;
+                }
+            }
+            return false;
+        }
 
         public string IpAddress => ipAddress;
-        public NormaServer(int _port)
+        public int Port => port;
+        public NormaServer(string _ip, int _port)
         {
             this.port = _port;
-            this.ipAddress = getLocalIpAddress();
+            this.ipAddress = _ip;
         }   
 
         /// <summary>
@@ -81,15 +109,9 @@ namespace NormaSocketControl
 
         private string getLocalIpAddress()
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            return "";
+            string[] addrs = GetAvailableIpAddressList();
+            if (addrs.Length > 0) return addrs[0];
+            else return "";
         }
 
         private void addClientToList(NormaServerClient cl)
