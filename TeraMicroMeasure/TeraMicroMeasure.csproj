@@ -104,9 +104,9 @@
       <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
       <Name>NormaMeasureUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NormaSocketControl\NormaSocketControl.csproj">
+    <ProjectReference Include="..\NormaSocketControl\NormaMeasureSocketControl.csproj">
       <Project>{8a1d8281-0ac9-4129-8b74-42facbdb47aa}</Project>
-      <Name>NormaSocketControl</Name>
+      <Name>NormaMeasureSocketControl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

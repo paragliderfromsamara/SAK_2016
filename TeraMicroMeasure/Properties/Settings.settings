@@ -8,5 +8,8 @@
     <Setting Name="IsServerApp" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="LeftButtonActiveColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">181, 218, 255</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

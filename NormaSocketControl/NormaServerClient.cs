@@ -7,7 +7,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
-namespace NormaSocketControl
+namespace NormaMeasure.SocketControl
 {
     public delegate string NormaServerClientMessageDelegate(string message, NormaServerClient client);
     public delegate void NormaServerClientDelegate(NormaServerClient client);
@@ -29,8 +29,8 @@ namespace NormaSocketControl
 
         public NormaServerClient(TcpClient client)
         {
-            string fullAddr = tcpClient.Client.RemoteEndPoint.ToString();
             this.tcpClient = client;
+            string fullAddr = tcpClient.Client.RemoteEndPoint.ToString();
             this.ip_address = fullAddr.Substring(0, fullAddr.IndexOf(':'));
         }
 

@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
 
-namespace NormaSocketControl
+namespace NormaMeasure.SocketControl
 {
     public delegate void ProcessConnectionException(Exception ex);
     public class NormaServer

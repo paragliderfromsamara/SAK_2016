@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NormaSocketControl;
+using NormaMeasure.SocketControl;
 using System.Globalization;
 using System.Threading;
 using NormaMeasure.Utils;
@@ -16,9 +16,6 @@ namespace TeraMicroMeasure
 {
     public partial class MainForm : Form
     {
-        WorspaceState currentState;
-        WorkSpaceSubState currentSubState;
-        SortedList<WorspaceState, WorkSpaceSubState[]> ApplicationStateList;
         private SortedList<string, NormaServerClient> clientList = new SortedList<string, NormaServerClient>();
         NormaServer server;
         public MainForm()
@@ -30,8 +27,6 @@ namespace TeraMicroMeasure
                 InitializeComponent();
                 InitCulture();
                 initStatusBar();
-                HideLeftPanel();
-                InitWorkSpace();
                 if (Properties.Settings.Default.IsServerApp) InitAsServerApp();
                 else InitAsClientApp();
             }
@@ -44,47 +39,9 @@ namespace TeraMicroMeasure
 
         private void InitWorkSpace()
         {
-            ApplicationStateList = new SortedList<WorspaceState, WorkSpaceSubState[]>();
-            ApplicationStateList[WorspaceState.SETTINGS] = new WorkSpaceSubState[] { WorkSpaceSubState.CONNECTION_SETTINGS, WorkSpaceSubState.CLIENTS_SETTINGS, WorkSpaceSubState.DATABASE_SETTINGS };
-            ApplicationStateList[WorspaceState.DATABASE] = new WorkSpaceSubState[] { WorkSpaceSubState.DATABASE_USERS, WorkSpaceSubState.DATABASE_CABLES, WorkSpaceSubState.DATABASE_TEST_RESULTS };
-            
+
         }
 
-        private void SetWorkSpaceState(WorspaceState state, WorkSpaceSubState subState = WorkSpaceSubState.NONE)
-        {
-            if (subState == WorkSpaceSubState.NONE) subState = ApplicationStateList[state][0];
-            switch(state)
-            {
-                case WorspaceState.SETTINGS:
-                    SetSettingsSubState(subState);
-                    break;
-                case WorspaceState.DATABASE:
-                    break;
-                case WorspaceState.MEASURE:
-                    break;
-            }
-        }
-
-        private void SetWorkSpaceSubState(WorkSpaceSubState subSate)
-        {
-            WorspaceState state = GetStateBySubState(subSate);
-            if (state != WorspaceState.NONE) SetWorkSpaceState(state, subSate);
-        }
-
-        private WorspaceState GetStateBySubState(WorkSpaceSubState subState)
-        {
-            WorspaceState s = WorspaceState.NONE;
-            foreach(var key in ApplicationStateList.Keys)
-            {
-                foreach(var ss in ApplicationStateList[key])
-                {
-                    if (ss == subState) 
-                    { s = key; break; }
-                }
-                if (s != WorspaceState.NONE) break;
-            }
-            return s;
-        }
 
         private void InitAsServerApp()
         {
@@ -111,6 +68,12 @@ namespace TeraMicroMeasure
         private void InitAsClientApp()
         {
             this.Text = "Клиент";
+        }
+
+        private void reinitServer()
+        {
+            stopServer();
+            initServer();
         }
 
         private void initServer()
@@ -205,12 +168,16 @@ namespace TeraMicroMeasure
 
         private void MainForm_FormClosing_ForServer()
         {
+            stopServer();
+        }
+
+        private void stopServer()
+        {
             if (server != null) server.Stop();
             foreach (NormaServerClient cl in clientList.Values)
             {
                 cl.Close();
             }
-
         }
 
         private void MainForm_FormClosing_ForClient()
@@ -224,82 +191,17 @@ namespace TeraMicroMeasure
             Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
         }
 
-        private void HideLeftPanel()
+        private void serverStatusLabel_Click(object sender, EventArgs e)
         {
-            leftPanel.Hide();
-            workSpacePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            SelectServerIpForm ipForm = new SelectServerIpForm();
+            ipForm.FormClosed += IpForm_FormClosed;
+            ipForm.ShowDialog();
         }
 
-        private void ShowLeftPanel()
+        private void IpForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            leftPanel.Show();
-            workSpacePanel.Dock = System.Windows.Forms.DockStyle.None;
-            workSpacePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            workSpacePanel.Width = this.Width - leftPanel.Width;
-            workSpacePanel.Height = this.Height - topPanel.Height;
-
+            reinitServer();
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (leftPanel.Visible) HideLeftPanel();
-            else ShowLeftPanel();
-        }
-
-
-        private void label1_MouseHover(object sender, EventArgs e)
-        {
-            Label l = sender as Label;
-            l.BackColor = System.Drawing.SystemColors.MenuHighlight;
-        }
-
-        private void label1_MouseLeave(object sender, EventArgs e)
-        {
-            Label l = sender as Label;
-            l.BackColor = System.Drawing.SystemColors.HotTrack;
-        }
-
-        private void настройкиСервераToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SetWorkSpaceSubState(WorkSpaceSubState.CONNECTION_SETTINGS);
-        }
-
-
-        #region Управление меню настроек
-
-        private void SetSettingsSubState(WorkSpaceSubState subState)
-        {
-            if (currentState != WorspaceState.SETTINGS) InitSettingsLeftMenu();
-        }
-
-        private void InitSettingsLeftMenu()
-        {
-           
-        }
-        #endregion
-
-
-    }
-
-    enum WorspaceState
-    {
-        NONE,
-        SETTINGS,
-        DATABASE,
-        MEASURE
-    }
-
-    enum WorkSpaceSubState
-    {
-        NONE,
-        CONNECTION_SETTINGS,
-        DATABASE_SETTINGS,
-        CLIENTS_SETTINGS,
-        DATABASE_USERS,
-        DATABASE_CABLES,
-        DATABASE_TEST_RESULTS
     }
 
 

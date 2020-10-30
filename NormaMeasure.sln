@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaMeasureProtocolBuilder
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeraMicroMeasure", "TeraMicroMeasure\TeraMicroMeasure.csproj", "{79773892-79C9-42C3-8367-B7B03FB8D1D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaSocketControl", "NormaSocketControl\NormaSocketControl.csproj", "{8A1D8281-0AC9-4129-8B74-42FACBDB47AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaMeasureSocketControl", "NormaSocketControl\NormaMeasureSocketControl.csproj", "{8A1D8281-0AC9-4129-8B74-42FACBDB47AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

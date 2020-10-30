@@ -46,5 +46,14 @@ namespace TeraMicroMeasure.Properties {
                 this["IsServerApp"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("181, 218, 255")]
+        public global::System.Drawing.Color LeftButtonActiveColor {
+            get {
+                return ((global::System.Drawing.Color)(this["LeftButtonActiveColor"]));
+            }
+        }
     }
 }
