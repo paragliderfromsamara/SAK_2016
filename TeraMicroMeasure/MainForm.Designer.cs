@@ -30,6 +30,7 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.настройкиСервераToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.базыДанныхToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.пользователиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.кабелиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,7 +40,6 @@
             this.serverStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.topPanel = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
-            this.настройкиСервераToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -66,6 +66,13 @@
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(83, 21);
             this.settingsToolStripMenuItem.Text = "Настройки";
+            // 
+            // настройкиСервераToolStripMenuItem
+            // 
+            this.настройкиСервераToolStripMenuItem.Name = "настройкиСервераToolStripMenuItem";
+            this.настройкиСервераToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.настройкиСервераToolStripMenuItem.Text = "Настройки сервера";
+            this.настройкиСервераToolStripMenuItem.Click += new System.EventHandler(this.serverStatusLabel_Click);
             // 
             // базыДанныхToolStripMenuItem
             // 
@@ -115,8 +122,8 @@
             // serverStatusLabel
             // 
             this.serverStatusLabel.Name = "serverStatusLabel";
-            this.serverStatusLabel.Size = new System.Drawing.Size(138, 17);
-            this.serverStatusLabel.Text = "IP адрес: 192.168.100.220";
+            this.serverStatusLabel.Size = new System.Drawing.Size(205, 17);
+            this.serverStatusLabel.Text = "IP адрес: 192.168.100.220 Порт: 16000";
             this.serverStatusLabel.Click += new System.EventHandler(this.serverStatusLabel_Click);
             // 
             // topPanel
@@ -146,13 +153,6 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "";
             this.button1.UseVisualStyleBackColor = false;
-            // 
-            // настройкиСервераToolStripMenuItem
-            // 
-            this.настройкиСервераToolStripMenuItem.Name = "настройкиСервераToolStripMenuItem";
-            this.настройкиСервераToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.настройкиСервераToolStripMenuItem.Text = "Настройки сервера";
-            this.настройкиСервераToolStripMenuItem.Click += new System.EventHandler(this.serverStatusLabel_Click);
             // 
             // MainForm
             // 

@@ -14,11 +14,26 @@ namespace NormaMeasure.SocketControl
     public delegate void NormaServerClientExceptionDelegate(string ipAddr, Exception ex);
     public class NormaServerClient
     {
+        public NormaServerClientMessageDelegate MessageSent;
         public NormaServerClientExceptionDelegate ClientConnectionException;
         public NormaServerClientMessageDelegate OnMessageReceived;
         private TcpClient tcpClient;
         private Thread clientThread;
         private string ip_address;
+        private string _message_from = string.Empty;
+        private string _message_to = string.Empty;
+        private bool HasDataForSend => !String.IsNullOrEmpty(_message_to);
+        public string MessageTo
+        {
+            set
+            {
+                _message_to = value;
+            }
+            get
+            {
+                return _message_to;
+            }
+        }
         public string IpAddress
         {
             get
@@ -74,14 +89,22 @@ namespace NormaMeasure.SocketControl
                     }
                     while (stream.DataAvailable);
                     string message = builder.ToString();
-                    message = OnMessageReceived(message, this);
-                    data = Encoding.Default.GetBytes(message);
-                    stream.Write(data, 0, data.Length);
+                    if (!string.IsNullOrWhiteSpace(message))
+                    {
+                        MessageTo = OnMessageReceived(message, this);
+                    }
+                    if (HasDataForSend)
+                    {
+                        data = Encoding.Default.GetBytes(MessageTo);
+                        stream.Write(data, 0, data.Length);
+                        MessageSent?.Invoke(MessageTo, this);
+                        MessageTo = string.Empty;
+                    }
                 }
             }
             catch (Exception ex)
             {
-                ClientConnectionException(ip_address, ex);
+                ClientConnectionException?.Invoke(ip_address, ex);
             }
             finally
             {

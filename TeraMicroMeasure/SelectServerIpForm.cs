@@ -16,7 +16,9 @@ namespace TeraMicroMeasure
         public SelectServerIpForm()
         {
             InitializeComponent();
+            if (!Properties.Settings.Default.IsServerApp) this.Height *= 2;
             InitControlPanel();
+
         }
 
         private void InitControlPanel()

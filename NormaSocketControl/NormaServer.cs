@@ -21,6 +21,27 @@ namespace NormaMeasure.SocketControl
         private string ipAddress;
         private int port;
 
+        public static bool IsValidIPString(string ip)
+        {
+            try
+            {
+                IPAddress.Parse(ip);
+                return true;
+            }catch
+            {
+                return false;
+            }
+            
+        }
+
+        public static NormaServerClient GetToServerConnectionForClient(string localIp, int localPort, string serverIp, int serverPort)
+        {
+            IPEndPoint localPoint = new IPEndPoint(IPAddress.Parse(localIp), localPort);
+            IPEndPoint serverPoint = new IPEndPoint(IPAddress.Parse(serverIp), serverPort);
+            TcpClient cl = new TcpClient(localPoint);
+            cl.Connect(serverPoint);
+            return new NormaServerClient(cl);
+        }
         public static string[] GetAvailableIpAddressList()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());

@@ -18,6 +18,8 @@ namespace TeraMicroMeasure
     {
         private SortedList<string, NormaServerClient> clientList = new SortedList<string, NormaServerClient>();
         NormaServer server;
+        NormaServerClient client;
+        NormaMessager messager;
         public MainForm()
         {
             AppTypeSelector appSel = new AppTypeSelector();
@@ -34,19 +36,13 @@ namespace TeraMicroMeasure
             {
                 Close();
             }
-
-        }
-
-        private void InitWorkSpace()
-        {
-
         }
 
 
         private void InitAsServerApp()
         {
             retry:
-            string currentIp = SettingsControl.GetServerIp();
+            string currentIp = SettingsControl.GetLocalIP();
             string[] ipList = NormaServer.GetAvailableIpAddressList();
             this.Text = "Сервер";
             if (!NormaServer.IncludesIpOnList(currentIp) && !SettingsControl.GetOfflineMode())
@@ -56,7 +52,7 @@ namespace TeraMicroMeasure
                     if(ipList[0] == "127.0.0.1")
                     {
                         if (MessageBox.Show("Отсутсвуют доступные подключения!\n\nПри нажатии \"Отмена\" приложение запустится в автономном режиме.\n\nПри нажатии \"Повтор\" будет произведен повторный поиск", "Отсутствуют подключения", MessageBoxButtons.RetryCancel, MessageBoxIcon.Information) == DialogResult.Retry) goto retry;
-                        SettingsControl.SetServerIpAndPort(ipList[0], "8888");
+                        SettingsControl.SetLocalIpAndPort(ipList[0], "8888");
                     }
                 }
                 SelectServerIpForm ipForm = new SelectServerIpForm();
@@ -68,6 +64,34 @@ namespace TeraMicroMeasure
         private void InitAsClientApp()
         {
             this.Text = "Клиент";
+            retry:
+            string localIp = SettingsControl.GetLocalIP();
+            int localPort = SettingsControl.GetLocalPort();
+            string serverIp = SettingsControl.GetServerIP();
+            int serverPort = SettingsControl.GetServerPort();
+            //if (String.IsNullOrWhiteSpace(currentIp)) MessageBox.Show("Нет данных о сервере");
+            //else MessageBox.Show(currentIp);
+            try
+            {
+                client = NormaServer.GetToServerConnectionForClient(localIp, localPort, serverIp, serverPort);
+                client.OnMessageReceived += OnClientMeassageReceived;
+                client.ClientConnectionException += LostServerConnection;
+                client.StartThread();
+                // client.OnMessageReceived += ;
+                // client.
+            }
+            catch(Exception ex)
+            {
+                SelectServerIpForm ipForm = new SelectServerIpForm();
+                ipForm.ShowDialog();
+                MessageBox.Show(ex.Message);
+                goto retry;
+            }
+        }
+
+        private void LostServerConnection(string ipAddr, Exception ex)
+        {
+            MessageBox.Show("Подключение разорвано");
         }
 
         private void reinitServer()
@@ -76,11 +100,13 @@ namespace TeraMicroMeasure
             initServer();
         }
 
+
+
         private void initServer()
         {
             if (!SettingsControl.GetOfflineMode())
             {
-                server = new NormaServer(SettingsControl.GetServerIp(), SettingsControl.GetServerPort());
+                server = new NormaServer(SettingsControl.GetLocalIP(), SettingsControl.GetLocalPort());
                 server.ProcessOnServerConnectionException += onServerException;
                 server.OnClientConnected += OnClientConnected;
                 server.Start();
@@ -107,7 +133,8 @@ namespace TeraMicroMeasure
                 client.ClientConnectionException += OnClientDisconnected;
                 clientList.Add(client.IpAddress, client);
                 refreshClientCounterStatusText();
-                MessageBox.Show(client.IpAddress);
+                init_messager(client);
+                //MessageBox.Show(client.IpAddress);
             }
         }
 
@@ -139,8 +166,18 @@ namespace TeraMicroMeasure
             }
             else
             {
-                return "";
+                if (messager != null) init_messager(cl);
+                if (cl != null) messager.AddToChat(message, cl.IpAddress);
+                return "Ok";
             }
+        }
+
+
+        private void init_messager(NormaServerClient cl)
+        {
+            messager = new NormaMessager(cl);
+           // messager.SendMessage += SendMessage;
+            messager.Show(this);
         }
 
         private void initStatusBar()
@@ -182,7 +219,17 @@ namespace TeraMicroMeasure
 
         private void MainForm_FormClosing_ForClient()
         {
+            stopConnectionToServer();
+        }
 
+        private void stopConnectionToServer()
+        {
+            if (client != null)
+            {
+                client.ClientConnectionException = null;
+                client.Close();
+
+            } 
         }
 
         private void InitCulture()
