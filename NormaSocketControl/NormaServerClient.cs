@@ -76,7 +76,7 @@ namespace NormaMeasure.SocketControl
             try
             {
                 stream = tcpClient.GetStream();
-                byte[] data = new byte[64]; // буфер для получаемых данных
+                byte[] data = new byte[512]; // буфер для получаемых данных
                 while (true)
                 {
                     // получаем сообщение

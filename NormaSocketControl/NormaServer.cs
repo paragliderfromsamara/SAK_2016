@@ -14,7 +14,7 @@ namespace NormaMeasure.SocketControl
     public class NormaServer
     {
         public ProcessConnectionException ProcessOnServerConnectionException;
-        public NormaServerClientDelegate OnClientConnected;
+        public NormaTCPClientDelegate OnClientConnected;
         public NormaServerClientDelegate OnClientDisconnected;
         private TcpListener listener;
         private Thread serverThread;
@@ -34,14 +34,7 @@ namespace NormaMeasure.SocketControl
             
         }
 
-        public static NormaServerClient GetToServerConnectionForClient(string localIp, int localPort, string serverIp, int serverPort)
-        {
-            IPEndPoint localPoint = new IPEndPoint(IPAddress.Parse(localIp), localPort);
-            IPEndPoint serverPoint = new IPEndPoint(IPAddress.Parse(serverIp), serverPort);
-            TcpClient cl = new TcpClient(localPoint);
-            cl.Connect(serverPoint);
-            return new NormaServerClient(cl);
-        }
+
         public static string[] GetAvailableIpAddressList()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -104,22 +97,15 @@ namespace NormaMeasure.SocketControl
             {
                 listener = new TcpListener(IPAddress.Parse(ipAddress), port);
                 listener.Start();
-                //Console.WriteLine("Ожидание подключений...");
-                //Debug.WriteLine("Ожидание подключений...");
                 while (true)
                 {
                     TcpClient client = listener.AcceptTcpClient();
-                    NormaServerClient clientObject = new NormaServerClient(client);
+                    NormaTCPClient clientObject = new NormaTCPClient(client);
                     addClientToList(clientObject);
-                    // создаем новый поток для обслуживания нового клиента
-                    // Thread clientThread = new Thread(new ThreadStart(clientObject.Process));
-                    // clientThread.Start();
-                    //Debug.WriteLine("Найден клиент...");
                 }
             }
             catch (Exception ex)
             {
-                // MessageBox.Show(ex.Message, "Ошибка соединения");
                 ProcessOnServerConnectionException(ex);
             }
             finally
@@ -135,21 +121,12 @@ namespace NormaMeasure.SocketControl
             else return "";
         }
 
-        private void addClientToList(NormaServerClient cl)
+        private void addClientToList(NormaTCPClient cl)
         {
             OnClientConnected(cl);
-            cl.StartThread();
-            Debug.WriteLine("Найден клиент... " + cl.IpAddress);
+            cl.InitOnServerThread();
+            Debug.WriteLine("Найден клиент... " + cl.RemoteIP);
         }
 
-       // public void Dispose()
-       // {
-       //     if (listener != null)
-       //     {
-       //         listener.Server.Dispose();
-       //         listener = null;
-       //         
-       //     }
-       // }
     }
 }

@@ -58,12 +58,6 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="NormaMessager.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NormaMessager.Designer.cs">
-      <DependentUpon>NormaMessager.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectServerIpForm.cs">
@@ -74,14 +68,12 @@
     </Compile>
     <Compile Include="ServerSettingsControl.cs" />
     <Compile Include="SettingsControl.cs" />
+    <Compile Include="TeraMicroClientXmlObject.cs" />
     <EmbeddedResource Include="AppTypeSelector.resx">
       <DependentUpon>AppTypeSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NormaMessager.resx">
-      <DependentUpon>NormaMessager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
