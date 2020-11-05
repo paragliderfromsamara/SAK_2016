@@ -48,7 +48,6 @@ namespace NormaMeasure.SocketControl
             remoteIP = remote_ip;
             localPort = local_port;
             remotePort = remote_port;
-            initTCPClient();
         }
 
         public NormaTCPClient(TcpClient _client)
@@ -89,7 +88,7 @@ namespace NormaMeasure.SocketControl
             IPEndPoint remotePoint = new IPEndPoint(IPAddress.Parse(remoteIP), remotePort);
             tcpClient = new TcpClient(localPoint);
             tcpClient.Connect(remotePoint);
-            InitOnClientThread();
+           // InitOnClientThread();
         }
 
         public void InitOnServerThread()
@@ -106,8 +105,9 @@ namespace NormaMeasure.SocketControl
 
         public void Send(string message)
         {
+            if (tcpClient == null) initTCPClient();
             MessageToSend = message;
-
+            InitOnClientThread();
         }
 
         private void clientSendProcess()
@@ -151,7 +151,10 @@ namespace NormaMeasure.SocketControl
                 if (stream != null)
                     stream.Close();
                 if (tcpClient != null)
-                    tcpClient.Close();
+                {
+                    dispose_tcp_client();
+                }
+                    
             }
         }
 
@@ -161,11 +164,8 @@ namespace NormaMeasure.SocketControl
             {
                 clientThread.Abort();
             }
-            if (tcpClient != null)
-            {
-                if (tcpClient.Connected) tcpClient.Close();
-                tcpClient.Dispose();
-            }
+            if (tcpClient != null) dispose_tcp_client();
+            
         }
 
         private void clientReceiveProcess()
@@ -177,7 +177,6 @@ namespace NormaMeasure.SocketControl
                 tcpClient.ReceiveTimeout = 3000;
                 tcpClient.SendTimeout = 3000;
                 stream = tcpClient.GetStream();
-
                 byte[] data = new byte[256]; // буфер для получаемых данных
                 while (true)
                 {
@@ -214,9 +213,16 @@ namespace NormaMeasure.SocketControl
             {
                 if (stream != null)
                     stream.Close();
-                if (tcpClient != null)
-                    tcpClient.Close();
+                if (tcpClient != null) dispose_tcp_client();
+                    
             }
+        }
+
+        private void dispose_tcp_client()
+        {
+            tcpClient.Close();
+            tcpClient.Dispose();
+            tcpClient = null;
         }
     }
 

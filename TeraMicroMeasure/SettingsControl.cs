@@ -8,8 +8,9 @@ namespace TeraMicroMeasure
 {
     static class SettingsControl
     {
-        static string SelfTCPInfoSectionName = "LocalTCPSettings";
-        static string ServerTCPInfoSectionName = "ServerTCPSettings";
+        const string SelfTCPInfoSectionName = "LocalTCPSettings";
+        const string ServerTCPInfoSectionName = "ServerTCPSettings";
+        const string ClientSettingsSectionName = "ClientSettings";
 
         public static void SetLocalIpAndPort(string ip, string port)
         {
@@ -62,5 +63,34 @@ namespace TeraMicroMeasure
             return (f.ReadInt("offline", SelfTCPInfoSectionName) == 1);
         }
 
+        public static int GetClientId()
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            return f.ReadInt("client_id", ClientSettingsSectionName);
+        }
+
+        public static void SetClientId(int id)
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            f.Write("client_id", id.ToString(), ClientSettingsSectionName);
+        }
+
+        public static void SetRequestPeriod(int time)
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            f.Write("request_period", time.ToString(), ClientSettingsSectionName);
+        }
+
+        public static int GetRequestPeriod()
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            int requestPeriod = f.ReadInt("request_period", ServerTCPInfoSectionName);
+            if (requestPeriod == 0)
+            {
+                requestPeriod = 1000;
+                f.Write("request_period", requestPeriod.ToString(), ClientSettingsSectionName);
+            }
+            return requestPeriod;
+        }
     }
 }

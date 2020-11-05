@@ -52,6 +52,7 @@
     <Compile Include="AppTypeSelector.Designer.cs">
       <DependentUpon>AppTypeSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClientTCPControl.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,8 +68,10 @@
       <DependentUpon>SelectServerIpForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ServerSettingsControl.cs" />
+    <Compile Include="ServerTCPControl.cs" />
     <Compile Include="SettingsControl.cs" />
-    <Compile Include="TeraMicroClientXmlObject.cs" />
+    <Compile Include="XmlObjects\ClientXmlState.cs" />
+    <Compile Include="XmlObjects\ServerXmlState.cs" />
     <EmbeddedResource Include="AppTypeSelector.resx">
       <DependentUpon>AppTypeSelector.cs</DependentUpon>
     </EmbeddedResource>

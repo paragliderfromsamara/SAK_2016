@@ -20,6 +20,7 @@ namespace NormaMeasure.SocketControl
         private Thread serverThread;
         private string ipAddress;
         private int port;
+        private Dictionary<string, NormaTCPClient> serverClients;
 
         public static bool IsValidIPString(string ip)
         {
@@ -67,6 +68,7 @@ namespace NormaMeasure.SocketControl
         public int Port => port;
         public NormaServer(string _ip, int _port)
         {
+            this.serverClients = new Dictionary<string, NormaTCPClient>();
             this.port = _port;
             this.ipAddress = _ip;
         }   
@@ -101,7 +103,7 @@ namespace NormaMeasure.SocketControl
                 {
                     TcpClient client = listener.AcceptTcpClient();
                     NormaTCPClient clientObject = new NormaTCPClient(client);
-                    addClientToList(clientObject);
+                    processClient(clientObject);
                 }
             }
             catch (Exception ex)
@@ -114,16 +116,19 @@ namespace NormaMeasure.SocketControl
             }
         }
 
-        private string getLocalIpAddress()
-        {
-            string[] addrs = GetAvailableIpAddressList();
-            if (addrs.Length > 0) return addrs[0];
-            else return "";
-        }
 
-        private void addClientToList(NormaTCPClient cl)
+        private void processClient(NormaTCPClient cl)
         {
-            OnClientConnected(cl);
+            if (!serverClients.ContainsKey(cl.RemoteIP))
+            {
+                serverClients.Add(cl.RemoteIP, cl);
+                cl.InitOnClientThread();
+                OnClientConnected(cl);
+            }
+            else
+            {
+                serverClients[cl.RemoteIP].ReceiveData();
+            }
             cl.InitOnServerThread();
             Debug.WriteLine("Найден клиент... " + cl.RemoteIP);
         }

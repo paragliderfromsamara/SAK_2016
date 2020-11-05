@@ -12,6 +12,8 @@ using System.Globalization;
 using System.Threading;
 using NormaMeasure.Utils;
 using System.Xml;
+using TeraMicroMeasure.XmlObjects;
+
 
 namespace TeraMicroMeasure
 {
@@ -20,6 +22,8 @@ namespace TeraMicroMeasure
         private SortedList<string, NormaTCPClient> clientList = new SortedList<string, NormaTCPClient>();
         NormaServer server;
         NormaTCPClient client;
+        ClientTCPControl clientTCPControl;
+        ServerTCPControl serverTCPControl;
         public MainForm()
         {
             AppTypeSelector appSel = new AppTypeSelector();
@@ -40,11 +44,30 @@ namespace TeraMicroMeasure
             testXml();
         }
 
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Properties.Settings.Default.IsServerApp) MainForm_FormClosing_ForServer();
+            else MainForm_FormClosing_ForClient();
+
+        }
+
+        private void InitCulture()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("my");
+            Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
+        }
+
+
         private void testXml()
         {
-            TeraMicroClientXmlObject o = new TeraMicroClientXmlObject();
-            o.OperatorName = "Вася";
-            richTextBox1.Text = o.InnerXml;
+            ServerXmlObject s = new ServerXmlObject();
+            ClientXmlState c = new ClientXmlState();
+            c.ClientID = 2;
+            s.AddClient("192.168.1.0", c);
+            richTextBox1.Text = s.InnerXml;
+            richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
+            richTextBox1.Text += "\n" + s.Clients["192.168.1.0"].ClientID.ToString();
+
         }
 
         private void InitAsServerApp()
@@ -66,64 +89,42 @@ namespace TeraMicroMeasure
                 SelectServerIpForm ipForm = new SelectServerIpForm();
                 ipForm.ShowDialog();
             }
-            initServer();
+            initServerControl();
         }
         private void InitAsClientApp()
         {
             this.Text = "Клиент";
-            retry:
-            string localIp = SettingsControl.GetLocalIP();
-            int localPort = SettingsControl.GetLocalPort();
-            string serverIp = SettingsControl.GetServerIP();
-            int serverPort = SettingsControl.GetServerPort();
-            if (string.IsNullOrWhiteSpace(localIp) || string.IsNullOrWhiteSpace(serverIp))
-            {
-                SelectServerIpForm ipForm = new SelectServerIpForm();
-                ipForm.ShowDialog();
-            }
-            //if (String.IsNullOrWhiteSpace(currentIp)) MessageBox.Show("Нет данных о сервере");
-            //else MessageBox.Show(currentIp);
-            try
-            {
-                client = new NormaTCPClient(localIp, serverIp, localPort, serverPort);
-                client.OnAnswerReceived += OnServerAnswerReceived;
-                client.ClientSendMessageException += LostServerConnection;
-                client.Send("Привет!!!");
-                // client.OnMessageReceived += ;
-                // client.
-            }
-            catch(Exception ex)
-            {
-                SelectServerIpForm ipForm = new SelectServerIpForm();
-                ipForm.ShowDialog();
-                //MessageBox.Show(ex.Message);
-                goto retry;
-            }
+            CheckBaseTCPClientParameters();
+            InitClientTCPControl();
         }
 
-        private void LostServerConnection(string ipAddr, Exception ex)
+
+
+        private void processReceivedState(object state, EventArgs a)
         {
-            MessageBox.Show("Подключение разорвано");
+            richTextBox1.Text = state as string;
         }
 
+        #region ServerModePart
         private void reinitServer()
         {
             stopServer();
-            initServer();
+            initServerControl();
         }
 
-
-
-        private void initServer()
+        private void initServerControl()
         {
             if (!SettingsControl.GetOfflineMode())
             {
+                serverTCPControl = new ServerTCPControl(buildServerXML());
+
                 server = new NormaServer(SettingsControl.GetLocalIP(), SettingsControl.GetLocalPort());
                 server.ProcessOnServerConnectionException += onServerException;
                 server.OnClientConnected += OnClientConnected;
                 server.Start();
                 serverStatusLabel.Text = $"IP aдрес: {server.IpAddress}; порт: {server.Port}";
-            }else
+            }
+            else
             {
                 serverStatusLabel.Text = "Сервер выключен";
             }
@@ -157,7 +158,7 @@ namespace TeraMicroMeasure
                 client.ClientReceiveMessageException += OnClientDisconnected;
                 clientList.Add(client.RemoteIP, client);
                 refreshClientCounterStatusText();
-               // init_messager(client);
+                // init_messager(client);
                 //MessageBox.Show(client.IpAddress);
             }
         }
@@ -176,15 +177,15 @@ namespace TeraMicroMeasure
         }
         private void onServerException(Exception ex)
         {
-           if (ex.HResult != -2147467259) MessageBox.Show(ex.Message, $"Ошибка соединения: {ex.HResult}");
+            if (ex.HResult != -2147467259) MessageBox.Show(ex.Message, $"Ошибка соединения: {ex.HResult}");
         }
-        
+
         private void OnClientMeassageReceived(string message, NormaTCPClient cl)
         {
             cl.MessageToSend = "Hello Fucker!!!";
             if (InvokeRequired)
             {
-                BeginInvoke(new NormaTCPMessageDelegate(OnClientMeassageReceived), new object[] {message, cl });
+                BeginInvoke(new NormaTCPMessageDelegate(OnClientMeassageReceived), new object[] { message, cl });
             }
             else
             {
@@ -206,14 +207,18 @@ namespace TeraMicroMeasure
 
         private void refreshClientCounterStatusText()
         {
-            clientCounterStatus.Text =  $"Клиентов подключено: {clientList.Count}";
+            clientCounterStatus.Text = $"Клиентов подключено: {clientList.Count}";
+        }
+        private void serverStatusLabel_Click(object sender, EventArgs e)
+        {
+            SelectServerIpForm ipForm = new SelectServerIpForm();
+            ipForm.FormClosed += IpForm_FormClosed;
+            ipForm.ShowDialog();
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void IpForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (Properties.Settings.Default.IsServerApp) MainForm_FormClosing_ForServer();
-            else MainForm_FormClosing_ForClient();
-
+            reinitServer();
         }
 
         private void MainForm_FormClosing_ForServer()
@@ -226,42 +231,86 @@ namespace TeraMicroMeasure
             if (server != null) server.Stop();
             foreach (NormaTCPClient cl in clientList.Values)
             {
-               cl.Close();
+                cl.Close();
             }
+        }
+
+        private ServerXmlState buildServerXML()
+        {
+            ServerXmlState serverState = new ServerXmlState();
+            serverState.IPAddress = SettingsControl.GetLocalIP();
+            serverState.Port = SettingsControl.GetLocalPort();
+            serverState.RequestPeriod = SettingsControl.GetRequestPeriod();
+            return serverState;
+        }
+        #endregion
+
+        #region ClientModePart
+
+        private ClientXmlState buildClientXML()
+        {
+            ClientXmlState clientXML = new ClientXmlState();
+            clientXML.ClientID = SettingsControl.GetClientId();
+            clientXML.ClientIP = SettingsControl.GetLocalIP();
+            clientXML.ClientPort = SettingsControl.GetLocalPort();
+            clientXML.ServerIP = SettingsControl.GetServerIP();
+            clientXML.ServerPort = SettingsControl.GetServerPort();
+            return clientXML;
+        }
+
+        private void CheckBaseTCPClientParameters()
+        {
+            string localIp = SettingsControl.GetLocalIP();
+            int localPort = SettingsControl.GetLocalPort();
+            string serverIp = SettingsControl.GetServerIP();
+            int serverPort = SettingsControl.GetServerPort();
+            if (string.IsNullOrWhiteSpace(localIp) || string.IsNullOrWhiteSpace(serverIp) || serverIp == "127.0.0.1" || localIp == "127.0.0.1")
+            {
+                SelectServerIpForm ipForm = new SelectServerIpForm();
+                ipForm.ShowDialog();
+            }
+        }
+
+        private void InitClientTCPControl()
+        {
+            try
+            {
+                clientTCPControl = new ClientTCPControl(buildClientXML());
+                clientTCPControl.OnServerStateReceived += processReceivedState;
+                clientTCPControl.OnConnectionException += LostServerConnection;
+                //clientTCPControl
+            }
+            catch (Exception)
+            {
+                SelectServerIpForm ipForm = new SelectServerIpForm();
+                ipForm.ShowDialog();
+                //MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        private void LostServerConnection(object ex, EventArgs a)
+        {
+            Exception e = ex as Exception;
+            MessageBox.Show(e.Message);
         }
 
         private void MainForm_FormClosing_ForClient()
         {
-            stopConnectionToServer();
+            stopTCPControl();
         }
 
-        private void stopConnectionToServer()
+        private void stopTCPControl()
         {
-            if (client != null)
+            if (clientTCPControl != null)
             {
-                client.ClientReceiveMessageException = null;
-                client.ClientSendMessageException = null;
-                client.Close();
-            } 
+                clientTCPControl.OnServerStateReceived = null;
+                clientTCPControl.OnConnectionException = null;
+                clientTCPControl.Stop();
+            }
         }
+        #endregion
 
-        private void InitCulture()
-        {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("my");
-            Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
-        }
-
-        private void serverStatusLabel_Click(object sender, EventArgs e)
-        {
-            SelectServerIpForm ipForm = new SelectServerIpForm();
-            ipForm.FormClosed += IpForm_FormClosed;
-            ipForm.ShowDialog();
-        }
-
-        private void IpForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            reinitServer();
-        }
     }
 
 
