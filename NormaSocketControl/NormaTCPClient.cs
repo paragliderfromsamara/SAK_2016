@@ -19,6 +19,8 @@ namespace NormaMeasure.SocketControl
         public NormaTCPClientExceptionDelegate ClientReceiveMessageException;
         public NormaTCPClientExceptionDelegate ClientSendMessageException;
 
+        private int receiveTimeout = 500;
+        private int sendTimeout = 500;
         protected TcpClient tcpClient;
         protected string remoteIP;
         protected string localIP;
@@ -28,20 +30,29 @@ namespace NormaMeasure.SocketControl
         public string RemoteIP => remoteIP;
         public string LocalIP => localIP;
         private string messageToSend;
-        private bool messageSentFlag = true;
+        private bool sendingIsActive = false;
+        private bool receiveIsActive = false;
+       
         public string MessageToSend
         {
             set
             {
                 messageToSend = value;
-                messageSentFlag = false;
             }
             get
             {
                 return messageToSend;
             }
         }
+        public void SetTimeouts(int rec_time, int send_time)
+        {
+            this.receiveTimeout = rec_time;
+            this.sendTimeout = send_time;
+        }
 
+        public void RefreshConnection()
+        {
+        }
         public NormaTCPClient(string local_ip, string remote_ip, int local_port, int remote_port)
         {
             localIP = local_ip;
@@ -82,49 +93,54 @@ namespace NormaMeasure.SocketControl
             return v;
         }
 
-        private void initTCPClient()
+        public void InitReceiveThread()
         {
-            IPEndPoint localPoint = new IPEndPoint(IPAddress.Parse(localIP), localPort);
-            IPEndPoint remotePoint = new IPEndPoint(IPAddress.Parse(remoteIP), remotePort);
-            tcpClient = new TcpClient(localPoint);
-            tcpClient.Connect(remotePoint);
-           // InitOnClientThread();
+            if (!receiveIsActive)
+            {
+                clientThread = new Thread(new ThreadStart(receiveProcess));
+                clientThread.Start();
+            }
         }
 
-        public void InitOnServerThread()
+        public void InitSending()
         {
-            clientThread = new Thread(clientReceiveProcess);
-            clientThread.Start();
-        }
-
-        public void InitOnClientThread()
-        {
-            clientThread = new Thread(clientSendProcess);
+            clientThread = new Thread(new ThreadStart(sendProcess));
             clientThread.Start();
         }
 
         public void Send(string message)
         {
-            if (tcpClient == null) initTCPClient();
+            //if (tcpClient == null) initTCPClient();
             MessageToSend = message;
-            InitOnClientThread();
+            if (!sendingIsActive) InitSending();
         }
 
-        private void clientSendProcess()
+        public void StopSending()
+        {
+            sendingIsActive = false;
+            Thread.Sleep(300);
+        }
+
+        private void sendProcess()
         {
             NetworkStream stream = null;
+            IPEndPoint localPoint = new IPEndPoint(IPAddress.Parse(localIP), localPort);
+            IPEndPoint remotePoint = new IPEndPoint(IPAddress.Parse(remoteIP), remotePort);
+            tcpClient = new TcpClient(localPoint);
+            tcpClient.ReceiveTimeout = receiveTimeout;
+            tcpClient.SendTimeout = sendTimeout;
             try
             {
-                tcpClient.ReceiveTimeout = 3000;
-                tcpClient.SendTimeout = 3000;
-                stream = tcpClient.GetStream();
 
+                tcpClient.Connect(IPAddress.Parse(remoteIP), remotePort);
+                stream = tcpClient.GetStream();
                 byte[] dataIn = new byte[256]; // буфер для получаемых данных
-                byte[] dataOut = Encoding.Default.GetBytes(MessageToSend);
-               // while (true)
-               // {
+                byte[] dataOut;
+                sendingIsActive = true; 
+                while (sendingIsActive)
+                {
                     // получаем сообщение
-              //      if (messageSentFlag) continue;
+                    dataOut = Encoding.Default.GetBytes(MessageToSend);
                     StringBuilder builder = new StringBuilder();
                     int bytes = 0;
                     stream.Write(dataOut, 0, dataOut.Length);
@@ -136,14 +152,15 @@ namespace NormaMeasure.SocketControl
                     while (stream.DataAvailable);
                     string recMessage = builder.ToString();
                     recMessage.Trim();
-                    OnAnswerReceived(recMessage, this);
-                    messageSentFlag = true;
-               // }
+                    OnAnswerReceived?.Invoke(recMessage, this);
+                    Thread.Sleep(receiveTimeout*2/3);
+                 }
                stream.Close();
-               tcpClient.Close();
+               dispose_tcp_client();
             }
             catch (Exception ex)
             {
+                sendingIsActive = false;
                 ClientSendMessageException?.Invoke(remoteIP, ex);
             }
             finally
@@ -154,31 +171,36 @@ namespace NormaMeasure.SocketControl
                 {
                     dispose_tcp_client();
                 }
-                    
             }
         }
 
         public void Close()
         {
-            if (clientThread != null)
-            {
-                clientThread.Abort();
-            }
-            if (tcpClient != null) dispose_tcp_client();
-            
+            sendingIsActive = false;
+            receiveIsActive = false;
+            //if (tcpClient != null)
+            //{
+            //    tcpClient.GetStream().Close();
+            //    tcpClient.Close();
+            //    tcpClient.Dispose();
+            //     tcpClient = null;
+            //    if (clientThread != null) clientThread.Abort();
+            // }
+            Thread.Sleep(3000);
         }
 
-        private void clientReceiveProcess()
+        private void receiveProcess()
         {
             NetworkStream stream = null;
 
             try
             {
-                tcpClient.ReceiveTimeout = 3000;
-                tcpClient.SendTimeout = 3000;
+                tcpClient.ReceiveTimeout = receiveTimeout;
+                tcpClient.SendTimeout = sendTimeout;
                 stream = tcpClient.GetStream();
                 byte[] data = new byte[256]; // буфер для получаемых данных
-                while (true)
+                receiveIsActive = true;
+                while (receiveIsActive)
                 {
                     // получаем сообщение
                     StringBuilder builder = new StringBuilder();
@@ -191,30 +213,24 @@ namespace NormaMeasure.SocketControl
                     while (stream.DataAvailable);
                     string recMessage = builder.ToString();
                     recMessage.Trim();
-                    if (!string.IsNullOrWhiteSpace(recMessage))
-                    {
-                        OnMessageReceived(recMessage, this);
-                        data = Encoding.Default.GetBytes(MessageToSend);
-                        stream.Write(data, 0, data.Length);
-                    }else
-                    {
-                        data = Encoding.Default.GetBytes("EMPTY");
-                        stream.Write(data, 0, data.Length);
-                    }
-
+                    OnMessageReceived?.Invoke(recMessage, this);
+                    data = Encoding.Default.GetBytes(MessageToSend);
+                    stream.Write(data, 0, data.Length);
                 }
+                stream.Close();
+                dispose_tcp_client();
             }
             catch (Exception ex)
             {
-                ClientReceiveMessageException?.Invoke(remoteIP, ex);
+                receiveIsActive = false;
                 Debug.WriteLine("Клиент отвалился от сервера");
+                ClientReceiveMessageException?.Invoke(remoteIP, ex);
             }
             finally
             {
                 if (stream != null)
                     stream.Close();
                 if (tcpClient != null) dispose_tcp_client();
-                    
             }
         }
 

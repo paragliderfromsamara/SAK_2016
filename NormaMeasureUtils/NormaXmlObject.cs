@@ -10,16 +10,26 @@ namespace NormaMeasure.Utils
     public class NormaXmlObject
     {
         private XmlDocument xml;
+        private XmlElement documentElement;
+        public string docElementTagName;
         public bool WasChanged;
         public string InnerXml => xml.InnerXml;
+        private bool isValid;
+        public bool IsValid => isValid;
+        private string docElTagName;
         public NormaXmlObject()
         {
+            docElTagName = this.GetType().Name;
             xml = new XmlDocument();
+            documentElement = xml.CreateElement(docElTagName);
+            xml.AppendChild(documentElement);
+            isValid = true;
         }
 
         public NormaXmlObject(string innerXml) : this()
         {
             xml.InnerXml = innerXml;
+            isValid = hasElement(docElTagName);
         }
 
         protected void setXmlProp(string key, string value)
@@ -27,11 +37,26 @@ namespace NormaMeasure.Utils
             retry:
             try
             {
-                WasChanged = xml.GetElementsByTagName(key)[0].InnerXml != value;
-                xml.GetElementsByTagName(key)[0].InnerXml = value;
+                XmlElement newEl = xml.CreateElement(key);
+                newEl.InnerXml = value;
+                
+                if (documentElement.GetElementsByTagName(key).Count > 0)
+                {
+                    XmlElement lastEl = documentElement.GetElementsByTagName(key)[0] as XmlElement;
+                    documentElement.ReplaceChild(lastEl, newEl);
+                }else
+                {
+                    documentElement.AppendChild(newEl);
+                }
+               // WasChanged = documentElement.GetElementsByTagName(key)[0].InnerXml != value;
+               // XmlElement el = documentElement.GetElementsByTagName(key)[0] as XmlElement;
+                
+               // el.InnerXml = value;
+               // documentElement.ReplaceChild(documentElement.GetElementsByTagName(key)[0], el);
+                
             }catch(NullReferenceException)
             {
-                xml.PrependChild(xml.CreateElement(key));
+                documentElement.AppendChild(xml.CreateElement(key));
                 goto retry;
             }
         }
@@ -41,9 +66,12 @@ namespace NormaMeasure.Utils
             string v;
             try
             {
-                v = xml.GetElementsByTagName(key)[0].InnerXml;
+                v = documentElement.GetElementsByTagName(key)[0].Value;
             }
             catch (NullReferenceException)
+            {
+                v = "";
+            }finally
             {
                 v = "";
             }
@@ -53,7 +81,7 @@ namespace NormaMeasure.Utils
         protected Dictionary<string, string> GetNodesInnerXmlFromContainer(string containerTag, string nodeTagName)
         {
             XmlNodeList v;
-            XmlNode containerNode = xml.GetElementsByTagName(containerTag)[0];
+            XmlNode containerNode = documentElement.GetElementsByTagName(containerTag)[0];
             XmlElement el;
             Dictionary<string, string> d = new Dictionary<string, string>();
             if (containerNode != null)
@@ -72,7 +100,6 @@ namespace NormaMeasure.Utils
 
         protected void AddElementToContainer(string containerTag, string elTagName, string innerXml, string id = null)
         {
-            XmlNode parentNode = xml.GetElementsByTagName(containerTag)[0];
             XmlElement parentEl = getOrCreateElement(containerTag);
             XmlElement childEl = xml.CreateElement(elTagName);
             childEl.InnerXml = innerXml;
@@ -80,11 +107,28 @@ namespace NormaMeasure.Utils
             parentEl.AppendChild(childEl);
         }
 
+        protected void ReplaceElementOnContainer(string containerTag, string elTagName, string innerXml, string id)
+        {
+            XmlNode parentNode = documentElement.GetElementsByTagName(containerTag)[0];
+            XmlElement parentEl = getOrCreateElement(containerTag);
+            XmlElement el = null;
+            foreach(XmlElement e in parentEl.GetElementsByTagName(elTagName))
+            {
+                if (e.GetAttribute("id") == id)
+                {
+                    el = e;
+                    break;
+                }
+            }
+            if (el == null) AddElementToContainer(containerTag, elTagName, innerXml, id);
+            else el.InnerXml = innerXml;
+        }
+
         protected XmlElement getOrCreateElement(string tagName)
         {
-            XmlNode node = xml.GetElementsByTagName(tagName)[0];
+            XmlNode node = documentElement.GetElementsByTagName(tagName)[0];
             XmlElement el = (node == null) ? xml.CreateElement(tagName) : node as XmlElement;
-            if (node == null) xml.AppendChild(el);
+            if (node == null) documentElement.AppendChild(el);
             return el;
         }
 

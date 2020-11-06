@@ -41,6 +41,7 @@
             this.topPanel = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.transCounterLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -107,7 +108,8 @@
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clientCounterStatus,
-            this.serverStatusLabel});
+            this.serverStatusLabel,
+            this.transCounterLbl});
             this.statusStrip.Location = new System.Drawing.Point(0, 873);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1496, 22);
@@ -163,6 +165,12 @@
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
+            // transCounterLbl
+            // 
+            this.transCounterLbl.Name = "transCounterLbl";
+            this.transCounterLbl.Size = new System.Drawing.Size(118, 17);
+            this.transCounterLbl.Text = "toolStripStatusLabel1";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -203,6 +211,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripMenuItem настройкиСервераToolStripMenuItem;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ToolStripStatusLabel transCounterLbl;
     }
 }
 

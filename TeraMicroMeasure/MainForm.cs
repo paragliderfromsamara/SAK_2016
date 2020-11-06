@@ -19,11 +19,12 @@ namespace TeraMicroMeasure
 {
     public partial class MainForm : Form
     {
-        private SortedList<string, NormaTCPClient> clientList = new SortedList<string, NormaTCPClient>();
-        NormaServer server;
-        NormaTCPClient client;
+        private ClientXmlState[] clientList = new ClientXmlState[] { };
+        //NormaServer server;
+        //NormaTCPClient client;
         ClientTCPControl clientTCPControl;
         ServerTCPControl serverTCPControl;
+        int recCounter = 0;
         public MainForm()
         {
             AppTypeSelector appSel = new AppTypeSelector();
@@ -60,14 +61,26 @@ namespace TeraMicroMeasure
 
         private void testXml()
         {
-            ServerXmlObject s = new ServerXmlObject();
+            ServerXmlState s = buildServerXML();
             ClientXmlState c = new ClientXmlState();
+            ClientXmlState c1;
             c.ClientID = 2;
+            c.ClientPort = 6666;
+
             s.AddClient("192.168.1.0", c);
             richTextBox1.Text = s.InnerXml;
             richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
             richTextBox1.Text += "\n" + s.Clients["192.168.1.0"].ClientID.ToString();
 
+            c1 = new ClientXmlState(c.InnerXml.Clone().ToString());
+            c1.ClientID = 376;
+            c1.ClientPort = 6666;
+
+
+            //s.ReplaceClient("192.168.1.0", c1);
+            //richTextBox1.Text += "\n" + s.InnerXml;
+            richTextBox1.Text += "\n" + c1.ClientID;
+            //richTextBox1.Text += "\n" + s.Clients["192.168.1.0"].ClientID.ToString();
         }
 
         private void InitAsServerApp()
@@ -99,10 +112,21 @@ namespace TeraMicroMeasure
         }
 
 
-
         private void processReceivedState(object state, EventArgs a)
         {
-            richTextBox1.Text = state as string;
+            //cl.MessageToSend = "Hello Fucker!!!";
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(processReceivedState), new object[] { state, a });
+            }
+            else
+            {
+                ServerXmlState sState = state as ServerXmlState;
+                richTextBox1.Text = sState.InnerXml;
+                transCounterLbl.Text = $"{recCounter++}";
+                //MessageBox.Show(message);//
+            }
+
         }
 
         #region ServerModePart
@@ -117,12 +141,15 @@ namespace TeraMicroMeasure
             if (!SettingsControl.GetOfflineMode())
             {
                 serverTCPControl = new ServerTCPControl(buildServerXML());
-
-                server = new NormaServer(SettingsControl.GetLocalIP(), SettingsControl.GetLocalPort());
-                server.ProcessOnServerConnectionException += onServerException;
-                server.OnClientConnected += OnClientConnected;
-                server.Start();
-                serverStatusLabel.Text = $"IP aдрес: {server.IpAddress}; порт: {server.Port}";
+                serverTCPControl.OnClientStateReceived += OnClientStateReceived;
+                serverTCPControl.OnServerConnectionException += onServerException;
+                serverTCPControl.OnClientListChanged += onClientListChanged;
+                serverTCPControl.OnServerStatusChanged += onServerStatusChanged;
+                //server = new NormaServer(SettingsControl.GetLocalIP(), SettingsControl.GetLocalPort());
+                //server.ProcessOnServerConnectionException += onServerException;
+                //server.OnClientConnected += OnClientConnected;
+                serverTCPControl.Start();
+                
             }
             else
             {
@@ -130,20 +157,47 @@ namespace TeraMicroMeasure
             }
 
         }
-
-        private void OnServerAnswerReceived(string message, NormaTCPClient cl)
+        
+        private void OnClientStateReceived(object o, EventArgs a)
         {
             //cl.MessageToSend = "Hello Fucker!!!";
             if (InvokeRequired)
             {
-                BeginInvoke(new NormaTCPMessageDelegate(OnServerAnswerReceived), new object[] { message, cl });
+               BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { o, a});
             }
             else
             {
-                MessageBox.Show(message);//
+                ClientXmlState s = o as ClientXmlState;
+                richTextBox1.Text = s.InnerXml;
+                transCounterLbl.Text = $"{recCounter++}";
+               //MessageBox.Show(message);//
+            }
+       }
+        private void onClientListChanged(object o, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(onClientListChanged), new object[] { o, e });
+            }
+            else
+            {
+                clientList = o as ClientXmlState[];
+                refreshClientCounterStatusText();
             }
         }
 
+        private void onServerStatusChanged(object o, EventArgs a)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(onServerStatusChanged), new object[] { o, a });
+            }
+            else
+            {
+                serverStatusLabel.Text = o as string;
+            }
+        }
+        /*
         private void OnClientConnected(NormaTCPClient client)
         {
             //MessageBox.Show(client.IpAddress);
@@ -175,11 +229,13 @@ namespace TeraMicroMeasure
                 refreshClientCounterStatusText();
             }
         }
-        private void onServerException(Exception ex)
+        */
+        private void onServerException(object o, EventArgs a)
         {
+            Exception ex = o as Exception;
             if (ex.HResult != -2147467259) MessageBox.Show(ex.Message, $"Ошибка соединения: {ex.HResult}");
         }
-
+        /*
         private void OnClientMeassageReceived(string message, NormaTCPClient cl)
         {
             cl.MessageToSend = "Hello Fucker!!!";
@@ -192,7 +248,7 @@ namespace TeraMicroMeasure
                 MessageBox.Show(message, "От клиента");//
             }
         }
-
+        */
 
         private void initStatusBar()
         {
@@ -207,7 +263,7 @@ namespace TeraMicroMeasure
 
         private void refreshClientCounterStatusText()
         {
-            clientCounterStatus.Text = $"Клиентов подключено: {clientList.Count}";
+            clientCounterStatus.Text = $"Клиентов подключено: {clientList.Length}";
         }
         private void serverStatusLabel_Click(object sender, EventArgs e)
         {
@@ -218,21 +274,19 @@ namespace TeraMicroMeasure
 
         private void IpForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            reinitServer();
+            if (serverTCPControl != null)reinitServer();
+            
         }
 
         private void MainForm_FormClosing_ForServer()
         {
+
             stopServer();
         }
 
         private void stopServer()
         {
-            if (server != null) server.Stop();
-            foreach (NormaTCPClient cl in clientList.Values)
-            {
-                cl.Close();
-            }
+            serverTCPControl.Stop();
         }
 
         private ServerXmlState buildServerXML()
@@ -273,17 +327,19 @@ namespace TeraMicroMeasure
 
         private void InitClientTCPControl()
         {
+            retry:
             try
             {
                 clientTCPControl = new ClientTCPControl(buildClientXML());
-                clientTCPControl.OnServerStateReceived += processReceivedState;
+                clientTCPControl.OnServerStateChanged += processReceivedState;
                 clientTCPControl.OnConnectionException += LostServerConnection;
-                //clientTCPControl
+                clientTCPControl.Start();
             }
             catch (Exception)
             {
                 SelectServerIpForm ipForm = new SelectServerIpForm();
                 ipForm.ShowDialog();
+                goto retry;
                 //MessageBox.Show(ex.Message);
             }
         }
@@ -292,7 +348,7 @@ namespace TeraMicroMeasure
         private void LostServerConnection(object ex, EventArgs a)
         {
             Exception e = ex as Exception;
-            MessageBox.Show(e.Message);
+            MessageBox.Show(e.Message, "Потеря связи с сервером");
         }
 
         private void MainForm_FormClosing_ForClient()
@@ -304,7 +360,7 @@ namespace TeraMicroMeasure
         {
             if (clientTCPControl != null)
             {
-                clientTCPControl.OnServerStateReceived = null;
+                clientTCPControl.OnServerStateChanged = null;
                 clientTCPControl.OnConnectionException = null;
                 clientTCPControl.Stop();
             }

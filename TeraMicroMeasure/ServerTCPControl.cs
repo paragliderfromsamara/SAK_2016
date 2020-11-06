@@ -10,18 +10,19 @@ namespace TeraMicroMeasure
 {
     class ServerTCPControl
     {
-        public EventHandler OnServerStarted;
-        public EventHandler OnClientConnected;
+        static object locker = new object();
+        public EventHandler OnClientAccepted;
+        public EventHandler OnClientDisconnected;
         public EventHandler OnServerConnectionException;
-        public EventHandler OnServerStop;
+        public EventHandler OnClientStateReceived;
+        public EventHandler OnServerStatusChanged;
+        public EventHandler OnClientListChanged;
 
         private ServerXmlState currentState;
         private NormaServer server;
         public ServerTCPControl(ServerXmlState state)
         {
             this.currentState = state;
-            
-
         }
 
         private void initServer()
@@ -29,21 +30,29 @@ namespace TeraMicroMeasure
             server = new NormaServer(currentState.IPAddress, currentState.Port);
             server.ProcessOnServerConnectionException += onServerException;
             server.OnClientConnected += onClientConnected;
+            server.OnClientDisconnected += onClientDisconnected;
+            server.OnStatusChanged += onServerStatusChanged;
         }
 
-        private void Start()
+        private void onServerStatusChanged(object o, EventArgs a)
+        {
+            OnServerStatusChanged?.Invoke(o, a);
+        }
+
+        public void Start()
         {
             if (server == null) initServer();
             server.Start();
-            OnServerStarted?.Invoke(server, new EventArgs());
+            OnServerStatusChanged?.Invoke(server, new EventArgs());
         }
 
-        private void Stop()
+        public void Stop()
         {
             if (server != null)
             {
                 server.Stop();
                 server = null;
+
             }
         }
         private void onServerException(Exception ex)
@@ -52,9 +61,50 @@ namespace TeraMicroMeasure
         }
 
         private void onClientConnected(NormaTCPClient client)
+        { 
+            //OnClientAccepted?.Invoke(client, new EventArgs());
+            client.OnMessageReceived += onClientStateReceived;
+        }
+
+        private void onClientDisconnected(NormaTCPClient client)
         {
-            
-            OnClientConnected?.Invoke(client, new EventArgs());
+            OnClientDisconnected?.Invoke(client, new EventArgs());
+        }
+
+        private void processReceivedClientState(ClientXmlState clState)
+        {
+
+        }
+
+
+
+        private void onClientStateReceived(string raw_state, NormaTCPClient client)
+        {
+
+            lock (locker)
+            {
+                ClientXmlState clState = new ClientXmlState(raw_state);
+                OnClientStateReceived?.Invoke(clState, new EventArgs());
+                if (!clState.IsValid)
+                {
+                    client.Close();
+                    return;
+                }
+                ServerXmlState nextState = new ServerXmlState(currentState.InnerXml.Clone().ToString());
+                
+                if (nextState.Clients.ContainsKey(client.RemoteIP))
+                {
+                    nextState.ReplaceClient(client.RemoteIP, clState);
+                }
+                else
+                {
+                    nextState.AddClient(client.RemoteIP, clState);                    
+                    OnClientListChanged?.Invoke(nextState.Clients.Values.ToArray().Clone(), new EventArgs());
+                }
+                if (currentState.InnerXml != nextState.InnerXml) this.currentState = nextState;
+                client.MessageToSend = currentState.InnerXml;
+                OnClientStateReceived?.Invoke(clState, new EventArgs());
+            }
         }
     }
 }

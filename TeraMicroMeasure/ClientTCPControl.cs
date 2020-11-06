@@ -11,25 +11,26 @@ namespace TeraMicroMeasure
     class ClientTCPControl
     {
         public EventHandler OnStateWasUpdated;
-        public EventHandler OnServerStateReceived;
+        public EventHandler OnServerStateChanged;
         public EventHandler StateReceived;
         public EventHandler OnConnectionException;
         private ClientXmlState currentState;
         private ServerXmlState currentServerState;
         private NormaTCPClient client;
-
+        private object locker = new object();
         public ClientTCPControl(ClientXmlState cur_state)
         {
             currentState = cur_state;
             initTCPClient();
-            
+            currentServerState = new ServerXmlState();
         }
 
         private void initTCPClient()
         {
             client = new NormaTCPClient(currentState.ClientIP, currentState.ServerIP, currentState.ClientPort, currentState.ServerPort);
-            client.OnMessageReceived += serverStateReceived;
+            client.OnAnswerReceived += serverStateReceived;
             client.ClientSendMessageException += connectionException;
+
         }
 
         public void Start()
@@ -50,11 +51,18 @@ namespace TeraMicroMeasure
             client.Send(currentState.InnerXml);
         }
 
-        private void serverStateReceived(string server_state, NormaTCPClient cl)
+        private void serverStateReceived(string raw_server_state, NormaTCPClient cl)
         {
-            ServerXmlState serverState = new ServerXmlState(server_state);
-            OnServerStateReceived?.Invoke(server_state, new EventArgs());
-
+            lock(locker)
+            {
+                ServerXmlState serverState = new ServerXmlState(raw_server_state);
+                if (!serverState.IsValid) return;
+                if (currentServerState.InnerXml != serverState.InnerXml)
+                {
+                    currentServerState = serverState;
+                }
+                OnServerStateChanged?.Invoke(currentServerState, new EventArgs());
+            }
         }
 
         private void connectionException(string ip_addr, Exception ex)

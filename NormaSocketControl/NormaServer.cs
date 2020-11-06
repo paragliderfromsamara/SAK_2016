@@ -15,12 +15,14 @@ namespace NormaMeasure.SocketControl
     {
         public ProcessConnectionException ProcessOnServerConnectionException;
         public NormaTCPClientDelegate OnClientConnected;
-        public NormaServerClientDelegate OnClientDisconnected;
+        public NormaTCPClientDelegate OnClientDisconnected;
+        public EventHandler OnStatusChanged;
         private TcpListener listener;
         private Thread serverThread;
         private string ipAddress;
         private int port;
-        private Dictionary<string, NormaTCPClient> serverClients;
+        public Dictionary<string, NormaTCPClient> ServerClients;
+      
 
         public static bool IsValidIPString(string ip)
         {
@@ -32,7 +34,6 @@ namespace NormaMeasure.SocketControl
             {
                 return false;
             }
-            
         }
 
 
@@ -68,7 +69,7 @@ namespace NormaMeasure.SocketControl
         public int Port => port;
         public NormaServer(string _ip, int _port)
         {
-            this.serverClients = new Dictionary<string, NormaTCPClient>();
+            this.ServerClients = new Dictionary<string, NormaTCPClient>();
             this.port = _port;
             this.ipAddress = _ip;
         }   
@@ -87,7 +88,11 @@ namespace NormaMeasure.SocketControl
 
         public void Stop()
         {
-            listener.Stop();
+            if (listener != null )listener.Stop();
+            foreach(NormaTCPClient cl in ServerClients.Values)
+            {
+                cl.Close();
+            }
         }
 
         /// <summary>
@@ -99,6 +104,7 @@ namespace NormaMeasure.SocketControl
             {
                 listener = new TcpListener(IPAddress.Parse(ipAddress), port);
                 listener.Start();
+                OnStatusChanged?.Invoke($"IP aдрес: {ipAddress}; порт: {port}", new EventArgs());
                 while (true)
                 {
                     TcpClient client = listener.AcceptTcpClient();
@@ -113,25 +119,31 @@ namespace NormaMeasure.SocketControl
             finally
             {
                 if (listener != null) listener.Stop();
+                OnStatusChanged?.Invoke($"Сервер не активен", new EventArgs());
+
             }
         }
 
 
         private void processClient(NormaTCPClient cl)
         {
-            if (!serverClients.ContainsKey(cl.RemoteIP))
+            if (!ServerClients.ContainsKey(cl.RemoteIP))
             {
-                serverClients.Add(cl.RemoteIP, cl);
-                cl.InitOnClientThread();
-                OnClientConnected(cl);
+                cl.ClientReceiveMessageException += disposeClient;
+                ServerClients.Add(cl.RemoteIP, cl);
+                OnClientConnected?.Invoke(cl);
+                cl.InitReceiveThread();
             }
-            else
-            {
-                serverClients[cl.RemoteIP].ReceiveData();
-            }
-            cl.InitOnServerThread();
+
             Debug.WriteLine("Найден клиент... " + cl.RemoteIP);
         }
 
+
+        private void disposeClient(string ip, Exception ex)
+        {
+            NormaTCPClient cl = ServerClients[ip];
+            OnClientDisconnected?.Invoke(cl);
+            ServerClients.Remove(ip);
+        }
     }
 }
