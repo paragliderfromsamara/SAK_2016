@@ -66,20 +66,22 @@ namespace TeraMicroMeasure
             ClientXmlState c1;
             c.ClientID = 2;
             c.ClientPort = 6666;
+            c.ClientIP = "192.168.0.2";
 
-            s.AddClient("192.168.1.0", c);
+            s.AddClient(c);
             richTextBox1.Text = s.InnerXml;
-            richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
-            richTextBox1.Text += "\n" + s.Clients["192.168.1.0"].ClientID.ToString();
+            //richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
+            //richTextBox1.Text += "\n" + s.Clients["192.168.1.0"].ClientID.ToString();
 
             c1 = new ClientXmlState(c.InnerXml.Clone().ToString());
             c1.ClientID = 376;
             c1.ClientPort = 6666;
+            c1.ClientIP = "192.168.0.2";
 
-
-            //s.ReplaceClient("192.168.1.0", c1);
-            //richTextBox1.Text += "\n" + s.InnerXml;
-            richTextBox1.Text += "\n" + c1.ClientID;
+            richTextBox1.Text += "\n\n";
+            s.ReplaceClient(c1);
+            richTextBox1.Text += "\n\n" + s.InnerXml;
+            richTextBox1.Text += "\n\n" + c1.InnerXml;
             //richTextBox1.Text += "\n" + s.Clients["192.168.1.0"].ClientID.ToString();
         }
 

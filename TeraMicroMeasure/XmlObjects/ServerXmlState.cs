@@ -95,14 +95,14 @@ namespace TeraMicroMeasure.XmlObjects
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="cl"></param>
-        public void AddClient(string ip, ClientXmlState cl)
+        public void AddClient(ClientXmlState cl)
         {
-            AddElementToContainer(ClientsListTagName, ClientElementTagName, cl.InnerXml, ip);
+            AddElementToContainer(ClientsListTagName, cl.InnerXml);
         }
 
-        public void ReplaceClient(string ip, ClientXmlState cl)
+        public void ReplaceClient(ClientXmlState cl)
         {
-            ReplaceElementOnContainer(ClientsListTagName, ClientElementTagName, cl.InnerXml, ip);
+            ReplaceElementOnContainer(ClientsListTagName, cl.RootElementTagName, cl.InnerXml, cl.ClientIP);
         }
 
     }

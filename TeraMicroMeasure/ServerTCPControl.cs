@@ -94,11 +94,11 @@ namespace TeraMicroMeasure
                 
                 if (nextState.Clients.ContainsKey(client.RemoteIP))
                 {
-                    nextState.ReplaceClient(client.RemoteIP, clState);
+                    nextState.ReplaceClient(clState);
                 }
                 else
                 {
-                    nextState.AddClient(client.RemoteIP, clState);                    
+                    nextState.AddClient(clState);                    
                     OnClientListChanged?.Invoke(nextState.Clients.Values.ToArray().Clone(), new EventArgs());
                 }
                 if (currentState.InnerXml != nextState.InnerXml) this.currentState = nextState;

@@ -22,7 +22,7 @@ namespace NormaMeasure.SocketControl
         private string ipAddress;
         private int port;
         public Dictionary<string, NormaTCPClient> ServerClients;
-      
+       
 
         public static bool IsValidIPString(string ip)
         {

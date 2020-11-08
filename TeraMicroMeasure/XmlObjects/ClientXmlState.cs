@@ -41,6 +41,7 @@ namespace TeraMicroMeasure.XmlObjects
             set
             {
                 setXmlProp("ClientIP", value);
+                ElementId = value;
             }
         }
 
