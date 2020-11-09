@@ -10,8 +10,9 @@ namespace TeraMicroMeasure.XmlObjects
     class ServerXmlState : NormaXmlObject
     {
         const string ClientsListTagName = "ClientsList";
-        const string ClientElementTagName = "Client";
-        
+        const string ClientElementTagName = "ClientXmlState";
+
+
 
         public ServerXmlState() : base()
         {

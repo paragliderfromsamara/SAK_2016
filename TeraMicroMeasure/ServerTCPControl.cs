@@ -10,6 +10,7 @@ namespace TeraMicroMeasure
 {
     class ServerTCPControl
     {
+        int testIdx = 0;
         static object locker = new object();
         public EventHandler OnClientAccepted;
         public EventHandler OnClientDisconnected;
@@ -83,28 +84,40 @@ namespace TeraMicroMeasure
 
             lock (locker)
             {
-                ClientXmlState clState = new ClientXmlState(raw_state);
-                OnClientStateReceived?.Invoke(clState, new EventArgs());
-                if (!clState.IsValid)
+                try
                 {
-                    client.Close();
+                    ClientXmlState clState = new ClientXmlState(raw_state);
+                    ServerXmlState nextState = new ServerXmlState(currentState.InnerXml);
+
+                    if (!clState.IsValid)
+                    {
+                        client.Close();
+                        return;
+                    }
+                    OnClientStateReceived?.Invoke(clState, new EventArgs());
+                    if (nextState.Clients.ContainsKey(clState.ClientIP))
+                    {
+                        nextState.ReplaceClient(clState);
+                    }
+                    else
+                    {
+                        nextState.AddClient(clState);
+                        OnClientListChanged?.Invoke(nextState.Clients.Values.ToArray().Clone(), new EventArgs());
+                    }
+                    if (currentState.InnerXml != nextState.InnerXml) this.currentState = nextState;
+                    client.MessageToSend = currentState.InnerXml;
+
+                }
+                catch(System.Xml.XmlException)
+                {
                     return;
+                }finally
+                {
+                    //client.Close();
                 }
-                ServerXmlState nextState = new ServerXmlState(currentState.InnerXml.Clone().ToString());
                 
-                if (nextState.Clients.ContainsKey(client.RemoteIP))
-                {
-                    nextState.ReplaceClient(clState);
-                }
-                else
-                {
-                    nextState.AddClient(clState);                    
-                    OnClientListChanged?.Invoke(nextState.Clients.Values.ToArray().Clone(), new EventArgs());
-                }
-                if (currentState.InnerXml != nextState.InnerXml) this.currentState = nextState;
-                client.MessageToSend = currentState.InnerXml;
-                OnClientStateReceived?.Invoke(clState, new EventArgs());
             }
         }
+
     }
 }

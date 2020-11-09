@@ -25,10 +25,15 @@ namespace NormaMeasure.Utils
             return r.ReadOuterXml();
         }
 
+        private string readInnerXml(XElement e)
+        {
+            XmlReader r = e.CreateReader();
+            r.MoveToContent();
+            return r.ReadOuterXml();
+        }
+
         private XElement createFromAString(string innerXml)
         {
-            //XElement e = new XElement("assHole");
-          // e.Add(innerXml);
             XElement e = XElement.Parse(innerXml);
             return e;
         }
@@ -58,10 +63,10 @@ namespace NormaMeasure.Utils
 
         public NormaXmlObject(string innerXml) : this()
         {
-         
-            //xRoot.
-            //xDoc.Add(innerXml);
-            //isValid = hasElement(docElTagName);
+            xDoc.RemoveNodes();
+            xRoot = createFromAString(innerXml);
+            xDoc.Add(xRoot);
+            isValid = xRoot.Name == this.RootElementTagName;
         }
 
         protected void setXmlProp(string key, string value)
@@ -93,8 +98,8 @@ namespace NormaMeasure.Utils
                 foreach(XElement e in parent.Elements(nodeTagName))
                 {
                     XAttribute idAttr = e.Attribute("id");
-                    string id = idAttr == null ? (i++).ToString() : idAttr.Value ;
-                    d.Add(id, e.ToString());
+                    string id = idAttr == null ? (i++).ToString() : idAttr.Value;
+                    d.Add(id, readInnerXml(e));
                 }
             }
             return d;

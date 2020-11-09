@@ -153,7 +153,7 @@ namespace NormaMeasure.SocketControl
                     string recMessage = builder.ToString();
                     recMessage.Trim();
                     OnAnswerReceived?.Invoke(recMessage, this);
-                    Thread.Sleep(receiveTimeout*2/3);
+                    Thread.Sleep(300);
                  }
                stream.Close();
                dispose_tcp_client();

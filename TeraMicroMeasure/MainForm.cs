@@ -42,7 +42,7 @@ namespace TeraMicroMeasure
                 Close();
             }
 
-            testXml();
+            //testXml();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -63,25 +63,28 @@ namespace TeraMicroMeasure
         {
             ServerXmlState s = buildServerXML();
             ClientXmlState c = new ClientXmlState();
+            ClientXmlState c2;
             ClientXmlState c1;
             c.ClientID = 2;
             c.ClientPort = 6666;
             c.ClientIP = "192.168.0.2";
 
+            c2 = new ClientXmlState(c.InnerXml);
             s.AddClient(c);
             richTextBox1.Text = s.InnerXml;
-            //richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
-            //richTextBox1.Text += "\n" + s.Clients["192.168.1.0"].ClientID.ToString();
+            richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
+            richTextBox1.Text += "\n" + s.Clients["192.168.0.2"].ClientID.ToString();
 
-            c1 = new ClientXmlState(c.InnerXml.Clone().ToString());
-            c1.ClientID = 376;
-            c1.ClientPort = 6666;
-            c1.ClientIP = "192.168.0.2";
+           // c1 = new ClientXmlState(c.InnerXml.Clone().ToString());
+           // c1.ClientID = 376;
+           // c1.ClientPort = 6666;
+           // c1.ClientIP = "192.168.0.2";
 
-            richTextBox1.Text += "\n\n";
-            s.ReplaceClient(c1);
-            richTextBox1.Text += "\n\n" + s.InnerXml;
-            richTextBox1.Text += "\n\n" + c1.InnerXml;
+           // richTextBox1.Text += "\n\n";
+           // s.ReplaceClient(c1);
+           // richTextBox1.Text += "\n\n" + s.InnerXml;
+           // richTextBox1.Text += "\n\n" + c1.InnerXml;
+           // richTextBox2.Text = c2.InnerXml;
             //richTextBox1.Text += "\n" + s.Clients["192.168.1.0"].ClientID.ToString();
         }
 
@@ -160,17 +163,27 @@ namespace TeraMicroMeasure
 
         }
         
+        private void processClientStateOnServerSide(ClientXmlState cs)
+        {
+            if (cs.ClientID == 0)
+            {
+
+            }
+        }
+
         private void OnClientStateReceived(object o, EventArgs a)
         {
             //cl.MessageToSend = "Hello Fucker!!!";
+            ClientXmlState cs = o as ClientXmlState;
             if (InvokeRequired)
             {
-               BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { o, a});
+                cs = o as ClientXmlState;
+                if (cs.ClientID == 0) cs.ClientID = 1;
+                BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { cs, a});
             }
             else
             {
-                ClientXmlState s = o as ClientXmlState;
-                richTextBox1.Text = s.InnerXml;
+                richTextBox1.Text = cs.InnerXml;
                 transCounterLbl.Text = $"{recCounter++}";
                //MessageBox.Show(message);//
             }
@@ -288,7 +301,7 @@ namespace TeraMicroMeasure
 
         private void stopServer()
         {
-            serverTCPControl.Stop();
+            if (serverTCPControl != null) serverTCPControl.Stop();
         }
 
         private ServerXmlState buildServerXML()
@@ -350,7 +363,7 @@ namespace TeraMicroMeasure
         private void LostServerConnection(object ex, EventArgs a)
         {
             Exception e = ex as Exception;
-            MessageBox.Show(e.Message, "Потеря связи с сервером");
+            MessageBox.Show(e.Message, $"Потеря связи с сервером {e.HResult} {e.GetType().Name}");
         }
 
         private void MainForm_FormClosing_ForClient()

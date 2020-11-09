@@ -18,6 +18,7 @@ namespace TeraMicroMeasure
         private ServerXmlState currentServerState;
         private NormaTCPClient client;
         private object locker = new object();
+        private int ServerTryFileLimit = 10;
         public ClientTCPControl(ClientXmlState cur_state)
         {
             currentState = cur_state;
@@ -55,13 +56,24 @@ namespace TeraMicroMeasure
         {
             lock(locker)
             {
-                ServerXmlState serverState = new ServerXmlState(raw_server_state);
-                if (!serverState.IsValid) return;
-                if (currentServerState.InnerXml != serverState.InnerXml)
+                try
                 {
-                    currentServerState = serverState;
+                    ServerXmlState serverState = new ServerXmlState(raw_server_state);
+                    if (!serverState.IsValid) return;
+                    if (currentServerState.InnerXml != serverState.InnerXml)
+                    {
+                        currentServerState = serverState;
+                    }
+                    OnServerStateChanged?.Invoke(currentServerState, new EventArgs());
+                    ServerTryFileLimit = 10;
                 }
-                OnServerStateChanged?.Invoke(currentServerState, new EventArgs());
+                catch(System.Xml.XmlException e)
+                {
+                    if (--ServerTryFileLimit == 0)
+                    {
+                        OnConnectionException?.Invoke(e, new EventArgs());
+                    }
+                }
             }
         }
 
