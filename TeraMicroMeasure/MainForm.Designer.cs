@@ -40,6 +40,7 @@
             this.serverStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.transCounterLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.topPanel = new System.Windows.Forms.Panel();
+            this.switchConnectToServerButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
@@ -140,6 +141,7 @@
             // 
             this.topPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.topPanel.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.topPanel.Controls.Add(this.switchConnectToServerButton);
             this.topPanel.Controls.Add(this.button1);
             this.topPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.topPanel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -147,6 +149,22 @@
             this.topPanel.Name = "topPanel";
             this.topPanel.Size = new System.Drawing.Size(1496, 50);
             this.topPanel.TabIndex = 3;
+            // 
+            // switchConnectToServerButton
+            // 
+            this.switchConnectToServerButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(179)))), ((int)(((byte)(9)))));
+            this.switchConnectToServerButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.switchConnectToServerButton.FlatAppearance.BorderSize = 0;
+            this.switchConnectToServerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.switchConnectToServerButton.Font = new System.Drawing.Font("Segoe MDL2 Assets", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.switchConnectToServerButton.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.switchConnectToServerButton.Location = new System.Drawing.Point(1446, 0);
+            this.switchConnectToServerButton.Name = "switchConnectToServerButton";
+            this.switchConnectToServerButton.Size = new System.Drawing.Size(50, 50);
+            this.switchConnectToServerButton.TabIndex = 3;
+            this.switchConnectToServerButton.Text = "";
+            this.switchConnectToServerButton.UseVisualStyleBackColor = false;
+            this.switchConnectToServerButton.Click += new System.EventHandler(this.switchConnectToServerButton_Click);
             // 
             // button1
             // 
@@ -223,6 +241,7 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ToolStripStatusLabel transCounterLbl;
         private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.Button switchConnectToServerButton;
     }
 }
 

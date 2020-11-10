@@ -5,15 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using TeraMicroMeasure.XmlObjects;
 using NormaMeasure.SocketControl;
+using System.Windows.Forms;
 
 namespace TeraMicroMeasure
 {
     class ServerTCPControl
     {
-        int testIdx = 0;
         static object locker = new object();
-        public EventHandler OnClientAccepted;
-        public EventHandler OnClientDisconnected;
         public EventHandler OnServerConnectionException;
         public EventHandler OnClientStateReceived;
         public EventHandler OnServerStatusChanged;
@@ -38,6 +36,7 @@ namespace TeraMicroMeasure
         private void onServerStatusChanged(object o, EventArgs a)
         {
             OnServerStatusChanged?.Invoke(o, a);
+      
         }
 
         public void Start()
@@ -69,7 +68,12 @@ namespace TeraMicroMeasure
 
         private void onClientDisconnected(NormaTCPClient client)
         {
-            OnClientDisconnected?.Invoke(client, new EventArgs());
+         
+            if (currentState.Clients.ContainsKey(client.RemoteIP))
+            {
+                currentState.RemoveClient(currentState.Clients[client.RemoteIP]);
+                OnClientListChanged?.Invoke(currentState.Clients.Values.ToArray(), new EventArgs());
+            }
         }
 
         private void processReceivedClientState(ClientXmlState clState)
@@ -101,6 +105,7 @@ namespace TeraMicroMeasure
                     }
                     else
                     {
+                        SynchronizeClientStateOnConnection(clState);
                         nextState.AddClient(clState);
                         OnClientListChanged?.Invoke(nextState.Clients.Values.ToArray().Clone(), new EventArgs());
                     }
@@ -119,5 +124,10 @@ namespace TeraMicroMeasure
             }
         }
 
+        private void SynchronizeClientStateOnConnection(ClientXmlState clState)
+        {
+            if (clState.ClientID == 0) clState.ClientID = SettingsControl.GetClientIdByIp(clState.ClientIP);
+            SettingsControl.SetClientIP(clState.ClientID, clState.ClientIP);
+        }
     }
 }

@@ -10,15 +10,18 @@ namespace TeraMicroMeasure
 {
     class ClientTCPControl
     {
-        public EventHandler OnStateWasUpdated;
+        public EventHandler OnStateWasChangedByServer;
         public EventHandler OnServerStateChanged;
+        public EventHandler OnServerConnected;
         public EventHandler StateReceived;
         public EventHandler OnConnectionException;
         private ClientXmlState currentState;
+        private ClientXmlState stateFromServer;
         private ServerXmlState currentServerState;
         private NormaTCPClient client;
         private object locker = new object();
         private int ServerTryFileLimit = 10;
+        private bool firstTransaction = false;
         public ClientTCPControl(ClientXmlState cur_state)
         {
             currentState = cur_state;
@@ -31,7 +34,6 @@ namespace TeraMicroMeasure
             client = new NormaTCPClient(currentState.ClientIP, currentState.ServerIP, currentState.ClientPort, currentState.ServerPort);
             client.OnAnswerReceived += serverStateReceived;
             client.ClientSendMessageException += connectionException;
-
         }
 
         public void Start()
@@ -63,8 +65,13 @@ namespace TeraMicroMeasure
                     if (currentServerState.InnerXml != serverState.InnerXml)
                     {
                         currentServerState = serverState;
+                        onServerStateChanged();
+                        if (!firstTransaction)
+                        {
+                            firstTransaction = true;
+                            OnServerConnected?.Invoke(currentServerState, new EventArgs());
+                        }
                     }
-                    OnServerStateChanged?.Invoke(currentServerState, new EventArgs());
                     ServerTryFileLimit = 10;
                 }
                 catch(System.Xml.XmlException e)
@@ -77,9 +84,40 @@ namespace TeraMicroMeasure
             }
         }
 
+        private void onServerStateChanged()
+        {
+            ClientXmlState clientStateFromServer = currentServerState.Clients[currentState.ClientIP];
+            if (clientStateFromServer == null) return;
+            if (!IsEqualWithCurrentState(clientStateFromServer)) SynchronizeWithCurrentState(clientStateFromServer);
+            OnServerStateChanged?.Invoke(currentServerState, new EventArgs());
+        }
+
+        private void SynchronizeWithCurrentState(ClientXmlState clientStateFromServer)
+        {
+            if (currentState.ClientID != clientStateFromServer.ClientID)
+            {
+                currentState.ClientID = clientStateFromServer.ClientID;
+                SettingsControl.SetClientId(currentState.ClientID);
+            }
+
+            OnStateWasChangedByServer?.Invoke(currentState, new EventArgs());
+        }
+
+        private bool IsEqualWithCurrentState(ClientXmlState clientStateFromServer)
+        {
+            bool f = true;
+            f &= clientStateFromServer.ClientID == currentState.ClientID;
+            return f;
+        }
+
         private void connectionException(string ip_addr, Exception ex)
         {
             OnConnectionException?.Invoke(ex, new EventArgs());
+        }
+
+        private void SynchronizeState()
+        {
+
         }
         
     }

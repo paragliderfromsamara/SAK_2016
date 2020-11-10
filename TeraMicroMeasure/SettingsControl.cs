@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.Utils;
+using System.Diagnostics;
+
 namespace TeraMicroMeasure
 {
     static class SettingsControl
@@ -91,6 +93,31 @@ namespace TeraMicroMeasure
                 f.Write("request_period", requestPeriod.ToString(), ClientSettingsSectionName);
             }
             return requestPeriod;
+        }
+        
+        public static int GetClientIdByIp(string ip)
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            int clId=0;
+            while(f.KeyExists("ip", $"Client_{++clId}"))
+            {
+                Debug.WriteLine($"GetClientIdByIp id={clId}");
+                if (f.Read("ip", $"Client_{clId}") == ip) break;
+            }
+            Debug.WriteLine($"GetClientIdByIp return_id={clId}");
+            return clId;
+        }
+
+        public static void SetClientIP(int client_id, string ip)
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            f.Write("ip", ip, $"Client_{client_id}");
+        }
+
+        public static string GetClientIP(int client_id)
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            return f.Read("ip", $"Client_{client_id}");
         }
     }
 }

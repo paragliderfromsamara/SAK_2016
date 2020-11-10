@@ -116,11 +116,9 @@ namespace NormaMeasure.Utils
             XElement container = getOrCreateElement(containerTag);
             XElement child = null;
             XElement newEl = createFromAString(innerXml);
-            Debug.WriteLine(elTagName);
-            Debug.WriteLine(container.Elements(elTagName).Count());
+
             foreach (XElement e in container.Elements(elTagName))
             {
-                //Debug.WriteLine(e.Attribute("id").Value);
                 if (e.Attribute("id").Value == id)
                 {
                     child = e;
@@ -133,6 +131,23 @@ namespace NormaMeasure.Utils
             }else
             {
                 child.ReplaceWith(newEl);
+            }
+        }
+
+        protected void RemoveElementFromContainer(string containerTagName, string elTagName, string id)
+        {
+            XElement container = getOrCreateElement(containerTagName);
+            foreach (XElement e in container.Elements(elTagName))
+            {
+                try
+                {
+                    if (e.Attribute("id").Value != id) continue;
+                    e.Remove();
+                }
+                catch
+                {
+                    continue;
+                }
             }
         }
 
@@ -153,5 +168,6 @@ namespace NormaMeasure.Utils
         {
             return xDoc.Element(key) != null;
         }
+
     }
 }

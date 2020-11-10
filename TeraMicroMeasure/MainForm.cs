@@ -19,6 +19,9 @@ namespace TeraMicroMeasure
 {
     public partial class MainForm : Form
     {
+        private System.Drawing.Color redColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+        private System.Drawing.Color greenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(179)))), ((int)(((byte)(9)))));
+        private System.Drawing.Color orangeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(140)))), ((int)(((byte)(0)))));
         private ClientXmlState[] clientList = new ClientXmlState[] { };
         //NormaServer server;
         //NormaTCPClient client;
@@ -34,6 +37,7 @@ namespace TeraMicroMeasure
                 InitializeComponent();
                 InitCulture();
                 initStatusBar();
+                InitButtonsBar();
                 if (Properties.Settings.Default.IsServerApp) InitAsServerApp();
                 else InitAsClientApp();
             }
@@ -43,6 +47,11 @@ namespace TeraMicroMeasure
             }
 
             //testXml();
+        }
+
+        private void InitButtonsBar()
+        {
+            switchConnectToServerButton.Visible = !Properties.Settings.Default.IsServerApp;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -75,16 +84,16 @@ namespace TeraMicroMeasure
             richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
             richTextBox1.Text += "\n" + s.Clients["192.168.0.2"].ClientID.ToString();
 
-           // c1 = new ClientXmlState(c.InnerXml.Clone().ToString());
-           // c1.ClientID = 376;
-           // c1.ClientPort = 6666;
-           // c1.ClientIP = "192.168.0.2";
+            // c1 = new ClientXmlState(c.InnerXml.Clone().ToString());
+            // c1.ClientID = 376;
+            // c1.ClientPort = 6666;
+            // c1.ClientIP = "192.168.0.2";
 
-           // richTextBox1.Text += "\n\n";
-           // s.ReplaceClient(c1);
-           // richTextBox1.Text += "\n\n" + s.InnerXml;
-           // richTextBox1.Text += "\n\n" + c1.InnerXml;
-           // richTextBox2.Text = c2.InnerXml;
+            // richTextBox1.Text += "\n\n";
+            // s.ReplaceClient(c1);
+            // richTextBox1.Text += "\n\n" + s.InnerXml;
+            // richTextBox1.Text += "\n\n" + c1.InnerXml;
+            // richTextBox2.Text = c2.InnerXml;
             //richTextBox1.Text += "\n" + s.Clients["192.168.1.0"].ClientID.ToString();
         }
 
@@ -98,7 +107,7 @@ namespace TeraMicroMeasure
             {
                 if (ipList.Length == 1)
                 {
-                    if(ipList[0] == "127.0.0.1")
+                    if (ipList[0] == "127.0.0.1")
                     {
                         if (MessageBox.Show("Отсутсвуют доступные подключения!\n\nПри нажатии \"Отмена\" приложение запустится в автономном режиме.\n\nПри нажатии \"Повтор\" будет произведен повторный поиск", "Отсутствуют подключения", MessageBoxButtons.RetryCancel, MessageBoxIcon.Information) == DialogResult.Retry) goto retry;
                         SettingsControl.SetLocalIpAndPort(ipList[0], "8888");
@@ -111,15 +120,16 @@ namespace TeraMicroMeasure
         }
         private void InitAsClientApp()
         {
-            this.Text = "Клиент";
+            SetClientTitle();
             CheckBaseTCPClientParameters();
+            setClientButtonStatus(ClientStatus.disconnected);
+            /////////////////////////////////////
             InitClientTCPControl();
         }
 
 
         private void processReceivedState(object state, EventArgs a)
         {
-            //cl.MessageToSend = "Hello Fucker!!!";
             if (InvokeRequired)
             {
                 BeginInvoke(new EventHandler(processReceivedState), new object[] { state, a });
@@ -129,7 +139,6 @@ namespace TeraMicroMeasure
                 ServerXmlState sState = state as ServerXmlState;
                 richTextBox1.Text = sState.InnerXml;
                 transCounterLbl.Text = $"{recCounter++}";
-                //MessageBox.Show(message);//
             }
 
         }
@@ -150,11 +159,7 @@ namespace TeraMicroMeasure
                 serverTCPControl.OnServerConnectionException += onServerException;
                 serverTCPControl.OnClientListChanged += onClientListChanged;
                 serverTCPControl.OnServerStatusChanged += onServerStatusChanged;
-                //server = new NormaServer(SettingsControl.GetLocalIP(), SettingsControl.GetLocalPort());
-                //server.ProcessOnServerConnectionException += onServerException;
-                //server.OnClientConnected += OnClientConnected;
                 serverTCPControl.Start();
-                
             }
             else
             {
@@ -162,32 +167,23 @@ namespace TeraMicroMeasure
             }
 
         }
-        
-        private void processClientStateOnServerSide(ClientXmlState cs)
-        {
-            if (cs.ClientID == 0)
-            {
 
-            }
-        }
 
         private void OnClientStateReceived(object o, EventArgs a)
         {
-            //cl.MessageToSend = "Hello Fucker!!!";
             ClientXmlState cs = o as ClientXmlState;
             if (InvokeRequired)
             {
                 cs = o as ClientXmlState;
                 if (cs.ClientID == 0) cs.ClientID = 1;
-                BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { cs, a});
+                BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { cs, a });
             }
             else
             {
                 richTextBox1.Text = cs.InnerXml;
                 transCounterLbl.Text = $"{recCounter++}";
-               //MessageBox.Show(message);//
             }
-       }
+        }
         private void onClientListChanged(object o, EventArgs e)
         {
             if (InvokeRequired)
@@ -212,58 +208,13 @@ namespace TeraMicroMeasure
                 serverStatusLabel.Text = o as string;
             }
         }
-        /*
-        private void OnClientConnected(NormaTCPClient client)
-        {
-            //MessageBox.Show(client.IpAddress);
-            if (InvokeRequired)
-            {
-                BeginInvoke(new NormaTCPClientDelegate(OnClientConnected), new object[] { client });
-                return;
-            }
-            else
-            {
-                client.OnMessageReceived += OnClientMeassageReceived;
-                client.ClientReceiveMessageException += OnClientDisconnected;
-                clientList.Add(client.RemoteIP, client);
-                refreshClientCounterStatusText();
-                // init_messager(client);
-                //MessageBox.Show(client.IpAddress);
-            }
-        }
 
-        private void OnClientDisconnected(string addr, Exception ex)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new NormaTCPClientExceptionDelegate(OnClientDisconnected), new object[] { addr, ex });
-            }
-            else
-            {
-                clientList.Remove(addr);
-                refreshClientCounterStatusText();
-            }
-        }
-        */
         private void onServerException(object o, EventArgs a)
         {
             Exception ex = o as Exception;
             if (ex.HResult != -2147467259) MessageBox.Show(ex.Message, $"Ошибка соединения: {ex.HResult}");
         }
-        /*
-        private void OnClientMeassageReceived(string message, NormaTCPClient cl)
-        {
-            cl.MessageToSend = "Hello Fucker!!!";
-            if (InvokeRequired)
-            {
-                BeginInvoke(new NormaTCPMessageDelegate(OnClientMeassageReceived), new object[] { message, cl });
-            }
-            else
-            {
-                MessageBox.Show(message, "От клиента");//
-            }
-        }
-        */
+
 
         private void initStatusBar()
         {
@@ -289,8 +240,8 @@ namespace TeraMicroMeasure
 
         private void IpForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (serverTCPControl != null)reinitServer();
-            
+            if (serverTCPControl != null) reinitServer();
+
         }
 
         private void MainForm_FormClosing_ForServer()
@@ -345,9 +296,12 @@ namespace TeraMicroMeasure
             retry:
             try
             {
+                setClientButtonStatus(ClientStatus.tryConnect);
                 clientTCPControl = new ClientTCPControl(buildClientXML());
+                clientTCPControl.OnServerConnected += onServerConnected_Handler;
                 clientTCPControl.OnServerStateChanged += processReceivedState;
                 clientTCPControl.OnConnectionException += LostServerConnection;
+                clientTCPControl.OnStateWasChangedByServer += OnStateWasChangedByServer_Handler;
                 clientTCPControl.Start();
             }
             catch (Exception)
@@ -359,11 +313,55 @@ namespace TeraMicroMeasure
             }
         }
 
+        private void onServerConnected_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(onServerConnected_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                setClientButtonStatus(ClientStatus.connected);
+            }
+        }
+
+        private void OnStateWasChangedByServer_Handler(object o, EventArgs a)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnStateWasChangedByServer_Handler), new object[] { o, a });
+            }
+            else
+            {
+                //ClientXmlState cs = o as ClientXmlState;
+                SetClientTitle();
+            }
+        }
 
         private void LostServerConnection(object ex, EventArgs a)
         {
-            Exception e = ex as Exception;
-            MessageBox.Show(e.Message, $"Потеря связи с сервером {e.HResult} {e.GetType().Name}");
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(LostServerConnection), new object[] { ex, a});
+            }else
+            {
+                Exception e = ex as Exception;
+                DialogResult r = MessageBox.Show($"{e.Message}", $"Ошибка связи с сервером", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning );
+                if (r == DialogResult.Retry) reinitClientTCPControl();
+                else if (r == DialogResult.Cancel)
+                {
+                   if  (MessageBox.Show("Хотите ввести новые данные сервера?", "Вопрос...", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        SelectServerIpForm ipForm = new SelectServerIpForm();
+                        ipForm.ShowDialog();
+                        reinitClientTCPControl();
+                        return;
+                    }
+                    setClientButtonStatus(ClientStatus.disconnected);
+                }
+
+            }
+
         }
 
         private void MainForm_FormClosing_ForClient()
@@ -371,6 +369,11 @@ namespace TeraMicroMeasure
             stopTCPControl();
         }
 
+        private void reinitClientTCPControl()
+        {
+            stopTCPControl();
+            InitClientTCPControl();
+        }
         private void stopTCPControl()
         {
             if (clientTCPControl != null)
@@ -378,11 +381,55 @@ namespace TeraMicroMeasure
                 clientTCPControl.OnServerStateChanged = null;
                 clientTCPControl.OnConnectionException = null;
                 clientTCPControl.Stop();
+                clientTCPControl = null;
             }
+            setClientButtonStatus(ClientStatus.disconnected);
+        }
+
+        private void switchConnectToServerButton_Click(object sender, EventArgs e)
+        {
+            if (clientTCPControl != null)
+            {
+                stopTCPControl();
+            } else
+            {
+                InitClientTCPControl();
+            }
+        }
+
+        private void setClientButtonStatus(ClientStatus s)
+        {
+            switch(s)
+            {
+                case ClientStatus.connected:
+                    switchConnectToServerButton.BackColor = greenColor;
+                    switchConnectToServerButton.Text = char.ConvertFromUtf32(57723);
+                    break;
+                case ClientStatus.disconnected:
+                    switchConnectToServerButton.BackColor = redColor;
+                    switchConnectToServerButton.Text = char.ConvertFromUtf32(57722);
+                    break;
+                case ClientStatus.tryConnect:
+                    switchConnectToServerButton.BackColor = orangeColor;
+                    switchConnectToServerButton.Text = char.ConvertFromUtf32(57722);
+                    break;
+            }
+        }
+
+        private void SetClientTitle()
+        {
+            int cId = SettingsControl.GetClientId();
+            this.Text = (cId == 0) ? "Клиент без номера" : $"Клиент {cId}";
         }
         #endregion
 
+
     }
 
-
+    enum ClientStatus : int
+    {
+        connected,
+        disconnected,
+        tryConnect
+    }
 }

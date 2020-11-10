@@ -186,7 +186,7 @@ namespace NormaMeasure.SocketControl
             //     tcpClient = null;
             //    if (clientThread != null) clientThread.Abort();
             // }
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
         }
 
         private void receiveProcess()

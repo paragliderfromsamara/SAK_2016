@@ -101,6 +101,11 @@ namespace TeraMicroMeasure.XmlObjects
             AddElementToContainer(ClientsListTagName, cl.InnerXml);
         }
 
+        public void RemoveClient(ClientXmlState cs)
+        {
+            RemoveElementFromContainer(ClientsListTagName, cs.RootElementTagName, cs.ClientIP);
+        }
+
         public void ReplaceClient(ClientXmlState cl)
         {
             ReplaceElementOnContainer(ClientsListTagName, cl.RootElementTagName, cl.InnerXml, cl.ClientIP);
