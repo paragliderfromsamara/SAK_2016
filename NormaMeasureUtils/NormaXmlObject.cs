@@ -18,11 +18,26 @@ namespace NormaMeasure.Utils
         public bool WasChanged;
         public string InnerXml => readInnerXml();
 
+
+        private string state_id;
+
+        private string refreshStateId()
+        {
+            return state_id = DateTime.Now.ToBinary().ToString("x");
+        }
+        public string StateId => state_id;
+
         private string readInnerXml()
         {
+            setStateIdToRoot();
             XmlReader r = xDoc.CreateReader();
             r.MoveToContent();
             return r.ReadOuterXml();
+        }
+
+        private void setStateIdToRoot()
+        {
+            xRoot.SetAttributeValue("state_id", state_id);
         }
 
         private string readInnerXml(XElement e)
@@ -53,9 +68,11 @@ namespace NormaMeasure.Utils
         public NormaXmlObject()
         {
             XAttribute a = new XAttribute("id", "null");
+            XAttribute u = new XAttribute("state_id", refreshStateId());
             xDoc = new XDocument();
             xRoot = new XElement(RootElementTagName);
             xRoot.Add(a);
+            xRoot.Add(u);
             xDoc.Add(xRoot);
             isValid = true;
         }
@@ -67,6 +84,17 @@ namespace NormaMeasure.Utils
             xRoot = createFromAString(innerXml);
             xDoc.Add(xRoot);
             isValid = xRoot.Name == this.RootElementTagName;
+            if (isValid) setStateIdFromXML();
+        }
+
+        private void setStateIdFromXML()
+        {
+            XAttribute a = xRoot.Attribute("state_id");
+            if (a != null)
+            {
+                state_id = a.Value;
+            }
+            else refreshStateId();
         }
 
         protected void setXmlProp(string key, string value)
@@ -80,6 +108,7 @@ namespace NormaMeasure.Utils
                     el.Value = value;
                 }
                 el.Value = value;
+                refreshStateId();
         }
 
         protected string getXmlProp(string key)
@@ -109,6 +138,7 @@ namespace NormaMeasure.Utils
         {
             XElement container = getOrCreateElement(containerTag);
             container.Add(createFromAString(elementAsXML));
+            refreshStateId();
         }
 
         protected void ReplaceElementOnContainer(string containerTag, string elTagName, string innerXml, string id)
@@ -132,6 +162,7 @@ namespace NormaMeasure.Utils
             {
                 child.ReplaceWith(newEl);
             }
+            refreshStateId();
         }
 
         protected void RemoveElementFromContainer(string containerTagName, string elTagName, string id)
@@ -143,12 +174,14 @@ namespace NormaMeasure.Utils
                 {
                     if (e.Attribute("id").Value != id) continue;
                     e.Remove();
+                    refreshStateId();
                 }
                 catch
                 {
                     continue;
                 }
             }
+
         }
 
         protected XElement getOrCreateElement(string tagName)

@@ -101,10 +101,8 @@ namespace TeraMicroMeasure
             int clId=0;
             while(f.KeyExists("ip", $"Client_{++clId}"))
             {
-                Debug.WriteLine($"GetClientIdByIp id={clId}");
                 if (f.Read("ip", $"Client_{clId}") == ip) break;
             }
-            Debug.WriteLine($"GetClientIdByIp return_id={clId}");
             return clId;
         }
 

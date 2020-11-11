@@ -73,6 +73,7 @@ namespace TeraMicroMeasure.XmlObjects
             }
         }
 
+        private Dictionary<string, ClientXmlState> _clients = null;
         /// <summary>
         /// Список подключенных клиентов по IP адресам
         /// </summary>
@@ -80,17 +81,22 @@ namespace TeraMicroMeasure.XmlObjects
         {
             get
             {
-                Dictionary<string, string> raw = GetNodesInnerXmlFromContainer(ClientsListTagName, ClientElementTagName);
-                Dictionary<string, ClientXmlState> clients = new Dictionary<string, ClientXmlState>();
-                foreach (string ip in raw.Keys)
+                if (_clients == null)
                 {
-                    clients.Add(ip, new ClientXmlState(raw[ip]));
+                    Dictionary<string, string> raw = GetNodesInnerXmlFromContainer(ClientsListTagName, ClientElementTagName);
+                    _clients = new Dictionary<string, ClientXmlState>();
+                    foreach (string ip in raw.Keys)
+                    {
+                        _clients.Add(ip, new ClientXmlState(raw[ip]));
+                    }
                 }
-                return clients;
+                return _clients;
                 //xm
             }
-        }     
-   
+        }
+
+        private void resetClients() { _clients = null; }
+
         /// <summary>
         /// Добавление клиента в списко подключенных
         /// </summary>
@@ -99,16 +105,19 @@ namespace TeraMicroMeasure.XmlObjects
         public void AddClient(ClientXmlState cl)
         {
             AddElementToContainer(ClientsListTagName, cl.InnerXml);
+            resetClients();
         }
 
         public void RemoveClient(ClientXmlState cs)
         {
             RemoveElementFromContainer(ClientsListTagName, cs.RootElementTagName, cs.ClientIP);
+            resetClients();
         }
 
         public void ReplaceClient(ClientXmlState cl)
         {
             ReplaceElementOnContainer(ClientsListTagName, cl.RootElementTagName, cl.InnerXml, cl.ClientIP);
+            resetClients();
         }
 
     }

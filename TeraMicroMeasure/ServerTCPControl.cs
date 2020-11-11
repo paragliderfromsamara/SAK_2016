@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TeraMicroMeasure.XmlObjects;
 using NormaMeasure.SocketControl;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace TeraMicroMeasure
 {
@@ -95,21 +96,22 @@ namespace TeraMicroMeasure
 
                     if (!clState.IsValid)
                     {
-                        client.Close();
+                        //client.Close();
                         return;
                     }
-                    OnClientStateReceived?.Invoke(clState, new EventArgs());
                     if (nextState.Clients.ContainsKey(clState.ClientIP))
                     {
-                        nextState.ReplaceClient(clState);
+                         if (clState.StateId == nextState.Clients[clState.ClientIP].StateId) nextState.ReplaceClient(clState);
                     }
                     else
                     {
                         SynchronizeClientStateOnConnection(clState);
                         nextState.AddClient(clState);
                         OnClientListChanged?.Invoke(nextState.Clients.Values.ToArray().Clone(), new EventArgs());
+                        Debug.WriteLine($"onClientStateReceived client_id = {clState.ClientID}"); 
                     }
-                    if (currentState.InnerXml != nextState.InnerXml) this.currentState = nextState;
+                    OnClientStateReceived?.Invoke(clState, new EventArgs());
+                    if (this.currentState.StateId == nextState.StateId) this.currentState = nextState;
                     client.MessageToSend = currentState.InnerXml;
 
                 }
@@ -126,7 +128,10 @@ namespace TeraMicroMeasure
 
         private void SynchronizeClientStateOnConnection(ClientXmlState clState)
         {
+            Debug.WriteLine($"SynchronizeClientStateOnConnection was_client_id = {clState.ClientID}");
+            Debug.WriteLine($"SynchronizeClientStateOnConnection client_ip = {clState.ClientIP}");
             if (clState.ClientID == 0) clState.ClientID = SettingsControl.GetClientIdByIp(clState.ClientIP);
+            Debug.WriteLine($"SynchronizeClientStateOnConnection next_client_id = {clState.ClientID}");
             SettingsControl.SetClientIP(clState.ClientID, clState.ClientIP);
         }
     }

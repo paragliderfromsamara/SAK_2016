@@ -82,7 +82,7 @@ namespace TeraMicroMeasure
             s.AddClient(c);
             richTextBox1.Text = s.InnerXml;
             richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
-            richTextBox1.Text += "\n" + s.Clients["192.168.0.2"].ClientID.ToString();
+            //richTextBox1.Text += "\n" + s.Clients["192.168.0.2"].ClientID.ToString();
 
             // c1 = new ClientXmlState(c.InnerXml.Clone().ToString());
             // c1.ClientID = 376;
@@ -175,7 +175,6 @@ namespace TeraMicroMeasure
             if (InvokeRequired)
             {
                 cs = o as ClientXmlState;
-                if (cs.ClientID == 0) cs.ClientID = 1;
                 BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { cs, a });
             }
             else
@@ -293,9 +292,9 @@ namespace TeraMicroMeasure
 
         private void InitClientTCPControl()
         {
-            retry:
-            try
-            {
+            //retry:
+           // try
+          //  {
                 setClientButtonStatus(ClientStatus.tryConnect);
                 clientTCPControl = new ClientTCPControl(buildClientXML());
                 clientTCPControl.OnServerConnected += onServerConnected_Handler;
@@ -303,14 +302,14 @@ namespace TeraMicroMeasure
                 clientTCPControl.OnConnectionException += LostServerConnection;
                 clientTCPControl.OnStateWasChangedByServer += OnStateWasChangedByServer_Handler;
                 clientTCPControl.Start();
-            }
-            catch (Exception)
-            {
-                SelectServerIpForm ipForm = new SelectServerIpForm();
-                ipForm.ShowDialog();
-                goto retry;
+            //}
+           // catch (Exception)
+           // {
+           //     SelectServerIpForm ipForm = new SelectServerIpForm();
+           //     ipForm.ShowDialog();
+           //     goto retry;
                 //MessageBox.Show(ex.Message);
-            }
+            //}
         }
 
         private void onServerConnected_Handler(object sender, EventArgs e)

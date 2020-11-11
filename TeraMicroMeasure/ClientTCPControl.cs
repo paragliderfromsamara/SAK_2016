@@ -62,15 +62,16 @@ namespace TeraMicroMeasure
                 {
                     ServerXmlState serverState = new ServerXmlState(raw_server_state);
                     if (!serverState.IsValid) return;
-                    if (currentServerState.InnerXml != serverState.InnerXml)
+                    if (currentServerState.StateId == serverState.StateId)
                     {
-                        currentServerState = serverState;
+                        this.currentServerState = serverState;
                         onServerStateChanged();
                         if (!firstTransaction)
                         {
                             firstTransaction = true;
                             OnServerConnected?.Invoke(currentServerState, new EventArgs());
                         }
+                        sendState();
                     }
                     ServerTryFileLimit = 10;
                 }
@@ -87,13 +88,15 @@ namespace TeraMicroMeasure
         private void onServerStateChanged()
         {
             ClientXmlState clientStateFromServer = currentServerState.Clients[currentState.ClientIP];
-            if (clientStateFromServer == null) return;
-            if (!IsEqualWithCurrentState(clientStateFromServer)) SynchronizeWithCurrentState(clientStateFromServer);
             OnServerStateChanged?.Invoke(currentServerState, new EventArgs());
+            if (clientStateFromServer == null) return;
+            if (clientStateFromServer.StateId != currentState.StateId) SynchronizeWithCurrentState(clientStateFromServer);
+            
         }
 
         private void SynchronizeWithCurrentState(ClientXmlState clientStateFromServer)
         {
+            if (clientStateFromServer.StateId == currentState.StateId) return;
             if (currentState.ClientID != clientStateFromServer.ClientID)
             {
                 currentState.ClientID = clientStateFromServer.ClientID;
@@ -101,6 +104,7 @@ namespace TeraMicroMeasure
             }
 
             OnStateWasChangedByServer?.Invoke(currentState, new EventArgs());
+           
         }
 
         private bool IsEqualWithCurrentState(ClientXmlState clientStateFromServer)
