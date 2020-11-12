@@ -53,6 +53,7 @@
       <DependentUpon>AppTypeSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="ClientTCPControl.cs" />
+    <Compile Include="CommandProcessors\ClentSideCommandProcessor.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

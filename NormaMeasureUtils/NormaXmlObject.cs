@@ -23,7 +23,11 @@ namespace NormaMeasure.Utils
 
         private string refreshStateId()
         {
-            return state_id = DateTime.Now.ToBinary().ToString("x");
+            DateTime t = DateTime.UtcNow;
+            Random r = new Random();
+            string sTime = t.ToBinary().ToString("x") + r.Next(1, 99999999).ToString("x");//$"{t.ToString()}:{t.Millisecond}-{r.Next(1, 99999999).ToString("x")}";
+            this.state_id = sTime;
+            return state_id;
         }
         public string StateId => state_id;
 

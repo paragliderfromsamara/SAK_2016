@@ -40,6 +40,16 @@ namespace TeraMicroMeasure
       
         }
 
+        public void SendState(ServerXmlState state_to_send)
+        {
+            currentState = new ServerXmlState(state_to_send.InnerXml);
+            string inner = state_to_send.InnerXml;
+            foreach (NormaTCPClient cl in server.ServerClients.Values)
+            {
+                cl.MessageToSend = inner;
+            }
+        }
+
         public void Start()
         {
             if (server == null) initServer();
@@ -63,26 +73,17 @@ namespace TeraMicroMeasure
 
         private void onClientConnected(NormaTCPClient client)
         { 
-            //OnClientAccepted?.Invoke(client, new EventArgs());
             client.OnMessageReceived += onClientStateReceived;
         }
 
         private void onClientDisconnected(NormaTCPClient client)
         {
-         
             if (currentState.Clients.ContainsKey(client.RemoteIP))
             {
                 currentState.RemoveClient(currentState.Clients[client.RemoteIP]);
-                OnClientListChanged?.Invoke(currentState.Clients.Values.ToArray(), new EventArgs());
+                OnClientListChanged?.Invoke(currentState, new EventArgs());
             }
         }
-
-        private void processReceivedClientState(ClientXmlState clState)
-        {
-
-        }
-
-
 
         private void onClientStateReceived(string raw_state, NormaTCPClient client)
         {
@@ -92,28 +93,8 @@ namespace TeraMicroMeasure
                 try
                 {
                     ClientXmlState clState = new ClientXmlState(raw_state);
-                    ServerXmlState nextState = new ServerXmlState(currentState.InnerXml);
-
-                    if (!clState.IsValid)
-                    {
-                        //client.Close();
-                        return;
-                    }
-                    if (nextState.Clients.ContainsKey(clState.ClientIP))
-                    {
-                         if (clState.StateId == nextState.Clients[clState.ClientIP].StateId) nextState.ReplaceClient(clState);
-                    }
-                    else
-                    {
-                        SynchronizeClientStateOnConnection(clState);
-                        nextState.AddClient(clState);
-                        OnClientListChanged?.Invoke(nextState.Clients.Values.ToArray().Clone(), new EventArgs());
-                        Debug.WriteLine($"onClientStateReceived client_id = {clState.ClientID}"); 
-                    }
-                    OnClientStateReceived?.Invoke(clState, new EventArgs());
-                    if (this.currentState.StateId == nextState.StateId) this.currentState = nextState;
+                    if (clState.IsValid) OnClientStateReceived?.Invoke(clState, new EventArgs());
                     client.MessageToSend = currentState.InnerXml;
-
                 }
                 catch(System.Xml.XmlException)
                 {
@@ -122,7 +103,6 @@ namespace TeraMicroMeasure
                 {
                     //client.Close();
                 }
-                
             }
         }
 

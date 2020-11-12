@@ -13,12 +13,13 @@ using System.Threading;
 using NormaMeasure.Utils;
 using System.Xml;
 using TeraMicroMeasure.XmlObjects;
-
+using TeraMicroMeasure.CommandProcessors;
 
 namespace TeraMicroMeasure
 {
     public partial class MainForm : Form
     {
+        object locker = new object();
         private System.Drawing.Color redColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
         private System.Drawing.Color greenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(179)))), ((int)(((byte)(9)))));
         private System.Drawing.Color orangeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(140)))), ((int)(((byte)(0)))));
@@ -27,6 +28,8 @@ namespace TeraMicroMeasure
         //NormaTCPClient client;
         ClientTCPControl clientTCPControl;
         ServerTCPControl serverTCPControl;
+        ClientXmlState currentClientState;
+        ServerXmlState currentServerState;
         int recCounter = 0;
         public MainForm()
         {
@@ -77,11 +80,18 @@ namespace TeraMicroMeasure
             c.ClientID = 2;
             c.ClientPort = 6666;
             c.ClientIP = "192.168.0.2";
+            System.Threading.Thread.Sleep(1000);
+            richTextBox1.Text = c.InnerXml;
+            c.ClientPort = 9999;
+            richTextBox1.Text += "\n\n" + c.IsValid;
+
+            //
 
             c2 = new ClientXmlState(c.InnerXml);
-            s.AddClient(c);
-            richTextBox1.Text = s.InnerXml;
-            richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
+            richTextBox1.Text += "\n\n" + c2.IsValid;
+            //s.AddClient(c);
+            //richTextBox1.Text = s.InnerXml;
+            //richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
             //richTextBox1.Text += "\n" + s.Clients["192.168.0.2"].ClientID.ToString();
 
             // c1 = new ClientXmlState(c.InnerXml.Clone().ToString());
@@ -128,21 +138,6 @@ namespace TeraMicroMeasure
         }
 
 
-        private void processReceivedState(object state, EventArgs a)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new EventHandler(processReceivedState), new object[] { state, a });
-            }
-            else
-            {
-                ServerXmlState sState = state as ServerXmlState;
-                richTextBox1.Text = sState.InnerXml;
-                transCounterLbl.Text = $"{recCounter++}";
-            }
-
-        }
-
         #region ServerModePart
         private void reinitServer()
         {
@@ -154,10 +149,11 @@ namespace TeraMicroMeasure
         {
             if (!SettingsControl.GetOfflineMode())
             {
-                serverTCPControl = new ServerTCPControl(buildServerXML());
+                currentServerState = buildServerXML();
+                serverTCPControl = new ServerTCPControl(currentServerState);
                 serverTCPControl.OnClientStateReceived += OnClientStateReceived;
                 serverTCPControl.OnServerConnectionException += onServerException;
-                serverTCPControl.OnClientListChanged += onClientListChanged;
+                serverTCPControl.OnClientListChanged += ServerStateUpdated_Handler;
                 serverTCPControl.OnServerStatusChanged += onServerStatusChanged;
                 serverTCPControl.Start();
             }
@@ -171,18 +167,32 @@ namespace TeraMicroMeasure
 
         private void OnClientStateReceived(object o, EventArgs a)
         {
-            ClientXmlState cs = o as ClientXmlState;
-            if (InvokeRequired)
+            lock(locker)
             {
-                cs = o as ClientXmlState;
-                BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { cs, a });
+                ClientXmlState cs = o as ClientXmlState;
+                
+                if (InvokeRequired)
+                {
+                    ServerStateUpdater ssu = new ServerStateUpdater(new ClientDetector(currentServerState, cs), ServerStateUpdated_Handler);
+                    serverTCPControl.SendState(ssu.ServerState);
+                    BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { ssu.CurrentClientState, a });
+                }
+                else
+                {
+                    richTextBox1.Text += "\n\n" + currentServerState.InnerXml;
+                    transCounterLbl.Text = $"{recCounter++}";
+                }
             }
-            else
-            {
-                richTextBox1.Text = cs.InnerXml;
-                transCounterLbl.Text = $"{recCounter++}";
-            }
+
         }
+
+        private void ServerStateUpdated_Handler(object o, EventArgs e)
+        {
+            currentServerState = o as ServerXmlState;
+            serverTCPControl.SendState(currentServerState);
+        }
+
+
         private void onClientListChanged(object o, EventArgs e)
         {
             if (InvokeRequired)
@@ -260,6 +270,7 @@ namespace TeraMicroMeasure
             serverState.IPAddress = SettingsControl.GetLocalIP();
             serverState.Port = SettingsControl.GetLocalPort();
             serverState.RequestPeriod = SettingsControl.GetRequestPeriod();
+            richTextBox2.Text = serverState.InnerXml;
             return serverState;
         }
         #endregion
@@ -293,12 +304,13 @@ namespace TeraMicroMeasure
         private void InitClientTCPControl()
         {
             //retry:
-           // try
-          //  {
+            // try
+            //  {
+                currentClientState = buildClientXML();
                 setClientButtonStatus(ClientStatus.tryConnect);
-                clientTCPControl = new ClientTCPControl(buildClientXML());
+                clientTCPControl = new ClientTCPControl(currentClientState);
                 clientTCPControl.OnServerConnected += onServerConnected_Handler;
-                clientTCPControl.OnServerStateChanged += processReceivedState;
+                clientTCPControl.OnServerStateChanged += processReceivedFromServerState;
                 clientTCPControl.OnConnectionException += LostServerConnection;
                 clientTCPControl.OnStateWasChangedByServer += OnStateWasChangedByServer_Handler;
                 clientTCPControl.Start();
@@ -310,6 +322,29 @@ namespace TeraMicroMeasure
            //     goto retry;
                 //MessageBox.Show(ex.Message);
             //}
+        }
+
+        private void processReceivedFromServerState(object state_for_a_process, EventArgs a)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(processReceivedFromServerState), new object[] { state_for_a_process, a });
+            }
+            else
+            {
+                ServerXmlState sState = state_for_a_process as ServerXmlState;
+                ClientIDProcessor clidp = new ClientIDProcessor(new TeraMicroStateProcessor(sState, currentClientState), ClientIdChange_Handler);
+                richTextBox1.Text = sState.InnerXml;
+                transCounterLbl.Text = $"{recCounter++}";
+                clientTCPControl.SendState(clidp.CurrentClientState);
+            }
+        }
+
+        private void ClientIdChange_Handler(object o, EventArgs e)
+        {
+            int id = Convert.ToInt16(o);
+            SettingsControl.SetClientId(id);
+            SetClientTitle();
         }
 
         private void onServerConnected_Handler(object sender, EventArgs e)

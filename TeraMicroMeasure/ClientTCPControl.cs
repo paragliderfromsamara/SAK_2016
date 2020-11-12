@@ -24,7 +24,7 @@ namespace TeraMicroMeasure
         private bool firstTransaction = false;
         public ClientTCPControl(ClientXmlState cur_state)
         {
-            currentState = cur_state;
+            stateFromServer = currentState = cur_state;
             initTCPClient();
             currentServerState = new ServerXmlState();
         }
@@ -49,6 +49,16 @@ namespace TeraMicroMeasure
                 client = null;
             }
         }
+
+        public void SendState(ClientXmlState s)
+        {
+            if (s.StateId != currentState.StateId)
+            {
+                currentState = new ClientXmlState(s.InnerXml);
+                sendState();
+            }
+        }
+
         private void sendState()
         {
             client.Send(currentState.InnerXml);
@@ -56,31 +66,23 @@ namespace TeraMicroMeasure
 
         private void serverStateReceived(string raw_server_state, NormaTCPClient cl)
         {
-            lock(locker)
+            try
             {
-                try
+                ServerXmlState serverState = new ServerXmlState(raw_server_state);
+                if (serverState.IsValid) OnServerStateChanged?.Invoke(serverState, new EventArgs());
+                if (!firstTransaction)
                 {
-                    ServerXmlState serverState = new ServerXmlState(raw_server_state);
-                    if (!serverState.IsValid) return;
-                    if (currentServerState.StateId == serverState.StateId)
-                    {
-                        this.currentServerState = serverState;
-                        onServerStateChanged();
-                        if (!firstTransaction)
-                        {
-                            firstTransaction = true;
-                            OnServerConnected?.Invoke(currentServerState, new EventArgs());
-                        }
-                        sendState();
-                    }
-                    ServerTryFileLimit = 10;
+                    firstTransaction = true;
+                    OnServerConnected?.Invoke(currentServerState, new EventArgs());
                 }
-                catch(System.Xml.XmlException e)
+                ServerTryFileLimit = 10;
+            }
+            catch (System.Xml.XmlException e)
+            {
+               
+                if (--ServerTryFileLimit == 0)
                 {
-                    if (--ServerTryFileLimit == 0)
-                    {
-                        OnConnectionException?.Invoke(e, new EventArgs());
-                    }
+                    OnConnectionException?.Invoke(e, new EventArgs());
                 }
             }
         }
@@ -96,7 +98,7 @@ namespace TeraMicroMeasure
 
         private void SynchronizeWithCurrentState(ClientXmlState clientStateFromServer)
         {
-            if (clientStateFromServer.StateId == currentState.StateId) return;
+            //if (clientStateFromServer.StateId == currentState.StateId) return;
             if (currentState.ClientID != clientStateFromServer.ClientID)
             {
                 currentState.ClientID = clientStateFromServer.ClientID;
