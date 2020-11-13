@@ -11,6 +11,7 @@ namespace TeraMicroMeasure.XmlObjects
     {
         public ClientXmlState() : base()
         {
+            _measure_state = new MeasureState();
         }
 
         public ClientXmlState(string innerXml) : base(innerXml)
@@ -84,5 +85,34 @@ namespace TeraMicroMeasure.XmlObjects
                 setXmlProp("ServerPort", value.ToString());
             }
         }
+
+        private MeasureState _measure_state;
+        public MeasureState MeasureState
+        {
+            get
+            {
+                if (_measure_state == null)
+                {
+                    _measure_state = new MeasureState();
+                    try
+                    {
+                        string v = InnerXmlOfElement(_measure_state.GetType().Name);
+                        if (string.IsNullOrEmpty(v)) _measure_state = new MeasureState();
+                        else _measure_state = new MeasureState(v);
+                    }
+                    catch (System.Xml.XmlException)
+                    {
+                        _measure_state = new MeasureState();
+                    }
+                }
+
+                return _measure_state;
+            }set
+            {
+                ReplaceElement(_measure_state.GetType().Name, value.InnerXml);
+                _measure_state = value;
+            }
+        }
+
     }
 }

@@ -51,6 +51,12 @@ namespace NormaMeasure.Utils
             return r.ReadOuterXml();
         }
 
+        protected string InnerXmlOfElement(string el_name)
+        {
+            if (hasElement(el_name)) return readInnerXml(xRoot.Element(el_name));
+            else return String.Empty;
+        }
+
         private XElement createFromAString(string innerXml)
         {
             XElement e = XElement.Parse(innerXml);
@@ -145,6 +151,12 @@ namespace NormaMeasure.Utils
             refreshStateId();
         }
 
+        protected void ReplaceElement(string tagName, string new_el_inner)
+        {
+            XElement newEl = createFromAString(new_el_inner);
+            if (hasElement(tagName)) xRoot.Element(tagName).Remove();
+            xRoot.Add(newEl);
+        }
         protected void ReplaceElementOnContainer(string containerTag, string elTagName, string innerXml, string id)
         {
             XElement container = getOrCreateElement(containerTag);

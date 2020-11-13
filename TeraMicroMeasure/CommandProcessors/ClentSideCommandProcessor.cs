@@ -94,7 +94,6 @@ namespace TeraMicroMeasure.CommandProcessors
         public ServerStateUpdater(TeraMicroStateProcessor pr, EventHandler OnServerStateChanged) : base(pr)
         {
             ServerStateChanged |= refreshCurrentClientOnServerSettings();
-            refreshCurrentClientOnServerSettings();
             if (ServerStateChanged) OnServerStateChanged?.Invoke(ServerState, new EventArgs());
         }
 
@@ -105,6 +104,7 @@ namespace TeraMicroMeasure.CommandProcessors
                 if (ExtractedClientState.StateId != CurrentClientState.StateId)
                 {
                     ServerState.ReplaceClient(CurrentClientState);
+                    ExtractedClientState = CurrentClientState;
                 }
                 else return false;
             }
@@ -112,6 +112,7 @@ namespace TeraMicroMeasure.CommandProcessors
             {
                 ServerState.AddClient(CurrentClientState);
             }
+           
             return true;
         }
 

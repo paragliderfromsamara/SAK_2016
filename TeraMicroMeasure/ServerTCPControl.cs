@@ -94,7 +94,7 @@ namespace TeraMicroMeasure
                 {
                     ClientXmlState clState = new ClientXmlState(raw_state);
                     if (clState.IsValid) OnClientStateReceived?.Invoke(clState, new EventArgs());
-                    client.MessageToSend = currentState.InnerXml;
+                    //client.MessageToSend = currentState.InnerXml;
                 }
                 catch(System.Xml.XmlException)
                 {

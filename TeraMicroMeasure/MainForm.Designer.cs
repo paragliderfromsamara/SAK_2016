@@ -44,6 +44,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.centralPanel = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -184,25 +185,36 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(91, 253);
+            this.richTextBox1.Location = new System.Drawing.Point(0, 699);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(679, 512);
+            this.richTextBox1.Size = new System.Drawing.Size(679, 171);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
             // richTextBox2
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(806, 253);
+            this.richTextBox2.Location = new System.Drawing.Point(694, 699);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(650, 512);
+            this.richTextBox2.Size = new System.Drawing.Size(650, 171);
             this.richTextBox2.TabIndex = 5;
             this.richTextBox2.Text = "";
+            // 
+            // centralPanel
+            // 
+            this.centralPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.centralPanel.Location = new System.Drawing.Point(0, 81);
+            this.centralPanel.Name = "centralPanel";
+            this.centralPanel.Size = new System.Drawing.Size(1496, 612);
+            this.centralPanel.TabIndex = 6;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1496, 895);
+            this.Controls.Add(this.centralPanel);
             this.Controls.Add(this.richTextBox2);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.topPanel);
@@ -242,6 +254,7 @@
         private System.Windows.Forms.ToolStripStatusLabel transCounterLbl;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.Button switchConnectToServerButton;
+        private System.Windows.Forms.Panel centralPanel;
     }
 }
 

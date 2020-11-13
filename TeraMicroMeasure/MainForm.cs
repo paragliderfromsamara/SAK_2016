@@ -30,6 +30,7 @@ namespace TeraMicroMeasure
         ServerTCPControl serverTCPControl;
         ClientXmlState currentClientState;
         ServerXmlState currentServerState;
+        MeasurePanel MeasurePanel;
         int recCounter = 0;
         public MainForm()
         {
@@ -49,7 +50,7 @@ namespace TeraMicroMeasure
                 Close();
             }
 
-            //testXml();
+           // testXml();
         }
 
         private void InitButtonsBar()
@@ -89,6 +90,9 @@ namespace TeraMicroMeasure
 
             c2 = new ClientXmlState(c.InnerXml);
             richTextBox1.Text += "\n\n" + c2.IsValid;
+
+            c2.MeasureState.CableId = 1;
+            richTextBox1.Text += "\n\n" + c2.MeasureState.InnerXml;
             //s.AddClient(c);
             //richTextBox1.Text = s.InnerXml;
             //richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
@@ -130,11 +134,13 @@ namespace TeraMicroMeasure
         }
         private void InitAsClientApp()
         {
+            currentClientState = buildClientXML();
             SetClientTitle();
             CheckBaseTCPClientParameters();
             setClientButtonStatus(ClientStatus.disconnected);
+            InitMeasurePanel();
             /////////////////////////////////////
-            InitClientTCPControl();
+            //InitClientTCPControl();
         }
 
 
@@ -167,29 +173,32 @@ namespace TeraMicroMeasure
 
         private void OnClientStateReceived(object o, EventArgs a)
         {
-            lock(locker)
+            lock (locker)
             {
                 ClientXmlState cs = o as ClientXmlState;
-                
+
                 if (InvokeRequired)
                 {
-                    ServerStateUpdater ssu = new ServerStateUpdater(new ClientDetector(currentServerState, cs), ServerStateUpdated_Handler);
-                    serverTCPControl.SendState(ssu.ServerState);
-                    BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { ssu.CurrentClientState, a });
+                    //ClientDetector cd = new ClientDetector(currentServerState, cs);
+                    ServerStateUpdater ssu = new ServerStateUpdater(
+                                                                     new ClientDetector(currentServerState, cs), ServerStateUpdated_Handler
+                                                                    );
+                    currentServerState = ssu.ServerState;
+                    BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { cs, a });
                 }
                 else
                 {
+                    richTextBox2.Text += "\n\n" + cs.InnerXml;
                     richTextBox1.Text += "\n\n" + currentServerState.InnerXml;
                     transCounterLbl.Text = $"{recCounter++}";
                 }
             }
-
         }
 
         private void ServerStateUpdated_Handler(object o, EventArgs e)
         {
-            currentServerState = o as ServerXmlState;
-            serverTCPControl.SendState(currentServerState);
+           currentServerState = o as ServerXmlState;
+           serverTCPControl.SendState(currentServerState);
         }
 
 
@@ -306,7 +315,7 @@ namespace TeraMicroMeasure
             //retry:
             // try
             //  {
-                currentClientState = buildClientXML();
+
                 setClientButtonStatus(ClientStatus.tryConnect);
                 clientTCPControl = new ClientTCPControl(currentClientState);
                 clientTCPControl.OnServerConnected += onServerConnected_Handler;
@@ -454,6 +463,15 @@ namespace TeraMicroMeasure
         {
             int cId = SettingsControl.GetClientId();
             this.Text = (cId == 0) ? "Клиент без номера" : $"Клиент {cId}";
+        }
+
+        private void InitMeasurePanel()
+        {
+            MeasurePanel = new MeasurePanel(currentClientState);
+            MeasurePanel.Parent = centralPanel;
+            MeasurePanel.Location = new Point(0, 150);
+           
+            MeasurePanel.Dock = DockStyle.Fill;
         }
         #endregion
 
