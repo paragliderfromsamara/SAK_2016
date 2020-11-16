@@ -44,7 +44,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.centralPanel = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -109,6 +108,7 @@
             // 
             // statusStrip
             // 
+            this.statusStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(69)))), ((int)(((byte)(128)))));
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clientCounterStatus,
             this.serverStatusLabel,
@@ -121,12 +121,14 @@
             // 
             // clientCounterStatus
             // 
+            this.clientCounterStatus.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.clientCounterStatus.Name = "clientCounterStatus";
             this.clientCounterStatus.Size = new System.Drawing.Size(71, 17);
             this.clientCounterStatus.Text = "Клиентов: 0";
             // 
             // serverStatusLabel
             // 
+            this.serverStatusLabel.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.serverStatusLabel.Name = "serverStatusLabel";
             this.serverStatusLabel.Size = new System.Drawing.Size(205, 17);
             this.serverStatusLabel.Text = "IP адрес: 192.168.100.220 Порт: 16000";
@@ -134,6 +136,7 @@
             // 
             // transCounterLbl
             // 
+            this.transCounterLbl.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.transCounterLbl.Name = "transCounterLbl";
             this.transCounterLbl.Size = new System.Drawing.Size(118, 17);
             this.transCounterLbl.Text = "toolStripStatusLabel1";
@@ -141,7 +144,7 @@
             // topPanel
             // 
             this.topPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.topPanel.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.topPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(49)))), ((int)(((byte)(99)))));
             this.topPanel.Controls.Add(this.switchConnectToServerButton);
             this.topPanel.Controls.Add(this.button1);
             this.topPanel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -199,28 +202,19 @@
             this.richTextBox2.TabIndex = 5;
             this.richTextBox2.Text = "";
             // 
-            // centralPanel
-            // 
-            this.centralPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.centralPanel.Location = new System.Drawing.Point(0, 81);
-            this.centralPanel.Name = "centralPanel";
-            this.centralPanel.Size = new System.Drawing.Size(1496, 612);
-            this.centralPanel.TabIndex = 6;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::TeraMicroMeasure.Properties.Resources.backgroundMdi;
             this.ClientSize = new System.Drawing.Size(1496, 895);
-            this.Controls.Add(this.centralPanel);
             this.Controls.Add(this.richTextBox2);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.topPanel);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(700, 500);
             this.Name = "MainForm";
@@ -254,7 +248,6 @@
         private System.Windows.Forms.ToolStripStatusLabel transCounterLbl;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.Button switchConnectToServerButton;
-        private System.Windows.Forms.Panel centralPanel;
     }
 }
 

@@ -30,7 +30,7 @@ namespace TeraMicroMeasure
         ServerTCPControl serverTCPControl;
         ClientXmlState currentClientState;
         ServerXmlState currentServerState;
-        MeasurePanel MeasurePanel;
+        MeasureForm measureForm;
         int recCounter = 0;
         public MainForm()
         {
@@ -467,11 +467,14 @@ namespace TeraMicroMeasure
 
         private void InitMeasurePanel()
         {
-            MeasurePanel = new MeasurePanel(currentClientState);
-            MeasurePanel.Parent = centralPanel;
-            MeasurePanel.Location = new Point(0, 150);
-           
-            MeasurePanel.Dock = DockStyle.Fill;
+            measureForm = new MeasureForm();
+            measureForm.MdiParent = this;
+            measureForm.Show();
+          //  MeasurePanel = new MeasurePanel(currentClientState);
+          // MeasurePanel.Parent = centralPanel;
+          // MeasurePanel.Location = new Point(0, 150);
+
+            //  MeasurePanel.Dock = DockStyle.Fill;
         }
         #endregion
 
