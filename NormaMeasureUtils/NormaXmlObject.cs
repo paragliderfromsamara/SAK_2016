@@ -14,6 +14,36 @@ namespace NormaMeasure.Utils
     {
         private XDocument xDoc;
         private XElement xRoot;
+
+        private string _innerXML = null;
+        private string innerXML
+        {
+            get
+            {
+                return _innerXML;
+            }set
+            {
+                XElement e = createFromAString(value);
+                if (isValidRoot(e))
+                {
+                    string new_state_id = state_id;
+                    if (isDifferentState(e, out new_state_id))
+                    {
+                        xRoot = e;
+                        xDoc.RemoveNodes();
+                        xDoc.Add(xRoot);
+                        buildFromXML();
+                        state_id = new_state_id;
+                        isValid = true;
+                    }
+
+                }else
+                {
+                    isValid = false;
+                }
+            }
+        }
+
         public string RootElementTagName => this.GetType().Name;
         public bool WasChanged;
         public string InnerXml => readInnerXml();
@@ -88,13 +118,34 @@ namespace NormaMeasure.Utils
         }
 
 
-        public NormaXmlObject(string innerXml) : this()
+        public NormaXmlObject(string inner_xml) : this()
         {
-            xDoc.RemoveNodes();
-            xRoot = createFromAString(innerXml);
-            xDoc.Add(xRoot);
-            isValid = xRoot.Name == this.RootElementTagName;
-            if (isValid) setStateIdFromXML();
+            this.innerXML = inner_xml;
+            //initXMLDocument();
+            //xDoc.RemoveNodes();
+            //xRoot = createFromAString(inner_xml);
+            //xDoc.Add(xRoot);
+            //isValid = xRoot.Name == this.RootElementTagName;
+            //if (isValid) setStateIdFromXML();
+        }
+
+        protected virtual bool isValidRoot(XElement root_el)
+        {
+            return root_el.Name == this.RootElementTagName;
+        }
+
+        private bool isDifferentState(XElement e, out string new_state_id)
+        {
+            new_state_id = e.Attribute("state_id").Value;
+            return state_id != new_state_id && !string.IsNullOrWhiteSpace(new_state_id);
+        }
+
+        /// <summary>
+        /// Собирает объект из xml кода
+        /// </summary>
+        protected virtual void buildFromXML()
+        {
+
         }
 
         private void setStateIdFromXML()
