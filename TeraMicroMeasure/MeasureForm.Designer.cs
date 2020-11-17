@@ -33,34 +33,37 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.RizolRadioButton = new System.Windows.Forms.RadioButton();
+            this.RleadRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.polarDelayUpDown = new System.Windows.Forms.NumericUpDown();
-            this.polarDelayLbl = new System.Windows.Forms.Label();
-            this.temperatureComboBox = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.depolTimeLbl = new System.Windows.Forms.Label();
+            this.depolDelay = new System.Windows.Forms.NumericUpDown();
             this.averagingCounter = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.polarDelayLbl = new System.Windows.Forms.Label();
+            this.polarDelayUpDown = new System.Windows.Forms.NumericUpDown();
+            this.temperatureComboBox = new System.Windows.Forms.Label();
+            this.measurePanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.temperature = new System.Windows.Forms.ComboBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.radioButton5 = new System.Windows.Forms.RadioButton();
-            this.radioButton6 = new System.Windows.Forms.RadioButton();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.depolDelay = new System.Windows.Forms.NumericUpDown();
-            this.depolTimeLbl = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.temperature = new System.Windows.Forms.ComboBox();
             this.startMeasureButton = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.voltagesGroupBox = new System.Windows.Forms.GroupBox();
+            this.v1000_RadioButton = new System.Windows.Forms.RadioButton();
+            this.v500_RadioButton = new System.Windows.Forms.RadioButton();
+            this.v100_RadioButton = new System.Windows.Forms.RadioButton();
+            this.v10_RadioButton = new System.Windows.Forms.RadioButton();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.polarDelayUpDown)).BeginInit();
-            this.panel1.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.depolDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.polarDelayUpDown)).BeginInit();
+            this.measurePanel.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.voltagesGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // cableComboBox
@@ -73,7 +76,7 @@
             "Кабель 3",
             "Кабель 4"});
             this.cableComboBox.Location = new System.Drawing.Point(17, 62);
-            this.cableComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cableComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.cableComboBox.Name = "cableComboBox";
             this.cableComboBox.Size = new System.Drawing.Size(218, 31);
             this.cableComboBox.TabIndex = 0;
@@ -121,8 +124,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.radioButton2);
-            this.groupBox1.Controls.Add(this.radioButton1);
+            this.groupBox1.Controls.Add(this.RizolRadioButton);
+            this.groupBox1.Controls.Add(this.RleadRadioButton);
             this.groupBox1.Location = new System.Drawing.Point(17, 117);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(367, 82);
@@ -131,27 +134,28 @@
             this.groupBox1.Text = "Измеряемый параметр";
             this.groupBox1.UseCompatibleTextRendering = true;
             // 
-            // radioButton1
+            // RizolRadioButton
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(36, 36);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(76, 27);
-            this.radioButton1.TabIndex = 0;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Rжил";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.RizolRadioButton.AutoSize = true;
+            this.RizolRadioButton.Location = new System.Drawing.Point(230, 36);
+            this.RizolRadioButton.Name = "RizolRadioButton";
+            this.RizolRadioButton.Size = new System.Drawing.Size(81, 27);
+            this.RizolRadioButton.TabIndex = 1;
+            this.RizolRadioButton.Text = "Rизол";
+            this.RizolRadioButton.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // RleadRadioButton
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(230, 36);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(81, 27);
-            this.radioButton2.TabIndex = 1;
-            this.radioButton2.Text = "Rизол";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.RleadRadioButton.AutoSize = true;
+            this.RleadRadioButton.Checked = true;
+            this.RleadRadioButton.Location = new System.Drawing.Point(36, 36);
+            this.RleadRadioButton.Name = "RleadRadioButton";
+            this.RleadRadioButton.Size = new System.Drawing.Size(76, 27);
+            this.RleadRadioButton.TabIndex = 0;
+            this.RleadRadioButton.TabStop = true;
+            this.RleadRadioButton.Text = "Rжил";
+            this.RleadRadioButton.UseVisualStyleBackColor = true;
+            this.RleadRadioButton.CheckedChanged += new System.EventHandler(this.MeasureTypeRadioButton_CheckedChanged_Common);
             // 
             // groupBox2
             // 
@@ -168,6 +172,53 @@
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Настройки измерителя";
+            // 
+            // depolTimeLbl
+            // 
+            this.depolTimeLbl.AutoSize = true;
+            this.depolTimeLbl.Location = new System.Drawing.Point(381, 36);
+            this.depolTimeLbl.Name = "depolTimeLbl";
+            this.depolTimeLbl.Size = new System.Drawing.Size(72, 18);
+            this.depolTimeLbl.TabIndex = 8;
+            this.depolTimeLbl.Text = "Разряд, c";
+            // 
+            // depolDelay
+            // 
+            this.depolDelay.Location = new System.Drawing.Point(384, 62);
+            this.depolDelay.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.depolDelay.Name = "depolDelay";
+            this.depolDelay.Size = new System.Drawing.Size(115, 26);
+            this.depolDelay.TabIndex = 7;
+            // 
+            // averagingCounter
+            // 
+            this.averagingCounter.FormattingEnabled = true;
+            this.averagingCounter.Location = new System.Drawing.Point(202, 60);
+            this.averagingCounter.Name = "averagingCounter";
+            this.averagingCounter.Size = new System.Drawing.Size(115, 26);
+            this.averagingCounter.TabIndex = 6;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(199, 34);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(123, 18);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Усреднение, изм";
+            // 
+            // polarDelayLbl
+            // 
+            this.polarDelayLbl.AutoSize = true;
+            this.polarDelayLbl.Location = new System.Drawing.Point(19, 35);
+            this.polarDelayLbl.Name = "polarDelayLbl";
+            this.polarDelayLbl.Size = new System.Drawing.Size(105, 18);
+            this.polarDelayLbl.TabIndex = 1;
+            this.polarDelayLbl.Text = "Выдержка, мс";
             // 
             // polarDelayUpDown
             // 
@@ -191,133 +242,50 @@
             0,
             0});
             // 
-            // polarDelayLbl
-            // 
-            this.polarDelayLbl.AutoSize = true;
-            this.polarDelayLbl.Location = new System.Drawing.Point(19, 35);
-            this.polarDelayLbl.Name = "polarDelayLbl";
-            this.polarDelayLbl.Size = new System.Drawing.Size(105, 18);
-            this.polarDelayLbl.TabIndex = 1;
-            this.polarDelayLbl.Text = "Выдержка, мс";
-            // 
             // temperatureComboBox
             // 
             this.temperatureComboBox.AutoSize = true;
             this.temperatureComboBox.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.temperatureComboBox.Location = new System.Drawing.Point(244, 219);
+            this.temperatureComboBox.Location = new System.Drawing.Point(227, 3);
             this.temperatureComboBox.Name = "temperatureComboBox";
             this.temperatureComboBox.Size = new System.Drawing.Size(104, 19);
             this.temperatureComboBox.TabIndex = 3;
             this.temperatureComboBox.Text = "Температура";
             // 
-            // label5
+            // measurePanel
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(199, 34);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(123, 18);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Усреднение, изм";
-            // 
-            // averagingCounter
-            // 
-            this.averagingCounter.FormattingEnabled = true;
-            this.averagingCounter.Location = new System.Drawing.Point(202, 60);
-            this.averagingCounter.Name = "averagingCounter";
-            this.averagingCounter.Size = new System.Drawing.Size(115, 26);
-            this.averagingCounter.TabIndex = 6;
+            this.measurePanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.measurePanel.Controls.Add(this.panel1);
+            this.measurePanel.Controls.Add(this.startMeasureButton);
+            this.measurePanel.Controls.Add(this.panel2);
+            this.measurePanel.Controls.Add(this.voltagesGroupBox);
+            this.measurePanel.Controls.Add(this.cableComboBox);
+            this.measurePanel.Controls.Add(this.groupBox2);
+            this.measurePanel.Controls.Add(this.label1);
+            this.measurePanel.Controls.Add(this.groupBox1);
+            this.measurePanel.Controls.Add(this.numericUpDown1);
+            this.measurePanel.Controls.Add(this.label2);
+            this.measurePanel.Location = new System.Drawing.Point(-2, -1);
+            this.measurePanel.Name = "measurePanel";
+            this.measurePanel.Size = new System.Drawing.Size(917, 412);
+            this.measurePanel.TabIndex = 6;
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.panel1.Controls.Add(this.startMeasureButton);
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.comboBox3);
-            this.panel1.Controls.Add(this.temperature);
-            this.panel1.Controls.Add(this.groupBox3);
-            this.panel1.Controls.Add(this.cableComboBox);
-            this.panel1.Controls.Add(this.groupBox2);
-            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.temperatureComboBox);
-            this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Controls.Add(this.numericUpDown1);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(-2, -1);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.temperature);
+            this.panel1.Location = new System.Drawing.Point(17, 215);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(917, 621);
-            this.panel1.TabIndex = 6;
-            // 
-            // temperature
-            // 
-            this.temperature.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.temperature.FormattingEnabled = true;
-            this.temperature.Location = new System.Drawing.Point(247, 245);
-            this.temperature.Name = "temperature";
-            this.temperature.Size = new System.Drawing.Size(137, 27);
-            this.temperature.TabIndex = 7;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.radioButton6);
-            this.groupBox3.Controls.Add(this.radioButton5);
-            this.groupBox3.Controls.Add(this.radioButton4);
-            this.groupBox3.Controls.Add(this.radioButton3);
-            this.groupBox3.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox3.Location = new System.Drawing.Point(17, 293);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(367, 86);
-            this.groupBox3.TabIndex = 6;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Измерительное напряжение";
-            // 
-            // radioButton3
-            // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Checked = true;
-            this.radioButton3.Location = new System.Drawing.Point(23, 38);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(56, 22);
-            this.radioButton3.TabIndex = 0;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "10 В";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // radioButton4
-            // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(100, 38);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(64, 22);
-            this.radioButton4.TabIndex = 1;
-            this.radioButton4.Text = "100 В";
-            this.radioButton4.UseVisualStyleBackColor = true;
-            // 
-            // radioButton5
-            // 
-            this.radioButton5.AutoSize = true;
-            this.radioButton5.Location = new System.Drawing.Point(186, 38);
-            this.radioButton5.Name = "radioButton5";
-            this.radioButton5.Size = new System.Drawing.Size(64, 22);
-            this.radioButton5.TabIndex = 2;
-            this.radioButton5.Text = "500 В";
-            this.radioButton5.UseVisualStyleBackColor = true;
-            // 
-            // radioButton6
-            // 
-            this.radioButton6.AutoSize = true;
-            this.radioButton6.Location = new System.Drawing.Point(273, 38);
-            this.radioButton6.Name = "radioButton6";
-            this.radioButton6.Size = new System.Drawing.Size(72, 22);
-            this.radioButton6.TabIndex = 3;
-            this.radioButton6.Text = "1000 В";
-            this.radioButton6.UseVisualStyleBackColor = true;
+            this.panel1.Size = new System.Drawing.Size(368, 62);
+            this.panel1.TabIndex = 7;
             // 
             // comboBox3
             // 
             this.comboBox3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(17, 245);
+            this.comboBox3.Location = new System.Drawing.Point(0, 29);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(218, 27);
             this.comboBox3.TabIndex = 8;
@@ -326,40 +294,20 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(13, 219);
+            this.label4.Location = new System.Drawing.Point(-4, 3);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(80, 19);
             this.label4.TabIndex = 9;
             this.label4.Text = "Материал";
             // 
-            // depolDelay
+            // temperature
             // 
-            this.depolDelay.Location = new System.Drawing.Point(384, 62);
-            this.depolDelay.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-            this.depolDelay.Name = "depolDelay";
-            this.depolDelay.Size = new System.Drawing.Size(115, 26);
-            this.depolDelay.TabIndex = 7;
-            // 
-            // depolTimeLbl
-            // 
-            this.depolTimeLbl.AutoSize = true;
-            this.depolTimeLbl.Location = new System.Drawing.Point(381, 36);
-            this.depolTimeLbl.Name = "depolTimeLbl";
-            this.depolTimeLbl.Size = new System.Drawing.Size(72, 18);
-            this.depolTimeLbl.TabIndex = 8;
-            this.depolTimeLbl.Text = "Разряд, c";
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(237)))), ((int)(((byte)(250)))));
-            this.panel2.Location = new System.Drawing.Point(405, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(512, 199);
-            this.panel2.TabIndex = 10;
+            this.temperature.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.temperature.FormattingEnabled = true;
+            this.temperature.Location = new System.Drawing.Point(230, 29);
+            this.temperature.Name = "temperature";
+            this.temperature.Size = new System.Drawing.Size(137, 27);
+            this.temperature.TabIndex = 7;
             // 
             // startMeasureButton
             // 
@@ -375,16 +323,90 @@
             this.startMeasureButton.Text = "Пуск измерения";
             this.startMeasureButton.UseVisualStyleBackColor = false;
             // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(237)))), ((int)(((byte)(250)))));
+            this.panel2.Location = new System.Drawing.Point(405, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(512, 199);
+            this.panel2.TabIndex = 10;
+            // 
+            // voltagesGroupBox
+            // 
+            this.voltagesGroupBox.Controls.Add(this.v1000_RadioButton);
+            this.voltagesGroupBox.Controls.Add(this.v500_RadioButton);
+            this.voltagesGroupBox.Controls.Add(this.v100_RadioButton);
+            this.voltagesGroupBox.Controls.Add(this.v10_RadioButton);
+            this.voltagesGroupBox.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.voltagesGroupBox.Location = new System.Drawing.Point(17, 293);
+            this.voltagesGroupBox.Name = "voltagesGroupBox";
+            this.voltagesGroupBox.Size = new System.Drawing.Size(367, 86);
+            this.voltagesGroupBox.TabIndex = 6;
+            this.voltagesGroupBox.TabStop = false;
+            this.voltagesGroupBox.Text = "Измерительное напряжение";
+            // 
+            // v1000_RadioButton
+            // 
+            this.v1000_RadioButton.AutoSize = true;
+            this.v1000_RadioButton.Location = new System.Drawing.Point(273, 38);
+            this.v1000_RadioButton.Name = "v1000_RadioButton";
+            this.v1000_RadioButton.Size = new System.Drawing.Size(72, 22);
+            this.v1000_RadioButton.TabIndex = 3;
+            this.v1000_RadioButton.Text = "1000 В";
+            this.v1000_RadioButton.UseVisualStyleBackColor = true;
+            // 
+            // v500_RadioButton
+            // 
+            this.v500_RadioButton.AutoSize = true;
+            this.v500_RadioButton.Location = new System.Drawing.Point(186, 38);
+            this.v500_RadioButton.Name = "v500_RadioButton";
+            this.v500_RadioButton.Size = new System.Drawing.Size(64, 22);
+            this.v500_RadioButton.TabIndex = 2;
+            this.v500_RadioButton.Text = "500 В";
+            this.v500_RadioButton.UseVisualStyleBackColor = true;
+            // 
+            // v100_RadioButton
+            // 
+            this.v100_RadioButton.AutoSize = true;
+            this.v100_RadioButton.Location = new System.Drawing.Point(100, 38);
+            this.v100_RadioButton.Name = "v100_RadioButton";
+            this.v100_RadioButton.Size = new System.Drawing.Size(64, 22);
+            this.v100_RadioButton.TabIndex = 1;
+            this.v100_RadioButton.Text = "100 В";
+            this.v100_RadioButton.UseVisualStyleBackColor = true;
+            // 
+            // v10_RadioButton
+            // 
+            this.v10_RadioButton.AutoSize = true;
+            this.v10_RadioButton.Checked = true;
+            this.v10_RadioButton.Location = new System.Drawing.Point(23, 38);
+            this.v10_RadioButton.Name = "v10_RadioButton";
+            this.v10_RadioButton.Size = new System.Drawing.Size(56, 22);
+            this.v10_RadioButton.TabIndex = 0;
+            this.v10_RadioButton.TabStop = true;
+            this.v10_RadioButton.Text = "10 В";
+            this.v10_RadioButton.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(-2, 417);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(917, 289);
+            this.richTextBox1.TabIndex = 7;
+            this.richTextBox1.Text = "";
+            // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(914, 620);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(914, 709);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.measurePanel);
             this.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.MaximizeBox = false;
             this.Name = "MeasureForm";
             this.Text = "MeasureForm";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
@@ -392,12 +414,14 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.depolDelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.polarDelayUpDown)).EndInit();
+            this.measurePanel.ResumeLayout(false);
+            this.measurePanel.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.depolDelay)).EndInit();
+            this.voltagesGroupBox.ResumeLayout(false);
+            this.voltagesGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -409,8 +433,8 @@
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton RizolRadioButton;
+        private System.Windows.Forms.RadioButton RleadRadioButton;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ComboBox temperature;
         private System.Windows.Forms.ComboBox averagingCounter;
@@ -418,17 +442,19 @@
         private System.Windows.Forms.Label temperatureComboBox;
         private System.Windows.Forms.Label polarDelayLbl;
         private System.Windows.Forms.NumericUpDown polarDelayUpDown;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RadioButton radioButton6;
-        private System.Windows.Forms.RadioButton radioButton5;
-        private System.Windows.Forms.RadioButton radioButton4;
-        private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.Panel measurePanel;
+        private System.Windows.Forms.GroupBox voltagesGroupBox;
+        private System.Windows.Forms.RadioButton v1000_RadioButton;
+        private System.Windows.Forms.RadioButton v500_RadioButton;
+        private System.Windows.Forms.RadioButton v100_RadioButton;
+        private System.Windows.Forms.RadioButton v10_RadioButton;
         private System.Windows.Forms.Label depolTimeLbl;
         private System.Windows.Forms.NumericUpDown depolDelay;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Button startMeasureButton;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

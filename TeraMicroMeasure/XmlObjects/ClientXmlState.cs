@@ -4,14 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.Utils;
+using NormaMeasure.DBControl.Tables;
+
 
 namespace TeraMicroMeasure.XmlObjects
 {
-    class ClientXmlState : NormaXmlObject
+    public class ClientXmlState : NormaXmlObject
     {
+
+        public static ClientXmlState CreateDefaultByClientId(int client_id)
+        {
+            ClientXmlState s = new ClientXmlState();
+            s.MeasureTypeId = MeasuredParameterType.Rleads;
+            s.ClientID = client_id;
+            s.MeasureVoltage = 10;
+
+            return s;
+        }
+
         public ClientXmlState() : base()
         {
-            _measure_state = new MeasureState();
+            //_measure_state = new MeasureState();
         }
 
         public ClientXmlState(string innerXml) : base(innerXml)
@@ -86,33 +99,40 @@ namespace TeraMicroMeasure.XmlObjects
             }
         }
 
-        private MeasureState _measure_state;
-        public MeasureState MeasureState
+        /// <summary>
+        /// ID измеряемого параметра
+        /// Должен соответствовать ID параметра из таблицы MeasuredParameterType
+        /// </summary>
+        public uint MeasureTypeId
         {
             get
             {
-                if (_measure_state == null)
-                {
-                    _measure_state = new MeasureState();
-                    try
-                    {
-                        string v = InnerXmlOfElement(_measure_state.GetType().Name);
-                        if (string.IsNullOrEmpty(v)) _measure_state = new MeasureState();
-                        else _measure_state = new MeasureState(v);
-                    }
-                    catch (System.Xml.XmlException)
-                    {
-                        _measure_state = new MeasureState();
-                    }
-                }
-
-                return _measure_state;
-            }set
+                uint v = MeasuredParameterType.Rleads;
+                tryGetUIntXmlProp("MeasureTypeId", out v);
+                return v;
+            }
+            set
             {
-                ReplaceElement(_measure_state.GetType().Name, value.InnerXml);
-                _measure_state = value;
+                setXmlProp("MeasureTypeId", value.ToString());
             }
         }
+
+        public uint MeasureVoltage
+        {
+            get
+            {
+                uint v = 10;
+                tryGetUIntXmlProp("MeasureVoltage", out v);
+                return v;
+            }
+            set
+            {
+                setXmlProp("MeasureVoltage", value.ToString());
+            }
+        }
+
+
+       
 
     }
 }

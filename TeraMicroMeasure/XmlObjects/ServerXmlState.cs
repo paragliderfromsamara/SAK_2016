@@ -7,7 +7,7 @@ using NormaMeasure.Utils;
 
 namespace TeraMicroMeasure.XmlObjects
 {
-    class ServerXmlState : NormaXmlObject
+    public class ServerXmlState : NormaXmlObject
     {
         const string ClientsListTagName = "ClientsList";
         const string ClientElementTagName = "ClientXmlState";

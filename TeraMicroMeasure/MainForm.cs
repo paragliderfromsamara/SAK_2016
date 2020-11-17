@@ -30,17 +30,19 @@ namespace TeraMicroMeasure
         ServerTCPControl serverTCPControl;
         ClientXmlState currentClientState;
         ServerXmlState currentServerState;
-        MeasureForm measureForm;
+        Dictionary<int, MeasureForm> measureFormsList;
         int recCounter = 0;
         public MainForm()
         {
             AppTypeSelector appSel = new AppTypeSelector();
+            measureFormsList = new Dictionary<int, MeasureForm>();
             //appSel.ShowDialog();
             if (appSel.ShowDialog() == DialogResult.OK)
             {
                 InitializeComponent();
                 InitCulture();
                 initStatusBar();
+                initTopBar();
                 InitButtonsBar();
                 if (Properties.Settings.Default.IsServerApp) InitAsServerApp();
                 else InitAsClientApp();
@@ -51,6 +53,12 @@ namespace TeraMicroMeasure
             }
 
            // testXml();
+        }
+
+        private void initTopBar()
+        {
+            testLinesToolStripMenuItem.Visible = Properties.Settings.Default.IsServerApp;
+            if (Properties.Settings.Default.IsServerApp) InitTestLinesTabOnTopBar();
         }
 
         private void InitButtonsBar()
@@ -82,17 +90,17 @@ namespace TeraMicroMeasure
             c.ClientPort = 6666;
             c.ClientIP = "192.168.0.2";
             System.Threading.Thread.Sleep(1000);
-            richTextBox1.Text = c.InnerXml;
+            //richTextBox1.Text = c.InnerXml;
             c.ClientPort = 9999;
-            richTextBox1.Text += "\n\n" + c.IsValid;
+            //richTextBox1.Text += "\n\n" + c.IsValid;
 
             //
 
             c2 = new ClientXmlState(c.InnerXml);
-            richTextBox1.Text += "\n\n" + c2.IsValid;
+            //richTextBox1.Text += "\n\n" + c2.IsValid;
 
-            c2.MeasureState.CableId = 1;
-            richTextBox1.Text += "\n\n" + c2.MeasureState.InnerXml;
+           // c2.MeasureState.CableId = 1;
+          //  richTextBox1.Text += "\n\n" + c2.MeasureState.InnerXml;
             //s.AddClient(c);
             //richTextBox1.Text = s.InnerXml;
             //richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();
@@ -116,7 +124,6 @@ namespace TeraMicroMeasure
             retry:
             string currentIp = SettingsControl.GetLocalIP();
             string[] ipList = NormaServer.GetAvailableIpAddressList();
-            this.Text = "Сервер";
             if (!NormaServer.IncludesIpOnList(currentIp) && !SettingsControl.GetOfflineMode())
             {
                 if (ipList.Length == 1)
@@ -131,14 +138,81 @@ namespace TeraMicroMeasure
                 ipForm.ShowDialog();
             }
             initServerControl();
+
         }
+
+        private void InitTestLinesTabOnTopBar()
+        {
+            int[] clientIds = SettingsControl.GetClientList();
+            foreach(int id in clientIds)
+            {
+                ToolStripItem i = testLinesToolStripMenuItem.DropDownItems.Add($"Линия {id}");
+                i.Name = $"ToolStripItemOfClient_{id}";
+                i.Click += ToolStripItemOfClient_Click;
+            }
+            //transCounterLbl.Text = clientIds.Length.ToString();
+        }
+
+        private void ToolStripItemOfClient_Click(object sender, EventArgs e)
+        {
+            ToolStripItem i = sender as ToolStripItem;
+            int clientId = -1;
+            int.TryParse(i.Name.Replace("ToolStripItemOfClient_", ""), out clientId);
+            if (clientId > 0) ShowClientForm(clientId);
+        }
+
+        private void ShowClientForm(int client_id)
+        {
+            MeasureForm f = getOrCreateMeasureFormByClientId(client_id);
+            if (!f.Visible) f.Show();
+            if (f.WindowState == FormWindowState.Minimized) f.WindowState = FormWindowState.Normal;
+        }
+
+        private MeasureForm getMeasureFormByClientId(int client_id)
+        {
+            MeasureForm f = null;
+            if (measureFormsList.ContainsKey(client_id)) f = measureFormsList[client_id];
+            return f;
+        }
+
+        private MeasureForm getOrCreateMeasureFormByClientId(int client_id)
+        {
+            MeasureForm f = getMeasureFormByClientId(client_id);
+            if (f == null) f = InitMeasureFormByClientId(client_id);
+            return f;
+        }
+
+        private MeasureForm InitMeasureFormByClientId(int client_id)
+        {
+            MeasureForm f = new MeasureForm(client_id);
+            f.MdiParent = this;
+            f.FormClosing += MeasureForm_Closing;
+            //f.SetStates(currentServerState, currentClientState);
+            if (client_id == 0)
+            {
+
+            }else 
+            {
+                
+            }
+            measureFormsList.Add(client_id, f);
+            return f;
+        }
+
+        private void MeasureForm_Closing(object sender, FormClosingEventArgs e)
+        {
+            MeasureForm f = sender as MeasureForm;
+            measureFormsList.Remove(f.ClientID);
+        }
+
         private void InitAsClientApp()
         {
             currentClientState = buildClientXML();
             SetClientTitle();
             CheckBaseTCPClientParameters();
             setClientButtonStatus(ClientStatus.disconnected);
-            InitMeasurePanel();
+            InitMeasureForm();
+            
             /////////////////////////////////////
             //InitClientTCPControl();
         }
@@ -188,8 +262,8 @@ namespace TeraMicroMeasure
                 }
                 else
                 {
-                    richTextBox2.Text += "\n\n" + cs.InnerXml;
-                    richTextBox1.Text += "\n\n" + currentServerState.InnerXml;
+                    //richTextBox2.Text += "\n\n" + cs.InnerXml;
+                    //richTextBox1.Text += "\n\n" + currentServerState.InnerXml;
                     transCounterLbl.Text = $"{recCounter++}";
                 }
             }
@@ -279,7 +353,7 @@ namespace TeraMicroMeasure
             serverState.IPAddress = SettingsControl.GetLocalIP();
             serverState.Port = SettingsControl.GetLocalPort();
             serverState.RequestPeriod = SettingsControl.GetRequestPeriod();
-            richTextBox2.Text = serverState.InnerXml;
+            //richTextBox2.Text = serverState.InnerXml;
             return serverState;
         }
         #endregion
@@ -288,8 +362,7 @@ namespace TeraMicroMeasure
 
         private ClientXmlState buildClientXML()
         {
-            ClientXmlState clientXML = new ClientXmlState();
-            clientXML.ClientID = SettingsControl.GetClientId();
+            ClientXmlState clientXML = ClientXmlState.CreateDefaultByClientId(SettingsControl.GetClientId());
             clientXML.ClientIP = SettingsControl.GetLocalIP();
             clientXML.ClientPort = SettingsControl.GetLocalPort();
             clientXML.ServerIP = SettingsControl.GetServerIP();
@@ -343,7 +416,7 @@ namespace TeraMicroMeasure
             {
                 ServerXmlState sState = state_for_a_process as ServerXmlState;
                 ClientIDProcessor clidp = new ClientIDProcessor(new TeraMicroStateProcessor(sState, currentClientState), ClientIdChange_Handler);
-                richTextBox1.Text = sState.InnerXml;
+                //richTextBox1.Text = sState.InnerXml;
                 transCounterLbl.Text = $"{recCounter++}";
                 clientTCPControl.SendState(clidp.CurrentClientState);
             }
@@ -462,14 +535,18 @@ namespace TeraMicroMeasure
         private void SetClientTitle()
         {
             int cId = SettingsControl.GetClientId();
-            this.Text = (cId == 0) ? "Клиент без номера" : $"Клиент {cId}";
+            this.Text = (cId <= 0) ? "Испытательная линия без номера" : $"Испытательная линия с номером {cId}";
         }
 
-        private void InitMeasurePanel()
+        private void InitMeasureForm()
         {
-            measureForm = new MeasureForm();
-            measureForm.MdiParent = this;
-            measureForm.Show();
+            MeasureForm f = getOrCreateMeasureFormByClientId(SettingsControl.GetClientId());
+            f.ClientState = currentClientState;
+            f.Show();
+            
+            //measureForm = new MeasureForm();
+            //measureForm.MdiParent = this;
+            //measureForm.Show();
           //  MeasurePanel = new MeasurePanel(currentClientState);
           // MeasurePanel.Parent = centralPanel;
           // MeasurePanel.Location = new Point(0, 150);
@@ -487,4 +564,5 @@ namespace TeraMicroMeasure
         disconnected,
         tryConnect
     }
+
 }

@@ -105,14 +105,5 @@ namespace TeraMicroMeasure
                 }
             }
         }
-
-        private void SynchronizeClientStateOnConnection(ClientXmlState clState)
-        {
-            Debug.WriteLine($"SynchronizeClientStateOnConnection was_client_id = {clState.ClientID}");
-            Debug.WriteLine($"SynchronizeClientStateOnConnection client_ip = {clState.ClientIP}");
-            if (clState.ClientID == 0) clState.ClientID = SettingsControl.GetClientIdByIp(clState.ClientIP);
-            Debug.WriteLine($"SynchronizeClientStateOnConnection next_client_id = {clState.ClientID}");
-            SettingsControl.SetClientIP(clState.ClientID, clState.ClientIP);
-        }
     }
 }

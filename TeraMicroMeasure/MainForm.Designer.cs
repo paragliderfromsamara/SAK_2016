@@ -28,13 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкиСервераToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.базыДанныхToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.пользователиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.кабелиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.испытанияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.clientCounterStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.serverStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -42,26 +43,25 @@
             this.topPanel = new System.Windows.Forms.Panel();
             this.switchConnectToServerButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.menuStrip1.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.topPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.menuStrip1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.menuStrip.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingsToolStripMenuItem,
-            this.базыДанныхToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.MinimumSize = new System.Drawing.Size(600, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1496, 25);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
+            this.базыДанныхToolStripMenuItem,
+            this.testLinesToolStripMenuItem});
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.MinimumSize = new System.Drawing.Size(600, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(1496, 25);
+            this.menuStrip.TabIndex = 0;
+            this.menuStrip.Text = "menuStrip1";
             // 
             // settingsToolStripMenuItem
             // 
@@ -105,6 +105,12 @@
             this.испытанияToolStripMenuItem.Name = "испытанияToolStripMenuItem";
             this.испытанияToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.испытанияToolStripMenuItem.Text = "Испытания";
+            // 
+            // testLinesToolStripMenuItem
+            // 
+            this.testLinesToolStripMenuItem.Name = "testLinesToolStripMenuItem";
+            this.testLinesToolStripMenuItem.Size = new System.Drawing.Size(152, 21);
+            this.testLinesToolStripMenuItem.Text = "Испытательные линии";
             // 
             // statusStrip
             // 
@@ -186,42 +192,24 @@
             this.button1.Text = "";
             this.button1.UseVisualStyleBackColor = false;
             // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(0, 699);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(679, 171);
-            this.richTextBox1.TabIndex = 4;
-            this.richTextBox1.Text = "";
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.Location = new System.Drawing.Point(694, 699);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(650, 171);
-            this.richTextBox2.TabIndex = 5;
-            this.richTextBox2.Text = "";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::TeraMicroMeasure.Properties.Resources.backgroundMdi;
             this.ClientSize = new System.Drawing.Size(1496, 895);
-            this.Controls.Add(this.richTextBox2);
-            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.topPanel);
             this.Controls.Add(this.statusStrip);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.menuStrip);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.IsMdiContainer = true;
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.menuStrip;
             this.MinimumSize = new System.Drawing.Size(700, 500);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.topPanel.ResumeLayout(false);
@@ -232,7 +220,7 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.Panel topPanel;
@@ -244,10 +232,9 @@
         private System.Windows.Forms.ToolStripMenuItem испытанияToolStripMenuItem;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripMenuItem настройкиСервераToolStripMenuItem;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ToolStripStatusLabel transCounterLbl;
-        private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.Button switchConnectToServerButton;
+        private System.Windows.Forms.ToolStripMenuItem testLinesToolStripMenuItem;
     }
 }
 

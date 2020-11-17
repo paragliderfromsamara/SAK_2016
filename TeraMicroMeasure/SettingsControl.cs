@@ -68,7 +68,9 @@ namespace TeraMicroMeasure
         public static int GetClientId()
         {
             IniFile f = IniFile.GetAppSettingsFile();
-            return f.ReadInt("client_id", ClientSettingsSectionName);
+            int v = f.ReadInt("client_id", ClientSettingsSectionName);
+            if (v == 0) v = -1;
+            return v;
         }
 
         public static void SetClientId(int id)
@@ -98,7 +100,7 @@ namespace TeraMicroMeasure
         public static int GetClientIdByIp(string ip)
         {
             IniFile f = IniFile.GetAppSettingsFile();
-            int clId=0;
+            int clId=-1;
             while(f.KeyExists("ip", $"Client_{++clId}"))
             {
                 if (f.Read("ip", $"Client_{clId}") == ip) break;
@@ -116,6 +118,18 @@ namespace TeraMicroMeasure
         {
             IniFile f = IniFile.GetAppSettingsFile();
             return f.Read("ip", $"Client_{client_id}");
+        }
+
+        public static int[] GetClientList()
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            List<int> cl = new List<int>();
+            int clId = 0;
+            while (f.KeyExists("ip", $"Client_{++clId}"))
+            {
+                cl.Add(clId);
+            }
+            return cl.ToArray();
         }
     }
 }

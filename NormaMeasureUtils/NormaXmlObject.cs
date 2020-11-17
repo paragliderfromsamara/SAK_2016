@@ -213,6 +213,12 @@ namespace NormaMeasure.Utils
             return int.TryParse(getXmlProp(key), out defVal);
         }
 
+        protected bool tryGetUIntXmlProp(string key, out uint defVal)
+        {
+            return uint.TryParse(getXmlProp(key), out defVal);
+        }
+
+
         protected bool hasElement(string key)
         {
             return xDoc.Element(key) != null;
