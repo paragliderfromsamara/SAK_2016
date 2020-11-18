@@ -30,18 +30,18 @@
         {
             this.cableComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.cableLengthNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.RizolRadioButton = new System.Windows.Forms.RadioButton();
             this.RleadRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.depolTimeLbl = new System.Windows.Forms.Label();
-            this.depolDelay = new System.Windows.Forms.NumericUpDown();
+            this.afterMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
             this.averagingCounter = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.polarDelayLbl = new System.Windows.Forms.Label();
-            this.polarDelayUpDown = new System.Windows.Forms.NumericUpDown();
+            this.beforeMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
             this.temperatureComboBox = new System.Windows.Forms.Label();
             this.measurePanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -56,11 +56,11 @@
             this.v100_RadioButton = new System.Windows.Forms.RadioButton();
             this.v10_RadioButton = new System.Windows.Forms.RadioButton();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.depolDelay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.polarDelayUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).BeginInit();
             this.measurePanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.voltagesGroupBox.SuspendLayout();
@@ -91,23 +91,23 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Кабель";
             // 
-            // numericUpDown1
+            // cableLengthNumericUpDown
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(248, 63);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.cableLengthNumericUpDown.Location = new System.Drawing.Point(248, 63);
+            this.cableLengthNumericUpDown.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.cableLengthNumericUpDown.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(136, 30);
-            this.numericUpDown1.TabIndex = 2;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.cableLengthNumericUpDown.Name = "cableLengthNumericUpDown";
+            this.cableLengthNumericUpDown.Size = new System.Drawing.Size(136, 30);
+            this.cableLengthNumericUpDown.TabIndex = 2;
+            this.cableLengthNumericUpDown.Value = new decimal(new int[] {
             1000,
             0,
             0,
@@ -160,11 +160,11 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.depolTimeLbl);
-            this.groupBox2.Controls.Add(this.depolDelay);
+            this.groupBox2.Controls.Add(this.afterMeasureDelayUpDown);
             this.groupBox2.Controls.Add(this.averagingCounter);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.polarDelayLbl);
-            this.groupBox2.Controls.Add(this.polarDelayUpDown);
+            this.groupBox2.Controls.Add(this.beforeMeasureDelayUpDown);
             this.groupBox2.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox2.Location = new System.Drawing.Point(405, 263);
             this.groupBox2.Name = "groupBox2";
@@ -182,17 +182,17 @@
             this.depolTimeLbl.TabIndex = 8;
             this.depolTimeLbl.Text = "Разряд, c";
             // 
-            // depolDelay
+            // afterMeasureDelayUpDown
             // 
-            this.depolDelay.Location = new System.Drawing.Point(384, 62);
-            this.depolDelay.Maximum = new decimal(new int[] {
+            this.afterMeasureDelayUpDown.Location = new System.Drawing.Point(384, 62);
+            this.afterMeasureDelayUpDown.Maximum = new decimal(new int[] {
             300,
             0,
             0,
             0});
-            this.depolDelay.Name = "depolDelay";
-            this.depolDelay.Size = new System.Drawing.Size(115, 26);
-            this.depolDelay.TabIndex = 7;
+            this.afterMeasureDelayUpDown.Name = "afterMeasureDelayUpDown";
+            this.afterMeasureDelayUpDown.Size = new System.Drawing.Size(115, 26);
+            this.afterMeasureDelayUpDown.TabIndex = 7;
             // 
             // averagingCounter
             // 
@@ -220,23 +220,18 @@
             this.polarDelayLbl.TabIndex = 1;
             this.polarDelayLbl.Text = "Выдержка, мс";
             // 
-            // polarDelayUpDown
+            // beforeMeasureDelayUpDown
             // 
-            this.polarDelayUpDown.Location = new System.Drawing.Point(22, 61);
-            this.polarDelayUpDown.Maximum = new decimal(new int[] {
+            this.beforeMeasureDelayUpDown.Location = new System.Drawing.Point(22, 61);
+            this.beforeMeasureDelayUpDown.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.polarDelayUpDown.Minimum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.polarDelayUpDown.Name = "polarDelayUpDown";
-            this.polarDelayUpDown.Size = new System.Drawing.Size(115, 26);
-            this.polarDelayUpDown.TabIndex = 0;
-            this.polarDelayUpDown.Value = new decimal(new int[] {
+            this.beforeMeasureDelayUpDown.Name = "beforeMeasureDelayUpDown";
+            this.beforeMeasureDelayUpDown.Size = new System.Drawing.Size(115, 26);
+            this.beforeMeasureDelayUpDown.TabIndex = 0;
+            this.beforeMeasureDelayUpDown.Value = new decimal(new int[] {
             200,
             0,
             0,
@@ -263,7 +258,7 @@
             this.measurePanel.Controls.Add(this.groupBox2);
             this.measurePanel.Controls.Add(this.label1);
             this.measurePanel.Controls.Add(this.groupBox1);
-            this.measurePanel.Controls.Add(this.numericUpDown1);
+            this.measurePanel.Controls.Add(this.cableLengthNumericUpDown);
             this.measurePanel.Controls.Add(this.label2);
             this.measurePanel.Location = new System.Drawing.Point(-2, -1);
             this.measurePanel.Name = "measurePanel";
@@ -409,13 +404,13 @@
             this.MaximizeBox = false;
             this.Name = "MeasureForm";
             this.Text = "MeasureForm";
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.depolDelay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.polarDelayUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).EndInit();
             this.measurePanel.ResumeLayout(false);
             this.measurePanel.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -430,7 +425,7 @@
 
         private System.Windows.Forms.ComboBox cableComboBox;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown cableLengthNumericUpDown;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton RizolRadioButton;
@@ -441,7 +436,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label temperatureComboBox;
         private System.Windows.Forms.Label polarDelayLbl;
-        private System.Windows.Forms.NumericUpDown polarDelayUpDown;
+        private System.Windows.Forms.NumericUpDown beforeMeasureDelayUpDown;
         private System.Windows.Forms.Panel measurePanel;
         private System.Windows.Forms.GroupBox voltagesGroupBox;
         private System.Windows.Forms.RadioButton v1000_RadioButton;
@@ -449,7 +444,7 @@
         private System.Windows.Forms.RadioButton v100_RadioButton;
         private System.Windows.Forms.RadioButton v10_RadioButton;
         private System.Windows.Forms.Label depolTimeLbl;
-        private System.Windows.Forms.NumericUpDown depolDelay;
+        private System.Windows.Forms.NumericUpDown afterMeasureDelayUpDown;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Button startMeasureButton;

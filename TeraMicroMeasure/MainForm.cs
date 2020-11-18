@@ -52,7 +52,7 @@ namespace TeraMicroMeasure
                 Close();
             }
 
-           // testXml();
+           testXml();
         }
 
         private void initTopBar()
@@ -82,25 +82,48 @@ namespace TeraMicroMeasure
 
         private void testXml()
         {
+            /*
             ServerXmlState s = buildServerXML();
+            ServerXmlState s1;
             ClientXmlState c = new ClientXmlState();
-            ClientXmlState c2;
             ClientXmlState c1;
-            c.ClientID = 2;
-            c.ClientPort = 6666;
-            c.ClientIP = "192.168.0.2";
-            System.Threading.Thread.Sleep(1000);
+            ClientXmlState c2 = buildClientXML();
+            richTextBox1.Text = c.InnerXml;
+            c.ClientIP = "Хуйня";
+            //richTextBox1.Text += "\n\n" + c.WasChanged;
+            richTextBox1.Text += "\n\n" + c.InnerXml;
+            c1 = new ClientXmlState(c.InnerXml);
+            richTextBox1.Text += "\n\n" + c1.InnerXml;
+
+            richTextBox1.Text += "\n\n" + c1.ClientIP;
+
+            s.AddClient(c);
+            s.AddClient(c2);
+
+            s1 = new ServerXmlState(s.InnerXml);
+            richTextBox1.Text += "\n\n" + s.InnerXml;
+            richTextBox1.Text += "\n\n" + s1.InnerXml;
+            richTextBox1.Text += "\n\n" + (s1.Clients[c1.ClientIP] ).InnerXml;
+            s1.RemoveClient(c1);
+            richTextBox1.Text += "\n\n" + s1.InnerXml;
+            */
+            //ClientXmlState c2;
+            //ClientXmlState c1;
+            //c.ClientID = 2;
+            //c.ClientPort = 6666;
+            //c.ClientIP = "192.168.0.2";
+            //System.Threading.Thread.Sleep(1000);
             //richTextBox1.Text = c.InnerXml;
-            c.ClientPort = 9999;
+            //c.ClientPort = 9999;
             //richTextBox1.Text += "\n\n" + c.IsValid;
 
             //
 
-            c2 = new ClientXmlState(c.InnerXml);
+            //c2 = new ClientXmlState(c.InnerXml);
             //richTextBox1.Text += "\n\n" + c2.IsValid;
 
-           // c2.MeasureState.CableId = 1;
-          //  richTextBox1.Text += "\n\n" + c2.MeasureState.InnerXml;
+            // c2.MeasureState.CableId = 1;
+            //  richTextBox1.Text += "\n\n" + c2.MeasureState.InnerXml;
             //s.AddClient(c);
             //richTextBox1.Text = s.InnerXml;
             //richTextBox1.Text += "\n" + s.Clients.Keys.First<string>();

@@ -9,9 +9,11 @@ namespace TeraMicroMeasure.XmlObjects
 {
     public class ServerXmlState : NormaXmlObject
     {
-        const string ClientsListTagName = "ClientsList";
-        const string ClientElementTagName = "ClientXmlState";
-
+        const string ClientsList_TagName = "ClientsList";
+        const string ClientElement_TagName = "ClientXmlState";
+        const string IPAddress_TagName = "ip";
+        const string Port_TagName = "port";
+        const string RequestPeriod_TagName = "RequestPeriod";
 
 
         public ServerXmlState() : base()
@@ -24,6 +26,8 @@ namespace TeraMicroMeasure.XmlObjects
 
         }
 
+
+        string ip_address;
         /// <summary>
         /// IP адрес сервера
         /// </summary>
@@ -31,14 +35,20 @@ namespace TeraMicroMeasure.XmlObjects
         {
             get
             {
-                return getXmlProp("ip");
+                return ip_address;
             }
             set
             {
-                setXmlProp("ip", value);
+                bool f = ip_address != value;
+                if (f)
+                {
+                    ip_address = value;
+                    setChangedFlag(f);
+                }
             }
         }
 
+        int port;
         /// <summary>
         /// TCP порт на котором работает сервер
         /// </summary>
@@ -46,16 +56,20 @@ namespace TeraMicroMeasure.XmlObjects
         {
             get
             {
-                int p = 8000;
-                tryGetIntXmlProp("port", out p);
-                return p;
+                return port;
             }
             set
             {
-                setXmlProp("port", value.ToString());
+                bool f = port != value;
+                if (f)
+                {
+                    port = value;
+                    setChangedFlag(f);
+                }
             }
         }
 
+        int request_period;
         /// <summary>
         /// Периодичность запросов клиентов к серверу
         /// </summary>
@@ -63,17 +77,20 @@ namespace TeraMicroMeasure.XmlObjects
         {
             get
             {
-                int p = 1000;
-                tryGetIntXmlProp("request_period", out p);
-                return p;
+                return request_period;
             }
             set
             {
-                setXmlProp("request_period", value.ToString());
+                bool f = request_period != value;
+                if (f)
+                {
+                    request_period = value;
+                    setChangedFlag(f);
+                }
             }
         }
 
-        private Dictionary<string, ClientXmlState> _clients = null;
+        Dictionary<string, ClientXmlState> clients = new Dictionary<string, ClientXmlState>();
         /// <summary>
         /// Список подключенных клиентов по IP адресам
         /// </summary>
@@ -81,21 +98,75 @@ namespace TeraMicroMeasure.XmlObjects
         {
             get
             {
-                if (_clients == null)
+                if (clients == null)
                 {
-                    Dictionary<string, string> raw = GetNodesInnerXmlFromContainer(ClientsListTagName, ClientElementTagName);
-                    _clients = new Dictionary<string, ClientXmlState>();
+                    Dictionary<string, string> raw = GetNodesInnerXmlFromContainer(ClientsList_TagName, ClientElement_TagName);
+                    clients = new Dictionary<string, ClientXmlState>();
                     foreach (string ip in raw.Keys)
                     {
-                        _clients.Add(ip, new ClientXmlState(raw[ip]));
+                        clients.Add(ip, new ClientXmlState(raw[ip]));
                     }
                 }
-                return _clients;
+                return clients;
                 //xm
             }
         }
 
-        private void resetClients() { _clients = null; }
+        protected override void buildFromXML()
+        {
+            base.buildFromXML();
+            fillIPAddressFromXML();
+            fillPortFormXML();
+            fillRequestPeriodFromXML();
+            fillClientsFromXML();
+        }
+
+        private void fillClientsFromXML()
+        {
+            clients.Clear();
+            Dictionary<string, string> raw = GetNodesInnerXmlFromContainer(ClientsList_TagName, ClientElement_TagName);
+            foreach (string ip in raw.Keys)
+            {
+                clients.Add(ip, new ClientXmlState(raw[ip]));
+            }
+        }
+
+        private void fillRequestPeriodFromXML()
+        {
+            int v = 500;
+            tryGetIntXmlProp(RequestPeriod_TagName, out v);
+            if (v == 0) v = 500;
+            request_period = v;
+        }
+
+        private void fillPortFormXML()
+        {
+            int v = 8000;
+            tryGetIntXmlProp(Port_TagName, out v);
+            port = v;
+        }
+
+        protected override void fillXMLDocument()
+        {
+            base.fillXMLDocument();
+            setXmlProp(IPAddress_TagName, ip_address);
+            setXmlProp(Port_TagName, port.ToString());
+            setXmlProp(RequestPeriod_TagName, request_period.ToString());
+            addClientsToXML();
+        }
+
+        private void addClientsToXML()
+        {
+            foreach(var cl in clients.Values)
+            {
+                AddElementToContainer(ClientsList_TagName, cl.InnerXml);
+            }
+        }
+
+        private void fillIPAddressFromXML()
+        {
+            ip_address = getXmlProp(IPAddress_TagName);
+        }
 
         /// <summary>
         /// Добавление клиента в списко подключенных
@@ -104,21 +175,35 @@ namespace TeraMicroMeasure.XmlObjects
         /// <param name="cl"></param>
         public void AddClient(ClientXmlState cl)
         {
-            AddElementToContainer(ClientsListTagName, cl.InnerXml);
-            resetClients();
+            if (!clients.ContainsKey(cl.ClientIP))
+            {
+                clients.Add(cl.ClientIP, cl);
+                setChangedFlag(true);
+            }else
+            {
+                throw new Exception($"Клиент с IP {cl.ClientIP} уже добавлен в список");
+            }
         }
 
         public void RemoveClient(ClientXmlState cs)
         {
-            RemoveElementFromContainer(ClientsListTagName, cs.RootElementTagName, cs.ClientIP);
-            resetClients();
+            if (clients.ContainsKey(cs.ClientIP))
+            {
+                clients.Remove(cs.ClientIP);
+                setChangedFlag(true);
+            }
         }
 
         public void ReplaceClient(ClientXmlState cl)
         {
-            ReplaceElementOnContainer(ClientsListTagName, cl.RootElementTagName, cl.InnerXml, cl.ClientIP);
-            resetClients();
+            if (!clients.ContainsKey(cl.ClientIP))
+            {
+                RemoveClient(cl);
+                AddClient(cl);
+            }
         }
+
+
 
     }
 }

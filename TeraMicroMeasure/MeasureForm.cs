@@ -37,6 +37,7 @@ namespace TeraMicroMeasure
                 RemoveHandlersFromInputs();
                 clientState = new ClientXmlState(value.InnerXml);
                 fillInputsFromClientState();
+                if (clientState.WasChanged && isCurrentPCClient) ClientStateOnFormChanged();
                 AddHandlersToInputs();
             }
             get
@@ -70,7 +71,19 @@ namespace TeraMicroMeasure
         private void InitPanels()
         {
             voltagesGroupBox.Visible = false;
+            InitAverageCountComboBox();
            // measurePanel.Enabled = isCurrentPCClient;
+        }
+
+        private void InitAverageCountComboBox()
+        {
+            averagingCounter.Items.Add("Без усреднения");
+            averagingCounter.DropDownStyle = ComboBoxStyle.DropDownList;
+            for(int i=1; i<=100; i++)
+            {
+                averagingCounter.Items.Add(i);
+            }
+            averagingCounter.SelectedIndex = 0;
         }
 
         private void SetTitle()
@@ -103,6 +116,72 @@ namespace TeraMicroMeasure
         {
             if (!HasClientState) return;
             SetMeasureTypeFromXMLState();
+            SetVoltageFromXmlState();
+            SetCableIDFromXmlState();
+            SetCableLengthFromXmlState();
+            SetBeforeMeasureDelayFromXMLState();
+            SetAfterMeasureDelayFromXMLState();
+            SetAveragingTimesFromXmlState();
+        }
+
+        private void SetAveragingTimesFromXmlState()
+        {
+            if (clientState.AveragingTimes < 0 || clientState.AveragingTimes > averagingCounter.Items.Count)
+            {
+                clientState.AveragingTimes = 0;
+            }
+            averagingCounter.SelectedIndex = Convert.ToInt16(clientState.AveragingTimes);
+        }
+
+        private void SetAfterMeasureDelayFromXMLState()
+        {
+            afterMeasureDelayUpDown.Value = clientState.AfterMeasureDelay;
+        }
+
+        private void SetBeforeMeasureDelayFromXMLState()
+        {
+            beforeMeasureDelayUpDown.Value = clientState.BeforeMeasureDelay;
+        }
+
+        private void SetCableLengthFromXmlState()
+        {
+            if (clientState.MeasuredCableLength < 1 || clientState.MeasuredCableLength > 10000)
+            {
+                clientState.MeasuredCableLength = 1000;
+            }
+            cableLengthNumericUpDown.Value = clientState.MeasuredCableLength;
+        }
+
+        private void SetCableIDFromXmlState()
+        {
+            if (clientState.MeasuredCableID < 0 || clientState.MeasuredCableID > cableComboBox.Items.Count)
+            {
+                clientState.MeasuredCableID = 0;
+            }
+            cableComboBox.SelectedIndex = clientState.MeasuredCableID;
+        }
+
+        private void SetVoltageFromXmlState()
+        {
+            switch (clientState.MeasureVoltage)
+            {
+                case 10:
+                    v10_RadioButton.Checked = true;
+                    break;
+                case 100:
+                    v100_RadioButton.Checked = true;
+                    break;
+                case 500:
+                    v500_RadioButton.Checked = true;
+                    break;
+                case 1000:
+                    v1000_RadioButton.Checked = true;
+                    break;
+                default:
+                    clientState.MeasureVoltage = 10;
+                    v10_RadioButton.Checked = true;
+                    break;
+            }
         }
 
         private void SetMeasureTypeFromXMLState()
@@ -120,13 +199,17 @@ namespace TeraMicroMeasure
 
         private void MeasuredVoltageRadioButton_CheckedChanged(object sender, EventArgs e)
         {
+
             RadioButton rb = sender as RadioButton;
             if (rb.Checked)
             {
-                uint mId = 0;
-                if (rb == RizolRadioButton) mId = MeasuredParameterType.Risol2;
-                else if (rb == RleadRadioButton) mId = MeasuredParameterType.Rleads;
-                clientState.MeasureTypeId = mId;
+                uint v = 0;
+                if (rb == v10_RadioButton) v = 10;
+                else if (rb == v100_RadioButton) v = 100;
+                else if (rb == v500_RadioButton) v = 500;
+                else if (rb == v1000_RadioButton) v = 1000;
+                clientState.MeasureVoltage = v;
+                //MessageBox.Show(v.ToString());
             }
             ClientStateOnFormChanged();
         }
@@ -140,12 +223,10 @@ namespace TeraMicroMeasure
             RadioButton rb = sender as RadioButton;
             if (rb.Checked)
             {
-                uint v = 0;
-                if (rb == v10_RadioButton) v = 10;
-                else if (rb == v100_RadioButton) v = 100;
-                else if (rb == v500_RadioButton) v = 500;
-                else if (rb == v1000_RadioButton) v = 1000;
-                clientState.MeasureVoltage = v;
+                uint mId = 0;
+                if (rb == RizolRadioButton) mId = MeasuredParameterType.Risol2;
+                else if (rb == RleadRadioButton) mId = MeasuredParameterType.Rleads;
+                clientState.MeasureTypeId = mId;
             }
             ClientStateOnFormChanged();
         }
@@ -162,6 +243,46 @@ namespace TeraMicroMeasure
             v500_RadioButton.CheckedChanged += MeasuredVoltageRadioButton_CheckedChanged;
             v1000_RadioButton.CheckedChanged += MeasuredVoltageRadioButton_CheckedChanged;
 
+            cableComboBox.SelectedValueChanged += MeasuredCableComboBox_SelectedValueChanged;
+            cableLengthNumericUpDown.ValueChanged += CableLengthNumericUpDown_ValueChanged;
+
+            beforeMeasureDelayUpDown.ValueChanged += BeforeMeasureDelayUpDown_ValueChanged;
+            afterMeasureDelayUpDown.ValueChanged += AfterMeasureDelayUpDown_ValueChanged;
+            averagingCounter.SelectedIndexChanged += AveragingCounter_SelectedIndexChanged;
+
+        }
+
+        private void AveragingCounter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            clientState.AveragingTimes = Convert.ToUInt16(cb.SelectedIndex);
+            ClientStateOnFormChanged();
+        }
+
+        private void AfterMeasureDelayUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown ud = sender as NumericUpDown;
+            uint v = 0;
+            uint.TryParse(ud.Value.ToString(), out v);
+            clientState.AfterMeasureDelay = v;
+            ClientStateOnFormChanged();
+        }
+
+        private void BeforeMeasureDelayUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown ud = sender as NumericUpDown;
+            uint v = 0;
+            uint.TryParse(ud.Value.ToString(), out v);
+            clientState.BeforeMeasureDelay = v;
+            ClientStateOnFormChanged();
+        }
+
+        private void MeasuredCableComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            clientState.MeasuredCableID = cb.SelectedIndex;
+            cableLengthNumericUpDown.ValueChanged += CableLengthNumericUpDown_ValueChanged;
+            ClientStateOnFormChanged();
         }
 
         private void RemoveHandlersFromInputs()
@@ -174,6 +295,22 @@ namespace TeraMicroMeasure
             v100_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
             v500_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
             v1000_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
+
+            cableComboBox.SelectedValueChanged -= MeasuredCableComboBox_SelectedValueChanged;
+            cableLengthNumericUpDown.ValueChanged -= CableLengthNumericUpDown_ValueChanged;
+
+            beforeMeasureDelayUpDown.ValueChanged -= BeforeMeasureDelayUpDown_ValueChanged;
+            afterMeasureDelayUpDown.ValueChanged -= AfterMeasureDelayUpDown_ValueChanged;
+            averagingCounter.SelectedIndexChanged -= AveragingCounter_SelectedIndexChanged;
+        }
+
+        private void CableLengthNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown ud = sender as NumericUpDown;
+            uint v = 1000;
+            uint.TryParse(ud.Value.ToString(), out v);
+            clientState.MeasuredCableLength = v;
+            ClientStateOnFormChanged();
         }
 
         private void ClientStateOnFormChanged()
