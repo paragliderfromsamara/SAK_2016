@@ -52,7 +52,7 @@ namespace TeraMicroMeasure
                 Close();
             }
 
-           testXml();
+           //testXml();
         }
 
         private void initTopBar()
@@ -187,6 +187,7 @@ namespace TeraMicroMeasure
         private void ShowClientForm(int client_id)
         {
             MeasureForm f = getOrCreateMeasureFormByClientId(client_id);
+            if (currentServerState.HasClientWithID(client_id)) f.ClientState = currentServerState.GetClientStateByClientID(client_id);
             if (!f.Visible) f.Show();
             if (f.WindowState == FormWindowState.Minimized) f.WindowState = FormWindowState.Normal;
         }
@@ -211,13 +212,6 @@ namespace TeraMicroMeasure
             f.MdiParent = this;
             f.FormClosing += MeasureForm_Closing;
             //f.SetStates(currentServerState, currentClientState);
-            if (client_id == 0)
-            {
-
-            }else 
-            {
-                
-            }
             measureFormsList.Add(client_id, f);
             return f;
         }
@@ -237,7 +231,7 @@ namespace TeraMicroMeasure
             InitMeasureForm();
             
             /////////////////////////////////////
-            //InitClientTCPControl();
+            InitClientTCPControl();
         }
 
 
@@ -280,6 +274,7 @@ namespace TeraMicroMeasure
                     ServerStateUpdater ssu = new ServerStateUpdater(
                                                                      new ClientDetector(currentServerState, cs), ServerStateUpdated_Handler
                                                                     );
+                    
                     currentServerState = ssu.ServerState;
                     BeginInvoke(new EventHandler(OnClientStateReceived), new object[] { cs, a });
                 }
@@ -287,9 +282,25 @@ namespace TeraMicroMeasure
                 {
                     //richTextBox2.Text += "\n\n" + cs.InnerXml;
                     //richTextBox1.Text += "\n\n" + currentServerState.InnerXml;
+                    refreshClientStateOnClientForm(cs);
                     transCounterLbl.Text = $"{recCounter++}";
                 }
             }
+        }
+
+        private void refreshClientStateOnClientForm(ClientXmlState cs)
+        {
+            if (measureFormsList.ContainsKey(cs.ClientID))
+            {
+                MeasureForm f = measureFormsList[cs.ClientID];
+                if (!f.HasClientState) f.ClientState = cs;
+                else
+                {
+                    if (f.ClientState.StateId != cs.StateId) f.ClientState = cs;
+                }
+
+            }
+
         }
 
         private void ServerStateUpdated_Handler(object o, EventArgs e)
@@ -565,6 +576,7 @@ namespace TeraMicroMeasure
         {
             MeasureForm f = getOrCreateMeasureFormByClientId(SettingsControl.GetClientId());
             f.ClientState = currentClientState;
+            f.OnClientStateChanged += RefreshClientStateFromMeasureForm;
             f.Show();
             
             //measureForm = new MeasureForm();
@@ -575,6 +587,20 @@ namespace TeraMicroMeasure
           // MeasurePanel.Location = new Point(0, 150);
 
             //  MeasurePanel.Dock = DockStyle.Fill;
+        }
+
+        private void RefreshClientStateFromMeasureForm(object sender, EventArgs e)
+        {
+            ClientXmlState s = sender as ClientXmlState;
+            RefreshCurrentClientState(s);
+
+
+        }
+
+        private void RefreshCurrentClientState(ClientXmlState new_state)
+        {
+            currentClientState = new_state;
+            clientTCPControl.SendState(currentClientState);
         }
         #endregion
 

@@ -204,6 +204,18 @@ namespace TeraMicroMeasure.XmlObjects
         }
 
 
+        public ClientXmlState GetClientStateByClientID(int client_id)
+        {
+            foreach(var cs in Clients.Values)
+            {
+                if (cs.ClientID == client_id) return cs;
+            }
+            return null;
+        }
 
+        public bool HasClientWithID(int client_id)
+        {
+            return GetClientStateByClientID(client_id) != null;
+        }
     }
 }

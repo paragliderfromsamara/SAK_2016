@@ -386,7 +386,7 @@ namespace TeraMicroMeasure.XmlObjects
         private void fillMeasuredCableLengthFromXML()
         {
             uint v = 1;
-            tryGetUIntXmlProp(measureVoltage_TagName, out v);
+            tryGetUIntXmlProp(measuredCableLength_TagName, out v);
             if (v == 0) v = 1;
             measured_cable_length = v;
         }

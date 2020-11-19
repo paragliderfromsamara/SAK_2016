@@ -72,7 +72,7 @@ namespace TeraMicroMeasure
         {
             voltagesGroupBox.Visible = false;
             InitAverageCountComboBox();
-           // measurePanel.Enabled = isCurrentPCClient;
+            measurePanel.Enabled = isCurrentPCClient;
         }
 
         private void InitAverageCountComboBox()
@@ -319,6 +319,7 @@ namespace TeraMicroMeasure
             OnClientStateChanged?.Invoke(clientState, new EventArgs());
             richTextBox1.Text = clientState.InnerXml;
         }
+
 
     }
 }
