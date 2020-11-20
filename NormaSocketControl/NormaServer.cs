@@ -8,10 +8,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
 
+
 namespace NormaMeasure.SocketControl
 {
     public delegate void ProcessConnectionException(Exception ex);
-    public class NormaServer
+    public class NormaServerDeprecated
     {
         public ProcessConnectionException ProcessOnServerConnectionException;
         public NormaTCPClientDelegate OnClientConnected;
@@ -67,7 +68,7 @@ namespace NormaMeasure.SocketControl
 
         public string IpAddress => ipAddress;
         public int Port => port;
-        public NormaServer(string _ip, int _port)
+        public NormaServerDeprecated(string _ip, int _port)
         {
             this.ServerClients = new Dictionary<string, NormaTCPClient>();
             this.port = _port;
@@ -144,6 +145,14 @@ namespace NormaMeasure.SocketControl
             NormaTCPClient cl = ServerClients[ip];
             OnClientDisconnected?.Invoke(cl);
             ServerClients.Remove(ip);
+        }
+    }
+
+    public class NormaServer
+    {
+        public NormaServer(TCPServerControllLib.TCPSettingsController controller)
+        {
+
         }
     }
 }

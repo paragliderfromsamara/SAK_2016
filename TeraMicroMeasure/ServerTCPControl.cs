@@ -19,7 +19,7 @@ namespace TeraMicroMeasure
         public EventHandler OnClientListChanged;
 
         private ServerXmlState currentState;
-        private NormaServer server;
+        private NormaServerDeprecated server;
         public ServerTCPControl(ServerXmlState state)
         {
             this.currentState = state;
@@ -27,7 +27,7 @@ namespace TeraMicroMeasure
 
         private void initServer()
         {
-            server = new NormaServer(currentState.IPAddress, currentState.Port);
+            server = new NormaServerDeprecated(currentState.IPAddress, currentState.Port);
             server.ProcessOnServerConnectionException += onServerException;
             server.OnClientConnected += onClientConnected;
             server.OnClientDisconnected += onClientDisconnected;

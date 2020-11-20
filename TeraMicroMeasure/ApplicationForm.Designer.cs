@@ -1,6 +1,6 @@
 ﻿namespace TeraMicroMeasure
 {
-    partial class MainForm
+    partial class ApplicationForm
     {
         /// <summary>
         /// Required designer variable.

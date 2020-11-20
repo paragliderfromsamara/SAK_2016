@@ -124,14 +124,14 @@ namespace NormaMeasure.SocketControl
         private void sendProcess()
         {
             NetworkStream stream = null;
-            IPEndPoint localPoint = new IPEndPoint(IPAddress.Parse(localIP), localPort);
-            IPEndPoint remotePoint = new IPEndPoint(IPAddress.Parse(remoteIP), remotePort);
-            tcpClient = new TcpClient(localPoint);
-            tcpClient.ReceiveTimeout = receiveTimeout;
-            tcpClient.SendTimeout = sendTimeout;
+
             try
             {
-
+                IPEndPoint localPoint = new IPEndPoint(IPAddress.Parse(localIP), localPort);
+                IPEndPoint remotePoint = new IPEndPoint(IPAddress.Parse(remoteIP), remotePort);
+                tcpClient = new TcpClient(localPoint);
+                tcpClient.ReceiveTimeout = receiveTimeout;
+                tcpClient.SendTimeout = sendTimeout;
                 tcpClient.Connect(IPAddress.Parse(remoteIP), remotePort);
                 stream = tcpClient.GetStream();
                 byte[] dataIn = new byte[256]; // буфер для получаемых данных

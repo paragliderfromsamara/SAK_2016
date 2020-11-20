@@ -32,7 +32,7 @@ namespace TeraMicroMeasure
             panel.Dock = DockStyle.Fill;
             panel.BackColor = System.Drawing.Color.AliceBlue;
             panel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            addrList = NormaServer.GetAvailableIpAddressList();
+            addrList = NormaServerDeprecated.GetAvailableIpAddressList();
             fill_data_from_settings();
             init_panel();
         }
@@ -169,7 +169,7 @@ namespace TeraMicroMeasure
         private void Rb_Click(object sender, EventArgs e)
         {
             localIpComboBox.Items.Clear();
-            addrList = NormaServer.GetAvailableIpAddressList();
+            addrList = NormaServerDeprecated.GetAvailableIpAddressList();
             foreach (var s in addrList)
             {
                 localIpComboBox.Items.Add(s);
@@ -198,10 +198,10 @@ namespace TeraMicroMeasure
             bool f;
             try
             {
-                f = NormaServer.IsValidIPString(ip);
+                f = NormaServerDeprecated.IsValidIPString(ip);
 
 
-                if (!is_server) f &= NormaServer.IsValidIPString(srvIp);
+                if (!is_server) f &= NormaServerDeprecated.IsValidIPString(srvIp);
             }
             catch
             {
@@ -222,7 +222,7 @@ namespace TeraMicroMeasure
            if (IsValidData())
            {
                 SettingsControl.SetLocalIpAndPort(localIpAddress, localPort.ToString());
-                if (!is_server) SettingsControl.SetServerIpAndPort(serverIpAddress, localPort.ToString());
+                if (!is_server) SettingsControl.SetServerIpAndPort(serverIpAddress, serverPort.ToString());
                 OnButtonClick?.Invoke(sender, e);
             }else
             {

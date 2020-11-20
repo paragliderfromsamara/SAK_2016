@@ -14,10 +14,11 @@ using NormaMeasure.Utils;
 using System.Xml;
 using TeraMicroMeasure.XmlObjects;
 using TeraMicroMeasure.CommandProcessors;
+using NormaMeasure.SocketControl.TCPServerControllLib;
 
 namespace TeraMicroMeasure
 {
-    public partial class MainForm : Form
+    public partial class ApplicationForm : Form
     {
         object locker = new object();
         private System.Drawing.Color redColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -32,7 +33,7 @@ namespace TeraMicroMeasure
         ServerXmlState currentServerState;
         Dictionary<int, MeasureForm> measureFormsList;
         int recCounter = 0;
-        public MainForm()
+        public ApplicationForm()
         {
             AppTypeSelector appSel = new AppTypeSelector();
             measureFormsList = new Dictionary<int, MeasureForm>();
@@ -144,10 +145,20 @@ namespace TeraMicroMeasure
 
         private void InitAsServerApp()
         {
+            try
+            {
+                TCPSettingsController c = new TCPSettingsController(false);
+            }catch(TCPSettingsControllerException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+            /*
             retry:
             string currentIp = SettingsControl.GetLocalIP();
-            string[] ipList = NormaServer.GetAvailableIpAddressList();
-            if (!NormaServer.IncludesIpOnList(currentIp) && !SettingsControl.GetOfflineMode())
+            string[] ipList = NormaServerDeprecated.GetAvailableIpAddressList();
+            currentServerState = buildServerXML();
+            if (!NormaServerDeprecated.IncludesIpOnList(currentIp) && !SettingsControl.GetOfflineMode())
             {
                 if (ipList.Length == 1)
                 {
@@ -161,7 +172,7 @@ namespace TeraMicroMeasure
                 ipForm.ShowDialog();
             }
             initServerControl();
-
+            */
         }
 
         private void InitTestLinesTabOnTopBar()
@@ -246,7 +257,10 @@ namespace TeraMicroMeasure
         {
             if (!SettingsControl.GetOfflineMode())
             {
-                currentServerState = buildServerXML();
+                
+                currentServerState.IPAddress = SettingsControl.GetLocalIP();
+                currentServerState.Port = SettingsControl.GetLocalPort();
+                currentServerState.RequestPeriod = SettingsControl.GetRequestPeriod();
                 serverTCPControl = new ServerTCPControl(currentServerState);
                 serverTCPControl.OnClientStateReceived += OnClientStateReceived;
                 serverTCPControl.OnServerConnectionException += onServerException;
@@ -397,10 +411,7 @@ namespace TeraMicroMeasure
         private ClientXmlState buildClientXML()
         {
             ClientXmlState clientXML = ClientXmlState.CreateDefaultByClientId(SettingsControl.GetClientId());
-            clientXML.ClientIP = SettingsControl.GetLocalIP();
-            clientXML.ClientPort = SettingsControl.GetLocalPort();
-            clientXML.ServerIP = SettingsControl.GetServerIP();
-            clientXML.ServerPort = SettingsControl.GetServerPort();
+
             return clientXML;
         }
 
@@ -422,7 +433,10 @@ namespace TeraMicroMeasure
             //retry:
             // try
             //  {
-
+                currentClientState.ClientIP = SettingsControl.GetLocalIP();
+                currentClientState.ClientPort = SettingsControl.GetLocalPort();
+                currentClientState.ServerIP = SettingsControl.GetServerIP();
+                currentClientState.ServerPort = SettingsControl.GetServerPort();
                 setClientButtonStatus(ClientStatus.tryConnect);
                 clientTCPControl = new ClientTCPControl(currentClientState);
                 clientTCPControl.OnServerConnected += onServerConnected_Handler;
@@ -507,6 +521,7 @@ namespace TeraMicroMeasure
                         reinitClientTCPControl();
                         return;
                     }
+                    clientTCPControl = null;
                     setClientButtonStatus(ClientStatus.disconnected);
                 }
 
