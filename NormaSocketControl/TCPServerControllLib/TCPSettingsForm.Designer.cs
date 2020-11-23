@@ -33,7 +33,7 @@
             this.localSettings = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.serverSettingsPanel = new System.Windows.Forms.GroupBox();
             this.remotePortInput = new System.Windows.Forms.NumericUpDown();
             this.remoteIPInput = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -42,12 +42,13 @@
             this.cancelButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.localPortInput)).BeginInit();
             this.localSettings.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.serverSettingsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.remotePortInput)).BeginInit();
             this.SuspendLayout();
             // 
             // localIPComboBox
             // 
+            this.localIPComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.localIPComboBox.FormattingEnabled = true;
             this.localIPComboBox.Location = new System.Drawing.Point(22, 49);
             this.localIPComboBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -80,6 +81,8 @@
             // 
             // localSettings
             // 
+            this.localSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.localSettings.Controls.Add(this.label2);
             this.localSettings.Controls.Add(this.label1);
             this.localSettings.Controls.Add(this.localIPComboBox);
@@ -111,20 +114,20 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "IP Адрес";
             // 
-            // groupBox1
+            // serverSettingsPanel
             // 
-            this.groupBox1.Controls.Add(this.remotePortInput);
-            this.groupBox1.Controls.Add(this.remoteIPInput);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Location = new System.Drawing.Point(12, 125);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Size = new System.Drawing.Size(414, 95);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Настройки сервера";
+            this.serverSettingsPanel.Controls.Add(this.remotePortInput);
+            this.serverSettingsPanel.Controls.Add(this.remoteIPInput);
+            this.serverSettingsPanel.Controls.Add(this.label3);
+            this.serverSettingsPanel.Controls.Add(this.label4);
+            this.serverSettingsPanel.Location = new System.Drawing.Point(12, 125);
+            this.serverSettingsPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.serverSettingsPanel.Name = "serverSettingsPanel";
+            this.serverSettingsPanel.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.serverSettingsPanel.Size = new System.Drawing.Size(414, 95);
+            this.serverSettingsPanel.TabIndex = 3;
+            this.serverSettingsPanel.TabStop = false;
+            this.serverSettingsPanel.Text = "Настройки сервера";
             // 
             // remotePortInput
             // 
@@ -176,6 +179,7 @@
             // 
             // saveButton
             // 
+            this.saveButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.saveButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.saveButton.Location = new System.Drawing.Point(12, 242);
             this.saveButton.Name = "saveButton";
@@ -187,6 +191,7 @@
             // 
             // cancelButton
             // 
+            this.cancelButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.Location = new System.Drawing.Point(237, 242);
             this.cancelButton.Name = "cancelButton";
@@ -203,7 +208,7 @@
             this.ControlBox = false;
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.serverSettingsPanel);
             this.Controls.Add(this.localSettings);
             this.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -213,8 +218,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.localPortInput)).EndInit();
             this.localSettings.ResumeLayout(false);
             this.localSettings.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.serverSettingsPanel.ResumeLayout(false);
+            this.serverSettingsPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.remotePortInput)).EndInit();
             this.ResumeLayout(false);
 
@@ -227,7 +232,7 @@
         private System.Windows.Forms.GroupBox localSettings;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox serverSettingsPanel;
         private System.Windows.Forms.NumericUpDown remotePortInput;
         private System.Windows.Forms.TextBox remoteIPInput;
         private System.Windows.Forms.Label label3;

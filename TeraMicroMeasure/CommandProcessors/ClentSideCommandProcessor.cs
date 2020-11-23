@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeraMicroMeasure.XmlObjects;
-
+using NormaMeasure.SocketControl.TCPServerControllLib;
+using NormaMeasure.SocketControl;
 
 namespace TeraMicroMeasure.CommandProcessors
 {
@@ -94,7 +95,7 @@ namespace TeraMicroMeasure.CommandProcessors
         public ServerStateUpdater(TeraMicroStateProcessor pr, EventHandler OnServerStateChanged) : base(pr)
         {
             ServerStateChanged |= refreshCurrentClientOnServerSettings();
-            if (ServerStateChanged) OnServerStateChanged?.Invoke(ServerState, new EventArgs());
+            if (ServerStateChanged) OnServerStateChanged?.Invoke(ServerState, new ServerXmlStateEventArgs(ServerState, CurrentClientState));
         }
 
         bool refreshCurrentClientOnServerSettings()
@@ -116,5 +117,74 @@ namespace TeraMicroMeasure.CommandProcessors
             return true;
         }
 
+    }
+
+    class ServerCommandDispatcher : IDisposable
+    {
+        TCPServerClientsControl clientsControl;
+        private ServerXmlState _currentServerState;
+        private ServerXmlState currentServerState
+        {
+            get
+            {
+                return _currentServerState;
+            }
+            set
+            {
+                bool f;
+                try
+                {
+                    f =  _currentServerState.StateId != value.StateId;
+                }catch(NullReferenceException)
+                {
+                    f = true;
+                }
+                if (f)
+                {
+                    _currentServerState = value;
+                    clientsControl.Answer = _currentServerState.InnerXml;
+                }
+            }
+        }
+        private EventHandler OnServerStateChangedByClient;
+        private static object locker = new object();
+
+        public ServerCommandDispatcher(TCPServerClientsControl _clients_control, ServerXmlState server_state, EventHandler on_server_state_changed_by_client_handler)
+        {
+            clientsControl = _clients_control;
+            currentServerState = server_state;
+            clientsControl.OnClientMessageReceived += OnClientMessageReceived_Handler;
+            
+            OnServerStateChangedByClient += on_server_state_changed_by_client_handler;
+
+        }
+
+
+        private void OnClientMessageReceived_Handler(object sender, EventArgs e)
+        {
+            lock(locker)
+            {
+                NormaTCPClientEventArgs a = e as NormaTCPClientEventArgs;
+                ClientXmlState cs = new ClientXmlState(a.Message);
+                if (cs.IsValid)
+                {
+                    ServerStateUpdater ssu = new ServerStateUpdater(
+                                     new ClientDetector(currentServerState, cs), OnServerStateUpdated_Handler
+                                    );
+                }
+
+            }
+        }
+
+
+        private void OnServerStateUpdated_Handler(object sender, EventArgs e)
+        {
+            OnServerStateChangedByClient?.Invoke(this, e);
+        }
+
+        public void Dispose()
+        {
+            clientsControl.Dispose();
+        }
     }
 }

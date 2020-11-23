@@ -20,6 +20,13 @@ namespace TeraMicroMeasure
 {
     public partial class ApplicationForm : Form
     {
+        bool IsServerApp
+        {
+            get
+            {
+                return Properties.Settings.Default.IsServerApp;
+            }
+        }
         object locker = new object();
         private System.Drawing.Color redColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
         private System.Drawing.Color greenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(179)))), ((int)(((byte)(9)))));
@@ -28,9 +35,12 @@ namespace TeraMicroMeasure
         //NormaServer server;
         //NormaTCPClient client;
         ClientTCPControl clientTCPControl;
-        ServerTCPControl serverTCPControl;
+        //ServerTCPControl serverTCPControl;
         ClientXmlState currentClientState;
         ServerXmlState currentServerState;
+
+
+        ServerCommandDispatcher commandDispatcher;
         Dictionary<int, MeasureForm> measureFormsList;
         int recCounter = 0;
         public ApplicationForm()
@@ -45,7 +55,7 @@ namespace TeraMicroMeasure
                 initStatusBar();
                 initTopBar();
                 InitButtonsBar();
-                if (Properties.Settings.Default.IsServerApp) InitAsServerApp();
+                if (IsServerApp) InitAsServerApp();
                 else InitAsClientApp();
             }
             else
@@ -58,18 +68,18 @@ namespace TeraMicroMeasure
 
         private void initTopBar()
         {
-            testLinesToolStripMenuItem.Visible = Properties.Settings.Default.IsServerApp;
-            if (Properties.Settings.Default.IsServerApp) InitTestLinesTabOnTopBar();
+            testLinesToolStripMenuItem.Visible = IsServerApp;
+            if (IsServerApp) InitTestLinesTabOnTopBar();
         }
 
         private void InitButtonsBar()
         {
-            switchConnectToServerButton.Visible = !Properties.Settings.Default.IsServerApp;
+            switchConnectToServerButton.Visible = !IsServerApp;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Properties.Settings.Default.IsServerApp) MainForm_FormClosing_ForServer();
+            if (IsServerApp) MainForm_FormClosing_ForServer();
             else MainForm_FormClosing_ForClient();
 
         }
@@ -145,13 +155,7 @@ namespace TeraMicroMeasure
 
         private void InitAsServerApp()
         {
-            try
-            {
-                TCPSettingsController c = new TCPSettingsController(false);
-            }catch(TCPSettingsControllerException e)
-            {
-                MessageBox.Show(e.Message);
-            }
+            initServerControl();
 
             /*
             retry:
@@ -173,6 +177,56 @@ namespace TeraMicroMeasure
             }
             initServerControl();
             */
+        }
+
+        private void OnServerStateChangedByClient_Handler(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnServerStatusChanged_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnServerStatusChanged_Handler), new object[] { sender, e });
+            }else
+            {
+                TCPServer s = sender as TCPServer;
+                switch(s.Status)
+                {
+                    case NORMA_SERVER_STATUS.ACTIVE:
+                        serverStatusLabel.Text = "Сервер активен";
+                        break;
+                    case NORMA_SERVER_STATUS.STOPPED:
+                        serverStatusLabel.Text = "Сервер остановлен";
+                        break;
+                    case NORMA_SERVER_STATUS.TRY_START:
+                        serverStatusLabel.Text = "Запуск сервера...";
+                        break;
+                    default:
+                        serverStatusLabel.Text = "Статус не обработан";
+                        break;
+                }
+            }
+        }
+
+        private void ShowTCPSettingsForm()
+        {
+            TCPSettingsForm f = new TCPSettingsForm(new TCPSettingsController(IsServerApp, false));
+            if (f.ShowDialog(this) == DialogResult.OK) ReinitTCP();
+        }
+
+        private void ReinitTCP()
+        {
+            if (IsServerApp)
+            {
+                reinitServer();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            
         }
 
         private void InitTestLinesTabOnTopBar()
@@ -257,7 +311,26 @@ namespace TeraMicroMeasure
         {
             if (!SettingsControl.GetOfflineMode())
             {
-                
+                try
+                {
+                    if (currentServerState == null) currentServerState = buildServerXML();
+                    commandDispatcher = new ServerCommandDispatcher(
+                                                                       new TCPServerClientsControl(
+                                                                                new TCPServer(
+                                                                                                new TCPSettingsController(true),
+                                                                                                OnServerStatusChanged_Handler
+                                                                                                )
+                                                                             ),
+                                                                        currentServerState,
+                                                                        OnServerStateChangedByClient_Handler
+
+                                                                    );
+                }
+                catch (TCPSettingsControllerException e)
+                {
+                    ShowTCPSettingsForm();
+                }
+                /*
                 currentServerState.IPAddress = SettingsControl.GetLocalIP();
                 currentServerState.Port = SettingsControl.GetLocalPort();
                 currentServerState.RequestPeriod = SettingsControl.GetRequestPeriod();
@@ -267,6 +340,8 @@ namespace TeraMicroMeasure
                 serverTCPControl.OnClientListChanged += ServerStateUpdated_Handler;
                 serverTCPControl.OnServerStatusChanged += onServerStatusChanged;
                 serverTCPControl.Start();
+                */
+
             }
             else
             {
@@ -319,8 +394,8 @@ namespace TeraMicroMeasure
 
         private void ServerStateUpdated_Handler(object o, EventArgs e)
         {
-           currentServerState = o as ServerXmlState;
-           serverTCPControl.SendState(currentServerState);
+           //currentServerState = o as ServerXmlState;
+           //serverTCPControl.SendState(currentServerState);
         }
 
 
@@ -371,28 +446,33 @@ namespace TeraMicroMeasure
         {
             clientCounterStatus.Text = $"Клиентов подключено: {clientList.Length}";
         }
+
+
         private void serverStatusLabel_Click(object sender, EventArgs e)
         {
-            SelectServerIpForm ipForm = new SelectServerIpForm();
-            ipForm.FormClosed += IpForm_FormClosed;
-            ipForm.ShowDialog();
+            ShowTCPSettingsForm();
         }
 
         private void IpForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (serverTCPControl != null) reinitServer();
+            if (commandDispatcher != null) reinitServer();
 
         }
 
         private void MainForm_FormClosing_ForServer()
         {
-
             stopServer();
         }
 
         private void stopServer()
         {
-            if (serverTCPControl != null) serverTCPControl.Stop();
+            // if (serverTCPControl != null) serverTCPControl.Stop();
+            if (commandDispatcher != null)
+            {
+                commandDispatcher.Dispose();
+                commandDispatcher = null;
+            }
+
         }
 
         private ServerXmlState buildServerXML()

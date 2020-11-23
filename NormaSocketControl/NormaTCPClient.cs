@@ -9,13 +9,23 @@ using System.Threading;
 using System.Diagnostics;
 namespace NormaMeasure.SocketControl
 {
+
+    public class NormaTCPClientEventArgs : EventArgs
+    {
+        public string Message;
+        public NormaTCPClientEventArgs(string _message)
+        {
+            Message = _message;
+        }
+    }
+
     public delegate void NormaTCPMessageDelegate(string message, NormaTCPClient client);
     public delegate void NormaTCPClientDelegate(NormaTCPClient client);
     public delegate void NormaTCPClientExceptionDelegate(string ipAddr, Exception ex);
     public class NormaTCPClient
     {
         public NormaTCPMessageDelegate OnAnswerReceived;
-        public NormaTCPMessageDelegate OnMessageReceived;
+        public EventHandler OnMessageReceived;
         public NormaTCPClientExceptionDelegate ClientReceiveMessageException;
         public NormaTCPClientExceptionDelegate ClientSendMessageException;
 
@@ -213,7 +223,8 @@ namespace NormaMeasure.SocketControl
                     while (stream.DataAvailable);
                     string recMessage = builder.ToString();
                     recMessage.Trim();
-                    OnMessageReceived?.Invoke(recMessage, this);
+                    OnMessageReceived_Handler(recMessage);
+
                     data = Encoding.Default.GetBytes(MessageToSend);
                     stream.Write(data, 0, data.Length);
                 }
@@ -232,6 +243,11 @@ namespace NormaMeasure.SocketControl
                     stream.Close();
                 if (tcpClient != null) dispose_tcp_client();
             }
+        }
+
+        private void OnMessageReceived_Handler(string message)
+        {
+            OnMessageReceived?.Invoke(this, new NormaTCPClientEventArgs(message));
         }
 
         private void dispose_tcp_client()

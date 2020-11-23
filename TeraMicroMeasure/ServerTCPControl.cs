@@ -10,6 +10,7 @@ using System.Diagnostics;
 
 namespace TeraMicroMeasure
 {
+    /*
     class ServerTCPControl
     {
         static object locker = new object();
@@ -106,4 +107,5 @@ namespace TeraMicroMeasure
             }
         }
     }
+    */
 }

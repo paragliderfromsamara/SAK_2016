@@ -84,12 +84,12 @@ namespace NormaMeasure.SocketControl.TCPServerControllLib
         public bool IsValid = true;
         public bool IsServerSettings;
      
-
-        public TCPSettingsController(bool is_it_server)
+        public TCPSettingsController(bool is_it_server, bool parse_addresses = true)
         {
             IsServerSettings = is_it_server;
-            InitIPAddressesFromSettingsData();
+            if (parse_addresses) InitIPAddressesFromSettingsData();
         }
+
 
         private void InitIPAddressesFromSettingsData()
         {
@@ -114,11 +114,10 @@ namespace NormaMeasure.SocketControl.TCPServerControllLib
                 serverIPAddress = r;
             }else
             {
-                throw new TCPSettingsControllerException(msg);
+                throw new TCPSettingsControllerException(msg+$"{IsServerSettings}");
             }
             //localEndPoint = new IPEndPoint(IPAddress.Parse(local_ip), local_port);
             //if (!IsServerSettings) serverEndPoint = new IPEndPoint(IPAddress.Parse(remote_ip), remote_port);
         }
-
     }
 }

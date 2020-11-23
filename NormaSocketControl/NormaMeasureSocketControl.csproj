@@ -46,6 +46,8 @@
     <Compile Include="NormaServer.cs" />
     <Compile Include="NormaTCPClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TCPServerControllLib\TCPServer.cs" />
+    <Compile Include="TCPServerControllLib\TCPServerClientsControl.cs" />
     <Compile Include="TCPServerControllLib\TCPSettingsController.cs" />
     <Compile Include="TCPServerControllLib\TCPSettingsForm.cs">
       <SubType>Form</SubType>
