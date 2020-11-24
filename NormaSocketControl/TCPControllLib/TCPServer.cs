@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 
-namespace NormaMeasure.SocketControl.TCPServerControllLib
+namespace NormaMeasure.SocketControl.TCPControlLib
 {
     public enum NORMA_SERVER_STATUS
     {

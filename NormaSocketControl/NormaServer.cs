@@ -148,11 +148,5 @@ namespace NormaMeasure.SocketControl
         }
     }
 
-    public class NormaServer
-    {
-        public NormaServer(TCPServerControllLib.TCPSettingsController controller)
-        {
 
-        }
-    }
 }

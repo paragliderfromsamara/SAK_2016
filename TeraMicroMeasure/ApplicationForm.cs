@@ -14,7 +14,7 @@ using NormaMeasure.Utils;
 using System.Xml;
 using TeraMicroMeasure.XmlObjects;
 using TeraMicroMeasure.CommandProcessors;
-using NormaMeasure.SocketControl.TCPServerControllLib;
+using NormaMeasure.SocketControl.TCPControlLib;
 
 namespace TeraMicroMeasure
 {
@@ -41,6 +41,7 @@ namespace TeraMicroMeasure
 
 
         ServerCommandDispatcher commandDispatcher;
+    
         Dictionary<int, MeasureForm> measureFormsList;
         int recCounter = 0;
         public ApplicationForm()
@@ -291,7 +292,7 @@ namespace TeraMicroMeasure
         {
             currentClientState = buildClientXML();
             SetClientTitle();
-            CheckBaseTCPClientParameters();
+            //CheckBaseTCPClientParameters();
             setClientButtonStatus(ClientStatus.disconnected);
             InitMeasureForm();
             
@@ -510,6 +511,16 @@ namespace TeraMicroMeasure
 
         private void InitClientTCPControl()
         {
+            try
+            {
+                TCPSettingsController tsc = new TCPSettingsController(false);
+            }
+            catch (TCPSettingsControllerException e)
+            {
+                ShowTCPSettingsForm();
+            }
+
+            /*
             //retry:
             // try
             //  {
@@ -532,6 +543,7 @@ namespace TeraMicroMeasure
            //     goto retry;
                 //MessageBox.Show(ex.Message);
             //}
+            */
         }
 
         private void processReceivedFromServerState(object state_for_a_process, EventArgs a)

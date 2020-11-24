@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 
-namespace NormaMeasure.SocketControl.TCPServerControllLib
+namespace NormaMeasure.SocketControl.TCPControlLib
 {
     public class TCPSettingsControllerException : FormatException
     {

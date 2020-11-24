@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 
-namespace NormaMeasure.SocketControl.TCPServerControllLib
+namespace NormaMeasure.SocketControl.TCPControlLib
 {
     public partial class TCPSettingsForm : Form
     {
