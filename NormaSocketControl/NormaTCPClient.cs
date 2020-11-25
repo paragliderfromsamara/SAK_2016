@@ -53,6 +53,7 @@ namespace NormaMeasure.SocketControl
         private bool sendingIsActive = false;
         private bool receiveIsActive = false;
 
+        public TCP_CLIENT_STATUS Status => status;
         private TCP_CLIENT_STATUS _status = TCP_CLIENT_STATUS.DISCONNECTED;
         private TCPSettingsController tcpSettingsController;
 
@@ -196,9 +197,10 @@ namespace NormaMeasure.SocketControl
                         builder.Append(Encoding.Default.GetString(dataIn, 0, bytes));
                     }
                     while (stream.DataAvailable);
+                    status = TCP_CLIENT_STATUS.CONNECTED;
                     string recMessage = builder.ToString();
                     recMessage.Trim();
-                    status = TCP_CLIENT_STATUS.CONNECTED;
+
                     OnAnswerReceived_Handler(recMessage); 
                     Thread.Sleep(300);
                  }
@@ -230,7 +232,7 @@ namespace NormaMeasure.SocketControl
 
         public void Close()
         {
-            status = TCP_CLIENT_STATUS.WILL_DISCONNECT;
+            if (status == TCP_CLIENT_STATUS.CONNECTED) status = TCP_CLIENT_STATUS.WILL_DISCONNECT;
             sendingIsActive = false;
             receiveIsActive = false;
 
@@ -303,7 +305,7 @@ namespace NormaMeasure.SocketControl
             tcpClient.Close();
             tcpClient.Dispose();
             tcpClient = null;
-            if (status != TCP_CLIENT_STATUS.ABORTED) status = TCP_CLIENT_STATUS.DISCONNECTED;
+            //if (status != TCP_CLIENT_STATUS.ABORTED) status = TCP_CLIENT_STATUS.DISCONNECTED;
         }
 
         public void Dispose()

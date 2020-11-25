@@ -26,8 +26,14 @@ namespace NormaMeasure.SocketControl.TCPControlLib
         {
             client = _client;
             client.OnAnswerReceived += OnServerAnswerReceived_Handler;
+            client.OnClientStatusChanged += OnClientStatusChanged_Handler;
             OnConnectionStatusChanged += on_connection_status_changed;
-            client.InitSending();
+           // client.InitSending();
+        }
+
+        private void OnClientStatusChanged_Handler(object sender, EventArgs e)
+        {
+            OnConnectionStatusChanged?.Invoke(sender, e);
         }
 
         public void InitSending()

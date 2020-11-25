@@ -20,6 +20,8 @@ namespace TeraMicroMeasure
 {
     public partial class ApplicationForm : Form
     {
+        const int clientTryConnectionTimes = 5;
+        int connectionTimesNow = clientTryConnectionTimes;
         bool IsServerApp
         {
             get
@@ -226,10 +228,12 @@ namespace TeraMicroMeasure
             }
             else
             {
-                throw new NotImplementedException();
+                refreshConnectionToServer();
             }
             
         }
+
+
 
         private void InitTestLinesTabOnTopBar()
         {
@@ -292,13 +296,14 @@ namespace TeraMicroMeasure
         private void InitAsClientApp()
         {
             currentClientState = buildClientXML();
-            SetClientTitle();
+            connectionTimesNow = clientTryConnectionTimes;
+             SetClientTitle();
             //CheckBaseTCPClientParameters();
             setClientButtonStatus(ClientStatus.disconnected);
             InitMeasureForm();
             
             /////////////////////////////////////
-            InitClientTCPControl();
+            ConnectToServer();
         }
 
 
@@ -426,12 +431,6 @@ namespace TeraMicroMeasure
             }
         }
 
-        private void onServerException(object o, EventArgs a)
-        {
-            Exception ex = o as Exception;
-            if (ex.HResult != -2147467259) MessageBox.Show(ex.Message, $"Ошибка соединения: {ex.HResult}");
-        }
-
 
         private void initStatusBar()
         {
@@ -455,11 +454,6 @@ namespace TeraMicroMeasure
             ShowTCPSettingsForm();
         }
 
-        private void IpForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (serverCommandDispatcher != null) reinitServer();
-
-        }
 
         private void MainForm_FormClosing_ForServer()
         {
@@ -497,20 +491,8 @@ namespace TeraMicroMeasure
             return clientXML;
         }
 
-        private void CheckBaseTCPClientParameters()
-        {
-            string localIp = SettingsControl.GetLocalIP();
-            int localPort = SettingsControl.GetLocalPort();
-            string serverIp = SettingsControl.GetServerIP();
-            int serverPort = SettingsControl.GetServerPort();
-            if (string.IsNullOrWhiteSpace(localIp) || string.IsNullOrWhiteSpace(serverIp) || serverIp == "127.0.0.1" || localIp == "127.0.0.1")
-            {
-                SelectServerIpForm ipForm = new SelectServerIpForm();
-                ipForm.ShowDialog();
-            }
-        }
 
-        private void InitClientTCPControl()
+        private void ConnectToServer()
         {
             try
             {
@@ -521,9 +503,8 @@ namespace TeraMicroMeasure
                                                                                                        ),
                                                                         buildClientXML()
                                                                       );
-                TCPSettingsController tsc = new TCPSettingsController(false);
             }
-            catch (TCPSettingsControllerException e)
+            catch (TCPSettingsControllerException)
             {
                 ShowTCPSettingsForm();
             }
@@ -556,8 +537,61 @@ namespace TeraMicroMeasure
 
         private void ClientConnectionStatus_Handler(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(ClientConnectionStatus_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                NormaTCPClient client = sender as NormaTCPClient;
+                switch (client.Status)
+                {
+                    case TCP_CLIENT_STATUS.CONNECTED:
+                        setClientButtonStatus(ClientStatus.connected);
+                        break;
+                    case TCP_CLIENT_STATUS.DISCONNECTED:
+                        setClientButtonStatus(ClientStatus.disconnected);
+                        break;
+                    case TCP_CLIENT_STATUS.TRY_CONNECT:
+                        setClientButtonStatus(ClientStatus.tryConnect);
+                        break;
+                    case TCP_CLIENT_STATUS.ABORTED:
+   
+                        tryToConnect();
+                        break;
+                    default:
+                        setClientButtonStatus(ClientStatus.disconnected);
+                        break;
+                }
+               //MessageBox.Show(client.Status.ToString());
+            }
+
         }
+
+
+        private void tryToConnect()
+        {
+            this.Text = $"Осталось попыток: {connectionTimesNow}";
+            if (connectionTimesNow-- > 0)
+            {
+                Thread t = new Thread(new ThreadStart(tryConnectThreadFunc));
+                t.Start();
+                //refreshConnectionToServer();
+                
+            }else
+            {
+                setClientButtonStatus(ClientStatus.disconnected);
+                disconnectFromServer();
+            }
+
+        }
+
+        private void tryConnectThreadFunc()
+        {
+            Thread.Sleep(500);
+            refreshConnectionToServer();
+        }
+
 
         private void processReceivedFromServerState(object state_for_a_process, EventArgs a)
         {
@@ -616,14 +650,14 @@ namespace TeraMicroMeasure
             {
                 Exception e = ex as Exception;
                 DialogResult r = MessageBox.Show($"{e.Message}", $"Ошибка связи с сервером", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning );
-                if (r == DialogResult.Retry) reinitClientTCPControl();
+                if (r == DialogResult.Retry) refreshConnectionToServer();
                 else if (r == DialogResult.Cancel)
                 {
                    if  (MessageBox.Show("Хотите ввести новые данные сервера?", "Вопрос...", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         SelectServerIpForm ipForm = new SelectServerIpForm();
                         ipForm.ShowDialog();
-                        reinitClientTCPControl();
+                        refreshConnectionToServer();
                         return;
                     }
                     clientTCPControl = null;
@@ -636,16 +670,24 @@ namespace TeraMicroMeasure
 
         private void MainForm_FormClosing_ForClient()
         {
-            stopTCPControl();
+            disconnectFromServer();
         }
 
-        private void reinitClientTCPControl()
+        private void refreshConnectionToServer()
         {
-            stopTCPControl();
-            InitClientTCPControl();
+            disconnectFromServer();
+            ConnectToServer();
         }
-        private void stopTCPControl()
+
+
+        private void disconnectFromServer()
         {
+            if (clientCommandDispatcher != null)
+            {
+                clientCommandDispatcher.Dispose();
+                clientCommandDispatcher = null;
+            }
+            /*
             if (clientTCPControl != null)
             {
                 clientTCPControl.OnServerStateChanged = null;
@@ -654,16 +696,18 @@ namespace TeraMicroMeasure
                 clientTCPControl = null;
             }
             setClientButtonStatus(ClientStatus.disconnected);
+            */
         }
 
         private void switchConnectToServerButton_Click(object sender, EventArgs e)
         {
-            if (clientTCPControl != null)
+            if (clientCommandDispatcher != null)
             {
-                stopTCPControl();
+                disconnectFromServer();
             } else
             {
-                InitClientTCPControl();
+                connectionTimesNow = clientTryConnectionTimes;
+                ConnectToServer();
             }
         }
 
