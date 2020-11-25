@@ -40,7 +40,8 @@ namespace TeraMicroMeasure
         ServerXmlState currentServerState;
 
 
-        ServerCommandDispatcher commandDispatcher;
+        ServerCommandDispatcher serverCommandDispatcher;
+        ClientCommandDispatcher clientCommandDispatcher;
     
         Dictionary<int, MeasureForm> measureFormsList;
         int recCounter = 0;
@@ -315,7 +316,7 @@ namespace TeraMicroMeasure
                 try
                 {
                     if (currentServerState == null) currentServerState = buildServerXML();
-                    commandDispatcher = new ServerCommandDispatcher(
+                    serverCommandDispatcher = new ServerCommandDispatcher(
                                                                        new TCPServerClientsControl(
                                                                                 new TCPServer(
                                                                                                 new TCPSettingsController(true),
@@ -456,7 +457,7 @@ namespace TeraMicroMeasure
 
         private void IpForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (commandDispatcher != null) reinitServer();
+            if (serverCommandDispatcher != null) reinitServer();
 
         }
 
@@ -468,10 +469,10 @@ namespace TeraMicroMeasure
         private void stopServer()
         {
             // if (serverTCPControl != null) serverTCPControl.Stop();
-            if (commandDispatcher != null)
+            if (serverCommandDispatcher != null)
             {
-                commandDispatcher.Dispose();
-                commandDispatcher = null;
+                serverCommandDispatcher.Dispose();
+                serverCommandDispatcher = null;
             }
 
         }
@@ -513,6 +514,13 @@ namespace TeraMicroMeasure
         {
             try
             {
+                clientCommandDispatcher = new ClientCommandDispatcher(
+                                                                        new TCPClientConnectionControl(
+                                                                                                            new NormaTCPClient(new TCPSettingsController(false)),
+                                                                                                            ClientConnectionStatus_Handler
+                                                                                                       ),
+                                                                        buildClientXML()
+                                                                      );
                 TCPSettingsController tsc = new TCPSettingsController(false);
             }
             catch (TCPSettingsControllerException e)
@@ -544,6 +552,11 @@ namespace TeraMicroMeasure
                 //MessageBox.Show(ex.Message);
             //}
             */
+        }
+
+        private void ClientConnectionStatus_Handler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void processReceivedFromServerState(object state_for_a_process, EventArgs a)

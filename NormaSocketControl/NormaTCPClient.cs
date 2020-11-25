@@ -7,9 +7,18 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
+using NormaMeasure.SocketControl.TCPControlLib;
+
 namespace NormaMeasure.SocketControl
 {
-
+    public enum TCP_CLIENT_STATUS
+    {
+        CONNECTED,
+        DISCONNECTED,
+        TRY_CONNECT,
+        WILL_DISCONNECT, 
+        ABORTED
+    }
     public class NormaTCPClientEventArgs : EventArgs
     {
         public string Message;
@@ -22,10 +31,11 @@ namespace NormaMeasure.SocketControl
     public delegate void NormaTCPMessageDelegate(string message, NormaTCPClient client);
     public delegate void NormaTCPClientDelegate(NormaTCPClient client);
     public delegate void NormaTCPClientExceptionDelegate(string ipAddr, Exception ex);
-    public class NormaTCPClient
+    public class NormaTCPClient : IDisposable
     {
-        public NormaTCPMessageDelegate OnAnswerReceived;
+        public EventHandler OnAnswerReceived;
         public EventHandler OnMessageReceived;
+        public EventHandler OnClientStatusChanged;
         public NormaTCPClientExceptionDelegate ClientReceiveMessageException;
         public NormaTCPClientExceptionDelegate ClientSendMessageException;
 
@@ -42,7 +52,25 @@ namespace NormaMeasure.SocketControl
         private string messageToSend;
         private bool sendingIsActive = false;
         private bool receiveIsActive = false;
-       
+
+        private TCP_CLIENT_STATUS _status = TCP_CLIENT_STATUS.DISCONNECTED;
+        private TCPSettingsController tcpSettingsController;
+
+        private TCP_CLIENT_STATUS status
+        {
+            get
+            {
+                return _status;
+            }set
+            {
+                if (_status != value)
+                {
+                    _status = value;
+                    OnClientStatusChanged?.Invoke(this, new EventArgs());
+                }
+            }
+        }
+
         public string MessageToSend
         {
             set
@@ -82,6 +110,12 @@ namespace NormaMeasure.SocketControl
             tcpClient = _client;
         }
 
+        public NormaTCPClient(TCPSettingsController tcp_settings_controller)
+        {
+            this.tcpSettingsController = tcp_settings_controller;
+
+        }
+
         private string getIPFromFullAddr(string addr)
         {
             return addr.Substring(0, addr.IndexOf(':'));
@@ -107,6 +141,7 @@ namespace NormaMeasure.SocketControl
         {
             if (!receiveIsActive)
             {
+                status = TCP_CLIENT_STATUS.TRY_CONNECT;
                 clientThread = new Thread(new ThreadStart(receiveProcess));
                 clientThread.Start();
             }
@@ -115,6 +150,7 @@ namespace NormaMeasure.SocketControl
         public void InitSending()
         {
             clientThread = new Thread(new ThreadStart(sendProcess));
+            status = TCP_CLIENT_STATUS.TRY_CONNECT;
             clientThread.Start();
         }
 
@@ -137,8 +173,8 @@ namespace NormaMeasure.SocketControl
 
             try
             {
-                IPEndPoint localPoint = new IPEndPoint(IPAddress.Parse(localIP), localPort);
-                IPEndPoint remotePoint = new IPEndPoint(IPAddress.Parse(remoteIP), remotePort);
+                IPEndPoint localPoint = new IPEndPoint(tcpSettingsController.localIPAddress, tcpSettingsController.localPortOnSettingsFile);
+                IPEndPoint remotePoint = new IPEndPoint(tcpSettingsController.serverIPAddress, tcpSettingsController.serverPortOnSettingsFile);
                 tcpClient = new TcpClient(localPoint);
                 tcpClient.ReceiveTimeout = receiveTimeout;
                 tcpClient.SendTimeout = sendTimeout;
@@ -162,7 +198,8 @@ namespace NormaMeasure.SocketControl
                     while (stream.DataAvailable);
                     string recMessage = builder.ToString();
                     recMessage.Trim();
-                    OnAnswerReceived?.Invoke(recMessage, this);
+                    status = TCP_CLIENT_STATUS.CONNECTED;
+                    OnAnswerReceived_Handler(recMessage); 
                     Thread.Sleep(300);
                  }
                stream.Close();
@@ -171,7 +208,9 @@ namespace NormaMeasure.SocketControl
             catch (Exception ex)
             {
                 sendingIsActive = false;
+                status = TCP_CLIENT_STATUS.ABORTED;
                 ClientSendMessageException?.Invoke(remoteIP, ex);
+
             }
             finally
             {
@@ -184,10 +223,17 @@ namespace NormaMeasure.SocketControl
             }
         }
 
+        private void OnAnswerReceived_Handler(string recMessage)
+        {
+            OnAnswerReceived?.Invoke(this, new NormaTCPClientEventArgs(recMessage));
+        }
+
         public void Close()
         {
+            status = TCP_CLIENT_STATUS.WILL_DISCONNECT;
             sendingIsActive = false;
             receiveIsActive = false;
+
             //if (tcpClient != null)
             //{
             //    tcpClient.GetStream().Close();
@@ -227,6 +273,7 @@ namespace NormaMeasure.SocketControl
 
                     data = Encoding.Default.GetBytes(MessageToSend);
                     stream.Write(data, 0, data.Length);
+                    status = TCP_CLIENT_STATUS.CONNECTED;
                 }
                 stream.Close();
                 dispose_tcp_client();
@@ -235,19 +282,20 @@ namespace NormaMeasure.SocketControl
             {
                 receiveIsActive = false;
                 Debug.WriteLine("Клиент отвалился от сервера");
-                ClientReceiveMessageException?.Invoke(remoteIP, ex);
+                //ClientReceiveMessageException?.Invoke(remoteIP, ex);
             }
             finally
             {
                 if (stream != null)
                     stream.Close();
                 if (tcpClient != null) dispose_tcp_client();
+
             }
         }
 
         private void OnMessageReceived_Handler(string message)
         {
-            OnMessageReceived?.Invoke(this, new NormaTCPClientEventArgs(message));
+            OnAnswerReceived?.Invoke(this, new NormaTCPClientEventArgs(message));
         }
 
         private void dispose_tcp_client()
@@ -255,6 +303,12 @@ namespace NormaMeasure.SocketControl
             tcpClient.Close();
             tcpClient.Dispose();
             tcpClient = null;
+            if (status != TCP_CLIENT_STATUS.ABORTED) status = TCP_CLIENT_STATUS.DISCONNECTED;
+        }
+
+        public void Dispose()
+        {
+            Close();
         }
     }
 

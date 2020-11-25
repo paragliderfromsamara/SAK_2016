@@ -32,7 +32,7 @@ namespace TeraMicroMeasure
         private void initTCPClient()
         {
             client = new NormaTCPClient(currentState.ClientIP, currentState.ServerIP, currentState.ClientPort, currentState.ServerPort);
-            client.OnAnswerReceived += serverStateReceived;
+           // client.OnAnswerReceived += serverStateReceived;
             client.ClientSendMessageException += connectionException;
         }
 

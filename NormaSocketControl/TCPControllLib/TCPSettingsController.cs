@@ -83,13 +83,18 @@ namespace NormaMeasure.SocketControl.TCPControlLib
 
         public bool IsValid = true;
         public bool IsServerSettings;
-     
+        private bool v;
+
         public TCPSettingsController(bool is_it_server, bool parse_addresses = true)
         {
             IsServerSettings = is_it_server;
             if (parse_addresses) InitIPAddressesFromSettingsData();
         }
 
+        public TCPSettingsController(bool v)
+        {
+            this.v = v;
+        }
 
         private void InitIPAddressesFromSettingsData()
         {

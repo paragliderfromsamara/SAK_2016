@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeraMicroMeasure.XmlObjects;
-using NormaMeasure.SocketControl.TCPServerControllLib;
+using NormaMeasure.SocketControl.TCPControlLib;
 using NormaMeasure.SocketControl;
 
 namespace TeraMicroMeasure.CommandProcessors
@@ -187,4 +187,40 @@ namespace TeraMicroMeasure.CommandProcessors
             clientsControl.Dispose();
         }
     }
+
+    public class ClientCommandDispatcher : IDisposable
+    {
+        TCPClientConnectionControl connectionControl;
+        ClientXmlState currentState;
+        public ClientCommandDispatcher(TCPClientConnectionControl _conn_cntrl, ClientXmlState _state)
+        {
+            currentState = _state;
+            connectionControl = _conn_cntrl;
+            connectionControl.OnServerAnswerReceived += OnServerStateReceived_Handler;
+            connectionControl.MessageTo = currentState.InnerXml;
+            connectionControl.InitSending();
+        }
+
+        private void OnServerStateReceived_Handler(object sender, EventArgs e)
+        {
+            NormaTCPClientEventArgs a = e as NormaTCPClientEventArgs;
+            NormaTCPClient cl = sender as NormaTCPClient;
+            ServerXmlState s = new ServerXmlState(a.Message);
+            
+        }
+
+        public void Dispose()
+        {
+            connectionControl.Dispose();
+        }
+    }
+
+    public enum FROM_SERVER_COMMAND_TYPE
+    {
+        CHANGE_CLIENT_ID, //Изменить ClientID
+        REFRESH_MEASURE_RESULT_FIELD, //Обновить поле результата
+        MEASURE_ABORTED // Отказ в измерении от сервера
+
+    }
+
 }
