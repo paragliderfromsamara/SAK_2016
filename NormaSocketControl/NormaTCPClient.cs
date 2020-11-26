@@ -199,6 +199,7 @@ namespace NormaMeasure.SocketControl
                     while (stream.DataAvailable);
                     status = TCP_CLIENT_STATUS.CONNECTED;
                     string recMessage = builder.ToString();
+                    
                     recMessage.Trim();
 
                     OnAnswerReceived_Handler(recMessage); 
@@ -276,6 +277,7 @@ namespace NormaMeasure.SocketControl
                     data = Encoding.Default.GetBytes(MessageToSend);
                     stream.Write(data, 0, data.Length);
                     status = TCP_CLIENT_STATUS.CONNECTED;
+
                 }
                 stream.Close();
                 dispose_tcp_client();
@@ -284,6 +286,7 @@ namespace NormaMeasure.SocketControl
             {
                 receiveIsActive = false;
                 Debug.WriteLine("Клиент отвалился от сервера");
+                Debug.WriteLine(ex.Message);
                 //ClientReceiveMessageException?.Invoke(remoteIP, ex);
             }
             finally

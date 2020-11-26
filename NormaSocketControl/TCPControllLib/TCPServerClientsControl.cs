@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace NormaMeasure.SocketControl.TCPControlLib
 {
     public class TCPServerClientsControl : IDisposable
     {
         public EventHandler OnClientMessageReceived;
+        public EventHandler OnClientDetected;
 
         private Dictionary<string, NormaTCPClient> ServerClients;
 
@@ -59,10 +61,13 @@ namespace NormaMeasure.SocketControl.TCPControlLib
                 cl.ClientReceiveMessageException += disposeClient;
                 cl.OnMessageReceived += OnClientMessageReceived_Handler;
                 ServerClients.Add(cl.RemoteIP, cl);
-                //OnClientConnected?.Invoke(cl);
+                OnClientDetected?.Invoke(cl, e);
+                cl.MessageToSend = answer;
                 cl.InitReceiveThread();
             }
         }
+
+
 
         private void disposeClient(string ip, Exception ex)
         {
@@ -90,7 +95,7 @@ namespace NormaMeasure.SocketControl.TCPControlLib
 
         private void OnClientMessageReceived_Handler(object sender, EventArgs e)
         {
-
+            Debug.WriteLine("OnClientMessageReceived_Handler on TCPServerClientsControl");
             OnClientMessageReceived?.Invoke(sender, e);
         }
 

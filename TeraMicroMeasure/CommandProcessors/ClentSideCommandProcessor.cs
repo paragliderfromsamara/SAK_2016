@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NormaMeasure.Utils;
 using TeraMicroMeasure.XmlObjects;
 using NormaMeasure.SocketControl.TCPControlLib;
 using NormaMeasure.SocketControl;
+using System.Diagnostics;
+
 
 namespace TeraMicroMeasure.CommandProcessors
 {
+
     class TeraMicroStateProcessor
     {
         public ClientXmlState[] AnotherClientStates;
@@ -123,6 +127,7 @@ namespace TeraMicroMeasure.CommandProcessors
     {
         TCPServerClientsControl clientsControl;
         private ServerXmlState _currentServerState;
+        private NormaTCPClient currentTCPClient;
         private ServerXmlState currentServerState
         {
             get
@@ -154,23 +159,37 @@ namespace TeraMicroMeasure.CommandProcessors
             clientsControl = _clients_control;
             currentServerState = server_state;
             clientsControl.OnClientMessageReceived += OnClientMessageReceived_Handler;
+            clientsControl.OnClientDetected += OnClientDetected_Handler;
             
             OnServerStateChangedByClient += on_server_state_changed_by_client_handler;
 
         }
 
+        private void OnClientDetected_Handler(object sender, EventArgs e)
+        {
+            clientsControl.Answer = currentServerState.InnerXml;
+        }
+
+        public void RefreshCurrentServerState(ServerXmlState state)
+        {
+            currentServerState = state;
+            clientsControl.Answer = currentServerState.InnerXml;
+        }
 
         private void OnClientMessageReceived_Handler(object sender, EventArgs e)
         {
             lock(locker)
             {
+                Debug.WriteLine("OnClientMessageReceived_Handler");
                 NormaTCPClientEventArgs a = e as NormaTCPClientEventArgs;
                 ClientXmlState cs = new ClientXmlState(a.Message);
+                currentTCPClient = sender as NormaTCPClient;
                 if (cs.IsValid)
                 {
                     ServerStateUpdater ssu = new ServerStateUpdater(
                                      new ClientDetector(currentServerState, cs), OnServerStateUpdated_Handler
                                     );
+                    
                 }
 
             }
@@ -180,6 +199,8 @@ namespace TeraMicroMeasure.CommandProcessors
         private void OnServerStateUpdated_Handler(object sender, EventArgs e)
         {
             OnServerStateChangedByClient?.Invoke(this, e);
+            currentTCPClient.MessageToSend = currentServerState.InnerXml;
+            Debug.WriteLine("OnServerStateUpdated_Handler");
         }
 
         public void Dispose()

@@ -9,12 +9,12 @@ namespace TeraMicroMeasure.XmlObjects
 {
     public class ServerXmlStateEventArgs : EventArgs
     {
-        private ClientXmlState client_state;
-        private ServerXmlState server_state;
+        public ClientXmlState ClientState;
+        public ServerXmlState ServerState;
         public ServerXmlStateEventArgs(ServerXmlState _server_state, ClientXmlState _changer_client_state)
         {
-            server_state = _server_state;
-            client_state = _changer_client_state;
+            ServerState = _server_state;
+            ClientState = _changer_client_state;
         }
     }
     public class ServerXmlState : NormaXmlObject

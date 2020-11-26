@@ -83,7 +83,6 @@ namespace NormaMeasure.SocketControl.TCPControlLib
 
         public bool IsValid = true;
         public bool IsServerSettings;
-        private bool v;
 
         public TCPSettingsController(bool is_it_server, bool parse_addresses = true)
         {
@@ -91,9 +90,10 @@ namespace NormaMeasure.SocketControl.TCPControlLib
             if (parse_addresses) InitIPAddressesFromSettingsData();
         }
 
-        public TCPSettingsController(bool v)
+        public TCPSettingsController(bool v) 
         {
-            this.v = v;
+            this.IsServerSettings = v;
+            InitIPAddressesFromSettingsData();
         }
 
         private void InitIPAddressesFromSettingsData()

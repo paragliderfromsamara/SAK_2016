@@ -183,8 +183,20 @@ namespace TeraMicroMeasure
             */
         }
 
-        private void OnServerStateChangedByClient_Handler(object sender, EventArgs e)
+
+
+        private void refreshClientStateOnClientForm(ClientXmlState cs)
         {
+            if (measureFormsList.ContainsKey(cs.ClientID))
+            {
+                MeasureForm f = measureFormsList[cs.ClientID];
+                if (!f.HasClientState) f.ClientState = cs;
+                else
+                {
+                    if (f.ClientState.StateId != cs.StateId) f.ClientState = cs;
+                }
+
+            }
 
         }
 
@@ -211,6 +223,7 @@ namespace TeraMicroMeasure
                         serverStatusLabel.Text = "Статус не обработан";
                         break;
                 }
+                if (s.Exception != null) MessageBox.Show(s.Exception.Message, s.Exception.GetType().Name);
             }
         }
 
@@ -357,7 +370,27 @@ namespace TeraMicroMeasure
 
         }
 
+        private void OnServerStateChangedByClient_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnServerStateChangedByClient_Handler), new object[] { sender, e});
+            }else
+            {
+                ServerXmlStateEventArgs a = e as ServerXmlStateEventArgs;
+                ServerCommandDispatcher d = sender as ServerCommandDispatcher;
+                d.RefreshCurrentServerState(a.ServerState);
+                refreshClientCounterStatusText(a.ServerState.Clients.Count);
+                
+            }
+        }
 
+        private void RefreshClientCounter()
+        {
+            throw new NotImplementedException();
+        }
+
+        /*
         private void OnClientStateReceived(object o, EventArgs a)
         {
             lock (locker)
@@ -383,42 +416,29 @@ namespace TeraMicroMeasure
                 }
             }
         }
+        */
 
-        private void refreshClientStateOnClientForm(ClientXmlState cs)
-        {
-            if (measureFormsList.ContainsKey(cs.ClientID))
+        /*
+            private void ServerStateUpdated_Handler(object o, EventArgs e)
             {
-                MeasureForm f = measureFormsList[cs.ClientID];
-                if (!f.HasClientState) f.ClientState = cs;
+               //currentServerState = o as ServerXmlState;
+               //serverTCPControl.SendState(currentServerState);
+            }
+
+
+            private void onClientListChanged(object o, EventArgs e)
+            {
+                if (InvokeRequired)
+                {
+                    BeginInvoke(new EventHandler(onClientListChanged), new object[] { o, e });
+                }
                 else
                 {
-                    if (f.ClientState.StateId != cs.StateId) f.ClientState = cs;
+                    clientList = o as ClientXmlState[];
+                    refreshClientCounterStatusText();
                 }
-
-            }
-
-        }
-
-        private void ServerStateUpdated_Handler(object o, EventArgs e)
-        {
-           //currentServerState = o as ServerXmlState;
-           //serverTCPControl.SendState(currentServerState);
-        }
-
-
-        private void onClientListChanged(object o, EventArgs e)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new EventHandler(onClientListChanged), new object[] { o, e });
-            }
-            else
-            {
-                clientList = o as ClientXmlState[];
-                refreshClientCounterStatusText();
-            }
-        }
-
+            }*/
+        /*
         private void onServerStatusChanged(object o, EventArgs a)
         {
             if (InvokeRequired)
@@ -431,21 +451,21 @@ namespace TeraMicroMeasure
             }
         }
 
-
+        */
         private void initStatusBar()
         {
             bool isServer = Properties.Settings.Default.IsServerApp;
 
             clientCounterStatus.Visible = isServer;
-            refreshClientCounterStatusText();
+            refreshClientCounterStatusText(0);
 
             serverStatusLabel.Visible = isServer;
             serverStatusLabel.Text = "Сервер выключен";
         }
 
-        private void refreshClientCounterStatusText()
+        private void refreshClientCounterStatusText(int clients_count)
         {
-            clientCounterStatus.Text = $"Клиентов подключено: {clientList.Length}";
+            clientCounterStatus.Text = $"Клиентов подключено: {clients_count}";
         }
 
 

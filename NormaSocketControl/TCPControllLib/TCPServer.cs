@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace NormaMeasure.SocketControl.TCPControlLib
 {
@@ -13,7 +14,8 @@ namespace NormaMeasure.SocketControl.TCPControlLib
     {
         ACTIVE,
         STOPPED,
-        TRY_START
+        TRY_START,
+        ABORTED
     }
     public class TCPServer : IDisposable
     {
@@ -65,9 +67,10 @@ namespace NormaMeasure.SocketControl.TCPControlLib
 
         private void ServerThreadProcess()
         {
+            tcpListener = new TcpListener(settings.localIPAddress, settings.localPortOnSettingsFile);
             try
             {
-                tcpListener = new TcpListener(settings.localIPAddress, settings.localPortOnSettingsFile);
+
                 tcpListener.Start();
                 status = NORMA_SERVER_STATUS.ACTIVE;
                 //OnStatusChanged?.Invoke($"IP aдрес: {ipAddress}; порт: {port}", new EventArgs());
@@ -81,6 +84,7 @@ namespace NormaMeasure.SocketControl.TCPControlLib
             catch (Exception ex)
             {
                 this.Exception = ex;
+             
             }
             finally
             {
@@ -92,6 +96,7 @@ namespace NormaMeasure.SocketControl.TCPControlLib
         private void ProcessClient(NormaTCPClient client_object)
         {
             OnClientDetected?.Invoke(client_object, new EventArgs());
+            
         }
 
         public void Dispose()
