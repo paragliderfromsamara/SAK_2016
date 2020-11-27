@@ -195,13 +195,18 @@ namespace TeraMicroMeasure.XmlObjects
             }
         }
 
-        public void RemoveClient(ClientXmlState cs)
+        public void RemoveClient(string ip)
         {
-            if (clients.ContainsKey(cs.ClientIP))
+            if (clients.ContainsKey(ip))
             {
-                clients.Remove(cs.ClientIP);
+                clients.Remove(ip);
                 setChangedFlag(true);
             }
+        }
+
+        public void RemoveClient(ClientXmlState cs)
+        {
+            RemoveClient(cs.ClientIP);
         }
 
         public void ReplaceClient(ClientXmlState cl)

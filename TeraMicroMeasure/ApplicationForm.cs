@@ -15,6 +15,7 @@ using System.Xml;
 using TeraMicroMeasure.XmlObjects;
 using TeraMicroMeasure.CommandProcessors;
 using NormaMeasure.SocketControl.TCPControlLib;
+using System.Diagnostics;
 
 namespace TeraMicroMeasure
 {
@@ -235,12 +236,14 @@ namespace TeraMicroMeasure
 
         private void ReinitTCP()
         {
+            
             if (IsServerApp)
             {
                 reinitServer();
             }
             else
             {
+                connectionTimesNow = clientTryConnectionTimes;
                 refreshConnectionToServer();
             }
             
@@ -379,7 +382,10 @@ namespace TeraMicroMeasure
             {
                 ServerXmlStateEventArgs a = e as ServerXmlStateEventArgs;
                 ServerCommandDispatcher d = sender as ServerCommandDispatcher;
+
                 d.RefreshCurrentServerState(a.ServerState);
+                Debug.WriteLine("OnServerStateChangedByClient_Handler on Application Form");
+                Debug.WriteLine(a.ServerState.InnerXml);
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
                 
             }

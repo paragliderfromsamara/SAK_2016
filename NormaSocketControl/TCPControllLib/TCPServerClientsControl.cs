@@ -13,6 +13,7 @@ namespace NormaMeasure.SocketControl.TCPControlLib
     {
         public EventHandler OnClientMessageReceived;
         public EventHandler OnClientDetected;
+        public EventHandler OnClientDisconnected;
 
         private Dictionary<string, NormaTCPClient> ServerClients;
 
@@ -58,7 +59,8 @@ namespace NormaMeasure.SocketControl.TCPControlLib
             NormaTCPClient cl = s as NormaTCPClient;
             if (!ServerClients.ContainsKey(cl.RemoteIP))
             {
-                cl.ClientReceiveMessageException += disposeClient;
+                Debug.WriteLine("OnClientDetected_Handler on TCPServerClientsControl");
+                cl.OnClientDisconnectedWithException += disposeClient;
                 cl.OnMessageReceived += OnClientMessageReceived_Handler;
                 ServerClients.Add(cl.RemoteIP, cl);
                 OnClientDetected?.Invoke(cl, e);
@@ -69,11 +71,11 @@ namespace NormaMeasure.SocketControl.TCPControlLib
 
 
 
-        private void disposeClient(string ip, Exception ex)
+        private void disposeClient(object sender, EventArgs e)
         {
-            NormaTCPClient cl = ServerClients[ip];
-            //OnClientDisconnected?.Invoke(cl);
-            ServerClients.Remove(ip);
+            NormaTCPClient cl = sender as NormaTCPClient;
+            OnClientDisconnected?.Invoke(cl, e);
+            ServerClients.Remove(cl.RemoteIP);
         }
 
         private void disposeClients()

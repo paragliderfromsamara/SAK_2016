@@ -36,8 +36,9 @@ namespace NormaMeasure.SocketControl
         public EventHandler OnAnswerReceived;
         public EventHandler OnMessageReceived;
         public EventHandler OnClientStatusChanged;
-        public NormaTCPClientExceptionDelegate ClientReceiveMessageException;
-        public NormaTCPClientExceptionDelegate ClientSendMessageException;
+        public EventHandler OnClientDisconnectedWithException;
+        //public NormaTCPClientExceptionDelegate ClientReceiveMessageException;
+        //public NormaTCPClientExceptionDelegate ClientSendMessageException;
 
         private int receiveTimeout = 500;
         private int sendTimeout = 500;
@@ -52,6 +53,7 @@ namespace NormaMeasure.SocketControl
         private string messageToSend;
         private bool sendingIsActive = false;
         private bool receiveIsActive = false;
+        public Exception Exception;
 
         public TCP_CLIENT_STATUS Status => status;
         private TCP_CLIENT_STATUS _status = TCP_CLIENT_STATUS.DISCONNECTED;
@@ -171,48 +173,50 @@ namespace NormaMeasure.SocketControl
         private void sendProcess()
         {
             NetworkStream stream = null;
+            IPEndPoint localPoint = new IPEndPoint(tcpSettingsController.localIPAddress, tcpSettingsController.localPortOnSettingsFile);
+            IPEndPoint remotePoint = new IPEndPoint(tcpSettingsController.serverIPAddress, tcpSettingsController.serverPortOnSettingsFile);
+            tcpClient = new TcpClient(localPoint);
+            tcpClient.ReceiveTimeout = receiveTimeout;
+            tcpClient.SendTimeout = sendTimeout;
+            tcpClient.Connect(remotePoint);
+            stream = tcpClient.GetStream();
+            byte[] dataIn = new byte[256]; // буфер для получаемых данных
+            byte[] dataOut;
+            sendingIsActive = true;
+            while (sendingIsActive)
+            {
+                // получаем сообщение
+                dataOut = Encoding.Default.GetBytes(MessageToSend);
+                StringBuilder builder = new StringBuilder();
+                int bytes = 0;
+                stream.Write(dataOut, 0, dataOut.Length);
+                do
+                {
+                    bytes = stream.Read(dataIn, 0, dataIn.Length);
+                    builder.Append(Encoding.Default.GetString(dataIn, 0, bytes));
+                }
+                while (stream.DataAvailable);
+                status = TCP_CLIENT_STATUS.CONNECTED;
+                string recMessage = builder.ToString();
 
+                recMessage.Trim();
+
+                OnAnswerReceived_Handler(recMessage);
+                Thread.Sleep(300);
+            }
+            stream.Close();
+            dispose_tcp_client();
             try
             {
-                IPEndPoint localPoint = new IPEndPoint(tcpSettingsController.localIPAddress, tcpSettingsController.localPortOnSettingsFile);
-                IPEndPoint remotePoint = new IPEndPoint(tcpSettingsController.serverIPAddress, tcpSettingsController.serverPortOnSettingsFile);
-                tcpClient = new TcpClient(localPoint);
-                tcpClient.ReceiveTimeout = receiveTimeout;
-                tcpClient.SendTimeout = sendTimeout;
-                tcpClient.Connect(IPAddress.Parse(remoteIP), remotePort);
-                stream = tcpClient.GetStream();
-                byte[] dataIn = new byte[256]; // буфер для получаемых данных
-                byte[] dataOut;
-                sendingIsActive = true; 
-                while (sendingIsActive)
-                {
-                    // получаем сообщение
-                    dataOut = Encoding.Default.GetBytes(MessageToSend);
-                    StringBuilder builder = new StringBuilder();
-                    int bytes = 0;
-                    stream.Write(dataOut, 0, dataOut.Length);
-                    do
-                    {
-                        bytes = stream.Read(dataIn, 0, dataIn.Length);
-                        builder.Append(Encoding.Default.GetString(dataIn, 0, bytes));
-                    }
-                    while (stream.DataAvailable);
-                    status = TCP_CLIENT_STATUS.CONNECTED;
-                    string recMessage = builder.ToString();
-                    
-                    recMessage.Trim();
-
-                    OnAnswerReceived_Handler(recMessage); 
-                    Thread.Sleep(300);
-                 }
-               stream.Close();
-               dispose_tcp_client();
+                
             }
             catch (Exception ex)
             {
                 sendingIsActive = false;
                 status = TCP_CLIENT_STATUS.ABORTED;
-                ClientSendMessageException?.Invoke(remoteIP, ex);
+                this.Exception = ex;
+                OnClientDisconnectedWithException?.Invoke(this, new EventArgs());
+                //ClientSendMessageException?.Invoke(remoteIP, ex);
 
             }
             finally
@@ -287,6 +291,8 @@ namespace NormaMeasure.SocketControl
                 receiveIsActive = false;
                 Debug.WriteLine("Клиент отвалился от сервера");
                 Debug.WriteLine(ex.Message);
+                this.Exception = ex;
+                OnClientDisconnectedWithException?.Invoke(this, new EventArgs());
                 //ClientReceiveMessageException?.Invoke(remoteIP, ex);
             }
             finally
@@ -300,7 +306,7 @@ namespace NormaMeasure.SocketControl
 
         private void OnMessageReceived_Handler(string message)
         {
-            OnAnswerReceived?.Invoke(this, new NormaTCPClientEventArgs(message));
+            OnMessageReceived?.Invoke(this, new NormaTCPClientEventArgs(message));
         }
 
         private void dispose_tcp_client()

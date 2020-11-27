@@ -130,7 +130,7 @@ namespace NormaMeasure.SocketControl
         {
             if (!ServerClients.ContainsKey(cl.RemoteIP))
             {
-                cl.ClientReceiveMessageException += disposeClient;
+               // cl.ClientReceiveMessageException += disposeClient;
                 ServerClients.Add(cl.RemoteIP, cl);
                 OnClientConnected?.Invoke(cl);
                 cl.InitReceiveThread();

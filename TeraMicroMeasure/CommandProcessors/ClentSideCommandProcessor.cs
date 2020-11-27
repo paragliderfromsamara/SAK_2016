@@ -108,13 +108,19 @@ namespace TeraMicroMeasure.CommandProcessors
             {
                 if (ExtractedClientState.StateId != CurrentClientState.StateId)
                 {
+                    Debug.WriteLine("REPLACE CLIENT ON SERVER STATE UPDATER");
                     ServerState.ReplaceClient(CurrentClientState);
                     ExtractedClientState = CurrentClientState;
                 }
-                else return false;
+                else
+                {
+                    Debug.WriteLine("NOTHING DO ON SERVER STATE UPDATER");
+                    return false;
+                }
             }
             else
             {
+                Debug.WriteLine("ADD CLIENT ON SERVER STATE UPDATER");
                 ServerState.AddClient(CurrentClientState);
             }
            
@@ -157,50 +163,82 @@ namespace TeraMicroMeasure.CommandProcessors
         public ServerCommandDispatcher(TCPServerClientsControl _clients_control, ServerXmlState server_state, EventHandler on_server_state_changed_by_client_handler)
         {
             clientsControl = _clients_control;
-            currentServerState = server_state;
+            currentServerState = new ServerXmlState(server_state.InnerXml);
             clientsControl.OnClientMessageReceived += OnClientMessageReceived_Handler;
             clientsControl.OnClientDetected += OnClientDetected_Handler;
-            
+            clientsControl.OnClientDisconnected += OnClientDisconnected_Handler;
+
+
             OnServerStateChangedByClient += on_server_state_changed_by_client_handler;
 
         }
 
         private void OnClientDetected_Handler(object sender, EventArgs e)
         {
+            Debug.WriteLine("OnClientDetected_Handler on ServerCommandDispatcher");
+            clientsControl.Answer = currentServerState.InnerXml;
+            //NormaTCPClient cl = sender as NormaTCPClient;
+            //cl.MessageToSend = currentServerState.InnerXml;
+        }
+
+        private void RefreshCurrentServerStateOnClientControl()
+        {
             clientsControl.Answer = currentServerState.InnerXml;
         }
 
         public void RefreshCurrentServerState(ServerXmlState state)
         {
-            currentServerState = state;
-            clientsControl.Answer = currentServerState.InnerXml;
+            currentServerState = new ServerXmlState(state.InnerXml);
+            RefreshCurrentServerStateOnClientControl();
         }
 
         private void OnClientMessageReceived_Handler(object sender, EventArgs e)
         {
             lock(locker)
             {
-                Debug.WriteLine("OnClientMessageReceived_Handler");
+                
                 NormaTCPClientEventArgs a = e as NormaTCPClientEventArgs;
-                ClientXmlState cs = new ClientXmlState(a.Message);
-                currentTCPClient = sender as NormaTCPClient;
-                if (cs.IsValid)
+                if (!string.IsNullOrWhiteSpace(a.Message))
                 {
-                    ServerStateUpdater ssu = new ServerStateUpdater(
-                                     new ClientDetector(currentServerState, cs), OnServerStateUpdated_Handler
-                                    );
-                    
+                    ClientXmlState cs = new ClientXmlState(a.Message);
+                    Debug.WriteLine(cs.InnerXml);
+                    currentTCPClient = sender as NormaTCPClient;
+                    if (cs.IsValid)
+                    {
+                        ServerStateUpdater ssu = new ServerStateUpdater(
+                                         new ClientDetector(currentServerState, cs), OnServerStateUpdated_Handler
+                                        );
+
+                    }
                 }
+
 
             }
         }
 
+        private void OnClientDisconnected_Handler(object client, EventArgs e)
+        {
+            lock(locker)
+            {
+                NormaTCPClient cl = client as NormaTCPClient;
+                string ip = cl.RemoteIP as string;
+                if (currentServerState.Clients.ContainsKey(ip))
+                {
+                    currentServerState.RemoveClient(ip);
+                    RefreshCurrentServerStateOnClientControl();
+                    Debug.WriteLine("OnClientDisconnected_Handler: 1");
+                }else Debug.WriteLine("OnClientDisconnected_Handler: 0");
+            }
+        }
 
         private void OnServerStateUpdated_Handler(object sender, EventArgs e)
         {
+            ServerXmlStateEventArgs a = e as ServerXmlStateEventArgs;
             OnServerStateChangedByClient?.Invoke(this, e);
-            currentTCPClient.MessageToSend = currentServerState.InnerXml;
-            Debug.WriteLine("OnServerStateUpdated_Handler");
+           // RefreshCurrentServerState(a.ServerState);
+            Debug.WriteLine("OnServerStateUpdated_Handler: ");
+            Debug.WriteLine(clientsControl.Answer);
+
         }
 
         public void Dispose()
