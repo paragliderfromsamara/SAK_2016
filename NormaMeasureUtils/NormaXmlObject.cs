@@ -148,9 +148,11 @@ namespace NormaMeasure.Utils
             else return String.Empty;
         }
 
-        private XElement createFromAString(string innerXml)
+        private XElement createFromAString(string _inner)
         {
-            XElement e = XElement.Parse(innerXml);
+            //Debug.WriteLine(innerXML);
+
+            XElement e = XElement.Parse(_inner);
             return e;
         }
 
@@ -287,6 +289,7 @@ namespace NormaMeasure.Utils
                 {
                     XAttribute idAttr = e.Attribute("id");
                     string id = idAttr == null ? (i++).ToString() : idAttr.Value;
+                   // Debug.WriteLine("id = "  + id);
                     d.Add(id, readInnerXml(e));
                 }
             }
@@ -345,6 +348,26 @@ namespace NormaMeasure.Utils
                 }
             }
 
+        }
+
+        protected void AddXMLObject(NormaXmlObject o)
+        {
+            Debug.WriteLine(o.InnerXml);
+            XElement e = createFromAString(o.InnerXml);
+            xRoot.Add(e);
+        }
+
+        protected string getOuterOfXMLObject(string object_tag_name)
+        {
+            string inner = string.Empty;
+            XElement node = xRoot.Element(object_tag_name);
+            if (node != null)
+            {
+                XmlReader r = node.CreateReader();
+                r.MoveToContent();
+                inner = r.ReadOuterXml();
+            }
+            return inner;
         }
 
         protected XElement getOrCreateElement(string tagName)

@@ -11,6 +11,10 @@ namespace NormaMeasure.SocketControl.TCPControlLib
         public EventHandler OnConnectionStatusChanged;
         public EventHandler OnServerAnswerReceived;
         private NormaTCPClient client;
+        public string LocalIP => client.LocalIP;
+        public int LocalPort => client.LocalPort;
+        public string RemoteIP => client.RemoteIP;
+        public int RemotePort => client.RemotePort;
         public string MessageTo
         {
             get

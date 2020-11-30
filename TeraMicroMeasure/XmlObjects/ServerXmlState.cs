@@ -17,6 +17,7 @@ namespace TeraMicroMeasure.XmlObjects
             ClientState = _changer_client_state;
         }
     }
+
     public class ServerXmlState : NormaXmlObject
     {
         const string ClientsList_TagName = "ClientsList";
@@ -211,11 +212,11 @@ namespace TeraMicroMeasure.XmlObjects
 
         public void ReplaceClient(ClientXmlState cl)
         {
-            if (!clients.ContainsKey(cl.ClientIP))
+            if (clients.ContainsKey(cl.ClientIP))
             {
                 RemoveClient(cl);
-                AddClient(cl);
             }
+            AddClient(cl);
         }
 
 

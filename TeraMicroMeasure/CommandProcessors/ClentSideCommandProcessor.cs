@@ -85,7 +85,7 @@ namespace TeraMicroMeasure.CommandProcessors
 
         void getOrSetClientID()
         {
-            if (CurrentClientState.ClientID == 0)
+            if (CurrentClientState.ClientID == -1)
             {
                 CurrentClientState.ClientID = SettingsControl.GetClientIdByIp(CurrentClientState.ClientIP);
                 SettingsControl.SetClientIP(CurrentClientState.ClientID, CurrentClientState.ClientIP);
@@ -190,6 +190,7 @@ namespace TeraMicroMeasure.CommandProcessors
         {
             currentServerState = new ServerXmlState(state.InnerXml);
             RefreshCurrentServerStateOnClientControl();
+            Debug.WriteLine($"RefreshCurrentServerState {state.InnerXml}");
         }
 
         private void OnClientMessageReceived_Handler(object sender, EventArgs e)
@@ -249,14 +250,22 @@ namespace TeraMicroMeasure.CommandProcessors
 
     public class ClientCommandDispatcher : IDisposable
     {
+        private static object locker = new object();
         TCPClientConnectionControl connectionControl;
+        EventHandler OnClientStateChangedByServer;
         ClientXmlState currentState;
-        public ClientCommandDispatcher(TCPClientConnectionControl _conn_cntrl, ClientXmlState _state)
+        public ClientCommandDispatcher(TCPClientConnectionControl _conn_cntrl, ClientXmlState _state, EventHandler on_client_state_changed_by_server)
         {
-            currentState = _state;
+            //currentState = _state;
+            OnClientStateChangedByServer = on_client_state_changed_by_server;
             connectionControl = _conn_cntrl;
             connectionControl.OnServerAnswerReceived += OnServerStateReceived_Handler;
-            connectionControl.MessageTo = currentState.InnerXml;
+            _state.ClientIP = connectionControl.LocalIP;
+            _state.ClientPort = connectionControl.LocalPort;
+            _state.ServerIP = connectionControl.RemoteIP;
+            _state.ServerPort = connectionControl.RemotePort;
+            RefreshCurrentState(_state);
+            //connectionControl.MessageTo = currentState.InnerXml;
             connectionControl.InitSending();
         }
 
@@ -265,7 +274,25 @@ namespace TeraMicroMeasure.CommandProcessors
             NormaTCPClientEventArgs a = e as NormaTCPClientEventArgs;
             NormaTCPClient cl = sender as NormaTCPClient;
             ServerXmlState s = new ServerXmlState(a.Message);
-            
+            if (s.Clients.ContainsKey(cl.LocalIP))
+            {
+                if (s.Clients[cl.LocalIP].StateId != currentState.StateId)
+                {
+                    ServerXmlStateEventArgs args = new ServerXmlStateEventArgs(s, s.Clients[cl.LocalIP]);
+                    OnClientStateChangedByServer?.Invoke(s, args);
+                }
+            }
+        }
+
+        public void RefreshCurrentState(ClientXmlState state)
+        {
+            lock(locker)
+            {
+                string inner = state.InnerXml;
+                currentState = new ClientXmlState(inner);
+                connectionControl.MessageTo = inner;
+
+            }
         }
 
         public void Dispose()

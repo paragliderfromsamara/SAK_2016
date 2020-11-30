@@ -50,6 +50,8 @@ namespace NormaMeasure.SocketControl
         protected Thread clientThread;
         public string RemoteIP => remoteIP;
         public string LocalIP => localIP;
+        public int LocalPort => localPort;
+        public int RemotePort => remotePort;
         private string messageToSend;
         private bool sendingIsActive = false;
         private bool receiveIsActive = false;
@@ -57,7 +59,27 @@ namespace NormaMeasure.SocketControl
 
         public TCP_CLIENT_STATUS Status => status;
         private TCP_CLIENT_STATUS _status = TCP_CLIENT_STATUS.DISCONNECTED;
-        private TCPSettingsController tcpSettingsController;
+        private TCPSettingsController _tcpSettingsController;
+        private TCPSettingsController tcpSettingsController
+        {
+            get
+            {
+                return _tcpSettingsController;
+            }set
+            {
+                if (value != null)
+                {
+                    localIP = value.localIPOnSettingsFile;
+                    localPort = value.localPortOnSettingsFile;
+                    if (!value.IsServerSettings)
+                    {
+                        remoteIP = value.serverIPOnSettingsFile;
+                        remotePort = value.serverPortOnSettingsFile;
+                    }
+                }
+                _tcpSettingsController = value;
+            }
+        }
 
         private TCP_CLIENT_STATUS status
         {
@@ -173,42 +195,42 @@ namespace NormaMeasure.SocketControl
         private void sendProcess()
         {
             NetworkStream stream = null;
-            IPEndPoint localPoint = new IPEndPoint(tcpSettingsController.localIPAddress, tcpSettingsController.localPortOnSettingsFile);
-            IPEndPoint remotePoint = new IPEndPoint(tcpSettingsController.serverIPAddress, tcpSettingsController.serverPortOnSettingsFile);
-            tcpClient = new TcpClient(localPoint);
-            tcpClient.ReceiveTimeout = receiveTimeout;
-            tcpClient.SendTimeout = sendTimeout;
-            tcpClient.Connect(remotePoint);
-            stream = tcpClient.GetStream();
-            byte[] dataIn = new byte[256]; // буфер для получаемых данных
-            byte[] dataOut;
-            sendingIsActive = true;
-            while (sendingIsActive)
-            {
-                // получаем сообщение
-                dataOut = Encoding.Default.GetBytes(MessageToSend);
-                StringBuilder builder = new StringBuilder();
-                int bytes = 0;
-                stream.Write(dataOut, 0, dataOut.Length);
-                do
-                {
-                    bytes = stream.Read(dataIn, 0, dataIn.Length);
-                    builder.Append(Encoding.Default.GetString(dataIn, 0, bytes));
-                }
-                while (stream.DataAvailable);
-                status = TCP_CLIENT_STATUS.CONNECTED;
-                string recMessage = builder.ToString();
 
-                recMessage.Trim();
-
-                OnAnswerReceived_Handler(recMessage);
-                Thread.Sleep(300);
-            }
-            stream.Close();
-            dispose_tcp_client();
             try
             {
-                
+                IPEndPoint localPoint = new IPEndPoint(tcpSettingsController.localIPAddress, tcpSettingsController.localPortOnSettingsFile);
+                IPEndPoint remotePoint = new IPEndPoint(tcpSettingsController.serverIPAddress, tcpSettingsController.serverPortOnSettingsFile);
+                tcpClient = new TcpClient(localPoint);
+                tcpClient.ReceiveTimeout = receiveTimeout;
+                tcpClient.SendTimeout = sendTimeout;
+                tcpClient.Connect(remotePoint);
+                stream = tcpClient.GetStream();
+                byte[] dataIn = new byte[256]; // буфер для получаемых данных
+                byte[] dataOut;
+                sendingIsActive = true;
+                while (sendingIsActive)
+                {
+                    // получаем сообщение
+                    dataOut = Encoding.Default.GetBytes(MessageToSend);
+                    StringBuilder builder = new StringBuilder();
+                    int bytes = 0;
+                    stream.Write(dataOut, 0, dataOut.Length);
+                    do
+                    {
+                        bytes = stream.Read(dataIn, 0, dataIn.Length);
+                        builder.Append(Encoding.Default.GetString(dataIn, 0, bytes));
+                    }
+                    while (stream.DataAvailable);
+                    status = TCP_CLIENT_STATUS.CONNECTED;
+                    string recMessage = builder.ToString();
+
+                    recMessage.Trim();
+
+                    OnAnswerReceived_Handler(recMessage);
+                    Thread.Sleep(300);
+                }
+                stream.Close();
+                dispose_tcp_client();
             }
             catch (Exception ex)
             {

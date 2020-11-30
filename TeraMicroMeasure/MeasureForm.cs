@@ -27,26 +27,26 @@ namespace TeraMicroMeasure
             }
         }
         bool isCurrentPCClient;
-        private ClientXmlState clientState;
+        private MeasureXMLState measureState;
         private ServerXmlState serverState;
-        public bool HasClientState => clientState != null;
-        public ClientXmlState ClientState
+        public bool HasState => measureState != null;
+        public MeasureXMLState MeasureState
         {
             set
             {
                 RemoveHandlersFromInputs();
-                clientState = new ClientXmlState(value.InnerXml);
+                measureState = new MeasureXMLState(value.InnerXml);
                 fillInputsFromClientState();
-                if (clientState.WasChanged && isCurrentPCClient) ClientStateOnFormChanged();
+                if (measureState.WasChanged && isCurrentPCClient) MeasureStateOnFormChanged();
                 AddHandlersToInputs();
             }
             get
             {
-                return clientState;
+                return measureState;
             }
         }
 
-        public EventHandler OnClientStateChanged;
+        public EventHandler OnMeasureStateChanged;
         public MeasureForm(int client_id)
         {
             int curCLientId = SettingsControl.GetClientId();
@@ -56,6 +56,7 @@ namespace TeraMicroMeasure
             //////////////////////////////////////////////////////////////
             SetTitle();
             InitPanels();
+            MeasureState = MeasureXMLState.GetDefault();
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace TeraMicroMeasure
         /// <param name="client_state"></param>
         public MeasureForm(ClientXmlState client_state) : this(client_state.ClientID)
         {
-            ClientState = client_state;
+            MeasureState = client_state.MeasureState;
         }
 
 
@@ -107,14 +108,15 @@ namespace TeraMicroMeasure
             this.serverState = new ServerXmlState(server_state.InnerXml);
         }
 
-        private void RefreshClientState(ClientXmlState client_state)
+        public void RefreshClientState(ClientXmlState client_state)
         {
-            this.ClientState = client_state;
+            if (ClientID == client_state.ClientID) ClientID = client_state.ClientID;
+            this.MeasureState = client_state.MeasureState;
         }
 
         private void fillInputsFromClientState()
         {
-            if (!HasClientState) return;
+            //if (!HasClientState) return;
             SetMeasureTypeFromXMLState();
             SetVoltageFromXmlState();
             SetCableIDFromXmlState();
@@ -126,44 +128,44 @@ namespace TeraMicroMeasure
 
         private void SetAveragingTimesFromXmlState()
         {
-            if (clientState.AveragingTimes < 0 || clientState.AveragingTimes > averagingCounter.Items.Count)
+            if (measureState.AveragingTimes < 0 || measureState.AveragingTimes > averagingCounter.Items.Count)
             {
-                clientState.AveragingTimes = 0;
+                measureState.AveragingTimes = 0;
             }
-            averagingCounter.SelectedIndex = Convert.ToInt16(clientState.AveragingTimes);
+            averagingCounter.SelectedIndex = Convert.ToInt16(measureState.AveragingTimes);
         }
 
         private void SetAfterMeasureDelayFromXMLState()
         {
-            afterMeasureDelayUpDown.Value = clientState.AfterMeasureDelay;
+            afterMeasureDelayUpDown.Value = measureState.AfterMeasureDelay;
         }
 
         private void SetBeforeMeasureDelayFromXMLState()
         {
-            beforeMeasureDelayUpDown.Value = clientState.BeforeMeasureDelay;
+            beforeMeasureDelayUpDown.Value = measureState.BeforeMeasureDelay;
         }
 
         private void SetCableLengthFromXmlState()
         {
-            if (clientState.MeasuredCableLength < 1 || clientState.MeasuredCableLength > 10000)
+            if (measureState.MeasuredCableLength < 1 || measureState.MeasuredCableLength > 10000)
             {
-                clientState.MeasuredCableLength = 1000;
+                measureState.MeasuredCableLength = 1000;
             }
-            cableLengthNumericUpDown.Value = clientState.MeasuredCableLength;
+            cableLengthNumericUpDown.Value = measureState.MeasuredCableLength;
         }
 
         private void SetCableIDFromXmlState()
         {
-            if (clientState.MeasuredCableID < 0 || clientState.MeasuredCableID > cableComboBox.Items.Count)
+            if (measureState.MeasuredCableID < 0 || measureState.MeasuredCableID > cableComboBox.Items.Count)
             {
-                clientState.MeasuredCableID = 0;
+                measureState.MeasuredCableID = 0;
             }
-            cableComboBox.SelectedIndex = clientState.MeasuredCableID;
+            cableComboBox.SelectedIndex = measureState.MeasuredCableID;
         }
 
         private void SetVoltageFromXmlState()
         {
-            switch (clientState.MeasureVoltage)
+            switch (measureState.MeasureVoltage)
             {
                 case 10:
                     v10_RadioButton.Checked = true;
@@ -178,7 +180,7 @@ namespace TeraMicroMeasure
                     v1000_RadioButton.Checked = true;
                     break;
                 default:
-                    clientState.MeasureVoltage = 10;
+                    measureState.MeasureVoltage = 10;
                     v10_RadioButton.Checked = true;
                     break;
             }
@@ -186,7 +188,7 @@ namespace TeraMicroMeasure
 
         private void SetMeasureTypeFromXMLState()
         {
-            switch(clientState.MeasureTypeId)
+            switch(measureState.MeasureTypeId)
             {
                 case MeasuredParameterType.Rleads:
                     RleadRadioButton.Checked = true;
@@ -208,10 +210,10 @@ namespace TeraMicroMeasure
                 else if (rb == v100_RadioButton) v = 100;
                 else if (rb == v500_RadioButton) v = 500;
                 else if (rb == v1000_RadioButton) v = 1000;
-                clientState.MeasureVoltage = v;
+                measureState.MeasureVoltage = v;
                 //MessageBox.Show(v.ToString());
             }
-            ClientStateOnFormChanged();
+            MeasureStateOnFormChanged();
         }
 
         private void MeasureTypeRadioButton_CheckedChanged_Common(object sender, EventArgs e)
@@ -226,15 +228,15 @@ namespace TeraMicroMeasure
                 uint mId = 0;
                 if (rb == RizolRadioButton) mId = MeasuredParameterType.Risol2;
                 else if (rb == RleadRadioButton) mId = MeasuredParameterType.Rleads;
-                clientState.MeasureTypeId = mId;
+                measureState.MeasureTypeId = mId;
             }
-            ClientStateOnFormChanged();
+            MeasureStateOnFormChanged();
         }
 
 
         private void AddHandlersToInputs()
         {
-            if (!HasClientState) return;
+            //if (!HasClientState) return;
             RleadRadioButton.CheckedChanged += MeasureTypeRadioButton_CheckedChanged;
             RizolRadioButton.CheckedChanged += MeasureTypeRadioButton_CheckedChanged;
 
@@ -255,8 +257,8 @@ namespace TeraMicroMeasure
         private void AveragingCounter_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox cb = sender as ComboBox;
-            clientState.AveragingTimes = Convert.ToUInt16(cb.SelectedIndex);
-            ClientStateOnFormChanged();
+            measureState.AveragingTimes = Convert.ToUInt16(cb.SelectedIndex);
+            MeasureStateOnFormChanged();
         }
 
         private void AfterMeasureDelayUpDown_ValueChanged(object sender, EventArgs e)
@@ -264,8 +266,8 @@ namespace TeraMicroMeasure
             NumericUpDown ud = sender as NumericUpDown;
             uint v = 0;
             uint.TryParse(ud.Value.ToString(), out v);
-            clientState.AfterMeasureDelay = v;
-            ClientStateOnFormChanged();
+            measureState.AfterMeasureDelay = v;
+            MeasureStateOnFormChanged();
         }
 
         private void BeforeMeasureDelayUpDown_ValueChanged(object sender, EventArgs e)
@@ -273,21 +275,21 @@ namespace TeraMicroMeasure
             NumericUpDown ud = sender as NumericUpDown;
             uint v = 0;
             uint.TryParse(ud.Value.ToString(), out v);
-            clientState.BeforeMeasureDelay = v;
-            ClientStateOnFormChanged();
+            measureState.BeforeMeasureDelay = v;
+            MeasureStateOnFormChanged();
         }
 
         private void MeasuredCableComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             ComboBox cb = sender as ComboBox;
-            clientState.MeasuredCableID = cb.SelectedIndex;
+            measureState.MeasuredCableID = cb.SelectedIndex;
             cableLengthNumericUpDown.ValueChanged += CableLengthNumericUpDown_ValueChanged;
-            ClientStateOnFormChanged();
+            MeasureStateOnFormChanged();
         }
 
         private void RemoveHandlersFromInputs()
         {
-            if (!HasClientState) return;
+            //if (!HasClientState) return;
             RleadRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
             RizolRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
 
@@ -309,15 +311,15 @@ namespace TeraMicroMeasure
             NumericUpDown ud = sender as NumericUpDown;
             uint v = 1000;
             uint.TryParse(ud.Value.ToString(), out v);
-            clientState.MeasuredCableLength = v;
-            ClientStateOnFormChanged();
+            measureState.MeasuredCableLength = v;
+            MeasureStateOnFormChanged();
         }
 
-        private void ClientStateOnFormChanged()
+        private void MeasureStateOnFormChanged()
         {
-            if (!HasClientState) return;
-            OnClientStateChanged?.Invoke(clientState, new EventArgs());
-            richTextBox1.Text = clientState.InnerXml;
+           // if (!HasClientState) return;
+            OnMeasureStateChanged?.Invoke(measureState, new EventArgs());
+            richTextBox1.Text = measureState.InnerXml;
         }
 
 

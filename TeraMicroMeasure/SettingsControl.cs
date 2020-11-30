@@ -100,7 +100,7 @@ namespace TeraMicroMeasure
         public static int GetClientIdByIp(string ip)
         {
             IniFile f = IniFile.GetAppSettingsFile();
-            int clId=-1;
+            int clId=0;
             while(f.KeyExists("ip", $"Client_{++clId}"))
             {
                 if (f.Read("ip", $"Client_{clId}") == ip) break;
