@@ -47,6 +47,7 @@ namespace TeraMicroMeasure
         }
 
         public EventHandler OnMeasureStateChanged;
+
         public MeasureForm(int client_id)
         {
             int curCLientId = SettingsControl.GetClientId();
@@ -97,21 +98,10 @@ namespace TeraMicroMeasure
             this.Text = t;
         }
 
-        public void SetStates(ServerXmlState server_state, ClientXmlState client_state)
+        public void RefreshMeasureState(MeasureXMLState measure_state)
         {
-            RefreshClientState(client_state);
-            RefreshServerState(server_state);
-        }
-
-        private void RefreshServerState(ServerXmlState server_state)
-        {
-            this.serverState = new ServerXmlState(server_state.InnerXml);
-        }
-
-        public void RefreshClientState(ClientXmlState client_state)
-        {
-            if (ClientID == client_state.ClientID) ClientID = client_state.ClientID;
-            this.MeasureState = client_state.MeasureState;
+            MeasureState = measure_state;
+            richTextBox1.Text = measure_state.InnerXml;
         }
 
         private void fillInputsFromClientState()

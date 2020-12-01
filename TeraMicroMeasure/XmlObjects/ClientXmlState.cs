@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.Utils;
 using System.Diagnostics;
-
+using System.Windows.Forms;
 
 
 namespace TeraMicroMeasure.XmlObjects
@@ -31,12 +31,11 @@ namespace TeraMicroMeasure.XmlObjects
             }
             set
             {
-                bool f = _measure_state != value;
-                if (f)
-                {
+                if (value != null)
+                { 
                     _measure_state = value;
-                    setChangedFlag(f);
-                }
+                    setChangedFlag(true);
+                 }
             }
         }
 
@@ -167,6 +166,7 @@ namespace TeraMicroMeasure.XmlObjects
 
         protected override void buildFromXML()
         {
+            base.buildFromXML();
             fillClientIDFromXML();
             fillClientIPFromXML();
             fillServerIPFromXML();

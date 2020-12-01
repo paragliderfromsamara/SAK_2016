@@ -30,6 +30,8 @@ namespace TeraMicroMeasure
                 return Properties.Settings.Default.IsServerApp;
             }
         }
+
+
         object locker = new object();
         private System.Drawing.Color redColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
         private System.Drawing.Color greenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(179)))), ((int)(((byte)(9)))));
@@ -39,8 +41,8 @@ namespace TeraMicroMeasure
         //NormaTCPClient client;
         ///ClientTCPControl clientTCPControl;
         //ServerTCPControl serverTCPControl;
-        ClientXmlState currentClientState;
-        ServerXmlState currentServerState;
+        //ClientXmlState currentClientState;
+        //ServerXmlState currentServerState;
 
 
         ServerCommandDispatcher serverCommandDispatcher;
@@ -186,16 +188,7 @@ namespace TeraMicroMeasure
 
 
 
-        private void refreshClientStateOnClientForm(ClientXmlState cs)
-        {
-            if (measureFormsList.ContainsKey(cs.ClientID))
-            {
-                MeasureForm f = measureFormsList[cs.ClientID];
-                f.RefreshClientState(cs);
-
-            }
-
-        }
+       
 
         private void OnServerStatusChanged_Handler(object sender, EventArgs e)
         {
@@ -266,12 +259,31 @@ namespace TeraMicroMeasure
             if (clientId > 0) ShowClientForm(clientId);
         }
 
+
+
         private void ShowClientForm(int client_id)
         {
             MeasureForm f = getOrCreateMeasureFormByClientId(client_id);
-            if (currentServerState.HasClientWithID(client_id)) f.RefreshClientState(currentServerState.GetClientStateByClientID(client_id));
+            if (HasClientWithId(client_id)) f.RefreshMeasureState(GetClientStateByClientID(client_id).MeasureState);
             if (!f.Visible) f.Show();
             if (f.WindowState == FormWindowState.Minimized) f.WindowState = FormWindowState.Normal;
+        }
+
+        private bool HasClientWithId(int client_id)
+        {
+            if (serverCommandDispatcher == null)
+            {
+                return serverCommandDispatcher.HasClientWithId(client_id);
+            }
+            else return false;
+        }
+
+        private ClientXmlState GetClientStateByClientID(int client_id)
+        {
+            if (serverCommandDispatcher != null)
+            {
+                return serverCommandDispatcher.GetClientStateByClientID(client_id);
+            }return null;
         }
 
         private MeasureForm getMeasureFormByClientId(int client_id)
@@ -306,7 +318,7 @@ namespace TeraMicroMeasure
 
         private void InitAsClientApp()
         {
-            currentClientState = buildClientXML();
+            //currentClientState = buildClientXML();
             connectionTimesNow = clientTryConnectionTimes;
              SetClientTitle();
             //CheckBaseTCPClientParameters();
@@ -332,7 +344,11 @@ namespace TeraMicroMeasure
             {
                 try
                 {
-                    if (currentServerState == null) currentServerState = buildServerXML();
+                    ServerXmlState serverState = new ServerXmlState();
+                    TCPSettingsController tsc = new TCPSettingsController(true);
+                    serverState.IPAddress = tsc.localIPOnSettingsFile;
+                    serverState.Port = tsc.localPortOnSettingsFile;
+                    // if (currentServerState == null) currentServerState = buildServerXML();
                     serverCommandDispatcher = new ServerCommandDispatcher(
                                                                        new TCPServerClientsControl(
                                                                                 new TCPServer(
@@ -340,9 +356,13 @@ namespace TeraMicroMeasure
                                                                                                 OnServerStatusChanged_Handler
                                                                                                 )
                                                                              ),
-                                                                        currentServerState,
-                                                                        OnServerStateChangedByClient_Handler
-
+                                                                        buildServerXML(),
+                                                                        OnClientIDChanged_Handler,
+                                                                        OnMeasureSettingsChanged_Handler,
+                                                                        OnMeasureStart_Handler,
+                                                                        OnMeasureStop_Handler,
+                                                                        OnClientConnected_Handler,
+                                                                        OnClientDisconnected_Handler
                                                                     );
                 }
                 catch (TCPSettingsControllerException e)
@@ -369,6 +389,81 @@ namespace TeraMicroMeasure
 
         }
 
+        private void OnClientDisconnected_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnClientDisconnected_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                ClientListChangedEventArgs a = e as ClientListChangedEventArgs;
+                //RefreshMeasureStateOnMeasureForm(a.OnFocusClientState.ClientID, a.OnFocusClientState.MeasureState);
+                refreshClientCounterStatusText(a.ServerState.Clients.Count);
+            }
+        }
+
+        private void OnClientConnected_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnClientConnected_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                ClientListChangedEventArgs a = e as ClientListChangedEventArgs;
+                RefreshMeasureStateOnMeasureForm(a.OnFocusClientState.ClientID, a.OnFocusClientState.MeasureState);
+                refreshClientCounterStatusText(a.ServerState.Clients.Count);
+
+            }
+        }
+
+        private void OnMeasureStop_Handler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnMeasureStart_Handler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnMeasureSettingsChanged_Handler(object sender, EventArgs e)
+        { 
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnMeasureSettingsChanged_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                MeasureSettingsChangedEventArgs a = e as MeasureSettingsChangedEventArgs;
+                RefreshMeasureStateOnMeasureForm(a.ClientId, a.MeasureState_New);
+            }
+        }
+
+        private void RefreshMeasureStateOnMeasureForm(int client_id, MeasureXMLState new_state)
+        {
+            MeasureForm f = getMeasureFormByClientId(client_id);
+            if (f != null) f.RefreshMeasureState(new_state);
+        }
+
+        private void OnClientIDChanged_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnClientIDChanged_Handler), new object[] { sender, e });
+            }else
+            {
+                ClientIDChangedEventArgs a = e as ClientIDChangedEventArgs;
+                MeasureForm f = getMeasureFormByClientId(a.IdWas);
+                if (f != null) f.ClientID = a.IdNew;
+                //MeasureForm f = getMeasureFormByClientId(a.IdWas);
+                
+            }
+        }
+
+
+
         private void OnServerStateChangedByClient_Handler(object sender, EventArgs e)
         {
             ServerXmlStateEventArgs a = e as ServerXmlStateEventArgs;
@@ -390,6 +485,8 @@ namespace TeraMicroMeasure
         {
             throw new NotImplementedException();
         }
+
+
 
         /*
         private void OnClientStateReceived(object o, EventArgs a)
@@ -516,7 +613,7 @@ namespace TeraMicroMeasure
         {
             try
             {
-                currentClientState = buildClientXML();
+                ClientXmlState currentClientState = buildClientXML();
                 TCPSettingsController tsc = new TCPSettingsController(false);
                 currentClientState.ClientIP = tsc.localIPOnSettingsFile;
                 currentClientState.ClientPort = tsc.localPortOnSettingsFile;
@@ -528,7 +625,9 @@ namespace TeraMicroMeasure
                                                                                                             ClientConnectionStatus_Handler
                                                                                                        ),
                                                                         currentClientState,
-                                                                        processReceivedFromServerState
+                                                                        OnClientIDChanged_Handler,
+                                                                        OnMeasureStatusChanged_Handler
+                                                  
                                                                       );
             }
             catch (TCPSettingsControllerException)
@@ -560,6 +659,11 @@ namespace TeraMicroMeasure
                 //MessageBox.Show(ex.Message);
             //}
             */
+        }
+
+        private void OnMeasureStatusChanged_Handler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void ClientConnectionStatus_Handler(object sender, EventArgs e)
@@ -620,23 +724,6 @@ namespace TeraMicroMeasure
         }
 
 
-        private void processReceivedFromServerState(object state_for_a_process, EventArgs a)
-        {
-            ServerXmlState sState = state_for_a_process as ServerXmlState;
-            ServerXmlStateEventArgs args = a as ServerXmlStateEventArgs;
-            if (InvokeRequired)
-            {
-                ClientIDProcessor clidp = new ClientIDProcessor(new TeraMicroStateProcessor(sState, currentClientState), ClientIdChange_Handler);
-                currentClientState = clidp.CurrentClientState;
-                clientCommandDispatcher.RefreshCurrentState(currentClientState);
-                BeginInvoke(new EventHandler(processReceivedFromServerState), new object[] { sState, args });
-            }
-            else
-            {
-                //richTextBox1.Text = sState.InnerXml;
-                transCounterLbl.Text = $"{recCounter++}";
-            }
-        }
 
         private void ClientIdChange_Handler(object o, EventArgs e)
         {
@@ -675,34 +762,7 @@ namespace TeraMicroMeasure
                 SetClientTitle();
             }
         }
-        /*
-        private void LostServerConnection(object ex, EventArgs a)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new EventHandler(LostServerConnection), new object[] { ex, a});
-            }else
-            {
-                Exception e = ex as Exception;
-                DialogResult r = MessageBox.Show($"{e.Message}", $"Ошибка связи с сервером", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning );
-                if (r == DialogResult.Retry) refreshConnectionToServer();
-                else if (r == DialogResult.Cancel)
-                {
-                   if  (MessageBox.Show("Хотите ввести новые данные сервера?", "Вопрос...", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        SelectServerIpForm ipForm = new SelectServerIpForm();
-                        ipForm.ShowDialog();
-                        refreshConnectionToServer();
-                        return;
-                    }
-                    clientTCPControl = null;
-                    setClientButtonStatus(ClientStatus.disconnected);
-                }
 
-            }
-
-        }
-        */
         private void MainForm_FormClosing_ForClient()
         {
             disconnectFromServer();
@@ -775,7 +835,7 @@ namespace TeraMicroMeasure
         {
             MeasureForm f = getOrCreateMeasureFormByClientId(SettingsControl.GetClientId());
             //f.MeasureState = currentClientState;
-            f.OnMeasureStateChanged += RefreshClientStateFromMeasureForm;
+            f.OnMeasureStateChanged += RefreshMeasureStateOnClientDispatcher;
             f.Show();
             
             //measureForm = new MeasureForm();
@@ -788,18 +848,13 @@ namespace TeraMicroMeasure
             //  MeasurePanel.Dock = DockStyle.Fill;
         }
 
-        private void RefreshClientStateFromMeasureForm(object sender, EventArgs e)
+        private void RefreshMeasureStateOnClientDispatcher(object sender, EventArgs e)
         {
-            ClientXmlState s = sender as ClientXmlState;
-            RefreshCurrentClientState(s);
+            MeasureXMLState s = sender as MeasureXMLState;
+            if (clientCommandDispatcher != null) clientCommandDispatcher.RefreshMeasureState(s);
         }
 
-        private void RefreshCurrentClientState(ClientXmlState new_state)
-        {
-            currentClientState = new_state;
-            if (clientCommandDispatcher != null) clientCommandDispatcher.RefreshCurrentState(new_state);
-            //clientTCPControl.SendState(currentClientState);
-        }
+
         #endregion
 
 
