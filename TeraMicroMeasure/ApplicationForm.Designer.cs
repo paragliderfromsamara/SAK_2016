@@ -38,8 +38,7 @@
             this.testLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.clientCounterStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.serverStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.transCounterLbl = new System.Windows.Forms.ToolStripStatusLabel();
+            this.connectionStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.topPanel = new System.Windows.Forms.Panel();
             this.switchConnectToServerButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -117,8 +116,7 @@
             this.statusStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(69)))), ((int)(((byte)(128)))));
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clientCounterStatus,
-            this.serverStatusLabel,
-            this.transCounterLbl});
+            this.connectionStatusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 873);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1496, 22);
@@ -132,20 +130,13 @@
             this.clientCounterStatus.Size = new System.Drawing.Size(71, 17);
             this.clientCounterStatus.Text = "Клиентов: 0";
             // 
-            // serverStatusLabel
+            // connectionStatusLabel
             // 
-            this.serverStatusLabel.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.serverStatusLabel.Name = "serverStatusLabel";
-            this.serverStatusLabel.Size = new System.Drawing.Size(205, 17);
-            this.serverStatusLabel.Text = "IP адрес: 192.168.100.220 Порт: 16000";
-            this.serverStatusLabel.Click += new System.EventHandler(this.serverStatusLabel_Click);
-            // 
-            // transCounterLbl
-            // 
-            this.transCounterLbl.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.transCounterLbl.Name = "transCounterLbl";
-            this.transCounterLbl.Size = new System.Drawing.Size(118, 17);
-            this.transCounterLbl.Text = "toolStripStatusLabel1";
+            this.connectionStatusLabel.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.connectionStatusLabel.Name = "connectionStatusLabel";
+            this.connectionStatusLabel.Size = new System.Drawing.Size(205, 17);
+            this.connectionStatusLabel.Text = "IP адрес: 192.168.100.220 Порт: 16000";
+            this.connectionStatusLabel.Click += new System.EventHandler(this.serverStatusLabel_Click);
             // 
             // topPanel
             // 
@@ -192,7 +183,7 @@
             this.button1.Text = "";
             this.button1.UseVisualStyleBackColor = false;
             // 
-            // MainForm
+            // ApplicationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -205,7 +196,7 @@
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip;
             this.MinimumSize = new System.Drawing.Size(700, 500);
-            this.Name = "MainForm";
+            this.Name = "ApplicationForm";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip.ResumeLayout(false);
@@ -225,14 +216,13 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.Panel topPanel;
         private System.Windows.Forms.ToolStripStatusLabel clientCounterStatus;
-        private System.Windows.Forms.ToolStripStatusLabel serverStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel connectionStatusLabel;
         private System.Windows.Forms.ToolStripMenuItem базыДанныхToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem пользователиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem кабелиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem испытанияToolStripMenuItem;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripMenuItem настройкиСервераToolStripMenuItem;
-        private System.Windows.Forms.ToolStripStatusLabel transCounterLbl;
         private System.Windows.Forms.Button switchConnectToServerButton;
         private System.Windows.Forms.ToolStripMenuItem testLinesToolStripMenuItem;
     }
