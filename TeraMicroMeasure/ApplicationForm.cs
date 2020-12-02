@@ -31,8 +31,6 @@ namespace TeraMicroMeasure
             }
         }
 
-
-        object locker = new object();
         private System.Drawing.Color redColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
         private System.Drawing.Color greenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(179)))), ((int)(((byte)(9)))));
         private System.Drawing.Color orangeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(140)))), ((int)(((byte)(0)))));
@@ -400,11 +398,6 @@ namespace TeraMicroMeasure
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
                 
             }
-        }
-
-        private void RefreshClientCounter()
-        {
-            throw new NotImplementedException();
         }
 
         private void initStatusBar()
