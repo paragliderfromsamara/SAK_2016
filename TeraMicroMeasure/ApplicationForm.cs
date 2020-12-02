@@ -189,7 +189,7 @@ namespace TeraMicroMeasure
 
         private bool HasClientWithId(int client_id)
         {
-            if (serverCommandDispatcher == null)
+            if (serverCommandDispatcher != null)
             {
                 return serverCommandDispatcher.HasClientWithId(client_id);
             }
@@ -224,10 +224,6 @@ namespace TeraMicroMeasure
             f.MdiParent = this;
             f.FormClosing += MeasureForm_Closing;
             //f.SetStates(currentServerState, currentClientState);
-            if (IsServerApp && serverCommandDispatcher != null)
-            {
-                if (serverCommandDispatcher.HasClientWithId(client_id)) f.RefreshMeasureState(serverCommandDispatcher.GetClientStateByClientID(client_id).MeasureState);
-            }
             measureFormsList.Add(client_id, f);
             return f;
         }
@@ -261,10 +257,6 @@ namespace TeraMicroMeasure
             {
                 try
                 {
-                    ServerXmlState serverState = new ServerXmlState();
-                    TCPSettingsController tsc = new TCPSettingsController(true);
-                    serverState.IPAddress = tsc.localIPOnSettingsFile;
-                    serverState.Port = tsc.localPortOnSettingsFile;
                     serverCommandDispatcher = new ServerCommandDispatcher(
                                                                        new TCPServerClientsControl(
                                                                                 new TCPServer(
@@ -442,6 +434,17 @@ namespace TeraMicroMeasure
             serverState.IPAddress = SettingsControl.GetLocalIP();
             serverState.Port = SettingsControl.GetLocalPort();
             serverState.RequestPeriod = SettingsControl.GetRequestPeriod();
+            /*
+            for(int i = 10; i < 20; i++)
+            {
+                ClientXmlState s = new ClientXmlState();
+                s.ClientID = i;
+                s.ClientIP = $"127.0.0.{i}";
+                s.ClientPort = 2222;
+                s.ServerIP = $"127.0.0.{i + 1}";
+                s.ServerPort = 3000;
+                serverState.AddClient(s);
+            }*/
             return serverState;
         }
         #endregion
@@ -597,7 +600,7 @@ namespace TeraMicroMeasure
                 clientCommandDispatcher.Dispose();
                 clientCommandDispatcher = null;
             }
-
+            connectionTimesNow = -1; //Чтоб при выключении не совершал попыток поиска связи
         }
 
         private void switchConnectToServerButton_Click(object sender, EventArgs e)

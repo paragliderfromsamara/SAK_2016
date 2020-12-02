@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using TeraMicroMeasure.XmlObjects;
 using NormaMeasure.SocketControl;
 using NormaMeasure.SocketControl.TCPControlLib;
-using System.Diagnostics;
-
+//using System.Diagnostics;
+using System.Threading;
 
 namespace TeraMicroMeasure.CommandProcessors
 {
@@ -102,29 +102,25 @@ namespace TeraMicroMeasure.CommandProcessors
             OnMeasureStopByClient += on_measure_stop_by_client;
             OnClientConnected += on_client_connected;
             OnClientDisconnected += on_client_disconnected;
-
-            //OnServerStateChangedByClient += on_server_state_changed_by_client_handler;
-
         }
 
         private void OnClientDetected_Handler(object sender, EventArgs e)
         {
-            //Debug.WriteLine("OnClientDetected_Handler on ServerCommandDispatcher");
-            clientsControl.Answer = currentServerState.InnerXml;
-            //NormaTCPClient cl = sender as NormaTCPClient;
-            //cl.MessageToSend = currentServerState.InnerXml;
+            RefreshCurrentServerStateOnClientControl();
         }
 
         private void RefreshCurrentServerStateOnClientControl()
         {
-            clientsControl.Answer = currentServerState.InnerXml;
+            lock (locker)
+            {
+                clientsControl.Answer = currentServerState.InnerXml;
+            }
         }
 
         public void RefreshCurrentServerState(ServerXmlState state)
         {
             currentServerState = new ServerXmlState(state.InnerXml);
             RefreshCurrentServerStateOnClientControl();
-            //Debug.WriteLine($"RefreshCurrentServerState {state.InnerXml}");
         }
 
         private void OnClientMessageReceived_Handler(object sender, EventArgs e)
@@ -136,14 +132,12 @@ namespace TeraMicroMeasure.CommandProcessors
                 if (!string.IsNullOrWhiteSpace(a.Message))
                 {
                     ClientXmlState cs = new ClientXmlState(a.Message);
-                    //Debug.WriteLine(cs.InnerXml);
                     currentTCPClient = sender as NormaTCPClient;
                     if (cs.IsValid)
                     {
+                        ServerXmlState newState = new ServerXmlState(currentServerState.InnerXml);
                         if (currentServerState.Clients.ContainsKey(cs.ClientIP))
                         {
-                            Debug.WriteLine("ClientStateID = " + cs.StateId);
-                            Debug.WriteLine("MeasureStateID = " + cs.MeasureState.StateId);
                             ClientXmlState last_cs = currentServerState.Clients[cs.ClientIP];
                             if (last_cs.StateId != cs.StateId)
                             {
@@ -156,9 +150,6 @@ namespace TeraMicroMeasure.CommandProcessors
                             currentServerState.AddClient(cs);
                             OnClientConnected?.Invoke(this, new ClientListChangedEventArgs(currentServerState, cs));
                         }
-                        //ServerStateUpdater ssu = new ServerStateUpdater(
-                        //                 new ClientDetector(currentServerState, cs), OnServerStateUpdated_Handler
-                        //                );
                         if (currentServerState.WasChanged) RefreshCurrentServerStateOnClientControl();
                     }
                 }

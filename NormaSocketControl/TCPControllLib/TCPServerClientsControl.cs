@@ -57,12 +57,14 @@ namespace NormaMeasure.SocketControl.TCPControlLib
         private void OnClientDetected_Handler(object s, EventArgs e)
         {
             NormaTCPClient cl = s as NormaTCPClient;
+            TCPServerClientEventArgs a = e as TCPServerClientEventArgs;
             if (!ServerClients.ContainsKey(cl.RemoteIP))
             {
-                Debug.WriteLine("OnClientDetected_Handler on TCPServerClientsControl");
+                
                 cl.OnClientDisconnectedWithException += disposeClient;
                 cl.OnMessageReceived += OnClientMessageReceived_Handler;
                 ServerClients.Add(cl.RemoteIP, cl);
+                Debug.WriteLine($"OnClientDetected_Handler on TCPServerClientsControl {cl.RemoteIP} connection № {a.ClientConnectionNumber}");
                 OnClientDetected?.Invoke(cl, e);
                 cl.MessageToSend = answer;
                 cl.InitReceiveThread();
@@ -97,7 +99,6 @@ namespace NormaMeasure.SocketControl.TCPControlLib
 
         private void OnClientMessageReceived_Handler(object sender, EventArgs e)
         {
-            Debug.WriteLine("OnClientMessageReceived_Handler on TCPServerClientsControl");
             OnClientMessageReceived?.Invoke(sender, e);
         }
 

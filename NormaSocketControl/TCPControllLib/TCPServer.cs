@@ -10,6 +10,14 @@ using System.Diagnostics;
 
 namespace NormaMeasure.SocketControl.TCPControlLib
 {
+    class TCPServerClientEventArgs : EventArgs
+    {
+        public int ClientConnectionNumber;
+        public TCPServerClientEventArgs(int connection_number) : base()
+        {
+            ClientConnectionNumber = connection_number;
+        }
+    }
     public enum NORMA_SERVER_STATUS
     {
         ACTIVE,
@@ -29,6 +37,7 @@ namespace NormaMeasure.SocketControl.TCPControlLib
         private TCPSettingsController settings;
         private NORMA_SERVER_STATUS _status;
         private Thread serverThread;
+        private Dictionary<string, int> ClientConnectionCounter = new Dictionary<string, int>();
         private NORMA_SERVER_STATUS status
         {
             set
@@ -95,8 +104,15 @@ namespace NormaMeasure.SocketControl.TCPControlLib
 
         private void ProcessClient(NormaTCPClient client_object)
         {
-            OnClientDetected?.Invoke(client_object, new EventArgs());
+
+            OnClientDetected?.Invoke(client_object, new TCPServerClientEventArgs(RefreshConnectionCounter(client_object)));
             
+        }
+
+        private int RefreshConnectionCounter(NormaTCPClient cl)
+        {
+            if (!ClientConnectionCounter.ContainsKey(cl.RemoteIP)) ClientConnectionCounter[cl.RemoteIP] = 0;
+            return ++ClientConnectionCounter[cl.RemoteIP];
         }
 
         public void Dispose()

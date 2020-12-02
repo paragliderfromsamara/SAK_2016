@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
 using NormaMeasure.SocketControl.TCPControlLib;
+using System.Windows.Forms;
 
 namespace NormaMeasure.SocketControl
 {
@@ -175,6 +176,7 @@ namespace NormaMeasure.SocketControl
         public void InitSending()
         {
             clientThread = new Thread(new ThreadStart(sendProcess));
+            clientThread.Name = $"Client_{LocalIP}";
             status = TCP_CLIENT_STATUS.TRY_CONNECT;
             clientThread.Start();
         }
@@ -195,7 +197,6 @@ namespace NormaMeasure.SocketControl
         private void sendProcess()
         {
             NetworkStream stream = null;
-
             try
             {
                 IPEndPoint localPoint = new IPEndPoint(tcpSettingsController.localIPAddress, tcpSettingsController.localPortOnSettingsFile);
@@ -205,7 +206,9 @@ namespace NormaMeasure.SocketControl
                 tcpClient.SendTimeout = sendTimeout;
                 tcpClient.Connect(remotePoint);
                 stream = tcpClient.GetStream();
-                byte[] dataIn = new byte[256]; // буфер для получаемых данных
+                
+                ////retry:
+                byte[] dataIn = new byte[32768]; // буфер для получаемых данных
                 byte[] dataOut;
                 sendingIsActive = true;
                 while (sendingIsActive)
@@ -223,9 +226,8 @@ namespace NormaMeasure.SocketControl
                     while (stream.DataAvailable);
                     status = TCP_CLIENT_STATUS.CONNECTED;
                     string recMessage = builder.ToString();
-
+                    //msg = recMessage;
                     recMessage.Trim();
-
                     OnAnswerReceived_Handler(recMessage);
                     Thread.Sleep(300);
                 }
@@ -234,12 +236,23 @@ namespace NormaMeasure.SocketControl
             }
             catch (Exception ex)
             {
+                /*
+                if (ex.GetType().Name == "XmlException" && ex.HResult == -2146232000)
+                {
+                   
+                    bufferSize = dataLength * 2;
+                    goto retry;
+                }
+                else
+                {
+                    MessageBox.Show(ex.Message + "\n" + dataLength.ToString(), ex.GetType().Name + " код " + ex.HResult);
+                }*/
                 sendingIsActive = false;
                 status = TCP_CLIENT_STATUS.ABORTED;
                 this.Exception = ex;
                 OnClientDisconnectedWithException?.Invoke(this, new EventArgs());
-                //ClientSendMessageException?.Invoke(remoteIP, ex);
 
+                //ClientSendMessageException?.Invoke(remoteIP, ex);
             }
             finally
             {
@@ -262,16 +275,6 @@ namespace NormaMeasure.SocketControl
             if (status == TCP_CLIENT_STATUS.CONNECTED) status = TCP_CLIENT_STATUS.WILL_DISCONNECT;
             sendingIsActive = false;
             receiveIsActive = false;
-
-            //if (tcpClient != null)
-            //{
-            //    tcpClient.GetStream().Close();
-            //    tcpClient.Close();
-            //    tcpClient.Dispose();
-            //     tcpClient = null;
-            //    if (clientThread != null) clientThread.Abort();
-            // }
-            //Thread.Sleep(3000);
         }
 
         private void receiveProcess()
@@ -283,7 +286,7 @@ namespace NormaMeasure.SocketControl
                 tcpClient.ReceiveTimeout = receiveTimeout;
                 tcpClient.SendTimeout = sendTimeout;
                 stream = tcpClient.GetStream();
-                byte[] data = new byte[256]; // буфер для получаемых данных
+                byte[] data = new byte[512]; // буфер для получаемых данных
                 receiveIsActive = true;
                 while (receiveIsActive)
                 {
