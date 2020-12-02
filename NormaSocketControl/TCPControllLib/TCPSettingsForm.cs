@@ -18,7 +18,7 @@ namespace NormaMeasure.SocketControl.TCPControlLib
         string localIP => localIPComboBox.SelectedItem.ToString();
         int localPort => Convert.ToInt16(localPortInput.Value);
         string remoteIP => remoteIPInput.Text;
-        int remotePort => Convert.ToInt16(localPortInput.Value);
+        int remotePort => Convert.ToInt16(remotePortInput.Value);
         string localIPWas;
         int localPortWas;
         string remoteIPWas;

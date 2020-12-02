@@ -14,6 +14,7 @@ namespace TeraMicroMeasure
 {
     public partial class MeasureForm : Form
     {
+        bool IsOnline = false;
         int clientID;
         public int ClientID
         {
@@ -53,7 +54,7 @@ namespace TeraMicroMeasure
             int curCLientId = SettingsControl.GetClientId();
             InitializeComponent();
             clientID = client_id;
-            isCurrentPCClient = clientID == SettingsControl.GetClientId();
+            IsOnline = isCurrentPCClient = clientID == SettingsControl.GetClientId();
             //////////////////////////////////////////////////////////////
             SetTitle();
             InitPanels();
@@ -95,13 +96,27 @@ namespace TeraMicroMeasure
             else if (clientID > 0) t = $"Испытательная линия {clientID}";
             else t = "Испытательная линия без номера";
             if (isCurrentPCClient) t += " (Этот компьютер)";
+            else
+            {
+                t += (IsOnline) ? " (В сети)" : " (Нет связи)";
+            }
             this.Text = t;
         }
 
         public void RefreshMeasureState(MeasureXMLState measure_state)
         {
             MeasureState = measure_state;
+            SetConnectionStatus(true);
             richTextBox1.Text = measure_state.InnerXml;
+        }
+
+        public void SetConnectionStatus(bool is_online)
+        {
+            if (is_online != IsOnline)
+            {
+                IsOnline = is_online;
+                SetTitle();
+            }
         }
 
         private void fillInputsFromClientState()
