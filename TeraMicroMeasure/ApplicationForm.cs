@@ -87,6 +87,7 @@ namespace TeraMicroMeasure
 
         private void InitAsServerApp()
         {
+            this.Text = "Сервер измерений";
             initServerControl();
         }
 
