@@ -221,7 +221,7 @@ namespace NormaMeasure.SAC_APP
            else tableToolStripLabel.Text = $"Стол №{sacDevice.table.DeviceId} ({sacDevice.table.PortName})";
         }
 
-        private void Table_OnDataReceive(Devices.DeviceBase device)
+        private void Table_OnDataReceive(Devices.DeviceBaseOld device)
         {
             MessageBox.Show("Принят номер стола");
         }

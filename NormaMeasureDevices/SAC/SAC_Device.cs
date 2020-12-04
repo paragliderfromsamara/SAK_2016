@@ -53,7 +53,7 @@ namespace NormaMeasure.Devices.SAC
             table.Device_LostConnection += Table_Device_LostConnection;
         }
 
-        private void Table_Device_LostConnection(DeviceBase device)
+        private void Table_Device_LostConnection(DeviceBaseOld device)
         {
             OnTableLost?.Invoke(this, (SACTable)device);
 
@@ -61,7 +61,7 @@ namespace NormaMeasure.Devices.SAC
            // System.Windows.Forms.MessageBox.Show($"Table_Device_LostConnection ({device.PortName})");
         }
 
-        private void Table_Device_Connected(DeviceBase device)
+        private void Table_Device_Connected(DeviceBaseOld device)
         {
             OnTableFound?.Invoke(this, (SACTable)device);
             ((SACTable)device).ClearCableCommutator();
@@ -95,12 +95,12 @@ namespace NormaMeasure.Devices.SAC
             th.Start();
         }
 
-        private void Cps_Device_LostConnection(DeviceBase device)
+        private void Cps_Device_LostConnection(DeviceBaseOld device)
         {
             OnCPSLost?.Invoke(this, device as SACCPS);
         }
 
-        private void Cps_Device_Connected(DeviceBase device)
+        private void Cps_Device_Connected(DeviceBaseOld device)
         { 
             SettingsFile.RefreshLastCPSNumber();
             CentralSysPult.InitUnits();

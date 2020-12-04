@@ -43,7 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="COMDeviceFinder.cs" />
     <Compile Include="DeviceBase.cs" />
+    <Compile Include="DeviceBaseOld.cs" />
+    <Compile Include="DeviceCommandProtocol.cs" />
+    <Compile Include="DevicesDispatcher.cs" />
+    <Compile Include="Microohmmeter\Microohmmeter_uOmM_01m.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SAC\SACTestPlan.cs" />
     <Compile Include="SAC\SACMeasurePoint.cs" />
@@ -70,6 +75,7 @@
     <Compile Include="TableMap.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Teraohmmeter\TeraohmmeterTOmM_01.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">

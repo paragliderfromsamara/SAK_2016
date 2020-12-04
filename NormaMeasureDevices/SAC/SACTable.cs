@@ -13,7 +13,7 @@ namespace NormaMeasure.Devices.SAC
 {
     public delegate void SACTable_Handler(SACTable table);
     public delegate void TableReceiverControl_Thread_Handler(byte[] receivedInfo);
-    public class SACTable : DeviceBase
+    public class SACTable : DeviceBaseOld
     {
         public int TableNumber = 1;
 
@@ -41,7 +41,7 @@ namespace NormaMeasure.Devices.SAC
             else return sac.SettingsFile.GetTablePortName(TableNumber);
         }
 
-        private void SACTable_Device_Connected(DeviceBase device)
+        private void SACTable_Device_Connected(DeviceBaseOld device)
         {
             sac.SettingsFile.SetTablePortName(this.TableNumber, PortName);
         }

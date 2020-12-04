@@ -4,21 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace NormaMeasure.Devices
 {
-
-    public class DeviceBase : IDisposable
+    public class DeviceCommandProtocol
     {
-        public DeviceBase()
+        int MemorySize;
+        public DeviceCommandProtocol()
         {
 
-        }
-
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

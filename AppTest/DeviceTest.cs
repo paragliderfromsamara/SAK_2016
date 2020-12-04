@@ -42,27 +42,27 @@ namespace AppTest
             Console.WriteLine($"{commutator.State[0]} {commutator.State[1]}");
         }
 
-        private static void Cps_OnFindingException(DeviceBase device, Exception ex)
+        private static void Cps_OnFindingException(DeviceBaseOld device, Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
 
-        private static void Cps_Device_Finding(DeviceBase device)
+        private static void Cps_Device_Finding(DeviceBaseOld device)
         {
             Console.WriteLine($"Поиск ЦПС...");
         }
 
-        private static void Cps_Device_NotFound(DeviceBase device)
+        private static void Cps_Device_NotFound(DeviceBaseOld device)
         {
             Console.WriteLine($"ЦПС не найден");
         }
 
-        private static void Cps_Device_LostConnection(DeviceBase device)
+        private static void Cps_Device_LostConnection(DeviceBaseOld device)
         {
             Console.WriteLine($"ЦПС отключен");
         }
 
-        private static void Cps_Device_Connected(DeviceBase device)
+        private static void Cps_Device_Connected(DeviceBaseOld device)
         {
             Console.WriteLine($"Подключен ЦПС {device.DeviceType} №{device.DeviceId}");
         }

@@ -11,7 +11,7 @@ using NormaMeasure.DBControl.Tables;
 
 namespace NormaMeasure.Devices.SAC
 {
-    public class SACCPS : DeviceBase
+    public class SACCPS : DeviceBaseOld
     {
         #region Команды ЦПС
         /// <summary>

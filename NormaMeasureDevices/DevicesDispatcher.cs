@@ -4,21 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace NormaMeasure.Devices
 {
 
-    public class DeviceBase : IDisposable
+    public class DevicesDispatcher
     {
-        public DeviceBase()
+        
+        public DevicesDispatcher()
         {
 
         }
 
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
