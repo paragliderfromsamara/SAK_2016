@@ -124,12 +124,39 @@ namespace TeraMicroMeasure
         {
             IniFile f = IniFile.GetAppSettingsFile();
             List<int> cl = new List<int>();
-            int clId = 0;
-            while (f.KeyExists("ip", $"Client_{++clId}"))
+            for(int i = 1; i<=100; i++)
             {
-                cl.Add(clId);
+                if (f.KeyExists("ip", $"Client_{i}")) cl.Add(i);
             }
             return cl.ToArray();
         }
+
+        public static int GetClientID(int cId, string cIP)
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            int idByIP = -1;
+            int idNew = -1;
+            for (int i = 1; i <= 25; i++)
+            {
+                if (idNew > 0 && idByIP > 0) break;
+                if (f.KeyExists("ip", $"Client_{i}") && idByIP < 0)
+                {
+                    if (cIP == f.Read("ip", $"Client_{i}")) idByIP = i;
+                }
+                else if (idNew < 0) idNew = i;
+            }
+            if (idByIP > 0) return idByIP;
+            if (cId < 0) 
+            {
+                SetClientIP(idNew, cIP);
+                return idNew;
+            }else
+            {
+                SetClientIP(cId, cIP);
+                return cId;
+            }
+            
+        }
+
     }
 }

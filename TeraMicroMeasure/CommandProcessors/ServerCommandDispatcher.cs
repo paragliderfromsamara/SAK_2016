@@ -165,23 +165,13 @@ namespace TeraMicroMeasure.CommandProcessors
 
         private void GiveClientId(ClientXmlState cs)
         {
-            int idWas = cs.ClientID;
-            int idNext = cs.ClientID;
-            int id = 1;
-            if (cs.ClientID < 0) idNext = SettingsControl.GetClientIdByIp(cs.ClientIP);
-            check:
-            if (currentServerState.GetClientStateByClientID(idNext) != null)
+            int clientId = cs.ClientID;
+            if (clientId > 0)
             {
-                idNext = id++;
-                goto check;
+                if (currentServerState.GetClientStateByClientID(clientId) != null) clientId = -1;
             }
-            if (idWas != idNext)
-            {
-                cs.ClientID = idNext;
-                SettingsControl.SetClientIP(idNext, cs.ClientIP);
-                OnClientIDChanged?.Invoke(cs, new ClientIDChangedEventArgs(idWas, idNext));
-            }
-
+            clientId = SettingsControl.GetClientID(clientId, cs.ClientIP);
+            if (cs.ClientID != clientId) cs.ClientID = clientId;
         }
 
         private void processClientAsAlreadyConnected(ClientXmlState cs, ClientXmlState last_cs)
