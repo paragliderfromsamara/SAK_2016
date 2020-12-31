@@ -21,4 +21,22 @@ namespace NormaMeasure.Devices
             throw new NotImplementedException();
         }
     }
+
+    public struct DeviceInfo
+    {
+        DeviceType type;
+        int SerialYear;
+        byte SerialNumber;
+        ushort[] data;
+
+    }
+
+    public enum DeviceType : byte
+    {
+        Teraohmmeter = 1,
+        Microohmmeter = 2,
+        PICA_X = 3,
+        SAC_TVCH = 4
+       
+    }
 }

@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Ports;
 
 namespace NormaMeasure.Devices
 {
     public class COMDeviceFinder
     {
         private EventHandler OnDeviceFound;
-
-        public COMDeviceFinder()
+        private DeviceCommandProtocol commandProtocol;
+        public COMDeviceFinder(DeviceCommandProtocol command_protocol)
         {
-
+            commandProtocol = command_protocol;
         }
 
         private bool AttemptToConnection()
@@ -44,6 +47,39 @@ namespace NormaMeasure.Devices
             isOnFinding = false;
 
             Debug.WriteLine($"{DeviceType} status {flag}");
+            return flag;
+        }
+        private bool TryConnectToPort(string port_name)
+        {
+            bool flag = false;
+            try
+            {
+                ClosePort();
+                device_port.PortName = port_name;
+                if (OpenPort())
+                {
+                    if (CheckConnection())
+                    {
+                        flag = true;
+                    }
+                    else
+                    {
+                        ClosePort();
+                    }
+                }
+            }
+            catch (System.UnauthorizedAccessException)
+            {
+                ClosePort();
+            }
+            catch (System.IO.IOException)
+            {
+                ClosePort();
+            }
+            catch (TimeoutException)
+            {
+                ClosePort();
+            }
             return flag;
         }
     }
