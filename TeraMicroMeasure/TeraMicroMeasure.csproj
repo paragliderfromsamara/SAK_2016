@@ -112,6 +112,10 @@
       <Project>{6828dd40-1488-46d6-8f70-db5ef38c463f}</Project>
       <Name>NormaDBControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NormaMeasureDevices\NormaMeasureDevices.csproj">
+      <Project>{95c559b4-3dd7-471e-a601-e464bd041336}</Project>
+      <Name>NormaMeasureDevices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NormaMeasureUtils\NormaMeasureUtils.csproj">
       <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
       <Name>NormaMeasureUtils</Name>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.Utils;
 using System.Diagnostics;
+using NormaMeasure.Devices;
 
 namespace TeraMicroMeasure
 {
@@ -156,6 +157,32 @@ namespace TeraMicroMeasure
                 return cId;
             }
             
+        }
+
+        private static int GetDeviceId(string name_with_serial)
+        {
+            int i = 0;
+            IniFile f = IniFile.GetAppSettingsFile();
+            while (++i > 0)
+            {
+                if (!f.KeyExists("FullName", $"Device_{i}")) break;
+                if (f.Read("FullName", $"Device_{i}") != name_with_serial) continue;
+                else return i;
+            }
+            return i;
+        }
+        public static void CreateOrUpdateDevice(DeviceBase d)
+        {
+            IniFile f;
+            string signature = $"{d.TypeNameFull} {d.Serial}";
+            int deviceId = GetDeviceId(signature);
+            f = IniFile.GetAppSettingsFile();
+            f.Write("FullName", signature, $"Device_{deviceId}");
+            f.Write("TypeId", ((byte)d.TypeId).ToString(), $"Device_{deviceId}");
+            f.Write("SerialYear", d.SerialYear.ToString(), $"Device_{deviceId}");
+            f.Write("SerialNumber", d.SerialNumber.ToString(), $"Device_{deviceId}");
+            f.Write("WorkStatus", ((byte)d.WorkStatus).ToString(), $"Device_{deviceId}");
+            f.Write("ModelVersion", d.ModelVersion.ToString(), $"Device_{deviceId}");
         }
 
     }

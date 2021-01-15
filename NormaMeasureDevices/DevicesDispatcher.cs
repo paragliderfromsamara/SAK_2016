@@ -4,25 +4,104 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Modbus.Device;
+using System.Threading;
+using System.IO.Ports;
+using System.Diagnostics;
 
 namespace NormaMeasure.Devices
 {
 
-    public class DevicesDispatcher
+    public class DevicesDispatcher : IDisposable
     {
-        KeyValuePair<string, DeviceBase> connectedDevices;
-
-        public DevicesDispatcher()
+        private EventHandler OnDeviceFound;
+        private DeviceCommandProtocol commandProtocol;
+        private Dictionary<string, DeviceBase> deviceList;
+        //private List<string> deviceComList;
+        private Thread FindThread;
+        private bool NeedStop = false;
+        public DevicesDispatcher(DeviceCommandProtocol command_protocol, EventHandler on_device_found)
         {
-            connectedDevices = new KeyValuePair<string, DeviceBase>();
+            deviceList = new Dictionary<string, DeviceBase>();
+            commandProtocol = command_protocol;
+            OnDeviceFound = on_device_found;
+            InitFindThread();
         }
 
-        private void FindDevices()
+        public void InitFindThread()
         {
-            string[] port_list =
-            port_list = SerialPort.GetPortNames();
+            NeedStop = false;
+            FindThread = new Thread(new ThreadStart(findThreadFunction));
+            FindThread.Start();
         }
 
-        
+        public void StopFind()
+        {
+            NeedStop = true;
+        }
+
+        private string[] GetAvailablePortNames()
+        {
+            string[] port_list = SerialPort.GetPortNames();
+            List<string> portList = new List<string>();
+            string ports = String.Empty;
+            foreach (string port_name in port_list)
+            {
+                ports += $"{port_name}; ";
+                if (!deviceList.ContainsKey(port_name))
+                {
+                    portList.Add(port_name);
+                }
+            }
+
+            return portList.ToArray();
+        }
+
+        private void findThreadFunction()
+        {
+            while (!NeedStop)
+            {
+                string[] port_list = GetAvailablePortNames();
+                if (port_list.Length > 0)
+                {
+                    foreach (string port_name in port_list)
+                    {
+                        DeviceBase device = commandProtocol.GetDeviceOnCOM(port_name);
+                        Debug.WriteLine($"Сканируем порт {port_name}");
+                        if (device != null)
+                        {
+                            Debug.WriteLine($"Найдено устройство на {port_name}");
+                            OnDeviceFound?.Invoke(device, new EventArgs());
+                            device.OnDisconnected += OnDeviceDisconnected_Handler;
+                            deviceList.Add(port_name, device);
+                            device.GoToWaitingForCommand();
+                        }
+                    }
+                }
+                for (int i = 0; i < 2000; i++)
+                {
+                    Thread.Sleep(1);
+                    if (NeedStop) break;
+                }
+            }
+        }
+
+        private void OnDeviceDisconnected_Handler(object sender, EventArgs e)
+        {
+            DeviceBase d = sender as DeviceBase;
+            deviceList.Remove(d.PortName);
+            d.Dispose();
+        }
+
+        public void Dispose()
+        {
+            StopFind();
+            if (deviceList.Count > 0)
+            {
+                foreach(DeviceBase d in deviceList.Values)
+                {
+                    d.Dispose();
+                }
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@ using System.Xml;
 using TeraMicroMeasure.XmlObjects;
 using TeraMicroMeasure.CommandProcessors;
 using NormaMeasure.SocketControl.TCPControlLib;
+using NormaMeasure.Devices;
 using System.Diagnostics;
 
 namespace TeraMicroMeasure
@@ -39,6 +40,7 @@ namespace TeraMicroMeasure
         ServerCommandDispatcher serverCommandDispatcher;
         ClientCommandDispatcher clientCommandDispatcher;
         Dictionary<int, MeasureForm> measureFormsList;
+        DevicesDispatcher DeviceDispatcher;
 
         public ApplicationForm()
         {
@@ -51,13 +53,45 @@ namespace TeraMicroMeasure
                 initStatusBar();
                 initTopBar();
                 InitButtonsBar();
+                InitDeviceFinder();
                 if (IsServerApp) InitAsServerApp();
                 else InitAsClientApp();
+                
             }
             else
             {
                 Close();
             }
+        }
+
+        private void InitDeviceFinder()
+        {
+            DeviceDispatcher = new DevicesDispatcher(new DeviceCommandProtocol(), OnDeviceFound_EventHandler);
+        }
+
+        private void OnDeviceFound_EventHandler(object sender, EventArgs e)
+        {
+            DeviceBase d = sender as DeviceBase;
+            switch(d.TypeId)
+            {
+                case DeviceType.Microohmmeter:
+                case DeviceType.Teraohmmeter:
+                    AddSimpleDeviceToSettingsFile(d);
+                    break;
+            }
+            MessageBox.Show($"Подключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
+            d.OnDisconnected += OnDeviceDisconnected_EventHandler;
+        }
+
+        private void AddSimpleDeviceToSettingsFile(DeviceBase d)
+        {
+            SettingsControl.CreateOrUpdateDevice(d);
+        }
+
+        private void OnDeviceDisconnected_EventHandler(object sender, EventArgs e)
+        {
+            DeviceBase d = sender as DeviceBase;
+            MessageBox.Show($"Отключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
         }
 
         private void initTopBar()
@@ -73,9 +107,16 @@ namespace TeraMicroMeasure
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            StopDeviceFinder();
             if (IsServerApp) MainForm_FormClosing_ForServer();
             else MainForm_FormClosing_ForClient();
 
+
+        }
+
+        private void StopDeviceFinder()
+        {
+            if (DeviceDispatcher != null) DeviceDispatcher.Dispose();
         }
 
         private void InitCulture()
