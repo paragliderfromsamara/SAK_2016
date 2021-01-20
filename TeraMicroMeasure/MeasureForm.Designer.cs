@@ -56,6 +56,8 @@
             this.v100_RadioButton = new System.Windows.Forms.RadioButton();
             this.v10_RadioButton = new System.Windows.Forms.RadioButton();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.availableDevices = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -250,6 +252,8 @@
             // measurePanel
             // 
             this.measurePanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.measurePanel.Controls.Add(this.label3);
+            this.measurePanel.Controls.Add(this.availableDevices);
             this.measurePanel.Controls.Add(this.panel1);
             this.measurePanel.Controls.Add(this.startMeasureButton);
             this.measurePanel.Controls.Add(this.panel2);
@@ -311,7 +315,7 @@
             this.startMeasureButton.FlatAppearance.BorderSize = 0;
             this.startMeasureButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.startMeasureButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.startMeasureButton.Location = new System.Drawing.Point(405, 199);
+            this.startMeasureButton.Location = new System.Drawing.Point(719, 209);
             this.startMeasureButton.Name = "startMeasureButton";
             this.startMeasureButton.Size = new System.Drawing.Size(198, 48);
             this.startMeasureButton.TabIndex = 11;
@@ -390,6 +394,25 @@
             this.richTextBox1.TabIndex = 7;
             this.richTextBox1.Text = "";
             // 
+            // availableDevices
+            // 
+            this.availableDevices.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.availableDevices.FormattingEnabled = true;
+            this.availableDevices.Location = new System.Drawing.Point(405, 224);
+            this.availableDevices.Name = "availableDevices";
+            this.availableDevices.Size = new System.Drawing.Size(293, 27);
+            this.availableDevices.TabIndex = 12;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(401, 202);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(96, 19);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Измеритель";
+            // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
@@ -451,5 +474,7 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox availableDevices;
     }
 }

@@ -194,12 +194,14 @@ namespace TeraMicroMeasure.CommandProcessors
                     currentServerState.RemoveClient(ip);
                     RefreshCurrentServerStateOnClientControl();
                     OnClientDisconnected?.Invoke(this, new ClientListChangedEventArgs(currentServerState, cs));
-                    //Debug.WriteLine("OnClientDisconnected_Handler: 1");
                 }
-                //else Debug.WriteLine("OnClientDisconnected_Handler: 0");
             }
         }
 
+        public void AddDeviceToState(DeviceXMLState d)
+        {
+
+        }
 
         public ClientXmlState GetClientStateByClientID(int client_id)
         {

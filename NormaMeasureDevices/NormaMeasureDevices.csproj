@@ -80,6 +80,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Teraohmmeter\TeraohmmeterTOmM_01.cs" />
+    <Compile Include="Teraohmmeter\TOhmM_01_v1_CommandProtocol.cs" />
+    <Compile Include="XmlObjects\DeviceXMLState.cs" />
+    <Compile Include="XmlObjects\MicroohmmeterXMLState.cs" />
+    <Compile Include="XmlObjects\TeraohmmetrXMLState.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">

@@ -25,6 +25,7 @@ namespace TeraMicroMeasure.XmlObjects
         const string IPAddress_TagName = "ip";
         const string Port_TagName = "port";
         const string RequestPeriod_TagName = "RequestPeriod";
+        const string DevicesList_TagName = "ConnectedDevices";
 
 
         public ServerXmlState() : base()
@@ -98,6 +99,17 @@ namespace TeraMicroMeasure.XmlObjects
                     request_period = value;
                     setChangedFlag(f);
                 }
+            }
+        }
+
+
+        Dictionary<string, DeviceXMLState> devices = new Dictionary<string, DeviceXMLState>();
+
+        public Dictionary<string, DeviceXMLState> Devices
+        {
+            get
+            {
+                return devices;
             }
         }
 

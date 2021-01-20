@@ -72,6 +72,9 @@
     <Compile Include="ServerSettingsControl.cs" />
     <Compile Include="SettingsControl.cs" />
     <Compile Include="XmlObjects\ClientXmlState.cs" />
+    <Compile Include="XmlObjects\MicroohmmeterXMLState.cs" />
+    <Compile Include="XmlObjects\TeraohmmetrXMLState.cs" />
+    <Compile Include="XmlObjects\DeviceXMLState.cs" />
     <Compile Include="XmlObjects\MeasureState.cs" />
     <Compile Include="XmlObjects\MeasureXMLState.cs" />
     <Compile Include="XmlObjects\ServerXmlState.cs" />

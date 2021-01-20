@@ -28,7 +28,7 @@ namespace NormaMeasure.Devices
             comPortName = port_name;
         }
 
-        public DeviceBase GetDeviceOnCOM(string port_name)
+        public virtual DeviceBase GetDeviceOnCOM(string port_name)
         {
             DeviceBase device = null;
             DeviceInfo info;
@@ -53,12 +53,12 @@ namespace NormaMeasure.Devices
             port.StopBits = StopBits.One;
             port.Parity = Parity.None;
             port.DataBits = 8;
-            port.WriteTimeout = 500;
-            port.ReadTimeout = 500;
+            port.WriteTimeout = 20;
+            port.ReadTimeout = 20;
             return port;
         }
 
-        public DeviceInfo GetDeviceInfo()
+        public virtual DeviceInfo GetDeviceInfo()
         {
             ushort[] data = ReadHoldings(DeviceTypeAddr, DeviceModelVersionAddr);
             DeviceInfo info = new DeviceInfo();
@@ -76,7 +76,7 @@ namespace NormaMeasure.Devices
             return info;
         }
 
-        private ushort[] ReadHoldings(ushort addr_start, ushort addr_end)
+        protected ushort[] ReadHoldings(ushort addr_start, ushort addr_end)
         {
            
             SerialPort port = InitPort(comPortName);
@@ -95,7 +95,6 @@ namespace NormaMeasure.Devices
                 port.Dispose();
                 throw ex;
             }
-
             return value;
         }
 

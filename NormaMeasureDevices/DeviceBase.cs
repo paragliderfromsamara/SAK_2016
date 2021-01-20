@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NormaMeasure.Devices.XmlObjects;
+using System.Diagnostics;
 
 
 namespace NormaMeasure.Devices
@@ -22,6 +24,14 @@ namespace NormaMeasure.Devices
         public string SerialWithShortName => $"{type_name_short} зав.№ {Serial}";
         public string TypeNameFull => type_name_full;
         public string TypeNameShort => type_name_short;
+        private int client_id = -1;
+        public int ClientId
+        {
+            get
+            {
+                return client_id;
+            }
+        }
         public DeviceStatus WorkStatus => work_status;
 
 
@@ -78,10 +88,19 @@ namespace NormaMeasure.Devices
                     return new DeviceBase(info);
             }
         }
-
-        private void CheckDeviceConnectionThreadFunc()
+        
+        /// <summary>
+        /// Привязка прибора к измерительной линии
+        /// </summary>
+        /// <param name="cl_id"></param>
+        protected virtual void AssignToClient(int cl_id)
         {
-            int tryTimes = 3;
+            this.client_id = cl_id;
+        }
+
+        protected virtual void CheckDeviceConnectionThreadFunc()
+        {
+            int tryTimes = 50;
             DeviceCommandProtocol p = null;
             retry: 
             try
@@ -94,12 +113,8 @@ namespace NormaMeasure.Devices
                     {
                         work_status = DeviceStatus.DISCONNECTED;
                     }
-                    for(int i=0; i < 1000; i++)
-                    {
-                        Thread.Sleep(1);
-                        if (work_status != DeviceStatus.WAITING_FOR_COMMAND) break;
-                    }
-                    tryTimes = 3;
+                    Debug.WriteLine($"Попыток на отправку: {tryTimes};");
+                    tryTimes = 50;
                 }
                 p.Dispose();
             }catch
@@ -139,12 +154,20 @@ namespace NormaMeasure.Devices
             return (typeId > 0 && typeId <= (byte)DeviceType.AVU_4);
         }
 
+        public virtual DeviceXMLState GetXMLState()
+        {
+            return new DeviceXMLState(this);
+        }
+
         public void Dispose()
         {
             OnDisconnected = null;
             if (work_status == DeviceStatus.WAITING_FOR_COMMAND) work_status = DeviceStatus.WILL_DISCONNECT;
 
         }
+
+
+
     }
 
     public struct DeviceInfo
@@ -173,7 +196,18 @@ namespace NormaMeasure.Devices
         WAITING_FOR_COMMAND,
         CHANGE_STATUS,
         IS_ON_MEASURE,
+        IS_ON_POLARISATION,
+        IS_ON_DEPOLARISATION,
         DISCONNECTED, 
         WILL_DISCONNECT
+    }
+
+
+    public class NormaDeviceException : Exception
+    {
+        public NormaDeviceException(string message) : base(message)
+        {
+
+        }
     }
 }

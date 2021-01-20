@@ -79,7 +79,9 @@ namespace TeraMicroMeasure
                     AddSimpleDeviceToSettingsFile(d);
                     break;
             }
+            if (IsServerApp) 
             MessageBox.Show($"Подключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
+
             d.OnDisconnected += OnDeviceDisconnected_EventHandler;
         }
 
