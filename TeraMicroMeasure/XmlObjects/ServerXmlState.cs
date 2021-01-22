@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.Utils;
-
+using NormaMeasure.Devices.XmlObjects;
 namespace TeraMicroMeasure.XmlObjects
 {
     public class ServerXmlStateEventArgs : EventArgs
@@ -26,6 +26,7 @@ namespace TeraMicroMeasure.XmlObjects
         const string Port_TagName = "port";
         const string RequestPeriod_TagName = "RequestPeriod";
         const string DevicesList_TagName = "ConnectedDevices";
+        const string DeviceElement_TagName = "DeviceXMLState";
 
 
         public ServerXmlState() : base()
@@ -103,7 +104,7 @@ namespace TeraMicroMeasure.XmlObjects
         }
 
 
-        Dictionary<string, DeviceXMLState> devices = new Dictionary<string, DeviceXMLState>();
+        Dictionary<string,DeviceXMLState> devices = new Dictionary<string, DeviceXMLState>();
 
         public Dictionary<string, DeviceXMLState> Devices
         {
@@ -111,6 +112,54 @@ namespace TeraMicroMeasure.XmlObjects
             {
                 return devices;
             }
+        }
+
+        public DeviceXMLState GetXMLDeviceState(int type_id, string serial)
+        {
+            string key = $"{type_id}-{serial}";
+            if (devices.ContainsKey(key))
+            {
+                return devices[key];
+            }
+            else return null;
+        }
+
+        public void AddOrReplaceDevice(DeviceXMLState device_state)
+        {
+            string key = $"{device_state.TypeId}-{device_state.Serial}";
+            DeviceXMLState onList = GetXMLDeviceState(device_state.TypeId, device_state.Serial);
+            bool willAdd = false;
+            if (onList == null)
+            {
+                willAdd = true;
+            }else
+            {
+                if (onList.StateId != device_state.StateId)
+                {
+                    willAdd = true;
+                    devices.Remove(key);
+                }
+            }
+            if (willAdd)
+            {
+                devices.Add(key, device_state);
+                setChangedFlag(true);
+            }
+        }
+
+        public void RemoveDevice(int type_id, string serial)
+        {
+            string key = $"{type_id}-{serial}";
+            if (devices.ContainsKey(key))
+            {
+                devices.Remove(key);
+                setChangedFlag(true);
+            }
+        }
+
+        public bool ContainsDevice(int type_id, string serial)
+        {
+            return devices.ContainsKey($"{type_id}-{serial}");
         }
 
         Dictionary<string, ClientXmlState> clients = new Dictionary<string, ClientXmlState>();
@@ -142,6 +191,17 @@ namespace TeraMicroMeasure.XmlObjects
             fillPortFormXML();
             fillRequestPeriodFromXML();
             fillClientsFromXML();
+            fillDevicesFromXML();
+        }
+
+        private void fillDevicesFromXML()
+        {
+            devices.Clear();
+            Dictionary<string, string> raw = GetNodesInnerXmlFromContainer(DevicesList_TagName, DeviceElement_TagName);
+            foreach(var key in raw.Keys)
+            {
+                devices.Add(key, new DeviceXMLState(raw[key]));
+            }
         }
 
         private void fillClientsFromXML()
@@ -176,6 +236,15 @@ namespace TeraMicroMeasure.XmlObjects
             setXmlProp(Port_TagName, port.ToString());
             setXmlProp(RequestPeriod_TagName, request_period.ToString());
             addClientsToXML();
+            addDevicesToXML();
+        }
+
+        private void addDevicesToXML()
+        {
+            foreach(var d in devices.Values)
+            {
+                AddElementToContainer(DevicesList_TagName, d.InnerXml);
+            }
         }
 
         private void addClientsToXML()

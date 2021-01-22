@@ -8,14 +8,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TeraMicroMeasure.XmlObjects;
+using NormaMeasure.Devices;
+using NormaMeasure.Devices.XmlObjects;
 using NormaMeasure.DBControl.Tables;
 
 namespace TeraMicroMeasure
 {
+    internal delegate void XmlDeviceListDelegate(Dictionary<string, DeviceXMLState> xml_device_list);
+    internal delegate void XMLDeviceDelegate(DeviceXMLState xml_device);
+    internal delegate void WithoutAnAguments();
     public partial class MeasureForm : Form
     {
         bool IsOnline = false;
         int clientID;
+        private DeviceCaptureStatus device_capture_status;
+        public DeviceCaptureStatus DeviceCaptureStatus => device_capture_status;
+
+
         public int ClientID
         {
             get
@@ -27,10 +36,39 @@ namespace TeraMicroMeasure
                 SetTitle();
             }
         }
+        private DeviceType captured_device_type = DeviceType.Unknown;
+        public DeviceType CapturedDeviceType
+        {
+            get
+            {
+                return captured_device_type;
+            }set
+            {
+                captured_device_type = value;
+                RefreshDeviceList();
+            }   
+        }
+
+        private string captured_device_serial = String.Empty;
+        public string CapturedDeviceSerial
+        {
+            get
+            {
+                return captured_device_serial;
+            }
+            set
+            {
+                captured_device_serial = value;
+                
+            }   
+        }
+
         bool isCurrentPCClient;
         private MeasureXMLState measureState;
         private ServerXmlState serverState;
         public bool HasState => measureState != null;
+        private Dictionary<string, DeviceXMLState> remoteDevices = new Dictionary<string, DeviceXMLState>();
+
         public MeasureXMLState MeasureState
         {
             set
@@ -46,7 +84,7 @@ namespace TeraMicroMeasure
                 return measureState;
             }
         }
-
+        
         public EventHandler OnMeasureStateChanged;
 
         public MeasureForm(int client_id)
@@ -59,6 +97,7 @@ namespace TeraMicroMeasure
             SetTitle();
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
+            SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
         }
 
         /// <summary>
@@ -68,6 +107,7 @@ namespace TeraMicroMeasure
         public MeasureForm(ClientXmlState client_state) : this(client_state.ClientID)
         {
             MeasureState = client_state.MeasureState;
+
         }
 
 
@@ -76,6 +116,27 @@ namespace TeraMicroMeasure
             voltagesGroupBox.Visible = false;
             InitAverageCountComboBox();
             measurePanel.Enabled = isCurrentPCClient;
+        }
+
+        public void SetXmlDeviceList(Dictionary<string, DeviceXMLState> xml_device_list)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new XmlDeviceListDelegate(SetXmlDeviceList), new object[] { xml_device_list });
+            }else
+            {
+                remoteDevices = xml_device_list;
+                RefreshDeviceList();
+            }
+        }
+
+        private void RefreshDeviceList()
+        {
+            availableDevices.Items.Clear();
+            foreach(var d in remoteDevices.Values)
+            {
+                if (d.TypeId == (int)CapturedDeviceType)availableDevices.Items.Add($"{d.TypeNameFull}");
+            }
         }
 
         private void InitAverageCountComboBox()
@@ -231,8 +292,16 @@ namespace TeraMicroMeasure
             if (rb.Checked)
             {
                 uint mId = 0;
-                if (rb == RizolRadioButton) mId = MeasuredParameterType.Risol2;
-                else if (rb == RleadRadioButton) mId = MeasuredParameterType.Rleads;
+                if (rb == RizolRadioButton)
+                {
+                    mId = MeasuredParameterType.Risol2;
+                    CapturedDeviceType = DeviceType.Teraohmmeter;
+                }
+                else if (rb == RleadRadioButton)
+                {
+                    mId = MeasuredParameterType.Rleads;
+                    CapturedDeviceType = DeviceType.Microohmmeter;
+                }
                 measureState.MeasureTypeId = mId;
             }
             MeasureStateOnFormChanged();
@@ -327,6 +396,120 @@ namespace TeraMicroMeasure
             richTextBox1.Text = measureState.InnerXml;
         }
 
+        private void connectToDevice_Click(object sender, EventArgs e)
+        {
+            switch(device_capture_status)
+            {
+                case DeviceCaptureStatus.DISCONNECTED:
+                    CaptureSelectedDevice();
+                    SetDeviceCaptureStatus(DeviceCaptureStatus.WAITING_FOR_CONNECTION);
+                    break;
+                case DeviceCaptureStatus.CONNECTED:
+                    DisconnectSelectedDevice();
+                    SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
+                    break;
+                case DeviceCaptureStatus.WAITING_FOR_CONNECTION:
+                    DisconnectSelectedDevice();
+                    SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
+                    break;
+            }
+        }
 
+        private void DisconnectSelectedDevice()
+        {
+            captured_device_serial = measureState.CapturedDeviceSerial = String.Empty;
+            measureState.CapturedDeviceTypeId = (int)DeviceType.Unknown;
+            MeasureStateOnFormChanged();
+        }
+
+        private void CaptureSelectedDevice()
+        {
+            string serial = String.Empty;
+            int i = 0;
+            foreach (var d in remoteDevices.Values)
+            {
+                if (i == availableDevices.SelectedIndex)
+                {
+                    serial = d.Serial;
+                    break;
+                }
+                i++;
+            }
+            if (!String.IsNullOrWhiteSpace(serial))
+            {
+                measureState.CapturedDeviceTypeId = (int)CapturedDeviceType;
+                captured_device_serial = measureState.CapturedDeviceSerial = serial;
+                MeasureStateOnFormChanged();
+            }
+        }
+
+        private void SetDeviceCaptureStatus(DeviceCaptureStatus status)
+        {
+            switch(status)
+            {
+                case DeviceCaptureStatus.DISCONNECTED:
+                    availableDevices.Visible = true;
+                    availableDevices.Enabled = true;
+                    startMeasureButton.Visible = false;
+                    deviceControlButton.Text = "Подключить";
+                    deviceControlButton.Visible = true;
+                    break;
+                case DeviceCaptureStatus.CONNECTED:
+                    availableDevices.Visible = false;
+                    startMeasureButton.Visible = true;
+                    deviceControlButton.Text = "Отключить";
+                    deviceControlButton.Visible = true;
+                    break;
+                case DeviceCaptureStatus.WAITING_FOR_CONNECTION:
+                    availableDevices.Visible = true;
+                    availableDevices.Enabled = false;
+                    startMeasureButton.Visible = false;
+                    deviceControlButton.Text = "Прервать";
+                    deviceControlButton.Visible = true;
+                    break;
+            }
+            device_capture_status = status;
+        }
+        public void RefreshCapturedXmlDevice(DeviceXMLState xml_device)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new XMLDeviceDelegate(RefreshCapturedXmlDevice), new object[] { xml_device });
+            }else
+            {
+                if (device_capture_status == DeviceCaptureStatus.WAITING_FOR_CONNECTION)
+                {
+                    if (xml_device.ClientId == clientID)
+                    {
+                        SetDeviceCaptureStatus(DeviceCaptureStatus.CONNECTED);
+                    }
+                }else if (device_capture_status == DeviceCaptureStatus.CONNECTED)
+                {
+                    if (xml_device.ClientId != clientID)
+                    {
+                        DisconnectDeviceFromServerSide();
+                    }
+                }
+            }
+        }
+
+        public void DisconnectDeviceFromServerSide()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new WithoutAnAguments(DisconnectDeviceFromServerSide), new object[] { });
+            }else
+            {
+                SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
+            }
+        }
+    }
+
+
+    public enum DeviceCaptureStatus : byte
+    {
+        DISCONNECTED,
+        WAITING_FOR_CONNECTION,
+        CONNECTED
     }
 }

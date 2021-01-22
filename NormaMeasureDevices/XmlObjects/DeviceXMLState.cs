@@ -135,12 +135,20 @@ namespace NormaMeasure.Devices.XmlObjects
             }
         }
 
+        public DeviceXMLState(string innerXml) : base(innerXml)
+        {
+
+        }
 
         public DeviceXMLState(DeviceBase device) : base()
         {
             ClientId = device.ClientId;
             Serial = device.Serial;
             WorkStatusId = (int)device.WorkStatus;
+            TypeId = (int)device.TypeId;
+            TypeNameFull = device.TypeNameFull;
+            TypeNameShort = device.TypeNameShort;
+            id = $"{TypeId}-{Serial}";
         }
 
         protected override void fillXMLDocument()
@@ -150,6 +158,8 @@ namespace NormaMeasure.Devices.XmlObjects
             setXmlProp(TypeId_TagName, TypeId.ToString());
             setXmlProp(WorkStatusId_TagName, WorkStatusId.ToString());
             setXmlProp(ClientId_TagName, ClientId.ToString());
+            setXmlProp(TypeNameFull_TagName, type_name_full);
+            setXmlProp(TypeNameShort_TagName, type_name_short);
         }
 
         protected override void buildFromXML()
@@ -159,6 +169,18 @@ namespace NormaMeasure.Devices.XmlObjects
             fillClientIdFromXML();
             fillWorkStatusIdFromXML();
             fillTypeIdFromXML();
+            fillTypeNameFull();
+            fillTypeNameShort();
+        }
+
+        private void fillTypeNameShort()
+        {
+            type_name_short = getXmlProp(TypeNameShort_TagName);
+        }
+
+        private void fillTypeNameFull()
+        {
+            type_name_full = getXmlProp(TypeNameFull_TagName);
         }
 
         private void fillTypeIdFromXML()

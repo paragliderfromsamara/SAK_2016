@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using TeraMicroMeasure.XmlObjects;
 using NormaMeasure.SocketControl;
 using NormaMeasure.SocketControl.TCPControlLib;
-//using System.Diagnostics;
+using System.Diagnostics;
 using System.Threading;
+using NormaMeasure.Devices.XmlObjects;
+using NormaMeasure.Devices;
 
 namespace TeraMicroMeasure.CommandProcessors
 {
@@ -84,11 +86,13 @@ namespace TeraMicroMeasure.CommandProcessors
         private EventHandler OnMeasureStopByClient;
         private EventHandler OnClientConnected;
         private EventHandler OnClientDisconnected;
+        private EventHandler OnDeviceTryCapture;
+        private EventHandler OnDeviceReleased;
 
 
         private static object locker = new object();
 
-        public ServerCommandDispatcher(TCPServerClientsControl _clients_control, ServerXmlState server_state, EventHandler on_client_id_changed, EventHandler on_client_measure_settings_changed, EventHandler on_measure_start_by_client, EventHandler on_measure_stop_by_client, EventHandler on_client_connected, EventHandler on_client_disconnected)
+        public ServerCommandDispatcher(TCPServerClientsControl _clients_control, ServerXmlState server_state, EventHandler on_client_id_changed, EventHandler on_client_measure_settings_changed, EventHandler on_measure_start_by_client, EventHandler on_measure_stop_by_client, EventHandler on_client_connected, EventHandler on_client_disconnected, EventHandler on_device_try_capture, EventHandler on_device_released)
         {
             clientsControl = _clients_control;
             currentServerState = new ServerXmlState(server_state.InnerXml);
@@ -102,7 +106,39 @@ namespace TeraMicroMeasure.CommandProcessors
             OnMeasureStopByClient += on_measure_stop_by_client;
             OnClientConnected += on_client_connected;
             OnClientDisconnected += on_client_disconnected;
+            OnDeviceTryCapture += on_device_try_capture;
+            OnDeviceReleased += on_device_released;
         }
+
+        internal void RemoveDeviceFromServerState(DeviceType typeId, string serial)
+        {
+            lock (locker)
+            {
+                currentServerState.RemoveDevice((int)typeId, serial);
+                RefreshCurrentServerStateOnClientControl();
+            }
+        }
+
+        internal void AddDeviceToServerState(DeviceXMLState deviceXMLState)
+        {
+            DeviceXMLState ds = new DeviceXMLState(deviceXMLState.InnerXml);
+            lock(locker)
+            {
+                currentServerState.AddOrReplaceDevice(ds);
+                RefreshCurrentServerStateOnClientControl();
+            }
+        }
+
+        internal void ReplaceDeviceOnServerState(DeviceXMLState xml_device)
+        {
+            DeviceXMLState ds = new DeviceXMLState(xml_device.InnerXml);
+            lock (locker)
+            {
+                currentServerState.AddOrReplaceDevice(ds);
+                RefreshCurrentServerStateOnClientControl();
+            }
+        }
+        
 
         private void OnClientDetected_Handler(object sender, EventArgs e)
         {
@@ -180,6 +216,13 @@ namespace TeraMicroMeasure.CommandProcessors
             {
                 OnClientNeasureSettingsChanged?.Invoke(this, new MeasureSettingsChangedEventArgs(last_cs.MeasureState, cs.MeasureState, cs.ClientID));
             }
+            if (String.IsNullOrWhiteSpace(last_cs.MeasureState.CapturedDeviceSerial) && !String.IsNullOrWhiteSpace(cs.MeasureState.CapturedDeviceSerial))
+            {
+                OnDeviceTryCapture?.Invoke(cs, new EventArgs());
+            }else if (!String.IsNullOrWhiteSpace(last_cs.MeasureState.CapturedDeviceSerial) && String.IsNullOrWhiteSpace(cs.MeasureState.CapturedDeviceSerial))
+            {
+                OnDeviceReleased?.Invoke(cs, new EventArgs());
+            }
         }
 
         private void OnClientDisconnected_Handler(object client, EventArgs e)
@@ -196,11 +239,6 @@ namespace TeraMicroMeasure.CommandProcessors
                     OnClientDisconnected?.Invoke(this, new ClientListChangedEventArgs(currentServerState, cs));
                 }
             }
-        }
-
-        public void AddDeviceToState(DeviceXMLState d)
-        {
-
         }
 
         public ClientXmlState GetClientStateByClientID(int client_id)

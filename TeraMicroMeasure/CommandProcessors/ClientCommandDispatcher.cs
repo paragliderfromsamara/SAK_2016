@@ -7,6 +7,7 @@ using NormaMeasure.SocketControl;
 using NormaMeasure.SocketControl.TCPControlLib;
 using TeraMicroMeasure.XmlObjects;
 using System.Windows.Forms;
+using NormaMeasure.Devices.XmlObjects;
 
 namespace TeraMicroMeasure.CommandProcessors
 {
@@ -16,12 +17,17 @@ namespace TeraMicroMeasure.CommandProcessors
         TCPClientConnectionControl connectionControl;
         EventHandler OnClientIDChanged;
         EventHandler OnMeasureStatusChanged;
+        EventHandler OnServerStateReceived;
         ClientXmlState currentState;
-        public ClientCommandDispatcher(TCPClientConnectionControl _conn_cntrl, ClientXmlState _state, EventHandler on_client_id_changed, EventHandler on_measure_status_changed)
+        private TCPClientConnectionControl tCPClientConnectionControl;
+        private ClientXmlState currentClientState;
+
+        public ClientCommandDispatcher(TCPClientConnectionControl _conn_cntrl, ClientXmlState _state, EventHandler on_client_id_changed, EventHandler on_measure_status_changed, EventHandler on_server_state_received)
         {
             //currentState = _state;
             OnClientIDChanged += on_client_id_changed;
             OnMeasureStatusChanged += on_measure_status_changed;
+            OnServerStateReceived += on_server_state_received;
             connectionControl = _conn_cntrl;
             connectionControl.OnServerAnswerReceived += OnServerStateReceived_Handler;
             _state.ClientIP = connectionControl.LocalIP;
@@ -30,8 +36,8 @@ namespace TeraMicroMeasure.CommandProcessors
             _state.ServerPort = connectionControl.RemotePort;
             currentState = _state;
             RefreshCurrentStateOnConnectionControl();
-            //connectionControl.MessageTo = currentState.InnerXml;
             connectionControl.InitSending();
+            
         }
 
         private void OnServerStateReceived_Handler(object sender, EventArgs e)
@@ -42,6 +48,7 @@ namespace TeraMicroMeasure.CommandProcessors
             if (s.Clients.ContainsKey(cl.LocalIP))
             {
                 ClientXmlState fromServerState = s.Clients[cl.LocalIP];
+                OnServerStateReceived?.Invoke(s, new EventArgs());
                 if (fromServerState.StateId != currentState.StateId)
                 {
                     CheckClientIDChanged(fromServerState);
@@ -50,8 +57,12 @@ namespace TeraMicroMeasure.CommandProcessors
 
                     RefreshCurrentStateOnConnectionControl();
                 }
+               
             }
+
         }
+
+
 
         private void CheckClientIDChanged(ClientXmlState fromServerState)
         {

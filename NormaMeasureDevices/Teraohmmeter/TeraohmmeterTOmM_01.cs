@@ -49,7 +49,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
 
         public override DeviceXMLState GetXMLState()
         {
-            return new TeraohmmeterXMLState(this);
+            return new DeviceXMLState(this);
         }
     }
 }

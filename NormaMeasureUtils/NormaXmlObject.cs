@@ -160,12 +160,9 @@ namespace NormaMeasure.Utils
         public bool IsValid => isValid;
         public string ElementId
         {
-            set
+            get
             {
-                xRoot.Attribute("id").Value = value;
-            }get
-            {
-                return xRoot.Attribute("id").Value;
+                return _id;
             }
         }
         public NormaXmlObject()
@@ -212,7 +209,7 @@ namespace NormaMeasure.Utils
         protected virtual void buildFromXML()
         {
             state_id_was = state_id = xRoot.Attribute("state_id").Value;
-            xmlID = xRoot.Attribute("id").Value;
+            _id = xmlID = xRoot.Attribute("id").Value;
         }
 
 

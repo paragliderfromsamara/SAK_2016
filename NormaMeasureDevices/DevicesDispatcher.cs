@@ -7,6 +7,7 @@ using Modbus.Device;
 using System.Threading;
 using System.IO.Ports;
 using System.Diagnostics;
+using NormaMeasure.Devices.XmlObjects;
 
 namespace NormaMeasure.Devices
 {
@@ -25,6 +26,39 @@ namespace NormaMeasure.Devices
             commandProtocol = command_protocol;
             OnDeviceFound = on_device_found;
             InitFindThread();
+        }
+        public DeviceXMLState CaptureDeviceAndGetDeviceXmlState(int type_id, string serial, int client_id)
+        {
+            foreach(var d in deviceList.Values)
+            {
+                if ((int)d.TypeId == type_id && serial == d.Serial)
+                {
+                    if (d.ClientId == -1)
+                    {
+                        d.AssignToClient(client_id);
+                        return d.GetXMLState();
+                    }else if (d.ClientId == client_id)
+                    {
+                        return d.GetXMLState();
+                    }
+                    else return null;
+                }
+            }
+            return null;
+        }
+
+        public DeviceXMLState ReleaseDeviceAndGetDeviceXmlState(int client_id)
+        {
+            foreach (var d in deviceList.Values)
+            {
+                if (d.ClientId == client_id)
+                {
+                    d.ReleaseDeviceFromClient();
+                    return d.GetXMLState();
+                }
+                else return null;
+            }
+            return null;
         }
 
         public void InitFindThread()

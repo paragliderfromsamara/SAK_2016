@@ -19,7 +19,8 @@ namespace TeraMicroMeasure.XmlObjects
         const string beforeMeasureDelay_TagName = "BeforeMeasureDelay";
         const string afterMeasureDelay_TagName = "AfterMeasureDelay";
         const string averagingTimes_TagName = "AveragingTimes";
-
+        const string capturedDeviceTypeId_TagName = "CapturedDeviceTypeId";
+        const string capturedDeviceSerial_TagName = "CapturedDeviceSerial";
         uint measured_parameter_type_id = 1;
         /// <summary>
         /// ID измеряемого параметра
@@ -192,6 +193,49 @@ namespace TeraMicroMeasure.XmlObjects
             }
         }
 
+        int captured_device_type_id = -1;
+        /// <summary>
+        /// ID типа захваченного устройства
+        /// </summary>
+        public int CapturedDeviceTypeId
+        {
+            get
+            {
+                return captured_device_type_id;
+            }
+            set
+            {
+                bool f = captured_device_type_id != value;
+                if (f)
+                {
+                    captured_device_type_id = value;
+                    setChangedFlag(f);
+                }
+            }
+        }
+
+        string captured_device_serial = String.Empty;
+
+        /// <summary>
+        /// Серийный номер подключенного устройства
+        /// </summary>
+        public string CapturedDeviceSerial
+        {
+            get
+            {
+                return captured_device_serial;
+            }
+            set
+            {
+                bool f = captured_device_serial != value;
+                if (f)
+                {
+                    captured_device_serial = value;
+                    setChangedFlag(f);
+                }
+            }
+        } 
+
         public static MeasureXMLState GetDefault()
         {
             MeasureXMLState s = new MeasureXMLState();
@@ -223,6 +267,8 @@ namespace TeraMicroMeasure.XmlObjects
             setXmlProp(beforeMeasureDelay_TagName, before_measure_delay.ToString());
             setXmlProp(afterMeasureDelay_TagName, after_measure_delay.ToString());
             setXmlProp(averagingTimes_TagName, averaging_times.ToString());
+            setXmlProp(capturedDeviceTypeId_TagName, captured_device_type_id.ToString());
+            setXmlProp(capturedDeviceSerial_TagName, captured_device_serial);
         }
 
         protected override void buildFromXML()
@@ -236,7 +282,20 @@ namespace TeraMicroMeasure.XmlObjects
             fillBeforeMeasureDelayFromXML();
             fillAfterMeasureDelayFromXML();
             fillAveragingTimesFromXML();
+            fillCapturedDeviceTypeId();
+            fillCapturedDeviceSerial();
+        }
 
+        private void fillCapturedDeviceSerial()
+        {
+            captured_device_serial = getXmlProp(capturedDeviceSerial_TagName);
+        }
+
+        private void fillCapturedDeviceTypeId()
+        {
+            int v = -1;
+            tryGetIntXmlProp(capturedDeviceTypeId_TagName, out v);
+            captured_device_type_id = v;
         }
 
         private void fillAveragingTimesFromXML()

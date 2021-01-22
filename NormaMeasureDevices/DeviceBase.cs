@@ -13,6 +13,9 @@ namespace NormaMeasure.Devices
     public class DeviceBase : IDisposable
     {
         private static object locker = new object();
+
+        public DeviceXMLState xmlState = null;
+
         public EventHandler OnDisconnected;
         public uint SerialYear => serial_year;
         public uint SerialNumber => serial_number;
@@ -24,12 +27,20 @@ namespace NormaMeasure.Devices
         public string SerialWithShortName => $"{type_name_short} зав.№ {Serial}";
         public string TypeNameFull => type_name_full;
         public string TypeNameShort => type_name_short;
-        private int client_id = -1;
+        private int _client_id = -1;
+        private int client_id
+        {
+            set
+            {
+                _client_id = value;
+                if (xmlState != null) xmlState.ClientId = value;
+            }
+        }
         public int ClientId
         {
             get
             {
-                return client_id;
+                return _client_id;
             }
         }
         public DeviceStatus WorkStatus => work_status;
@@ -68,6 +79,11 @@ namespace NormaMeasure.Devices
             }
         }
 
+        internal void ReleaseDeviceFromClient()
+        {
+            client_id = -1;
+        }
+
         private uint serial_year = 2000;
         private uint serial_number = 0;
         private uint model_version = 0;
@@ -93,7 +109,7 @@ namespace NormaMeasure.Devices
         /// Привязка прибора к измерительной линии
         /// </summary>
         /// <param name="cl_id"></param>
-        protected virtual void AssignToClient(int cl_id)
+        public virtual void AssignToClient(int cl_id)
         {
             this.client_id = cl_id;
         }
@@ -156,7 +172,8 @@ namespace NormaMeasure.Devices
 
         public virtual DeviceXMLState GetXMLState()
         {
-            return new DeviceXMLState(this);
+            if (xmlState == null) xmlState = new DeviceXMLState(this);
+            return xmlState;
         }
 
         public void Dispose()
