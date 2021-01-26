@@ -32,7 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cableLengthNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.measuredParametersGroupBox = new System.Windows.Forms.GroupBox();
             this.RizolRadioButton = new System.Windows.Forms.RadioButton();
             this.RleadRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -44,31 +44,34 @@
             this.beforeMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
             this.temperatureComboBox = new System.Windows.Forms.Label();
             this.measurePanel = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.selectDevicePanel = new System.Windows.Forms.Panel();
+            this.deviceControlButton = new System.Windows.Forms.Button();
+            this.startMeasureButton = new System.Windows.Forms.Button();
             this.availableDevices = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.temperature = new System.Windows.Forms.ComboBox();
-            this.startMeasureButton = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.resultField = new System.Windows.Forms.Label();
+            this.deviceInfo = new System.Windows.Forms.Label();
             this.voltagesGroupBox = new System.Windows.Forms.GroupBox();
             this.v1000_RadioButton = new System.Windows.Forms.RadioButton();
             this.v500_RadioButton = new System.Windows.Forms.RadioButton();
             this.v100_RadioButton = new System.Windows.Forms.RadioButton();
             this.v10_RadioButton = new System.Windows.Forms.RadioButton();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.selectDevicePanel = new System.Windows.Forms.Panel();
-            this.deviceControlButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
-            this.groupBox1.SuspendLayout();
+            this.measuredParametersGroupBox.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).BeginInit();
             this.measurePanel.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.voltagesGroupBox.SuspendLayout();
             this.selectDevicePanel.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.voltagesGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // cableComboBox
@@ -127,17 +130,17 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Длина, м";
             // 
-            // groupBox1
+            // measuredParametersGroupBox
             // 
-            this.groupBox1.Controls.Add(this.RizolRadioButton);
-            this.groupBox1.Controls.Add(this.RleadRadioButton);
-            this.groupBox1.Location = new System.Drawing.Point(17, 117);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(367, 82);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Измеряемый параметр";
-            this.groupBox1.UseCompatibleTextRendering = true;
+            this.measuredParametersGroupBox.Controls.Add(this.RizolRadioButton);
+            this.measuredParametersGroupBox.Controls.Add(this.RleadRadioButton);
+            this.measuredParametersGroupBox.Location = new System.Drawing.Point(17, 117);
+            this.measuredParametersGroupBox.Name = "measuredParametersGroupBox";
+            this.measuredParametersGroupBox.Size = new System.Drawing.Size(367, 82);
+            this.measuredParametersGroupBox.TabIndex = 4;
+            this.measuredParametersGroupBox.TabStop = false;
+            this.measuredParametersGroupBox.Text = "Измеряемый параметр";
+            this.measuredParametersGroupBox.UseCompatibleTextRendering = true;
             // 
             // RizolRadioButton
             // 
@@ -263,7 +266,7 @@
             this.measurePanel.Controls.Add(this.cableComboBox);
             this.measurePanel.Controls.Add(this.groupBox2);
             this.measurePanel.Controls.Add(this.label1);
-            this.measurePanel.Controls.Add(this.groupBox1);
+            this.measurePanel.Controls.Add(this.measuredParametersGroupBox);
             this.measurePanel.Controls.Add(this.cableLengthNumericUpDown);
             this.measurePanel.Controls.Add(this.label2);
             this.measurePanel.Location = new System.Drawing.Point(-2, -1);
@@ -271,15 +274,39 @@
             this.measurePanel.Size = new System.Drawing.Size(917, 412);
             this.measurePanel.TabIndex = 6;
             // 
-            // label3
+            // selectDevicePanel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(401, 202);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(96, 19);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "Измеритель";
+            this.selectDevicePanel.Controls.Add(this.deviceControlButton);
+            this.selectDevicePanel.Controls.Add(this.startMeasureButton);
+            this.selectDevicePanel.Controls.Add(this.availableDevices);
+            this.selectDevicePanel.Location = new System.Drawing.Point(395, 205);
+            this.selectDevicePanel.Name = "selectDevicePanel";
+            this.selectDevicePanel.Size = new System.Drawing.Size(530, 58);
+            this.selectDevicePanel.TabIndex = 14;
+            // 
+            // deviceControlButton
+            // 
+            this.deviceControlButton.Location = new System.Drawing.Point(324, 6);
+            this.deviceControlButton.Name = "deviceControlButton";
+            this.deviceControlButton.Size = new System.Drawing.Size(198, 49);
+            this.deviceControlButton.TabIndex = 13;
+            this.deviceControlButton.Text = "Подключить";
+            this.deviceControlButton.UseVisualStyleBackColor = true;
+            this.deviceControlButton.Click += new System.EventHandler(this.connectToDevice_Click);
+            // 
+            // startMeasureButton
+            // 
+            this.startMeasureButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(124)))), ((int)(((byte)(224)))));
+            this.startMeasureButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.startMeasureButton.FlatAppearance.BorderSize = 0;
+            this.startMeasureButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.startMeasureButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.startMeasureButton.Location = new System.Drawing.Point(120, 7);
+            this.startMeasureButton.Name = "startMeasureButton";
+            this.startMeasureButton.Size = new System.Drawing.Size(198, 48);
+            this.startMeasureButton.TabIndex = 11;
+            this.startMeasureButton.Text = "Пуск измерения";
+            this.startMeasureButton.UseVisualStyleBackColor = false;
             // 
             // availableDevices
             // 
@@ -290,6 +317,16 @@
             this.availableDevices.Name = "availableDevices";
             this.availableDevices.Size = new System.Drawing.Size(293, 27);
             this.availableDevices.TabIndex = 12;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(401, 202);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(96, 19);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Измеритель";
             // 
             // panel1
             // 
@@ -330,27 +367,35 @@
             this.temperature.Size = new System.Drawing.Size(137, 27);
             this.temperature.TabIndex = 7;
             // 
-            // startMeasureButton
-            // 
-            this.startMeasureButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(124)))), ((int)(((byte)(224)))));
-            this.startMeasureButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.startMeasureButton.FlatAppearance.BorderSize = 0;
-            this.startMeasureButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.startMeasureButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.startMeasureButton.Location = new System.Drawing.Point(120, 7);
-            this.startMeasureButton.Name = "startMeasureButton";
-            this.startMeasureButton.Size = new System.Drawing.Size(198, 48);
-            this.startMeasureButton.TabIndex = 11;
-            this.startMeasureButton.Text = "Пуск измерения";
-            this.startMeasureButton.UseVisualStyleBackColor = false;
-            // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(237)))), ((int)(((byte)(250)))));
+            this.panel2.Controls.Add(this.resultField);
+            this.panel2.Controls.Add(this.deviceInfo);
             this.panel2.Location = new System.Drawing.Point(405, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(512, 199);
             this.panel2.TabIndex = 10;
+            // 
+            // resultField
+            // 
+            this.resultField.AutoSize = true;
+            this.resultField.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.resultField.Location = new System.Drawing.Point(159, 84);
+            this.resultField.Name = "resultField";
+            this.resultField.Size = new System.Drawing.Size(250, 45);
+            this.resultField.TabIndex = 1;
+            this.resultField.Text = "106.56 ТОм⋅м";
+            this.resultField.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // deviceInfo
+            // 
+            this.deviceInfo.AutoSize = true;
+            this.deviceInfo.Location = new System.Drawing.Point(18, 10);
+            this.deviceInfo.Name = "deviceInfo";
+            this.deviceInfo.Size = new System.Drawing.Size(273, 23);
+            this.deviceInfo.TabIndex = 0;
+            this.deviceInfo.Text = "Тераомметр ТОмМ-01 2021-01";
             // 
             // voltagesGroupBox
             // 
@@ -416,26 +461,6 @@
             this.richTextBox1.TabIndex = 7;
             this.richTextBox1.Text = "";
             // 
-            // selectDevicePanel
-            // 
-            this.selectDevicePanel.Controls.Add(this.deviceControlButton);
-            this.selectDevicePanel.Controls.Add(this.startMeasureButton);
-            this.selectDevicePanel.Controls.Add(this.availableDevices);
-            this.selectDevicePanel.Location = new System.Drawing.Point(395, 205);
-            this.selectDevicePanel.Name = "selectDevicePanel";
-            this.selectDevicePanel.Size = new System.Drawing.Size(530, 58);
-            this.selectDevicePanel.TabIndex = 14;
-            // 
-            // deviceControlButton
-            // 
-            this.deviceControlButton.Location = new System.Drawing.Point(324, 6);
-            this.deviceControlButton.Name = "deviceControlButton";
-            this.deviceControlButton.Size = new System.Drawing.Size(198, 49);
-            this.deviceControlButton.TabIndex = 13;
-            this.deviceControlButton.Text = "Подключить";
-            this.deviceControlButton.UseVisualStyleBackColor = true;
-            this.deviceControlButton.Click += new System.EventHandler(this.connectToDevice_Click);
-            // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
@@ -451,19 +476,21 @@
             this.Name = "MeasureForm";
             this.Text = "MeasureForm";
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.measuredParametersGroupBox.ResumeLayout(false);
+            this.measuredParametersGroupBox.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).EndInit();
             this.measurePanel.ResumeLayout(false);
             this.measurePanel.PerformLayout();
+            this.selectDevicePanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.voltagesGroupBox.ResumeLayout(false);
             this.voltagesGroupBox.PerformLayout();
-            this.selectDevicePanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -474,7 +501,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown cableLengthNumericUpDown;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox measuredParametersGroupBox;
         private System.Windows.Forms.RadioButton RizolRadioButton;
         private System.Windows.Forms.RadioButton RleadRadioButton;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -502,5 +529,7 @@
         private System.Windows.Forms.ComboBox availableDevices;
         private System.Windows.Forms.Panel selectDevicePanel;
         private System.Windows.Forms.Button deviceControlButton;
+        private System.Windows.Forms.Label resultField;
+        private System.Windows.Forms.Label deviceInfo;
     }
 }

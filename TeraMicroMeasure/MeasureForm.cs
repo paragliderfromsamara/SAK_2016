@@ -94,6 +94,7 @@ namespace TeraMicroMeasure
             clientID = client_id;
             IsOnline = isCurrentPCClient = clientID == SettingsControl.GetClientId();
             //////////////////////////////////////////////////////////////
+            ResetMeasureField();
             SetTitle();
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
@@ -132,10 +133,42 @@ namespace TeraMicroMeasure
 
         private void RefreshDeviceList()
         {
+            int idx = 0;
+            int i = -1;
             availableDevices.Items.Clear();
             foreach(var d in remoteDevices.Values)
             {
-                if (d.TypeId == (int)CapturedDeviceType)availableDevices.Items.Add($"{d.TypeNameFull}");
+                string status;
+                string title = $"{d.TypeNameShort} {d.Serial}";
+                if (d.ClientId > 0)
+                {
+                    status = $"(Линия {d.ClientId})";
+                }else if (d.ClientId == 0)
+                {
+                    status = $"(Сервер)";
+                } else
+                {
+                    status = $"(Не занят)";
+                }
+
+                if (d.TypeId == (int)CapturedDeviceType)
+                {
+                    ++i;
+                    availableDevices.Items.Add($"{title} {status}");
+                    if (clientID == d.ClientId) idx = i;
+                }
+            }
+            if (i>-1)
+            {
+                availableDevices.SelectedIndex = idx;
+                availableDevices.Enabled = true;
+                availableDevices.DropDownStyle = ComboBoxStyle.DropDownList;
+            }
+            else
+            {
+                availableDevices.DropDownStyle = ComboBoxStyle.DropDown;
+                availableDevices.Enabled = false;
+                availableDevices.Text = "Устройства отсутсвуют";
             }
         }
 
@@ -402,7 +435,7 @@ namespace TeraMicroMeasure
             {
                 case DeviceCaptureStatus.DISCONNECTED:
                     CaptureSelectedDevice();
-                    SetDeviceCaptureStatus(DeviceCaptureStatus.WAITING_FOR_CONNECTION);
+                    if (!String.IsNullOrWhiteSpace(captured_device_serial))SetDeviceCaptureStatus(DeviceCaptureStatus.WAITING_FOR_CONNECTION);
                     break;
                 case DeviceCaptureStatus.CONNECTED:
                     DisconnectSelectedDevice();
@@ -419,7 +452,13 @@ namespace TeraMicroMeasure
         {
             captured_device_serial = measureState.CapturedDeviceSerial = String.Empty;
             measureState.CapturedDeviceTypeId = (int)DeviceType.Unknown;
+            ResetMeasureField();
             MeasureStateOnFormChanged();
+        }
+
+        private void ResetMeasureField()
+        {
+            deviceInfo.Text = "Измеритель не выбран";
         }
 
         private void CaptureSelectedDevice()
@@ -430,7 +469,14 @@ namespace TeraMicroMeasure
             {
                 if (i == availableDevices.SelectedIndex)
                 {
-                    serial = d.Serial;
+                    if (d.ClientId == -1)
+                    {
+                        serial = d.Serial;
+                    }else
+                    {
+                        MessageBox.Show($"{d.TypeNameFull} {d.Serial} занят другой измерительной линией!", "Устройство занято", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
                     break;
                 }
                 i++;
@@ -453,12 +499,14 @@ namespace TeraMicroMeasure
                     startMeasureButton.Visible = false;
                     deviceControlButton.Text = "Подключить";
                     deviceControlButton.Visible = true;
+                    measuredParametersGroupBox.Enabled = true;
                     break;
                 case DeviceCaptureStatus.CONNECTED:
                     availableDevices.Visible = false;
                     startMeasureButton.Visible = true;
                     deviceControlButton.Text = "Отключить";
                     deviceControlButton.Visible = true;
+                    measuredParametersGroupBox.Enabled = false;
                     break;
                 case DeviceCaptureStatus.WAITING_FOR_CONNECTION:
                     availableDevices.Visible = true;
@@ -466,6 +514,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Visible = false;
                     deviceControlButton.Text = "Прервать";
                     deviceControlButton.Visible = true;
+                    measuredParametersGroupBox.Enabled = false;
                     break;
             }
             device_capture_status = status;
@@ -482,15 +531,24 @@ namespace TeraMicroMeasure
                     if (xml_device.ClientId == clientID)
                     {
                         SetDeviceCaptureStatus(DeviceCaptureStatus.CONNECTED);
+                        RefreshMeasureField(xml_device);
                     }
                 }else if (device_capture_status == DeviceCaptureStatus.CONNECTED)
                 {
                     if (xml_device.ClientId != clientID)
                     {
                         DisconnectDeviceFromServerSide();
+                    }else
+                    {
+                        RefreshMeasureField(xml_device);
                     }
                 }
             }
+        }
+
+        private void RefreshMeasureField(DeviceXMLState xml_device)
+        {
+            deviceInfo.Text = $"{xml_device.TypeNameFull} {xml_device.Serial}";
         }
 
         public void DisconnectDeviceFromServerSide()
