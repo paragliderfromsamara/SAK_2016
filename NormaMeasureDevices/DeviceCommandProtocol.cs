@@ -14,7 +14,10 @@ namespace NormaMeasure.Devices
     {
         int MemorySize;
         ushort DeviceTypeAddr = 0x0000;
+        ushort DeviceSerialYearAddr = 0x0001;
+        ushort DeviceSerialNumAddr = 0x0002;
         ushort DeviceModelVersionAddr = 0x0003;
+        ushort DeviceWorkStatusAddr = 0x0004;
 
         string comPortName;
 
@@ -97,6 +100,41 @@ namespace NormaMeasure.Devices
             }
             return value;
         }
+
+        protected void WriteMultipleHoldings(ushort address, ushort[] data)
+        {
+            SerialPort port = InitPort(comPortName);
+            try
+            {
+                port.Open();
+                ModbusSerialMaster m = ModbusSerialMaster.CreateRtu(port);
+                m.WriteMultipleRegisters(0, address, data);
+                port.Close();
+            }
+            catch (Exception ex)
+            {
+                port.Dispose();
+                throw ex;
+            }
+        }
+
+        protected void WriteSingleHolding(ushort address, ushort value)
+        {
+            SerialPort port = InitPort(comPortName);
+            try
+            {
+                port.Open();
+                ModbusSerialMaster m = ModbusSerialMaster.CreateRtu(port);
+                m.WriteSingleRegister(0, address, value);
+                port.Close();
+            }
+            catch (Exception ex)
+            {
+                port.Dispose();
+                throw ex;
+            }
+        }
+
 
         public void Dispose()
         {

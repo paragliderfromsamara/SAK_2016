@@ -10,10 +10,11 @@ using System.Diagnostics;
 
 namespace NormaMeasure.Devices
 {
+    delegate void ConnectionTheadDelegate();
     public class DeviceBase : IDisposable
     {
         private static object locker = new object();
-
+        bool threadIsActive = true;
         public DeviceXMLState xmlState = null;
 
         public EventHandler OnDisconnected;
@@ -52,7 +53,8 @@ namespace NormaMeasure.Devices
 
         protected DeviceType type_id;
         protected DeviceStatus _work_status = DeviceStatus.UNDEFINED;
-        Thread CheckConnectionThead;
+        Thread ConnectionThread;
+        ConnectionTheadDelegate OnThreadWillFinish = null;
         protected DeviceStatus work_status
         {
             get
@@ -122,23 +124,52 @@ namespace NormaMeasure.Devices
             try
             {
                 p = new DeviceCommandProtocol(port_name);
-                while (work_status == DeviceStatus.WAITING_FOR_COMMAND)
+                while (threadIsActive)
                 {
                     DeviceInfo info = p.GetDeviceInfo();
-                    if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
+                    if (DeviceInfoIsValid(info))
                     {
                         work_status = DeviceStatus.DISCONNECTED;
+                        break;
                     }
                     Debug.WriteLine($"Попыток на отправку: {tryTimes};");
                     tryTimes = 50;
                 }
                 p.Dispose();
+                OnThreadWillFinish?.Invoke();
             }catch
             {
                 if (p != null) p.Dispose();
                 if (tryTimes-- > 0) goto retry;
                 work_status = DeviceStatus.DISCONNECTED;
             }
+        }
+
+        protected virtual void DeviceConnectionThread()
+        {
+            int tryTimes = 50;
+            DeviceCommandProtocol p = null;
+            retry: 
+            try
+            {
+                p = new DeviceCommandProtocol(port_name);
+                while(work_status != DeviceStatus.DISCONNECTED)
+                {
+                    DeviceInfo info = p.GetDeviceInfo();
+                }
+                p.Dispose();
+            }
+            catch
+            {
+                if (p != null) p.Dispose();
+                if (tryTimes-- > 0) goto retry;
+                work_status = DeviceStatus.DISCONNECTED;
+            }
+        }
+
+        protected virtual bool DeviceInfoIsValid(DeviceInfo info)
+        {
+           return (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion);
         }
 
         internal void GoToWaitingForCommand()
@@ -153,8 +184,16 @@ namespace NormaMeasure.Devices
 
         private void InitConnectionCheckThread()
         {
-            CheckConnectionThead = new Thread(new ThreadStart(CheckDeviceConnectionThreadFunc));
-            CheckConnectionThead.Start();
+            SetDeviceConnectionThreadFunction(new ThreadStart(CheckDeviceConnectionThreadFunc));
+        }
+
+        private void SetDeviceConnectionThreadFunction(ThreadStart threadFunction, ConnectionTheadDelegate threadWillFinish = null)
+        {
+            threadIsActive = true;
+            OnThreadWillFinish = null;
+            if (threadWillFinish != null) OnThreadWillFinish += threadWillFinish;
+            ConnectionThread = new Thread(threadFunction);
+            ConnectionThread.Start();
         }
 
         public DeviceBase(DeviceInfo info)
@@ -193,6 +232,7 @@ namespace NormaMeasure.Devices
         public uint SerialYear;
         public byte SerialNumber;
         public byte ModelVersion;
+        public DeviceWorkStatus WorkStatus;
         public string PortName;
     }
 
@@ -218,6 +258,18 @@ namespace NormaMeasure.Devices
         DISCONNECTED, 
         WILL_DISCONNECT
     }
+
+    public enum DeviceWorkStatus : byte
+    {
+        IDLE = 0, 
+        MEASURE = 1,
+        CALIBRATION = 2, 
+        ENTERING_PARAMETERS = 3,
+        POLARIZATION = 4,
+        DEPOLARIZATION = 5,
+        LOST_CIRCUIT_CORRECTION = 6
+    }
+
 
 
     public class NormaDeviceException : Exception
