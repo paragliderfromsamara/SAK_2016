@@ -88,6 +88,15 @@ namespace TeraMicroMeasure
             MessageBox.Show($"Подключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
 
             d.OnDisconnected += OnDeviceDisconnected_EventHandler;
+            d.OnPCModeFlagChanged += PCModeFlagChanged_Handler;
+        }
+        private void PCModeFlagChanged_Handler(object sender, EventArgs e)
+        {
+            DeviceBase d = sender as DeviceBase;
+            if (IsServerApp)
+            {
+                ReplaceDeviceXMLStateOnServerCommandDispatcher(d.GetXMLState());
+            }
         }
 
         private void AddDeviceToServerCommandDispatcher(DeviceBase d)

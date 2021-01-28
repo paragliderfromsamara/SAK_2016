@@ -27,7 +27,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
             try
             {
                 p = new DeviceCommandProtocol(PortName);
-                while (work_status == DeviceStatus.WAITING_FOR_COMMAND)
+                while (threadIsActive)
                 {
                     DeviceInfo info = p.GetDeviceInfo();
                     if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
@@ -38,6 +38,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                     tryTimes = 50;
                 }
                 p.Dispose();
+                OnThreadWillFinish?.Invoke();
             }
             catch
             {

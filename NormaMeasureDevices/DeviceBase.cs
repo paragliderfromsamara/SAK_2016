@@ -10,12 +10,46 @@ using System.Diagnostics;
 
 namespace NormaMeasure.Devices
 {
-    delegate void ConnectionTheadDelegate();
+    public delegate void ConnectionTheadDelegate();
     public class DeviceBase : IDisposable
     {
         private static object locker = new object();
-        bool threadIsActive = true;
-        public DeviceXMLState xmlState = null;
+        private bool thread_is_active = false;
+
+        protected bool threadIsActive
+        {
+            get
+            {
+                return thread_is_active;
+            }set
+            {
+                lock(locker)
+                {
+                    thread_is_active = value;
+                }
+            }
+        }
+        
+
+        private bool pc_mode_flag = false;
+        protected bool pcModeFlag
+        {
+            get
+            {
+                return pc_mode_flag;
+            }set
+            {
+                if (value != pc_mode_flag)
+                {
+                    pc_mode_flag = value;
+                    if (!pc_mode_flag) client_id = -1;
+                    OnPCModeFlagChanged?.Invoke(this, new EventArgs());
+                }
+            }
+        }
+        public EventHandler OnPCModeFlagChanged;
+        public bool IsOnPCMode => pcModeFlag;
+        protected DeviceXMLState xmlState = null;
 
         public EventHandler OnDisconnected;
         public uint SerialYear => serial_year;
@@ -54,7 +88,7 @@ namespace NormaMeasure.Devices
         protected DeviceType type_id;
         protected DeviceStatus _work_status = DeviceStatus.UNDEFINED;
         Thread ConnectionThread;
-        ConnectionTheadDelegate OnThreadWillFinish = null;
+        protected ConnectionTheadDelegate OnThreadWillFinish = null;
         protected DeviceStatus work_status
         {
             get
@@ -73,6 +107,7 @@ namespace NormaMeasure.Devices
                             InitConnectionCheckThread();
                             break;
                         case DeviceStatus.DISCONNECTED:
+                            threadIsActive = false;
                             OnDisconnected?.Invoke(this, new EventArgs());
                             break;
                     }
@@ -114,6 +149,7 @@ namespace NormaMeasure.Devices
         public virtual void AssignToClient(int cl_id)
         {
             this.client_id = cl_id;
+            InitPCMode();
         }
 
         protected virtual void CheckDeviceConnectionThreadFunc()
@@ -134,30 +170,11 @@ namespace NormaMeasure.Devices
                     }
                     Debug.WriteLine($"Попыток на отправку: {tryTimes};");
                     tryTimes = 50;
+                    if (threadIsActive) break;
                 }
                 p.Dispose();
                 OnThreadWillFinish?.Invoke();
-            }catch
-            {
-                if (p != null) p.Dispose();
-                if (tryTimes-- > 0) goto retry;
-                work_status = DeviceStatus.DISCONNECTED;
-            }
-        }
-
-        protected virtual void DeviceConnectionThread()
-        {
-            int tryTimes = 50;
-            DeviceCommandProtocol p = null;
-            retry: 
-            try
-            {
-                p = new DeviceCommandProtocol(port_name);
-                while(work_status != DeviceStatus.DISCONNECTED)
-                {
-                    DeviceInfo info = p.GetDeviceInfo();
-                }
-                p.Dispose();
+                Debug.WriteLine($"-----------CheckDeviceConnectionThreadFunc STOPPED--------------");
             }
             catch
             {
@@ -182,18 +199,105 @@ namespace NormaMeasure.Devices
 
         }
 
-        private void InitConnectionCheckThread()
+        public void InitPCMode()
         {
-            SetDeviceConnectionThreadFunction(new ThreadStart(CheckDeviceConnectionThreadFunc));
+            if (!IsOnPCMode)
+            {
+                InitPCModeCheckThread();
+            }
         }
 
-        private void SetDeviceConnectionThreadFunction(ThreadStart threadFunction, ConnectionTheadDelegate threadWillFinish = null)
+        public void StopPCMode()
         {
-            threadIsActive = true;
-            OnThreadWillFinish = null;
-            if (threadWillFinish != null) OnThreadWillFinish += threadWillFinish;
-            ConnectionThread = new Thread(threadFunction);
-            ConnectionThread.Start();
+            if (IsOnPCMode) InitConnectionCheckThread();
+        }
+
+        protected virtual void InitPCModeCheckThread()
+        {
+            if (threadIsActive)
+            {
+                SetDeviceConnectionThreadFunction(new ThreadStart(PCModeThreadFunction), InitPCModeCheckThread);
+            }
+            else
+            {
+                SetDeviceConnectionThreadFunction(new ThreadStart(PCModeThreadFunction), InitConnectionCheckThread);
+            }
+        }
+
+        protected virtual void PCModeThreadFunction()
+        {
+            int tryTimes = 50;
+            bool isInited = false;
+            DeviceCommandProtocol p = null;
+            retry:
+            try
+            {
+                p = new DeviceCommandProtocol(port_name);
+                if (!isInited)
+                {
+                    p.SetPCModeFlag(true);
+                    pcModeFlag = p.GetPCModeFlag();
+                    p.SetMeasureLineNumber(ClientId);
+                    isInited = true; //чтоб больше этого не делать, устанавливаем флажок
+                }
+                while (threadIsActive)
+                {
+                    DeviceInfo info = p.GetDeviceInfo();
+                    if (DeviceInfoIsValid(info))
+                    {
+                        work_status = DeviceStatus.DISCONNECTED;
+                        break;
+                    }
+                    if (p.GetMeasureLineNumber() != ClientId) p.SetMeasureLineNumber(ClientId);
+                    tryTimes = 50;
+                    if (threadIsActive) threadIsActive = p.GetPCModeFlag();
+                }
+                if (pcModeFlag)
+                {
+                    p.SetPCModeFlag(false);
+                    pcModeFlag = false;
+                }
+                p.Dispose();
+                OnThreadWillFinish?.Invoke();
+            }
+            catch
+            {
+                if (p != null) p.Dispose();
+                if (tryTimes-- > 0) goto retry;
+                pcModeFlag = false;
+                work_status = DeviceStatus.DISCONNECTED;
+            }
+        }
+
+        protected void InitConnectionCheckThread()
+        {
+            if (threadIsActive)
+            {
+                SetDeviceConnectionThreadFunction(new ThreadStart(CheckDeviceConnectionThreadFunc), InitConnectionCheckThread);
+            }
+            else
+            {
+                SetDeviceConnectionThreadFunction(new ThreadStart(CheckDeviceConnectionThreadFunc));
+            }
+        }
+
+
+
+        protected void SetDeviceConnectionThreadFunction(ThreadStart threadFunction, ConnectionTheadDelegate onThreadWillFinish = null)
+        {
+            if (threadIsActive)
+            {
+                if (onThreadWillFinish != null) OnThreadWillFinish = onThreadWillFinish;
+                threadIsActive = false;
+
+            }
+            else
+            {
+                OnThreadWillFinish = (onThreadWillFinish != null) ? onThreadWillFinish : null;
+                ConnectionThread = new Thread(threadFunction);
+                threadIsActive = true;
+                ConnectionThread.Start();
+            }
         }
 
         public DeviceBase(DeviceInfo info)
@@ -218,7 +322,9 @@ namespace NormaMeasure.Devices
         public void Dispose()
         {
             OnDisconnected = null;
-            if (work_status == DeviceStatus.WAITING_FOR_COMMAND) work_status = DeviceStatus.WILL_DISCONNECT;
+            OnPCModeFlagChanged = null;
+            threadIsActive = false;
+            //if (work_status == DeviceStatus.WAITING_FOR_COMMAND) work_status = DeviceStatus.WILL_DISCONNECT;
 
         }
 

@@ -12,18 +12,22 @@ namespace NormaMeasure.Devices
 {
     public class DeviceCommandProtocol : IDisposable
     {
-        int MemorySize;
-        ushort DeviceTypeAddr = 0x0000;
-        ushort DeviceSerialYearAddr = 0x0001;
-        ushort DeviceSerialNumAddr = 0x0002;
-        ushort DeviceModelVersionAddr = 0x0003;
-        ushort DeviceWorkStatusAddr = 0x0004;
+        protected int MemorySize;
+        protected ushort DeviceTypeAddr;
+        protected ushort DeviceSerialYearAddr;
+        protected ushort DeviceSerialNumAddr;
+        protected ushort DeviceModelVersionAddr;
+        protected ushort DeviceWorkStatusAddr;
+        protected ushort PCModeFlagAddr;
+        protected ushort MeasureLineNumberAddr;
+
+
 
         string comPortName;
 
         public DeviceCommandProtocol()
         {
-
+            InitAddressMap();
         }
 
         public DeviceCommandProtocol(string port_name) : this()
@@ -77,6 +81,39 @@ namespace NormaMeasure.Devices
                 info.type = DeviceType.Unknown;
             }
             return info;
+        }
+
+        public virtual bool GetPCModeFlag()
+        {
+            return ReadBoolValue(PCModeFlagAddr);
+        }
+
+        public virtual short GetMeasureLineNumber()
+        {
+            return (short)ReadSingleHolding(MeasureLineNumberAddr);
+        }
+
+        public virtual void SetPCModeFlag(bool value)
+        {
+            ushort val = (value) ? (ushort)1 : (ushort)0;
+            WriteSingleHolding(PCModeFlagAddr, val);
+        }
+
+        public virtual void SetMeasureLineNumber(int value)
+        {
+            WriteSingleHolding(MeasureLineNumberAddr, (ushort)value);
+        }
+
+        protected bool ReadBoolValue(ushort addr)
+        {
+            ushort value = ReadSingleHolding(addr);
+            return (value > 0);
+        }
+
+        protected ushort ReadSingleHolding(ushort addr)
+        {
+            ushort[] value = ReadHoldings(addr, addr);
+            return ((value.Length > 0) ? value[0] : (ushort)0);
         }
 
         protected ushort[] ReadHoldings(ushort addr_start, ushort addr_end)
@@ -135,6 +172,16 @@ namespace NormaMeasure.Devices
             }
         }
 
+        protected virtual void InitAddressMap()
+        {
+            DeviceTypeAddr = 0x0000;
+            DeviceSerialYearAddr = 0x0001;
+            DeviceSerialNumAddr = 0x0002;
+            DeviceModelVersionAddr = 0x0003;
+            DeviceWorkStatusAddr = 0x0004;
+            PCModeFlagAddr = 0x0092;
+            MeasureLineNumberAddr = 0x0093;
+        }
 
         public void Dispose()
         {

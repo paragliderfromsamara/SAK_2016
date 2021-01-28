@@ -12,5 +12,12 @@ namespace NormaMeasure.Devices.Teraohmmeter
         {
 
         }
+
+        protected override void InitAddressMap()
+        {
+            base.InitAddressMap();
+            PCModeFlagAddr = 0x0092;
+            MeasureLineNumberAddr = 0x0093;
+        }
     }
 }

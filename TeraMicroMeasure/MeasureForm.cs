@@ -558,6 +558,7 @@ namespace TeraMicroMeasure
                 BeginInvoke(new WithoutAnAguments(DisconnectDeviceFromServerSide), new object[] { });
             }else
             {
+                DisconnectSelectedDevice();
                 SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
             }
         }
