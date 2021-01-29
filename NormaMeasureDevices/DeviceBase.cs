@@ -10,9 +10,23 @@ using System.Diagnostics;
 
 namespace NormaMeasure.Devices
 {
+    public class DeviceWorkStatusEventArgs : EventArgs
+    {
+        public DeviceWorkStatus StatusWas;
+        public DeviceWorkStatus StatusNew;
+        public DeviceWorkStatusEventArgs(DeviceWorkStatus sts_was, DeviceWorkStatus sts_new)
+        {
+            StatusWas = sts_was;
+            StatusNew = sts_new;
+        }
+    }
     public delegate void ConnectionTheadDelegate();
     public class DeviceBase : IDisposable
     {
+        public EventHandler OnDisconnected;
+        public EventHandler OnPCModeFlagChanged;
+        public EventHandler OnWorkStatusChanged;
+
         private static object locker = new object();
         private bool thread_is_active = false;
 
@@ -32,26 +46,87 @@ namespace NormaMeasure.Devices
         
 
         private bool pc_mode_flag = false;
-        protected bool pcModeFlag
+        public bool IsOnPCMode
         {
             get
             {
                 return pc_mode_flag;
-            }set
+            }
+            protected set
             {
                 if (value != pc_mode_flag)
                 {
                     pc_mode_flag = value;
-                    if (!pc_mode_flag) client_id = -1;
+                    if (!pc_mode_flag) ClientId = -1;
+                    if (xmlState != null) xmlState.IsOnPCMode = pc_mode_flag;
                     OnPCModeFlagChanged?.Invoke(this, new EventArgs());
                 }
             }
         }
-        public EventHandler OnPCModeFlagChanged;
-        public bool IsOnPCMode => pcModeFlag;
+
+        private bool is_connected = false;
+
+        public bool IsConnected
+        {
+            get
+            {
+                return is_connected;
+            }
+            protected set
+            {
+                lock(locker)
+                {
+                    if (value != is_connected)
+                    {
+                        is_connected = value;
+                        if (is_connected)
+                        {
+                            /*When flag is true*/
+                            InitConnectionCheckThread();
+                        }
+                        else
+                        {
+                            threadIsActive = false;
+                            WorkStatus = DeviceWorkStatus.DISCONNECTED;
+                            OnDisconnected?.Invoke(this, new EventArgs());
+                        }
+                    }
+                }
+               
+            }
+        }
+
+        public string WorkStatusText
+        {
+            get
+            {
+                switch(work_status)
+                {
+                    case DeviceWorkStatus.DISCONNECTED:
+                        return "Отключен";
+                    case DeviceWorkStatus.IDLE:
+                        return "Ожидает";
+                    case DeviceWorkStatus.CALIBRATION:
+                        return "Калибровка";
+                    case DeviceWorkStatus.ENTERING_PARAMETERS:
+                        return "Ввод параметров";
+                    case DeviceWorkStatus.DEPOLARIZATION:
+                        return "Разряд";
+                    case DeviceWorkStatus.POLARIZATION:
+                        return "Поляризация";
+                    case DeviceWorkStatus.MEASURE:
+                        return "Измерение";
+                    case DeviceWorkStatus.LOST_CIRCUIT_CORRECTION:
+                        return "Корректировка токов утечки";
+                    default:
+                        return "Неизвестный статус";
+                }
+            }
+        }
+
         protected DeviceXMLState xmlState = null;
 
-        public EventHandler OnDisconnected;
+
         public uint SerialYear => serial_year;
         public uint SerialNumber => serial_number;
         public uint ModelVersion => model_version;
@@ -62,63 +137,50 @@ namespace NormaMeasure.Devices
         public string SerialWithShortName => $"{type_name_short} зав.№ {Serial}";
         public string TypeNameFull => type_name_full;
         public string TypeNameShort => type_name_short;
-        private int _client_id = -1;
-        private int client_id
-        {
-            set
-            {
-                _client_id = value;
-                if (xmlState != null) xmlState.ClientId = value;
-            }
-        }
+        private int client_id = -1;
         public int ClientId
         {
             get
             {
-                return _client_id;
+                return client_id;
+            }
+            protected set
+            {
+                client_id = value;
+                if (xmlState != null) xmlState.ClientId = value;
             }
         }
-        public DeviceStatus WorkStatus => work_status;
+        // public DeviceStatus WorkStatus => work_status;
+        private DeviceWorkStatus work_status = DeviceWorkStatus.DISCONNECTED;
+        public DeviceWorkStatus WorkStatus
+        {
+            get
+            {
+                return work_status;
+            }protected set
+            {
+                if (work_status != value)
+                {
+                    DeviceWorkStatus was = work_status;
+                    work_status = value;
+                    if (xmlState != null) xmlState.WorkStatusId = (int)value;
+                    OnWorkStatusChanged?.Invoke(this, new DeviceWorkStatusEventArgs(was, work_status));
+                }
+            }
+        }
 
 
    
 
         public DeviceType TypeId => type_id;
-
         protected DeviceType type_id;
-        protected DeviceStatus _work_status = DeviceStatus.UNDEFINED;
         Thread ConnectionThread;
         protected ConnectionTheadDelegate OnThreadWillFinish = null;
-        protected DeviceStatus work_status
-        {
-            get
-            {
-                return _work_status;
-            }
-            set
-            {
-                lock(locker)
-                {
-                    DeviceStatus sts = _work_status;
-                    if (sts == value) return;
-                    switch (value)
-                    {
-                        case DeviceStatus.WAITING_FOR_COMMAND:
-                            InitConnectionCheckThread();
-                            break;
-                        case DeviceStatus.DISCONNECTED:
-                            threadIsActive = false;
-                            OnDisconnected?.Invoke(this, new EventArgs());
-                            break;
-                    }
-                    _work_status = value;
-                }
-            }
-        }
+
 
         internal void ReleaseDeviceFromClient()
         {
-            client_id = -1;
+            ClientId = -1;
         }
 
         private uint serial_year = 2000;
@@ -148,7 +210,7 @@ namespace NormaMeasure.Devices
         /// <param name="cl_id"></param>
         public virtual void AssignToClient(int cl_id)
         {
-            this.client_id = cl_id;
+            ClientId = cl_id;
             InitPCMode();
         }
 
@@ -156,31 +218,36 @@ namespace NormaMeasure.Devices
         {
             int tryTimes = 50;
             DeviceCommandProtocol p = null;
-            retry: 
+            retry:
             try
             {
-                p = new DeviceCommandProtocol(port_name);
+                p = new DeviceCommandProtocol(PortName);
                 while (threadIsActive)
                 {
                     DeviceInfo info = p.GetDeviceInfo();
-                    if (DeviceInfoIsValid(info))
+                    if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
                     {
-                        work_status = DeviceStatus.DISCONNECTED;
-                        break;
+                        //work_status = DeviceStatus.DISCONNECTED;
+                        IsConnected = false;
                     }
-                    Debug.WriteLine($"Попыток на отправку: {tryTimes};");
+                    else
+                    {
+                        WorkStatus = info.WorkStatus;
+                    }
+                    Thread.Sleep(800);
                     tryTimes = 50;
-                    if (threadIsActive) break;
                 }
                 p.Dispose();
                 OnThreadWillFinish?.Invoke();
-                Debug.WriteLine($"-----------CheckDeviceConnectionThreadFunc STOPPED--------------");
             }
             catch
             {
                 if (p != null) p.Dispose();
-                if (tryTimes-- > 0) goto retry;
-                work_status = DeviceStatus.DISCONNECTED;
+                if (tryTimes-- > 0)
+                {
+                    goto retry;
+                }
+                IsConnected = false;
             }
         }
 
@@ -189,9 +256,10 @@ namespace NormaMeasure.Devices
            return (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion);
         }
 
-        internal void GoToWaitingForCommand()
+        internal void InitConnection()
         {
-            work_status = DeviceStatus.WAITING_FOR_COMMAND;
+            //work_status = DeviceStatus.WAITING_FOR_COMMAND;
+            IsConnected = true;
         }
 
         public DeviceBase()
@@ -201,10 +269,15 @@ namespace NormaMeasure.Devices
 
         public void InitPCMode()
         {
-            if (!IsOnPCMode)
+            if (!IsOnPCMode && WorkStatus == DeviceWorkStatus.IDLE)
             {
                 InitPCModeCheckThread();
             }
+        }
+
+        public void InitMeasure()
+        {
+
         }
 
         public void StopPCMode()
@@ -236,7 +309,7 @@ namespace NormaMeasure.Devices
                 if (!isInited)
                 {
                     p.SetPCModeFlag(true);
-                    pcModeFlag = p.GetPCModeFlag();
+                    IsOnPCMode = p.GetPCModeFlag();
                     p.SetMeasureLineNumber(ClientId);
                     isInited = true; //чтоб больше этого не делать, устанавливаем флажок
                 }
@@ -245,17 +318,21 @@ namespace NormaMeasure.Devices
                     DeviceInfo info = p.GetDeviceInfo();
                     if (DeviceInfoIsValid(info))
                     {
-                        work_status = DeviceStatus.DISCONNECTED;
+                        //work_status = DeviceStatus.DISCONNECTED;
+                        IsConnected = false;
                         break;
+                    }else
+                    {
+                        WorkStatus = info.WorkStatus;
                     }
                     if (p.GetMeasureLineNumber() != ClientId) p.SetMeasureLineNumber(ClientId);
                     tryTimes = 50;
                     if (threadIsActive) threadIsActive = p.GetPCModeFlag();
                 }
-                if (pcModeFlag)
+                if (IsOnPCMode)
                 {
                     p.SetPCModeFlag(false);
-                    pcModeFlag = false;
+                    IsOnPCMode = false;
                 }
                 p.Dispose();
                 OnThreadWillFinish?.Invoke();
@@ -264,8 +341,9 @@ namespace NormaMeasure.Devices
             {
                 if (p != null) p.Dispose();
                 if (tryTimes-- > 0) goto retry;
-                pcModeFlag = false;
-                work_status = DeviceStatus.DISCONNECTED;
+                IsOnPCMode = false;
+                //work_status = DeviceStatus.DISCONNECTED;
+                IsConnected = false;
             }
         }
 
@@ -323,6 +401,7 @@ namespace NormaMeasure.Devices
         {
             OnDisconnected = null;
             OnPCModeFlagChanged = null;
+            OnWorkStatusChanged = null;
             threadIsActive = false;
             //if (work_status == DeviceStatus.WAITING_FOR_COMMAND) work_status = DeviceStatus.WILL_DISCONNECT;
 
@@ -353,20 +432,10 @@ namespace NormaMeasure.Devices
         AVU_4 = 6
     }
 
-    public enum DeviceStatus : byte
-    {
-        UNDEFINED,
-        WAITING_FOR_COMMAND,
-        CHANGE_STATUS,
-        IS_ON_MEASURE,
-        IS_ON_POLARISATION,
-        IS_ON_DEPOLARISATION,
-        DISCONNECTED, 
-        WILL_DISCONNECT
-    }
 
-    public enum DeviceWorkStatus : byte
+    public enum DeviceWorkStatus : int
     {
+        DISCONNECTED = -1,
         IDLE = 0, 
         MEASURE = 1,
         CALIBRATION = 2, 

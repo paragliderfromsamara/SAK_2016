@@ -44,11 +44,11 @@ namespace NormaMeasure.Devices
             {
                 info = GetDeviceInfo();
                 if (info.type != DeviceType.Unknown) device = DeviceBase.CreateFromDeviceInfo(info);
-                Debug.WriteLine($"DeviceType on {port_name}: {info.type} {info.SerialYear}-{info.SerialNumber} v.{info.ModelVersion}");
+                //Debug.WriteLine($"DeviceType on {port_name}: {info.type} {info.SerialYear}-{info.SerialNumber} v.{info.ModelVersion}");
             }
             catch(Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+               // Debug.WriteLine(ex.Message);
             }
             return device;
         }
@@ -65,17 +65,18 @@ namespace NormaMeasure.Devices
             return port;
         }
 
-        public virtual DeviceInfo GetDeviceInfo()
+        public DeviceInfo GetDeviceInfo()
         {
-            ushort[] data = ReadHoldings(DeviceTypeAddr, DeviceModelVersionAddr);
+            ushort[] data = ReadHoldings(DeviceTypeAddr, DeviceWorkStatusAddr);
             DeviceInfo info = new DeviceInfo();
             info.PortName = comPortName;
-            if (data.Length == 4)
+            if (data.Length == 5)
             {
                 info.type = DeviceBase.IsAllowedDeviceType((byte)data[0]) ? (DeviceType)data[0] : DeviceType.Unknown;
                 info.SerialYear = data[1];
                 info.SerialNumber = (byte)data[2];
                 info.ModelVersion = (byte)data[3];
+                info.WorkStatus = (DeviceWorkStatus)(data[4]);
             }else
             {
                 info.type = DeviceType.Unknown;
@@ -182,6 +183,7 @@ namespace NormaMeasure.Devices
             PCModeFlagAddr = 0x0092;
             MeasureLineNumberAddr = 0x0093;
         }
+
 
         public void Dispose()
         {

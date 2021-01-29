@@ -116,7 +116,7 @@ namespace TeraMicroMeasure
         {
             voltagesGroupBox.Visible = false;
             InitAverageCountComboBox();
-            measurePanel.Enabled = isCurrentPCClient;
+            selectDevicePanel.Visible = measurePanel.Enabled = isCurrentPCClient;
         }
 
         public void SetXmlDeviceList(Dictionary<string, DeviceXMLState> xml_device_list)
@@ -223,6 +223,13 @@ namespace TeraMicroMeasure
             SetBeforeMeasureDelayFromXMLState();
             SetAfterMeasureDelayFromXMLState();
             SetAveragingTimesFromXmlState();
+            SetCapturedDeviceFromXmlState();
+        }
+
+        private void SetCapturedDeviceFromXmlState()
+        {
+            CapturedDeviceSerial = measureState.CapturedDeviceSerial;
+            CapturedDeviceType = (DeviceType)measureState.CapturedDeviceTypeId;
         }
 
         private void SetAveragingTimesFromXmlState()
@@ -469,7 +476,7 @@ namespace TeraMicroMeasure
             {
                 if (i == availableDevices.SelectedIndex)
                 {
-                    if (d.ClientId == -1)
+                    if (d.ClientId == -1 || d.ClientId == clientID)
                     {
                         serial = d.Serial;
                     }else
@@ -526,29 +533,38 @@ namespace TeraMicroMeasure
                 BeginInvoke(new XMLDeviceDelegate(RefreshCapturedXmlDevice), new object[] { xml_device });
             }else
             {
-                if (device_capture_status == DeviceCaptureStatus.WAITING_FOR_CONNECTION)
+                if (isCurrentPCClient)
                 {
-                    if (xml_device.ClientId == clientID)
+                    if (device_capture_status == DeviceCaptureStatus.WAITING_FOR_CONNECTION)
                     {
-                        SetDeviceCaptureStatus(DeviceCaptureStatus.CONNECTED);
-                        RefreshMeasureField(xml_device);
+                        if (xml_device.ClientId == clientID)
+                        {
+                            SetDeviceCaptureStatus(DeviceCaptureStatus.CONNECTED);
+                            RefreshMeasureField(xml_device);
+                        }
                     }
-                }else if (device_capture_status == DeviceCaptureStatus.CONNECTED)
+                    else if (device_capture_status == DeviceCaptureStatus.CONNECTED)
+                    {
+                        if (xml_device.ClientId != clientID)
+                        {
+                            DisconnectDeviceFromServerSide();
+                        }
+                        else
+                        {
+                            RefreshMeasureField(xml_device);
+                        }
+                    }
+                }else
                 {
-                    if (xml_device.ClientId != clientID)
-                    {
-                        DisconnectDeviceFromServerSide();
-                    }else
-                    {
-                        RefreshMeasureField(xml_device);
-                    }
+                    RefreshMeasureField(xml_device);
                 }
+
             }
         }
 
         private void RefreshMeasureField(DeviceXMLState xml_device)
         {
-            deviceInfo.Text = $"{xml_device.TypeNameFull} {xml_device.Serial}";
+            deviceInfo.Text = $"{xml_device.TypeNameFull} {xml_device.Serial}\n{xml_device.WorkStatusText}";
         }
 
         public void DisconnectDeviceFromServerSide()

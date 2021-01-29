@@ -48,7 +48,6 @@
             this.deviceControlButton = new System.Windows.Forms.Button();
             this.startMeasureButton = new System.Windows.Forms.Button();
             this.availableDevices = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -259,7 +258,6 @@
             // 
             this.measurePanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.measurePanel.Controls.Add(this.selectDevicePanel);
-            this.measurePanel.Controls.Add(this.label3);
             this.measurePanel.Controls.Add(this.panel1);
             this.measurePanel.Controls.Add(this.panel2);
             this.measurePanel.Controls.Add(this.voltagesGroupBox);
@@ -279,7 +277,7 @@
             this.selectDevicePanel.Controls.Add(this.deviceControlButton);
             this.selectDevicePanel.Controls.Add(this.startMeasureButton);
             this.selectDevicePanel.Controls.Add(this.availableDevices);
-            this.selectDevicePanel.Location = new System.Drawing.Point(395, 205);
+            this.selectDevicePanel.Location = new System.Drawing.Point(391, 205);
             this.selectDevicePanel.Name = "selectDevicePanel";
             this.selectDevicePanel.Size = new System.Drawing.Size(530, 58);
             this.selectDevicePanel.TabIndex = 14;
@@ -317,16 +315,6 @@
             this.availableDevices.Name = "availableDevices";
             this.availableDevices.Size = new System.Drawing.Size(293, 27);
             this.availableDevices.TabIndex = 12;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(401, 202);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(96, 19);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "Измеритель";
             // 
             // panel1
             // 
@@ -525,7 +513,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox availableDevices;
         private System.Windows.Forms.Panel selectDevicePanel;
         private System.Windows.Forms.Button deviceControlButton;

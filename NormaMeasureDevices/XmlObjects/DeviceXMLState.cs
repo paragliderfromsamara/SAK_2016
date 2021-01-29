@@ -17,6 +17,8 @@ namespace NormaMeasure.Devices.XmlObjects
         const string ModelVersion_TagName = "ModelVersion";
         const string TypeNameFull_TagName = "TypeNameFull";
         const string TypeNameShort_TagName = "TypeNameShort";
+        const string IsOnPCMode_TagName = "IsOnPCMode";
+        const string WorkStatusText_TagName = "WorkStatusText";
 
         string serial;
         /// <summary>
@@ -99,6 +101,24 @@ namespace NormaMeasure.Devices.XmlObjects
             }
         }
 
+        string work_status_text;
+        public string WorkStatusText
+        {
+            get
+            {
+                return work_status_text;
+            }
+            set
+            {
+                bool f = work_status_text != value;
+                if (f)
+                {
+                    work_status_text = value;
+                    setChangedFlag(f);
+                }
+            }
+        }
+
         string type_name_full;
         public string TypeNameFull
         {
@@ -135,6 +155,27 @@ namespace NormaMeasure.Devices.XmlObjects
             }
         }
 
+
+        bool is_on_pc_mode;
+        public bool IsOnPCMode
+        {
+            get
+            {
+                return is_on_pc_mode;
+            }
+            set
+            {
+                bool f = is_on_pc_mode != value;
+                if (f)
+                {
+                    is_on_pc_mode = value;
+                    setChangedFlag(f);
+                }
+            }
+        }
+
+
+
         public DeviceXMLState(string innerXml) : base(innerXml)
         {
 
@@ -145,9 +186,11 @@ namespace NormaMeasure.Devices.XmlObjects
             ClientId = device.ClientId;
             Serial = device.Serial;
             WorkStatusId = (int)device.WorkStatus;
+            WorkStatusText = device.WorkStatusText;
             TypeId = (int)device.TypeId;
             TypeNameFull = device.TypeNameFull;
             TypeNameShort = device.TypeNameShort;
+            IsOnPCMode = device.IsOnPCMode;
             id = $"{TypeId}-{Serial}";
         }
 
@@ -160,6 +203,8 @@ namespace NormaMeasure.Devices.XmlObjects
             setXmlProp(ClientId_TagName, ClientId.ToString());
             setXmlProp(TypeNameFull_TagName, type_name_full);
             setXmlProp(TypeNameShort_TagName, type_name_short);
+            setXmlProp(IsOnPCMode_TagName, (is_on_pc_mode) ? "1" : "0");
+            setXmlProp(WorkStatusText_TagName, work_status_text);
         }
 
         protected override void buildFromXML()
@@ -171,6 +216,18 @@ namespace NormaMeasure.Devices.XmlObjects
             fillTypeIdFromXML();
             fillTypeNameFull();
             fillTypeNameShort();
+            fillIsOnPCModeFlag();
+            fillWorkStatusText();
+        }
+
+        private void fillWorkStatusText()
+        {
+            work_status_text = getXmlProp(WorkStatusText_TagName);
+        }
+
+        private void fillIsOnPCModeFlag()
+        {
+            is_on_pc_mode = (getXmlProp(IsOnPCMode_TagName) == "1");
         }
 
         private void fillTypeNameShort()

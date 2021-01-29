@@ -14,6 +14,7 @@ namespace NormaMeasure.Devices
 
     public class DevicesDispatcher : IDisposable
     {
+        private static object locker = new object();
         private EventHandler OnDeviceFound;
         private DeviceCommandProtocol commandProtocol;
         private Dictionary<string, DeviceBase> deviceList;
@@ -33,7 +34,7 @@ namespace NormaMeasure.Devices
             {
                 if ((int)d.TypeId == type_id && serial == d.Serial)
                 {
-                    if (d.ClientId == -1)
+                    if (d.ClientId == -1 && d.WorkStatus == DeviceWorkStatus.IDLE)
                     {
                         d.AssignToClient(client_id);
                         return d.GetXMLState();
@@ -107,7 +108,7 @@ namespace NormaMeasure.Devices
                             OnDeviceFound?.Invoke(device, new EventArgs());
                             device.OnDisconnected += OnDeviceDisconnected_Handler;
                             deviceList.Add(port_name, device);
-                            device.GoToWaitingForCommand();
+                            device.InitConnection();
                         }
                     }
                 }
@@ -121,9 +122,13 @@ namespace NormaMeasure.Devices
 
         private void OnDeviceDisconnected_Handler(object sender, EventArgs e)
         {
-            DeviceBase d = sender as DeviceBase;
-            deviceList.Remove(d.PortName);
-            d.Dispose();
+            lock (locker)
+            {
+                DeviceBase d = sender as DeviceBase;
+                deviceList.Remove(d.PortName);
+                d.Dispose();
+            }
+
         }
 
         public void Dispose()

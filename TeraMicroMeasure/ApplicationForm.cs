@@ -73,23 +73,89 @@ namespace TeraMicroMeasure
 
         private void OnDeviceFound_EventHandler(object sender, EventArgs e)
         {
-            DeviceBase d = sender as DeviceBase;
-            switch(d.TypeId)
+            if (InvokeRequired)
             {
-                case DeviceType.Microohmmeter:
-                case DeviceType.Teraohmmeter:
-                    AddSimpleDeviceToSettingsFile(d);
-                    break;
-            }
-            if (IsServerApp)
+                BeginInvoke(new EventHandler(OnDeviceFound_EventHandler), new object[] { sender, e});
+            }else
             {
-                AddDeviceToServerCommandDispatcher(d);
-            }
-            MessageBox.Show($"Подключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
+                DeviceBase d = sender as DeviceBase;
+                switch (d.TypeId)
+                {
+                    case DeviceType.Microohmmeter:
+                    case DeviceType.Teraohmmeter:
+                        AddSimpleDeviceToSettingsFile(d);
+                        break;
+                }
+                if (IsServerApp)
+                {
+                    AddDeviceToServerCommandDispatcher(d);
+                }
+                MessageBox.Show($"Подключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
+                AddOrUpdateDeviceOnToolStrip(d);
 
-            d.OnDisconnected += OnDeviceDisconnected_EventHandler;
-            d.OnPCModeFlagChanged += PCModeFlagChanged_Handler;
+                //d.OnDisconnected += OnDeviceDisconnected_EventHandler;
+                d.OnPCModeFlagChanged += PCModeFlagChanged_Handler;
+                d.OnWorkStatusChanged += WorkStatusChanged_Handler;
+            }
+
         }
+
+        private void AddOrUpdateDeviceOnToolStrip(DeviceBase d)
+        {
+            bool has = false;
+            string el_name = $"deviceToolStripLabel_{(int)d.TypeId}_{d.SerialYear}_{d.SerialNumber}";
+            string text = $"{d.SerialWithShortName} ({d.WorkStatusText})";
+            foreach (var item in statusStrip.Items)
+            {
+                if (item.GetType().Name == typeof(ToolStripStatusLabel).Name)
+                {
+                    ToolStripStatusLabel l = item as ToolStripStatusLabel;
+                    if (l.Name == el_name)
+                    {
+                        l.Text = text;
+                        has = true;
+                        break;
+                    }
+                }
+            }
+            if (!has)
+            {
+                ToolStripStatusLabel l = new ToolStripStatusLabel(text);
+                l.Name = el_name;
+                l.ForeColor = SystemColors.ControlLight;
+                statusStrip.Items.Add(l);
+            }
+
+        }
+
+        private void WorkStatusChanged_Handler(object sender, EventArgs e)
+        {
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(WorkStatusChanged_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                DeviceBase d = sender as DeviceBase;
+                DeviceWorkStatusEventArgs a = e as DeviceWorkStatusEventArgs;
+                AddOrUpdateDeviceOnToolStrip(d);
+                if (d.WorkStatus == DeviceWorkStatus.DISCONNECTED)
+                {
+                    OnDeviceDisconnected_EventHandler(sender, e);
+                }
+                else
+                {
+                    if (IsServerApp)
+                    {
+                        ReplaceDeviceXMLStateOnServerCommandDispatcher(d.GetXMLState());
+                    }
+                }
+
+
+            }
+        }
+
         private void PCModeFlagChanged_Handler(object sender, EventArgs e)
         {
             DeviceBase d = sender as DeviceBase;
@@ -113,6 +179,7 @@ namespace TeraMicroMeasure
             {
                 serverCommandDispatcher.ReplaceDeviceOnServerState(xml_device);
             }
+            if (measureFormsList.ContainsKey(xml_device.ClientId)) measureFormsList[xml_device.ClientId].RefreshCapturedXmlDevice(xml_device);
         }
 
         private void AddSimpleDeviceToSettingsFile(DeviceBase d)
@@ -123,6 +190,7 @@ namespace TeraMicroMeasure
         private void OnDeviceDisconnected_EventHandler(object sender, EventArgs e)
         {
             DeviceBase d = sender as DeviceBase;
+            
             MessageBox.Show($"Отключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
             if (IsServerApp)
             {

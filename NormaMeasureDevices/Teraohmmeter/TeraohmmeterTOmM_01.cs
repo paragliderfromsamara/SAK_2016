@@ -18,7 +18,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
             type_name_full = "Тераомметр ТОмМ-01";
         }
 
-
+/*
         protected override void CheckDeviceConnectionThreadFunc()
         {
             int tryTimes = 50;
@@ -32,9 +32,13 @@ namespace NormaMeasure.Devices.Teraohmmeter
                     DeviceInfo info = p.GetDeviceInfo();
                     if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
                     {
-                        work_status = DeviceStatus.DISCONNECTED;
+                        //work_status = DeviceStatus.DISCONNECTED;
+                        IsConnected = false;
+                    }else
+                    {
+                        WorkStatus = info.WorkStatus;
                     }
-                    Debug.WriteLine($"Попыток на отправку гы гы: {tryTimes};");
+                    Thread.Sleep(800);
                     tryTimes = 50;
                 }
                 p.Dispose();
@@ -44,10 +48,10 @@ namespace NormaMeasure.Devices.Teraohmmeter
             {
                 if (p != null) p.Dispose();
                 if (tryTimes-- > 0) goto retry;
-                work_status = DeviceStatus.DISCONNECTED;
+                IsConnected = false;
             }
         }
-
+*/
         public override DeviceXMLState GetXMLState()
         {
             return new DeviceXMLState(this);
