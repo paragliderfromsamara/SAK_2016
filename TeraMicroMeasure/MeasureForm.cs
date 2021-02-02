@@ -24,6 +24,8 @@ namespace TeraMicroMeasure
         private DeviceCaptureStatus device_capture_status;
         public DeviceCaptureStatus DeviceCaptureStatus => device_capture_status;
 
+        private MeasureStatus measureStatus = MeasureStatus.STOPPED;
+
 
         public int ClientID
         {
@@ -496,6 +498,34 @@ namespace TeraMicroMeasure
             }
         }
 
+        private void SetMeasureStatus(MeasureStatus status)
+        {
+            switch(status)
+            {
+                case MeasureStatus.STOPPED:
+                    startMeasureButton.Text = "Пуск измерения";
+                    startMeasureButton.Enabled = true;
+                    deviceControlButton.Enabled = true;
+                    break;
+                case MeasureStatus.WILL_START:
+                    startMeasureButton.Text = "Запускается...";
+                    startMeasureButton.Enabled = false;
+                    deviceControlButton.Enabled = false;
+                    break;
+                case MeasureStatus.STARTED:
+                    startMeasureButton.Text = "Остановить измерение";
+                    startMeasureButton.Enabled = true;
+                    deviceControlButton.Enabled = false;
+                    break;
+                case MeasureStatus.WILL_STOPPED:
+                    startMeasureButton.Text = "Останавливается...";
+                    startMeasureButton.Enabled = false;
+                    deviceControlButton.Enabled = false;
+                    break;
+            }
+            measureStatus = status;
+        }
+
         private void SetDeviceCaptureStatus(DeviceCaptureStatus status)
         {
             switch(status)
@@ -506,6 +536,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Visible = false;
                     deviceControlButton.Text = "Подключить";
                     deviceControlButton.Visible = true;
+                    deviceControlButton.Enabled = true;
                     measuredParametersGroupBox.Enabled = true;
                     break;
                 case DeviceCaptureStatus.CONNECTED:
@@ -535,26 +566,13 @@ namespace TeraMicroMeasure
             {
                 if (isCurrentPCClient)
                 {
-                    if (device_capture_status == DeviceCaptureStatus.WAITING_FOR_CONNECTION)
+                    if (CheckDeviceCaptureStatus(xml_device))
                     {
-                        if (xml_device.ClientId == clientID)
-                        {
-                            SetDeviceCaptureStatus(DeviceCaptureStatus.CONNECTED);
-                            RefreshMeasureField(xml_device);
-                        }
+                        CheckMeasureStatus(xml_device);
+                        RefreshMeasureField(xml_device);
                     }
-                    else if (device_capture_status == DeviceCaptureStatus.CONNECTED)
-                    {
-                        if (xml_device.ClientId != clientID)
-                        {
-                            DisconnectDeviceFromServerSide();
-                        }
-                        else
-                        {
-                            RefreshMeasureField(xml_device);
-                        }
-                    }
-                }else
+                }
+                else
                 {
                     RefreshMeasureField(xml_device);
                 }
@@ -562,9 +580,62 @@ namespace TeraMicroMeasure
             }
         }
 
+        private void CheckMeasureStatus(DeviceXMLState xml_device)
+        {
+            DeviceWorkStatus sts = (DeviceWorkStatus)xml_device.WorkStatusId;
+            switch(sts)
+            {
+                case DeviceWorkStatus.MEASURE:
+                    if (measureStatus == MeasureStatus.WILL_START) SetMeasureStatus(MeasureStatus.STARTED);
+                    break;
+                case DeviceWorkStatus.POLARIZATION:
+                    if (measureStatus == MeasureStatus.WILL_START) SetMeasureStatus(MeasureStatus.STARTED);
+                    break;
+                case DeviceWorkStatus.DEPOLARIZATION:
+                    break;
+                case DeviceWorkStatus.IDLE:
+                    if (measureStatus != MeasureStatus.WILL_STOPPED) SetMeasureStatus(MeasureStatus.STOPPED);
+                    break;
+            }
+        }
+
+        private bool CheckDeviceCaptureStatus(DeviceXMLState device_state)
+        {
+            if (device_capture_status == DeviceCaptureStatus.WAITING_FOR_CONNECTION)
+            {
+                if (device_state.ClientId == clientID)
+                {
+                    SetDeviceCaptureStatus(DeviceCaptureStatus.CONNECTED);
+                    RefreshMeasureField(device_state);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (device_capture_status == DeviceCaptureStatus.CONNECTED)
+            {
+                if (device_state.ClientId != clientID)
+                {
+                    DisconnectDeviceFromServerSide();
+                    measureState.MeasureStartFlag = false;
+                    MeasureStateOnFormChanged();
+                    return false;
+                }
+                else
+                {
+                    RefreshMeasureField(device_state);
+                    return true;
+                }
+            }
+            else return false;
+        }
+
         private void RefreshMeasureField(DeviceXMLState xml_device)
         {
             deviceInfo.Text = $"{xml_device.TypeNameFull} {xml_device.Serial}\n{xml_device.WorkStatusText}";
+            resultField.Text = $"{xml_device.ConvertedResult}";
         }
 
         public void DisconnectDeviceFromServerSide()
@@ -578,6 +649,24 @@ namespace TeraMicroMeasure
                 SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
             }
         }
+
+        private void startMeasureButton_Click(object sender, EventArgs e)
+        {
+            switch(measureStatus)
+            {
+                case MeasureStatus.STOPPED:
+                    measureState.MeasureStartFlag = true;
+                    SetMeasureStatus(MeasureStatus.WILL_START);
+                    MeasureStateOnFormChanged();
+                    break;
+                case MeasureStatus.STARTED:
+                    measureState.MeasureStartFlag = false;
+                    SetMeasureStatus(MeasureStatus.WILL_STOPPED);
+                    MeasureStateOnFormChanged();
+                    break;
+            }
+            
+        }
     }
 
 
@@ -586,5 +675,13 @@ namespace TeraMicroMeasure
         DISCONNECTED,
         WAITING_FOR_CONNECTION,
         CONNECTED
+    }
+
+    enum MeasureStatus
+    {
+        STOPPED,
+        WILL_START,
+        STARTED,
+        WILL_STOPPED
     }
 }

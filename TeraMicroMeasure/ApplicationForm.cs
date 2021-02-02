@@ -96,8 +96,27 @@ namespace TeraMicroMeasure
                 //d.OnDisconnected += OnDeviceDisconnected_EventHandler;
                 d.OnPCModeFlagChanged += PCModeFlagChanged_Handler;
                 d.OnWorkStatusChanged += WorkStatusChanged_Handler;
+                d.OnGetMeasureResult += OnGetMeasureResult_Handler;
             }
 
+        }
+
+        private void OnGetMeasureResult_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnGetMeasureResult_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                DeviceBase d = sender as DeviceBase;
+                MeasureResultEventArgs a = e as MeasureResultEventArgs;
+                
+                if (IsServerApp)
+                {
+                    ReplaceDeviceXMLStateOnServerCommandDispatcher(d.GetXMLState());
+                }
+            }
         }
 
         private void AddOrUpdateDeviceOnToolStrip(DeviceBase d)
@@ -518,12 +537,36 @@ namespace TeraMicroMeasure
 
         private void OnMeasureStop_Handler(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnMeasureStop_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                ClientXmlState cs = sender as ClientXmlState;
+                DeviceBase d = DeviceDispatcher.GetDeviceByTypeAndSerial(cs.MeasureState.CapturedDeviceTypeId, cs.MeasureState.CapturedDeviceSerial);
+                if (d != null)
+                {
+                    d.StopMeasure();
+                }
+            }
         }
 
         private void OnMeasureStart_Handler(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnMeasureStart_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                ClientXmlState cs = sender as ClientXmlState;
+                DeviceBase d = DeviceDispatcher.GetDeviceByTypeAndSerial(cs.MeasureState.CapturedDeviceTypeId, cs.MeasureState.CapturedDeviceSerial);
+                if (d != null)
+                {
+                    d.InitMeasureFromXMLState(cs.MeasureState);
+                }
+            }
         }
 
         private void OnMeasureSettingsChanged_Handler(object sender, EventArgs e)

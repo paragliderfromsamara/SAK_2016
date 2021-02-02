@@ -223,6 +223,13 @@ namespace TeraMicroMeasure.CommandProcessors
             {
                 OnDeviceReleased?.Invoke(cs, new EventArgs());
             }
+            if (!last_cs.MeasureState.MeasureStartFlag && cs.MeasureState.MeasureStartFlag)
+            {
+                OnMeasureStartByClient?.Invoke(cs, new EventArgs());
+            }else if (last_cs.MeasureState.MeasureStartFlag && !cs.MeasureState.MeasureStartFlag)
+            {
+                OnMeasureStopByClient?.Invoke(cs, new EventArgs());
+            }
         }
 
         private void OnClientDisconnected_Handler(object client, EventArgs e)

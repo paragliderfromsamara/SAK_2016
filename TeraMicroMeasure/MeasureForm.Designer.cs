@@ -305,6 +305,7 @@
             this.startMeasureButton.TabIndex = 11;
             this.startMeasureButton.Text = "Пуск измерения";
             this.startMeasureButton.UseVisualStyleBackColor = false;
+            this.startMeasureButton.Click += new System.EventHandler(this.startMeasureButton_Click);
             // 
             // availableDevices
             // 

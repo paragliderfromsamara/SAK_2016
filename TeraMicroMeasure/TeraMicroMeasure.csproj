@@ -72,7 +72,6 @@
     <Compile Include="ServerSettingsControl.cs" />
     <Compile Include="SettingsControl.cs" />
     <Compile Include="XmlObjects\ClientXmlState.cs" />
-    <Compile Include="XmlObjects\MeasureXMLState.cs" />
     <Compile Include="XmlObjects\ServerXmlState.cs" />
     <EmbeddedResource Include="AppTypeSelector.resx">
       <DependentUpon>AppTypeSelector.cs</DependentUpon>

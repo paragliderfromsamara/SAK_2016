@@ -20,7 +20,8 @@ namespace NormaMeasure.Devices
         protected ushort DeviceWorkStatusAddr;
         protected ushort PCModeFlagAddr;
         protected ushort MeasureLineNumberAddr;
-
+        protected ushort MeasureStartFlagAddr;
+        protected ushort MeasureStatusAddr;
 
 
         string comPortName;
@@ -82,6 +83,14 @@ namespace NormaMeasure.Devices
                 info.type = DeviceType.Unknown;
             }
             return info;
+        }
+
+        public ushort MeasureStatus
+        {
+            get
+            {
+                return ReadSingleHolding(MeasureStartFlagAddr);
+            }
         }
 
         public virtual bool GetPCModeFlag()
@@ -180,10 +189,21 @@ namespace NormaMeasure.Devices
             DeviceSerialNumAddr = 0x0002;
             DeviceModelVersionAddr = 0x0003;
             DeviceWorkStatusAddr = 0x0004;
-            PCModeFlagAddr = 0x0092;
-            MeasureLineNumberAddr = 0x0093;
+            PCModeFlagAddr = 0x0080;
+            MeasureLineNumberAddr = 0x0081;
+            MeasureStartFlagAddr = 0x0082;
         }
 
+        public float GetFloatFromUSHORT(ushort hight, ushort low)
+        {
+            byte[] bytes = new byte[4];
+            bytes[0] = (byte)(hight & 0xFF);
+            bytes[1] = (byte)(hight >> 8);
+            bytes[2] = (byte)(low & 0xFF);
+            bytes[3] = (byte)(low >> 8);
+            float value = BitConverter.ToSingle(bytes, 0);
+            return value;
+        }
 
         public void Dispose()
         {

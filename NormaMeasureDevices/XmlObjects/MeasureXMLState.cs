@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NormaMeasure.Utils;
 using NormaMeasure.DBControl.Tables;
 
-namespace TeraMicroMeasure.XmlObjects
+namespace NormaMeasure.Devices.XmlObjects
 {
     public class MeasureXMLState : NormaXmlObject
     {
@@ -21,6 +21,7 @@ namespace TeraMicroMeasure.XmlObjects
         const string averagingTimes_TagName = "AveragingTimes";
         const string capturedDeviceTypeId_TagName = "CapturedDeviceTypeId";
         const string capturedDeviceSerial_TagName = "CapturedDeviceSerial";
+        const string measureStartFlag_TagName = "MeasureStartFlag";
         uint measured_parameter_type_id = 1;
         /// <summary>
         /// ID измеряемого параметра
@@ -234,6 +235,25 @@ namespace TeraMicroMeasure.XmlObjects
                     setChangedFlag(f);
                 }
             }
+        }
+
+        bool measure_start_flag = false;
+        
+        public bool MeasureStartFlag
+        {
+            get
+            {
+                return measure_start_flag;
+            }
+            set
+            {
+                bool f = measure_start_flag != value;
+                if (f)
+                {
+                    measure_start_flag = value;
+                    setChangedFlag(f);
+                }
+            }
         } 
 
         public static MeasureXMLState GetDefault()
@@ -269,6 +289,7 @@ namespace TeraMicroMeasure.XmlObjects
             setXmlProp(averagingTimes_TagName, averaging_times.ToString());
             setXmlProp(capturedDeviceTypeId_TagName, captured_device_type_id.ToString());
             setXmlProp(capturedDeviceSerial_TagName, captured_device_serial);
+            setXmlProp(measureStartFlag_TagName, (measure_start_flag) ? "1" : "0");
         }
 
         protected override void buildFromXML()
@@ -284,6 +305,12 @@ namespace TeraMicroMeasure.XmlObjects
             fillAveragingTimesFromXML();
             fillCapturedDeviceTypeId();
             fillCapturedDeviceSerial();
+            fillMeasureStartFlag();
+        }
+
+        private void fillMeasureStartFlag()
+        {
+            measure_start_flag = getXmlProp(measureStartFlag_TagName) == "1";
         }
 
         private void fillCapturedDeviceSerial()

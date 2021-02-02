@@ -120,6 +120,18 @@ namespace NormaMeasure.Devices
             }
         }
 
+        public DeviceBase GetDeviceByTypeAndSerial(int typeId, string serial)
+        {
+            foreach(var d in deviceList.Values)
+            {
+                if (d.Serial == serial && (int)d.TypeId == typeId)
+                {
+                    return d;
+                }
+            }
+            return null;
+        }
+
         private void OnDeviceDisconnected_Handler(object sender, EventArgs e)
         {
             lock (locker)

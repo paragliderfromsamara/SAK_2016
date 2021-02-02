@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NormaMeasure.Devices.XmlObjects;
+using NormaMeasure.Devices.Teraohmmeter;
 using System.Diagnostics;
 
 
@@ -20,12 +21,28 @@ namespace NormaMeasure.Devices
             StatusNew = sts_new;
         }
     }
+
+    public class MeasureResultEventArgs : EventArgs
+    {
+        public double RawValue;
+        public double ConvertedValue;
+        public uint RangeId;
+        public uint MeasureStatus;
+        public MeasureResultEventArgs(TeraMeasureResultStruct result)
+        {
+            RawValue = result.ConvertedValue;
+            ConvertedValue = result.ConvertedByModeValue;
+            RangeId = result.Range;
+            MeasureStatus = result.MeasureStatus;
+        }
+    }
     public delegate void ConnectionTheadDelegate();
     public class DeviceBase : IDisposable
     {
         public EventHandler OnDisconnected;
         public EventHandler OnPCModeFlagChanged;
         public EventHandler OnWorkStatusChanged;
+        public EventHandler OnGetMeasureResult;
 
         private static object locker = new object();
         private bool thread_is_active = false;
@@ -125,6 +142,45 @@ namespace NormaMeasure.Devices
         }
 
         protected DeviceXMLState xmlState = null;
+
+        private double raw_result;
+        public double RawResult
+        {
+            get
+            {
+                return raw_result;
+            }protected set
+            {
+                raw_result = value;
+                if (xmlState != null) xmlState.RawResult = value;
+            }
+        }
+        private double converted_result;
+        public double ConvertedResult
+        {
+            get
+            {
+                return converted_result;
+            }
+            protected set
+            {
+                converted_result = value;
+                if (xmlState != null) xmlState.ConvertedResult = value;
+            }
+        }
+        private uint measure_status_id;
+        public uint MeasureStatusId
+        {
+            get
+            {
+                return measure_status_id;
+            }
+            protected set
+            {
+                measure_status_id = value;
+                if (xmlState != null) xmlState.MeasureStatusId = value;
+            }
+        }
 
 
         public uint SerialYear => serial_year;
@@ -275,15 +331,40 @@ namespace NormaMeasure.Devices
             }
         }
 
-        public void InitMeasure()
+        public void InitMeasureFromXMLState(MeasureXMLState measure_state)
+        {
+            SetMeasureParametersFromMeasureXMLState(measure_state);
+            InitPCModeMeasureThread();
+        }
+
+        public void InitPCModeMeasureThread()
+        {
+            if (threadIsActive)
+            {
+                SetDeviceConnectionThreadFunction(new ThreadStart(PCModeMeasureThread), InitPCModeMeasureThread);
+            }
+            else
+            {
+                SetDeviceConnectionThreadFunction(new ThreadStart(PCModeMeasureThread), InitPCModeCheckThread);
+            }
+        }
+
+        protected virtual void PCModeMeasureThread()
         {
 
+        }
+
+        protected virtual void SetMeasureParametersFromMeasureXMLState(MeasureXMLState measure_state)
+        {
+            //Инициализируется в дочерних классах
         }
 
         public void StopPCMode()
         {
             if (IsOnPCMode) InitConnectionCheckThread();
         }
+
+    
 
         protected virtual void InitPCModeCheckThread()
         {
@@ -359,7 +440,22 @@ namespace NormaMeasure.Devices
             }
         }
 
+        private void InitMeasureStopThread()
+        {
+            if (threadIsActive)
+            {
+                SetDeviceConnectionThreadFunction(new ThreadStart(MeasureStopThreadFunc), InitMeasureStopThread);
+            }
+            else
+            {
+                SetDeviceConnectionThreadFunction(new ThreadStart(MeasureStopThreadFunc), InitPCModeCheckThread);
+            }
+        }
 
+        protected virtual void MeasureStopThreadFunc()
+        {
+
+        }
 
         protected void SetDeviceConnectionThreadFunction(ThreadStart threadFunction, ConnectionTheadDelegate onThreadWillFinish = null)
         {
@@ -407,6 +503,10 @@ namespace NormaMeasure.Devices
 
         }
 
+        public void StopMeasure()
+        {
+            InitMeasureStopThread();
+        }
 
 
     }
