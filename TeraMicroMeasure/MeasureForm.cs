@@ -21,6 +21,7 @@ namespace TeraMicroMeasure
     {
         bool IsOnline = false;
         int clientID;
+        int tryMeasureStartCounter;
         private DeviceCaptureStatus device_capture_status;
         public DeviceCaptureStatus DeviceCaptureStatus => device_capture_status;
 
@@ -461,6 +462,8 @@ namespace TeraMicroMeasure
         {
             captured_device_serial = measureState.CapturedDeviceSerial = String.Empty;
             measureState.CapturedDeviceTypeId = (int)DeviceType.Unknown;
+            SetMeasureStatus(MeasureStatus.STOPPED);
+            measureState.MeasureStartFlag = false;
             ResetMeasureField();
             MeasureStateOnFormChanged();
         }
@@ -511,6 +514,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Text = "Запускается...";
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
+                    tryMeasureStartCounter = 3;
                     break;
                 case MeasureStatus.STARTED:
                     startMeasureButton.Text = "Остановить измерение";
@@ -582,11 +586,12 @@ namespace TeraMicroMeasure
 
         private void CheckMeasureStatus(DeviceXMLState xml_device)
         {
-            DeviceWorkStatus sts = (DeviceWorkStatus)xml_device.WorkStatusId;
+            //DeviceWorkStatus sts = (DeviceWorkStatus)xml_device.WorkStatusId;
+            /*
             switch(sts)
             {
                 case DeviceWorkStatus.MEASURE:
-                    if (measureStatus == MeasureStatus.WILL_START) SetMeasureStatus(MeasureStatus.STARTED);
+                    if (measureStatus == MeasureStatus.WILL_START || xml_device.IsOnMeasureCycle) SetMeasureStatus(MeasureStatus.STARTED);
                     break;
                 case DeviceWorkStatus.POLARIZATION:
                     if (measureStatus == MeasureStatus.WILL_START) SetMeasureStatus(MeasureStatus.STARTED);
@@ -594,8 +599,18 @@ namespace TeraMicroMeasure
                 case DeviceWorkStatus.DEPOLARIZATION:
                     break;
                 case DeviceWorkStatus.IDLE:
-                    if (measureStatus != MeasureStatus.WILL_STOPPED) SetMeasureStatus(MeasureStatus.STOPPED);
+                    if (measureStatus == MeasureStatus.WILL_STOPPED || measureStatus == MeasureStatus.STARTED) SetMeasureStatus(MeasureStatus.STOPPED);
                     break;
+            }*/
+            if (measureStatus == MeasureStatus.WILL_START && xml_device.IsOnMeasureCycle)
+            {
+                SetMeasureStatus(MeasureStatus.STARTED);
+            }else if (measureStatus == MeasureStatus.WILL_STOPPED && !xml_device.IsOnMeasureCycle)
+            {
+                SetMeasureStatus(MeasureStatus.STOPPED);
+            }else if (measureStatus == MeasureStatus.STARTED && !xml_device.IsOnMeasureCycle)
+            {
+                SetMeasureStatus(MeasureStatus.STOPPED);
             }
         }
 
@@ -667,6 +682,7 @@ namespace TeraMicroMeasure
             }
             
         }
+
     }
 
 

@@ -22,6 +22,7 @@ namespace NormaMeasure.Devices.XmlObjects
         const string RawResult_TagName = "RawResult";
         const string ConvertedResult_TagName = "ConvertedResult";
         const string MeasureStatusId_TagName = "MeasureStatusId";
+        const string IsOnMeasureCycle_TagName = "IsOnMeasureCycle";
 
         string serial;
         /// <summary>
@@ -177,6 +178,25 @@ namespace NormaMeasure.Devices.XmlObjects
             }
         }
 
+        bool is_on_measure_cycle;
+
+        public bool IsOnMeasureCycle
+        {
+            get
+            {
+                return is_on_measure_cycle;
+            }
+            set
+            {
+                bool f = is_on_measure_cycle != value;
+                if (f)
+                {
+                    is_on_measure_cycle = value;
+                    setChangedFlag(f);
+                }
+            }
+        }
+
         private double raw_result;
         public double RawResult
         {
@@ -248,6 +268,7 @@ namespace NormaMeasure.Devices.XmlObjects
             MeasureStatusId = device.MeasureStatusId;
             RawResult = device.RawResult;
             ConvertedResult = device.ConvertedResult;
+            IsOnMeasureCycle = device.IsOnMeasureCycle;
             id = $"{TypeId}-{Serial}";
         }
 
@@ -265,6 +286,7 @@ namespace NormaMeasure.Devices.XmlObjects
             setXmlProp(RawResult_TagName, raw_result.ToString());
             setXmlProp(ConvertedResult_TagName, converted_result.ToString());
             setXmlProp(MeasureStatusId_TagName, measure_status_id.ToString());
+            setXmlProp(IsOnMeasureCycle_TagName, (is_on_measure_cycle) ? "1" : "0");
         }
 
         protected override void buildFromXML()
@@ -281,6 +303,12 @@ namespace NormaMeasure.Devices.XmlObjects
             fillRawResult();
             fillConvertedResult();
             fillMeasureStatusId();
+            fillIsOnMeasureCycle();
+        }
+
+        private void fillIsOnMeasureCycle()
+        { 
+           is_on_measure_cycle = (getXmlProp(IsOnMeasureCycle_TagName) == "1");
         }
 
         private void fillMeasureStatusId()

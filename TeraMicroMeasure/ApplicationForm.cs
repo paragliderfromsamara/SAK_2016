@@ -17,7 +17,7 @@ using TeraMicroMeasure.CommandProcessors;
 using NormaMeasure.SocketControl.TCPControlLib;
 using NormaMeasure.Devices;
 using NormaMeasure.Devices.XmlObjects;
-using System.Diagnostics;
+//using System.Diagnostics;
 
 namespace TeraMicroMeasure
 {
@@ -97,8 +97,25 @@ namespace TeraMicroMeasure
                 d.OnPCModeFlagChanged += PCModeFlagChanged_Handler;
                 d.OnWorkStatusChanged += WorkStatusChanged_Handler;
                 d.OnGetMeasureResult += OnGetMeasureResult_Handler;
+                d.OnMeasureCycleFlagChanged += OnMeasureCycleFlagChanged_Handler;
             }
 
+        }
+
+        private void OnMeasureCycleFlagChanged_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnMeasureCycleFlagChanged_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                DeviceBase d = sender as DeviceBase;
+                if (IsServerApp)
+                {
+                    ReplaceDeviceXMLStateOnServerCommandDispatcher(d.GetXMLState());
+                }
+            }
         }
 
         private void OnGetMeasureResult_Handler(object sender, EventArgs e)
@@ -496,7 +513,7 @@ namespace TeraMicroMeasure
                 ClientListChangedEventArgs a = e as ClientListChangedEventArgs;
                 SetOfflineStatusOnMeasureForm(a.OnFocusClientState);
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
-                if (String.IsNullOrWhiteSpace(a.OnFocusClientState.MeasureState.CapturedDeviceSerial))
+                if (!String.IsNullOrWhiteSpace(a.OnFocusClientState.MeasureState.CapturedDeviceSerial))
                 {
                     OnDeviceReleased_Handler(a.OnFocusClientState, new EventArgs());
                 }
@@ -547,7 +564,7 @@ namespace TeraMicroMeasure
                 DeviceBase d = DeviceDispatcher.GetDeviceByTypeAndSerial(cs.MeasureState.CapturedDeviceTypeId, cs.MeasureState.CapturedDeviceSerial);
                 if (d != null)
                 {
-                    d.StopMeasure();
+                    if (d.ClientId == cs.ClientID) d.StopMeasure();
                 }
             }
         }
@@ -564,7 +581,7 @@ namespace TeraMicroMeasure
                 DeviceBase d = DeviceDispatcher.GetDeviceByTypeAndSerial(cs.MeasureState.CapturedDeviceTypeId, cs.MeasureState.CapturedDeviceSerial);
                 if (d != null)
                 {
-                    d.InitMeasureFromXMLState(cs.MeasureState);
+                    if (d.ClientId == cs.ClientID) d.InitMeasureFromXMLState(cs.MeasureState);
                 }
             }
         }
@@ -613,10 +630,7 @@ namespace TeraMicroMeasure
                 BeginInvoke(new EventHandler(OnServerStateChangedByClient_Handler), new object[] { d, a});
             }else
             {
-                Debug.WriteLine("OnServerStateChangedByClient_Handler on Application Form");
-                Debug.WriteLine(a.ServerState.InnerXml);
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
-                
             }
         }
 

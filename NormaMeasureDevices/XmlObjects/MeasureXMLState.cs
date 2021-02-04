@@ -261,8 +261,10 @@ namespace NormaMeasure.Devices.XmlObjects
             MeasureXMLState s = new MeasureXMLState();
             s.MeasureTypeId = MeasuredParameterType.Rleads;
             s.MeasureVoltage = 10;
+            s.MeasureStartFlag = false;
             return s;
         }
+
 
         public MeasureXMLState() : base()
         {

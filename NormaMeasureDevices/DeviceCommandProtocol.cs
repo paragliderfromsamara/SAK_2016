@@ -10,8 +10,17 @@ using System.Diagnostics;
 
 namespace NormaMeasure.Devices
 {
+    public class DeviceCommandProtocolException : Exception
+    {
+        public DeviceCommandProtocolException(string message, Exception inner) : base(message, inner)
+        {
+
+        }
+    } 
     public class DeviceCommandProtocol : IDisposable
     {
+        const int RETRY_SENDING_TIMES = 50;
+
         protected int MemorySize;
         protected ushort DeviceTypeAddr;
         protected ushort DeviceSerialYearAddr;
@@ -93,31 +102,81 @@ namespace NormaMeasure.Devices
             }
         }
 
-        public virtual bool GetPCModeFlag()
+        public int WorkStatus
         {
-            return ReadBoolValue(PCModeFlagAddr);
+            get
+            {
+                int ws = ReadSingleHolding(DeviceWorkStatusAddr);
+                return ws; 
+            }
         }
 
-        public virtual short GetMeasureLineNumber()
+        public bool MeasureStartFlag
         {
-            return (short)ReadSingleHolding(MeasureLineNumberAddr);
+            get
+            {
+                return ReadBoolValue(MeasureStartFlagAddr);
+            }
+            set
+            {
+                WriteBoolValue(MeasureStartFlagAddr, value);
+            }
         }
 
-        public virtual void SetPCModeFlag(bool value)
+        //public virtual bool GetPCModeFlag()
+        //{
+        //    return ReadBoolValue(PCModeFlagAddr);
+        //}
+
+        //public virtual short GetMeasureLineNumber()
+        //{
+        //    return (short)ReadSingleHolding(MeasureLineNumberAddr);
+        //}
+
+        public short MeasureLineNumber
         {
-            ushort val = (value) ? (ushort)1 : (ushort)0;
-            WriteSingleHolding(PCModeFlagAddr, val);
+            get
+            {
+                return (short)ReadSingleHolding(MeasureLineNumberAddr);
+            }
+            set
+            {
+                WriteSingleHolding(MeasureLineNumberAddr, (ushort)value);
+            }
         }
 
-        public virtual void SetMeasureLineNumber(int value)
+        public bool PCModeFlag
         {
-            WriteSingleHolding(MeasureLineNumberAddr, (ushort)value);
+            get
+            {
+                return ReadBoolValue(PCModeFlagAddr);
+            }
+            set
+            {
+                WriteBoolValue(PCModeFlagAddr, value);
+            }
         }
+        //public virtual void SetPCModeFlag(bool value)
+        //{
+        //    ushort val = (value) ? (ushort)1 : (ushort)0;
+        //    WriteBoolValue(PCModeFlagAddr, value);
+        //}
+
+        //public virtual void SetMeasureLineNumber(int value)
+        //{
+        //    WriteSingleHolding(MeasureLineNumberAddr, (ushort)value);
+        //}
 
         protected bool ReadBoolValue(ushort addr)
         {
             ushort value = ReadSingleHolding(addr);
             return (value > 0);
+        }
+
+        protected void WriteBoolValue(ushort addr, bool value)
+        {
+            ushort val = (ushort)((value) ? 1 : 0);
+            WriteSingleHolding(addr, val);
         }
 
         protected ushort ReadSingleHolding(ushort addr)
@@ -128,12 +187,14 @@ namespace NormaMeasure.Devices
 
         protected ushort[] ReadHoldings(ushort addr_start, ushort addr_end)
         {
-           
-            SerialPort port = InitPort(comPortName);
+            int times = RETRY_SENDING_TIMES;
+            SerialPort port = null;
             ushort length = (ushort)(addr_end - addr_start+1);
             ushort[] value;
+            retry:
             try
             {
+                port = InitPort(comPortName);
                 port.Open();
                 ModbusSerialMaster m = ModbusSerialMaster.CreateRtu(port);
                 value = m.ReadHoldingRegisters(0, addr_start, length);
@@ -142,17 +203,21 @@ namespace NormaMeasure.Devices
             catch(Exception ex)
             {
                 value = new ushort[] { };
-                port.Dispose();
-                throw ex;
+                if (port != null) port.Dispose();
+                if (times-- > 0) goto retry;
+                throw new DeviceCommandProtocolException($"Ошибка операции ReadHoldings для диапазона адресов {addr_start.ToString("X")}-{addr_end.ToString("X")};", ex);
             }
             return value;
         }
 
         protected void WriteMultipleHoldings(ushort address, ushort[] data)
         {
-            SerialPort port = InitPort(comPortName);
+            int times = RETRY_SENDING_TIMES;
+            SerialPort port = null;
+            retry:
             try
             {
+                port = InitPort(comPortName);
                 port.Open();
                 ModbusSerialMaster m = ModbusSerialMaster.CreateRtu(port);
                 m.WriteMultipleRegisters(0, address, data);
@@ -160,16 +225,20 @@ namespace NormaMeasure.Devices
             }
             catch (Exception ex)
             {
-                port.Dispose();
-                throw ex;
+                if (port != null) port.Dispose();
+                if (times-- > 0) goto retry;
+                throw new DeviceCommandProtocolException($"Ошибка операции WriteMultipleHoldings для адреса {address.ToString("X")};", ex);
             }
         }
 
         protected void WriteSingleHolding(ushort address, ushort value)
         {
-            SerialPort port = InitPort(comPortName);
+            int times = RETRY_SENDING_TIMES;
+            SerialPort port = null;
+            retry:
             try
             {
+                port = InitPort(comPortName);
                 port.Open();
                 ModbusSerialMaster m = ModbusSerialMaster.CreateRtu(port);
                 m.WriteSingleRegister(0, address, value);
@@ -177,8 +246,9 @@ namespace NormaMeasure.Devices
             }
             catch (Exception ex)
             {
-                port.Dispose();
-                throw ex;
+                if (port != null) port.Dispose();
+                if (times-- > 0) goto retry;
+                throw new DeviceCommandProtocolException($"Ошибка операции WriteSingleHolding для адреса {address.ToString("X")};", ex);
             }
         }
 
@@ -197,10 +267,10 @@ namespace NormaMeasure.Devices
         public float GetFloatFromUSHORT(ushort hight, ushort low)
         {
             byte[] bytes = new byte[4];
-            bytes[0] = (byte)(hight & 0xFF);
-            bytes[1] = (byte)(hight >> 8);
-            bytes[2] = (byte)(low & 0xFF);
-            bytes[3] = (byte)(low >> 8);
+            bytes[0] = (byte)(low >> 8);
+            bytes[1] = (byte)(hight & 0xFF);
+            bytes[2] = (byte)(hight >> 8);
+            bytes[3] = (byte)(low & 0xFF);
             float value = BitConverter.ToSingle(bytes, 0);
             return value;
         }

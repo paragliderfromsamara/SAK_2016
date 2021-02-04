@@ -49,16 +49,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                 return resultStruct;
             }
         }
-        public bool MeasureStartFlag
-        {
-            get
-            {
-                return (ReadSingleHolding(MeasureStartFlagAddr) == 1);
-            }set
-            {
-                WriteSingleHolding(MeasureStartFlagAddr, (ushort)((value) ? 1 : 0));
-            }
-        }
+
         public uint VoltageValue
         {
             get

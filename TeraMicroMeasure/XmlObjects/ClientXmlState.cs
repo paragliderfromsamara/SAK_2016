@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.Utils;
 using NormaMeasure.Devices.XmlObjects;
-using System.Diagnostics;
+//using System.Diagnostics;
 using System.Windows.Forms;
 
 
@@ -183,7 +183,6 @@ namespace TeraMicroMeasure.XmlObjects
             try
             {
                 s = new MeasureXMLState(getOuterOfXMLObject(s.RootElementTagName));
-                Debug.WriteLine(s.RootElementTagName);
                 if (s.IsValid) MeasureState = s;
             }
             catch(System.Xml.XmlException)

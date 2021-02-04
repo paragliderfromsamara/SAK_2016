@@ -43,6 +43,7 @@ namespace NormaMeasure.Devices
         public EventHandler OnPCModeFlagChanged;
         public EventHandler OnWorkStatusChanged;
         public EventHandler OnGetMeasureResult;
+        public EventHandler OnMeasureCycleFlagChanged;
 
         private static object locker = new object();
         private bool thread_is_active = false;
@@ -77,6 +78,27 @@ namespace NormaMeasure.Devices
                     if (!pc_mode_flag) ClientId = -1;
                     if (xmlState != null) xmlState.IsOnPCMode = pc_mode_flag;
                     OnPCModeFlagChanged?.Invoke(this, new EventArgs());
+                }
+            }
+        }
+
+        private bool is_on_measure_cycle = false;
+        public bool IsOnMeasureCycle
+        {
+            get
+            {
+                return is_on_measure_cycle;
+            }set
+            {
+                lock(locker)
+                {
+                    is_on_measure_cycle = value;
+                    if (value != is_on_measure_cycle)
+                    {
+                        is_on_measure_cycle = value;
+                        if (xmlState != null) xmlState.IsOnMeasureCycle = is_on_measure_cycle;
+                        OnMeasureCycleFlagChanged?.Invoke(this, new EventArgs());
+                    }
                 }
             }
         }
@@ -224,7 +246,7 @@ namespace NormaMeasure.Devices
                 }
             }
         }
-
+        
 
    
 
@@ -232,7 +254,7 @@ namespace NormaMeasure.Devices
         protected DeviceType type_id;
         Thread ConnectionThread;
         protected ConnectionTheadDelegate OnThreadWillFinish = null;
-
+        protected ThreadStart ThreadExecFunction = null;
 
         internal void ReleaseDeviceFromClient()
         {
@@ -277,10 +299,15 @@ namespace NormaMeasure.Devices
             retry:
             try
             {
-                p = new DeviceCommandProtocol(PortName);
+                p = GetDeviceCommandProtocol();
                 while (threadIsActive)
                 {
+                    Debug.WriteLine("------------------------SIMPLE_CONNECTION_CHECK---------------");
                     DeviceInfo info = p.GetDeviceInfo();
+                    if (IsOnPCMode)
+                    {
+                        p.PCModeFlag = IsOnPCMode = false;
+                    }
                     if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
                     {
                         //work_status = DeviceStatus.DISCONNECTED;
@@ -296,13 +323,13 @@ namespace NormaMeasure.Devices
                 p.Dispose();
                 OnThreadWillFinish?.Invoke();
             }
-            catch
+            catch(DeviceCommandProtocolException ex)
             {
+                Debug.WriteLine("----------------------------M E S S A G E--------------------");
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.InnerException.Message);
+                Debug.WriteLine("----------------------------M E S S A G E--E N D--------------");
                 if (p != null) p.Dispose();
-                if (tryTimes-- > 0)
-                {
-                    goto retry;
-                }
                 IsConnected = false;
             }
         }
@@ -334,6 +361,7 @@ namespace NormaMeasure.Devices
         public void InitMeasureFromXMLState(MeasureXMLState measure_state)
         {
             SetMeasureParametersFromMeasureXMLState(measure_state);
+            //IsOnMeasureCycle = true;
             InitPCModeMeasureThread();
         }
 
@@ -351,7 +379,6 @@ namespace NormaMeasure.Devices
 
         protected virtual void PCModeMeasureThread()
         {
-
         }
 
         protected virtual void SetMeasureParametersFromMeasureXMLState(MeasureXMLState measure_state)
@@ -378,20 +405,30 @@ namespace NormaMeasure.Devices
             }
         }
 
-        protected virtual void PCModeThreadFunction()
+        protected void ThreadLoop()
         {
-            int tryTimes = 50;
+            reload:
+            while(threadIsActive)
+            {
+               ThreadExecFunction?.Invoke();
+            }
+            OnThreadWillFinish?.Invoke();
+            if (threadIsActive) goto reload;
+        }
+
+
+        protected void PCModeThreadFunction()
+        {
             bool isInited = false;
             DeviceCommandProtocol p = null;
-            retry:
             try
             {
-                p = new DeviceCommandProtocol(port_name);
+                p = GetDeviceCommandProtocol();
                 if (!isInited)
                 {
-                    p.SetPCModeFlag(true);
-                    IsOnPCMode = p.GetPCModeFlag();
-                    p.SetMeasureLineNumber(ClientId);
+                    if (!IsOnPCMode)p.PCModeFlag = true;
+                    IsOnPCMode = true;
+                    p.MeasureLineNumber = (short)ClientId;
                     isInited = true; //чтоб больше этого не делать, устанавливаем флажок
                 }
                 while (threadIsActive)
@@ -399,33 +436,130 @@ namespace NormaMeasure.Devices
                     DeviceInfo info = p.GetDeviceInfo();
                     if (DeviceInfoIsValid(info))
                     {
-                        //work_status = DeviceStatus.DISCONNECTED;
                         IsConnected = false;
                         break;
-                    }else
+                    }
+                    else
                     {
                         WorkStatus = info.WorkStatus;
                     }
-                    if (p.GetMeasureLineNumber() != ClientId) p.SetMeasureLineNumber(ClientId);
-                    tryTimes = 50;
-                    if (threadIsActive) threadIsActive = p.GetPCModeFlag();
+                    if (p.MeasureLineNumber != ClientId) p.MeasureLineNumber = (short)ClientId;
+                    if (threadIsActive)
+                    {
+                        IsOnPCMode = p.PCModeFlag;
+                        if (!IsOnPCMode) threadIsActive = false;
+                    }
+                    /*
+                    if (!IsOnMeasureCycle && IsOnPCMode)
+                    {
+                        //Debug.WriteLine("ВЫКЛЮЧЕНИЕ ИЗМЕРИТЕЛЯ");
+                        if (isMeasureCycle)
+                        {
+                            p.MeasureStartFlag = false;
+                            //Thread.Sleep(18);
+                            if (CheckDeviceIsOnMeasureCycle(p)) continue;
+                            isMeasureCycle = false;
+                        }
+                    }
+                    else if (IsOnMeasureCycle && IsOnPCMode)
+                    {
+                        if (!isMeasureCycle)
+                        {
+                            //Debug.WriteLine("ОТПРАВКА ПАРАМЕТРОВ");
+                            SendMeasureParamsToDevice(p);
+                            //Debug.WriteLine("ВКЛЮЧЕНИЕ ИЗМЕРИТЕЛЯ");
+                            p.MeasureStartFlag = true;
+                            //Thread.Sleep(20);
+                            //if (!CheckDeviceIsOnMeasureCycle(p)) continue;
+                            isMeasureCycle = true;
+                        }
+
+                    }
+
+                    if (idx == 0)
+                    {
+                        //Debug.WriteLine("ЧТЕНИЕ ОСНОВНОЙ ИНФОРМАЦИИ");
+                        DeviceInfo info = p.GetDeviceInfo();
+                        if (DeviceInfoIsValid(info))
+                        {
+                            IsConnected = false;
+                            break;
+                        }
+                        else
+                        {
+                            WorkStatus = info.WorkStatus;
+                        }
+                        idx++;
+                    }else if (idx == 1)
+                    {
+                        //Debug.WriteLine("ПРОВЕРКА MEASURE LINE NUMBER");
+                        if (p.MeasureLineNumber != ClientId) p.MeasureLineNumber = (short)ClientId;
+                        idx++;
+                    }else if (idx == 2)
+                    {
+                        //Debug.WriteLine("ПРОВЕРКА PC MODE FLAG");
+                        if (threadIsActive) threadIsActive = IsOnPCMode = p.PCModeFlag;
+                        if (!threadIsActive) break;
+                        idx++;
+                    }else if (idx == 3)
+                    {
+                        if (isMeasureCycle && IsOnMeasureCycle)
+                        {
+                            //Debug.WriteLine("ЧТЕНИЕ РЕЗУЛЬТАТА");
+                            ReadMeasureResult(p);
+                        }
+                        idx++;
+                    }else if (idx == 4)
+                    {
+                        if (isMeasureCycle && IsOnMeasureCycle)
+                        {
+                            //Debug.WriteLine("ЧТЕНИЕ START MEASURE FLAG");
+                            IsOnMeasureCycle = isMeasureCycle = p.MeasureStartFlag;
+                        }
+                        idx++;
+                    }
+                    if (idx > 4) idx = 0;
+                    */
+                    //if (isMeasureCycle) Thread.Sleep(20);
+                    //tryTimes = 50;
                 }
-                if (IsOnPCMode)
-                {
-                    p.SetPCModeFlag(false);
-                    IsOnPCMode = false;
-                }
+               
                 p.Dispose();
-                OnThreadWillFinish?.Invoke();
+                //OnThreadWillFinish?.Invoke();
             }
-            catch
+            catch(DeviceCommandProtocolException ex)
             {
+                Debug.WriteLine("----------------------------M E S S A G E--------------------");
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.InnerException.Message);
+                Debug.WriteLine("----------------------------M E S S A G E--E N D--------------");
                 if (p != null) p.Dispose();
-                if (tryTimes-- > 0) goto retry;
                 IsOnPCMode = false;
+                IsOnMeasureCycle = false;
                 //work_status = DeviceStatus.DISCONNECTED;
                 IsConnected = false;
+
             }
+        }
+
+        protected virtual void ReadMeasureResult(DeviceCommandProtocol p)
+        {
+            
+        }
+
+        protected virtual bool CheckDeviceIsOnMeasureCycle(DeviceCommandProtocol p)
+        {
+            return false;
+        }
+
+        protected virtual void SendMeasureParamsToDevice(DeviceCommandProtocol p)
+        {
+            
+        }
+
+        protected virtual DeviceCommandProtocol GetDeviceCommandProtocol()
+        {
+            return new DeviceCommandProtocol(PortName);
         }
 
         protected void InitConnectionCheckThread()
@@ -459,19 +593,39 @@ namespace NormaMeasure.Devices
 
         protected void SetDeviceConnectionThreadFunction(ThreadStart threadFunction, ConnectionTheadDelegate onThreadWillFinish = null)
         {
+            
             if (threadIsActive)
             {
                 if (onThreadWillFinish != null) OnThreadWillFinish = onThreadWillFinish;
                 threadIsActive = false;
-
             }
             else
             {
                 OnThreadWillFinish = (onThreadWillFinish != null) ? onThreadWillFinish : null;
-                ConnectionThread = new Thread(threadFunction);
+                ThreadExecFunction = threadFunction;
                 threadIsActive = true;
-                ConnectionThread.Start();
+                if (ConnectionThread == null)
+                {
+                    ConnectionThread = new Thread(new ThreadStart(ThreadLoop));
+                    ConnectionThread.Start();
+                }
             }
+
+            /*
+        if (threadIsActive)
+        {
+            if (onThreadWillFinish != null) OnThreadWillFinish = onThreadWillFinish;
+            threadIsActive = false;
+
+        }
+        else
+        {
+            OnThreadWillFinish = (onThreadWillFinish != null) ? onThreadWillFinish : null;
+            ConnectionThread = new Thread(threadFunction);
+            threadIsActive = true;
+            ConnectionThread.Start();
+        }
+       */
         }
 
         public DeviceBase(DeviceInfo info)
@@ -497,7 +651,9 @@ namespace NormaMeasure.Devices
         {
             OnDisconnected = null;
             OnPCModeFlagChanged = null;
+            OnMeasureCycleFlagChanged = null;
             OnWorkStatusChanged = null;
+            OnThreadWillFinish = null;
             threadIsActive = false;
             //if (work_status == DeviceStatus.WAITING_FOR_COMMAND) work_status = DeviceStatus.WILL_DISCONNECT;
 
@@ -506,6 +662,7 @@ namespace NormaMeasure.Devices
         public void StopMeasure()
         {
             InitMeasureStopThread();
+            //IsOnMeasureCycle = false;
         }
 
 
@@ -544,7 +701,6 @@ namespace NormaMeasure.Devices
         DEPOLARIZATION = 5,
         LOST_CIRCUIT_CORRECTION = 6
     }
-
 
 
     public class NormaDeviceException : Exception
