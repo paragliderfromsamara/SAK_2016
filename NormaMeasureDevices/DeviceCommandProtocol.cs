@@ -267,10 +267,10 @@ namespace NormaMeasure.Devices
         public float GetFloatFromUSHORT(ushort hight, ushort low)
         {
             byte[] bytes = new byte[4];
-            bytes[0] = (byte)(low >> 8);
-            bytes[1] = (byte)(hight & 0xFF);
-            bytes[2] = (byte)(hight >> 8);
-            bytes[3] = (byte)(low & 0xFF);
+            bytes[0] = 0;
+            bytes[1] = (byte)(hight >> 8);
+            bytes[2] = (byte)(low & 0xFF);
+            bytes[3] = (byte)(low >> 8);
             float value = BitConverter.ToSingle(bytes, 0);
             return value;
         }
