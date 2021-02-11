@@ -259,9 +259,11 @@ namespace NormaMeasure.Devices
             DeviceSerialNumAddr = 0x0002;
             DeviceModelVersionAddr = 0x0003;
             DeviceWorkStatusAddr = 0x0004;
+
             PCModeFlagAddr = 0x0080;
             MeasureLineNumberAddr = 0x0081;
             MeasureStartFlagAddr = 0x0082;
+            MeasureStatusAddr = 0x0083;
         }
 
         public float GetFloatFromUSHORT(ushort hight, ushort low)

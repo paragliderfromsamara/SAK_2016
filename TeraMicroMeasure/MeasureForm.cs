@@ -102,6 +102,7 @@ namespace TeraMicroMeasure
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
             SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
+
         }
 
         /// <summary>
@@ -111,9 +112,16 @@ namespace TeraMicroMeasure
         public MeasureForm(ClientXmlState client_state) : this(client_state.ClientID)
         {
             MeasureState = client_state.MeasureState;
-
+            SetCapturedDeviceTypeId();
         }
 
+        private void SetCapturedDeviceTypeId()
+        {
+           // RleadRadioButton.Checked = true;
+           // MeasureTypeRadioButton_CheckedChanged(RleadRadioButton, new EventArgs());
+           // RefreshDeviceList();
+
+        }
 
         private void InitPanels()
         {

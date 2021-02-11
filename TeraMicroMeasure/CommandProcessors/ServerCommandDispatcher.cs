@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TeraMicroMeasure.XmlObjects;
 using NormaMeasure.SocketControl;
 using NormaMeasure.SocketControl.TCPControlLib;
-//using System.Diagnostics;
+using System.Diagnostics;
 using System.Threading;
 using NormaMeasure.Devices.XmlObjects;
 using NormaMeasure.Devices;
@@ -126,6 +126,7 @@ namespace TeraMicroMeasure.CommandProcessors
             {
                 currentServerState.AddOrReplaceDevice(ds);
                 RefreshCurrentServerStateOnClientControl();
+                Debug.WriteLine(ds.InnerXml);
             }
         }
 

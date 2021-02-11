@@ -634,6 +634,7 @@ namespace NormaMeasure.Devices
             serial_number = info.SerialNumber;
             model_version = info.ModelVersion;
             port_name = info.PortName;
+            work_status = info.WorkStatus;
         }
 
         public static bool IsAllowedDeviceType(byte typeId)
