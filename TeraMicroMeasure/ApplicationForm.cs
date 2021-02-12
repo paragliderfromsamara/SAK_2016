@@ -25,6 +25,8 @@ namespace TeraMicroMeasure
     {
         const int clientTryConnectionTimes = 5;
         int connectionTimesNow = clientTryConnectionTimes;
+        int deviceDisconnectTimes = 0;
+        int failureCount = 0;
         bool IsServerApp
         {
             get
@@ -141,7 +143,7 @@ namespace TeraMicroMeasure
             bool has = false;
             string el_name = $"deviceToolStripLabel_{(int)d.TypeId}_{d.SerialYear}_{d.SerialNumber}";
             string text = $"{d.SerialWithShortName} ({d.WorkStatusText})";
-            foreach (var item in statusStrip.Items)
+            foreach (var item in bottomStatusMenu.Items)
             {
                 if (item.GetType().Name == typeof(ToolStripStatusLabel).Name)
                 {
@@ -159,7 +161,7 @@ namespace TeraMicroMeasure
                 ToolStripStatusLabel l = new ToolStripStatusLabel(text);
                 l.Name = el_name;
                 l.ForeColor = SystemColors.ControlLight;
-                statusStrip.Items.Add(l);
+                bottomStatusMenu.Items.Add(l);
             }
 
         }
@@ -741,6 +743,7 @@ namespace TeraMicroMeasure
                 foreach(var d in xmlDevices.Values)
                 {
                     OnDeviceDisconnectedFromServer_Handler(d);
+                    disconnectedDevices.Text = $"Отключено раз:{++deviceDisconnectTimes}";
                 }
                 xmlDevices.Clear();
                 listWasChanged = true;
@@ -753,6 +756,7 @@ namespace TeraMicroMeasure
                   {
                     OnDeviceDisconnectedFromServer_Handler(xmlDevices[key]);
                     xmlDevices.Remove(key);
+                    disconnectedDevices.Text = $"Отключено раз:{++deviceDisconnectTimes}";
                     listWasChanged = true;
                   }
                 }
@@ -837,6 +841,7 @@ namespace TeraMicroMeasure
                         connectionTimesNow = clientTryConnectionTimes;
                         break;
                     case TCP_CLIENT_STATUS.DISCONNECTED:
+                        failureCounter.Text = $"Отвалов от сервера {failureCount++}";
                         setClientButtonStatus(ClientStatus.disconnected);
                         break;
                     case TCP_CLIENT_STATUS.TRY_CONNECT:
@@ -985,7 +990,8 @@ namespace TeraMicroMeasure
         {
             MeasureForm f = getOrCreateMeasureFormByClientId(SettingsControl.GetClientId());
             f.OnMeasureStateChanged += RefreshMeasureStateOnClientDispatcher;
-            f.Show();    
+            f.Show();
+            //if (!IsServerApp) f.SetXmlDeviceList(xmlDevices);
         }
 
         private void RefreshMeasureStateOnClientDispatcher(object sender, EventArgs e)

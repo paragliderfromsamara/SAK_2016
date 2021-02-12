@@ -102,7 +102,7 @@ namespace TeraMicroMeasure
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
             SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
-
+            SetCapturedDeviceTypeId();
         }
 
         /// <summary>
@@ -112,14 +112,18 @@ namespace TeraMicroMeasure
         public MeasureForm(ClientXmlState client_state) : this(client_state.ClientID)
         {
             MeasureState = client_state.MeasureState;
-            SetCapturedDeviceTypeId();
+            
+
         }
 
         private void SetCapturedDeviceTypeId()
         {
-           // RleadRadioButton.Checked = true;
-           // MeasureTypeRadioButton_CheckedChanged(RleadRadioButton, new EventArgs());
-           // RefreshDeviceList();
+            captured_device_type = GetDeviceTypeByRadioBox();
+            //this.Text = captured_device_type.ToString();
+            // RleadRadioButton.Checked = true;
+            // MeasureTypeRadioButton_CheckedChanged(RleadRadioButton, new EventArgs());
+            // RefreshDeviceList();
+            // captured_device_type = DeviceType.Microohmmeter;
 
         }
 
@@ -146,6 +150,7 @@ namespace TeraMicroMeasure
         {
             int idx = 0;
             int i = -1;
+            if (CapturedDeviceType == DeviceType.Unknown) captured_device_type = GetDeviceTypeByRadioBox();
             availableDevices.Items.Clear();
             foreach(var d in remoteDevices.Values)
             {
@@ -181,6 +186,13 @@ namespace TeraMicroMeasure
                 availableDevices.Enabled = false;
                 availableDevices.Text = "Устройства отсутсвуют";
             }
+        }
+
+        private DeviceType GetDeviceTypeByRadioBox()
+        {
+            if (RleadRadioButton.Checked) return DeviceType.Microohmmeter;
+            else if (RizolRadioButton.Checked) return DeviceType.Teraohmmeter;
+            else return DeviceType.Unknown;
         }
 
         private void InitAverageCountComboBox()
@@ -346,13 +358,14 @@ namespace TeraMicroMeasure
                 if (rb == RizolRadioButton)
                 {
                     mId = MeasuredParameterType.Risol2;
-                    CapturedDeviceType = DeviceType.Teraohmmeter;
+                    //CapturedDeviceType = DeviceType.Teraohmmeter;
                 }
                 else if (rb == RleadRadioButton)
                 {
                     mId = MeasuredParameterType.Rleads;
-                    CapturedDeviceType = DeviceType.Microohmmeter;
+                    //CapturedDeviceType = DeviceType.Microohmmeter;
                 }
+                CapturedDeviceType = GetDeviceTypeByRadioBox();
                 measureState.MeasureTypeId = mId;
             }
             MeasureStateOnFormChanged();
