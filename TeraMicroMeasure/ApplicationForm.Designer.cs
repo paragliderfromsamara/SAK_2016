@@ -39,11 +39,11 @@
             this.bottomStatusMenu = new System.Windows.Forms.StatusStrip();
             this.clientCounterStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.connectionStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.failureCounter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.disconnectedDevices = new System.Windows.Forms.ToolStripStatusLabel();
             this.topPanel = new System.Windows.Forms.Panel();
             this.switchConnectToServerButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.failureCounter = new System.Windows.Forms.ToolStripStatusLabel();
-            this.disconnectedDevices = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip.SuspendLayout();
             this.bottomStatusMenu.SuspendLayout();
             this.topPanel.SuspendLayout();
@@ -142,6 +142,20 @@
             this.connectionStatusLabel.Text = "IP адрес: 192.168.100.220 Порт: 16000";
             this.connectionStatusLabel.Click += new System.EventHandler(this.serverStatusLabel_Click);
             // 
+            // failureCounter
+            // 
+            this.failureCounter.ForeColor = System.Drawing.Color.FloralWhite;
+            this.failureCounter.Name = "failureCounter";
+            this.failureCounter.Size = new System.Drawing.Size(124, 17);
+            this.failureCounter.Text = "Отвалов от сервера 0";
+            // 
+            // disconnectedDevices
+            // 
+            this.disconnectedDevices.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.disconnectedDevices.Name = "disconnectedDevices";
+            this.disconnectedDevices.Size = new System.Drawing.Size(93, 17);
+            this.disconnectedDevices.Text = "отключено раз:";
+            // 
             // topPanel
             // 
             this.topPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -186,20 +200,7 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "";
             this.button1.UseVisualStyleBackColor = false;
-            // 
-            // failureCounter
-            // 
-            this.failureCounter.ForeColor = System.Drawing.Color.FloralWhite;
-            this.failureCounter.Name = "failureCounter";
-            this.failureCounter.Size = new System.Drawing.Size(124, 17);
-            this.failureCounter.Text = "Отвалов от сервера 0";
-            // 
-            // disconnectedDevices
-            // 
-            this.disconnectedDevices.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.disconnectedDevices.Name = "disconnectedDevices";
-            this.disconnectedDevices.Size = new System.Drawing.Size(93, 17);
-            this.disconnectedDevices.Text = "отключено раз:";
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // ApplicationForm
             // 

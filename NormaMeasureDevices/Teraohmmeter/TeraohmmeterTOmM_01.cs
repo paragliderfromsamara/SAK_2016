@@ -48,6 +48,9 @@ namespace NormaMeasure.Devices.Teraohmmeter
             int tryTimes = 50;
             int idx = 0;
             int readCounter = 3;
+            uint measureCyclesCounter = 0;
+            uint cyclesCounterWas = 0;
+            bool integratorIsStart = false;
             TOhmM_01_v1_CommandProtocol p = null;
             TeraMeasureResultStruct result;
             DeviceInfo info;
@@ -62,36 +65,41 @@ namespace NormaMeasure.Devices.Teraohmmeter
                     if (!IsOnMeasureCycle)
                     {
                         p.MeasureStartFlag = true;
+                       
                         IsOnMeasureCycle = p.MeasureStartFlag;
                         continue;
                     }
-                    //WorkStatus = (DeviceWorkStatus)p.WorkStatus;
-                    if (readCounter++ % 3 == 0)
-                    {
-                        info = p.GetDeviceInfo();
-                        if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
+                    WorkStatus = (DeviceWorkStatus)p.WorkStatus;
+                    //if (WorkStatus == DeviceWorkStatus.MEASURE)
+                    //{
+                        if (!integratorIsStart)
                         {
-                            IsConnected = false;
-                        }
-                        else
+                            Thread.Sleep(100);
+                             p.StartIntegrator();
+                            integratorIsStart = true;
+                        }else
                         {
-                            WorkStatus = info.WorkStatus;
-                        }
-                    }else
-                    {
-                        result = p.MeasureResult;
-                        ConvertedResult = result.ConvertedValue;
-                        RawResult = result.ConvertedByModeValue;
-                        MeasureStatusId = result.MeasureStatus;
-                        OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
-                        if (!p.PCModeFlag || p.MeasureLineNumber != ClientId)
-                        {
-                            threadIsActive = false;
-                            IsOnMeasureCycle = false;
-                            p.MeasureStartFlag = false;
-                            break;
-                        }
+                            measureCyclesCounter = p.MeasureCyclesCounter;
+                            if (cyclesCounterWas != measureCyclesCounter)
+                            {
+                                result = p.MeasureResult;
+                                ConvertedResult = result.ConvertedValue;
+                                RawResult = result.ConvertedByModeValue;
+                                MeasureStatusId = result.MeasureStatus;
+                                OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
+                            }else
+                            {
+                                if (!p.PCModeFlag || p.MeasureLineNumber != ClientId)
+                                {
+                                    threadIsActive = false;
+                                    IsOnMeasureCycle = false;
+                                    p.MeasureStartFlag = false;
+                                    break;
+                                }
+                            }
+                       // }
                     }
+
 
 
                     /*

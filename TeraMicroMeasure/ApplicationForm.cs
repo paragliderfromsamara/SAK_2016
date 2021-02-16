@@ -278,6 +278,7 @@ namespace TeraMicroMeasure
         {
             this.Text = "Сервер измерений";
             initServerControl();
+            SettingsControl.SetClientId(0);
         }
 
         private void OnServerStatusChanged_Handler(object sender, EventArgs e)
@@ -1000,9 +1001,13 @@ namespace TeraMicroMeasure
             if (clientCommandDispatcher != null) clientCommandDispatcher.RefreshMeasureState(s);
         }
 
+
         #endregion
 
-
+        private void button1_Click(object sender, EventArgs e)
+        {
+            InitMeasureForm();
+        }
     }
 
     enum ClientStatus : int
