@@ -70,25 +70,32 @@ namespace NormaMeasure.Devices.Teraohmmeter
                         continue;
                     }
                     WorkStatus = (DeviceWorkStatus)p.WorkStatus;
-                    //if (WorkStatus == DeviceWorkStatus.MEASURE)
-                    //{
+
+                    if (WorkStatus == DeviceWorkStatus.MEASURE)
+                    {
                         if (!integratorIsStart)
                         {
-                            Thread.Sleep(100);
-                             p.StartIntegrator();
+                            p.StartIntegratorFlag = true;
                             integratorIsStart = true;
                         }else
                         {
-                            measureCyclesCounter = p.MeasureCyclesCounter;
-                            if (cyclesCounterWas != measureCyclesCounter)
+                            Thread.Sleep(150);
+                            if (!p.StartIntegratorFlag)
                             {
+                                
                                 result = p.MeasureResult;
                                 ConvertedResult = result.ConvertedValue;
                                 RawResult = result.ConvertedByModeValue;
                                 MeasureStatusId = result.MeasureStatus;
                                 OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
-                            }else
+                                cyclesCounterWas = measureCyclesCounter;
+                                integratorIsStart = false;
+                                Debug.WriteLine($"COUNTER {cyclesCounterWas} -------------------");
+                                
+                            }
+                            else
                             {
+                                measureCyclesCounter = p.MeasureCyclesCounter;
                                 if (!p.PCModeFlag || p.MeasureLineNumber != ClientId)
                                 {
                                     threadIsActive = false;
@@ -97,7 +104,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                                     break;
                                 }
                             }
-                       // }
+                        }
                     }
 
 

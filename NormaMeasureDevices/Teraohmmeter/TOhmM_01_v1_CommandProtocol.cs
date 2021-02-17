@@ -30,7 +30,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
         ushort CableLengthMeasureIdAddr;
         ushort MeasureCyclesCounterAddr;
         ushort IntegratorStartValueAddr;
-
+        ushort StartIntegratorFlagAddr;
         public TeraMeasureResultStruct MeasureResult
         {
             get
@@ -171,9 +171,15 @@ namespace NormaMeasure.Devices.Teraohmmeter
             }
         }
 
-        public void StartIntegrator()
+        public bool StartIntegratorFlag
         {
-            StartIntegratorValue = 0;
+            get
+            {
+                return ReadBoolValue(StartIntegratorFlagAddr);
+            }set
+            {
+                WriteBoolValue(StartIntegratorFlagAddr, value);
+            }
         }
 
         public uint MeasureCyclesCounter
@@ -205,7 +211,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
             MeasuredIntegratorDifferenceAddr = 0x0087;
             ConvertedResistanceValueAddr = 0x0088;
             ConvertedByMeasureModeResistanceValueAddr = 0x008A;
-
+            StartIntegratorFlagAddr = 0x0097;
             MeasureCyclesCounterAddr = 0x0096;
             IntegratorStartValueAddr = 0x0090;
 
