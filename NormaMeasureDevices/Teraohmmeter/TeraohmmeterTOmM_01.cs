@@ -79,7 +79,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                             integratorIsStart = true;
                         }else
                         {
-                            Thread.Sleep(150);
+                            //Thread.Sleep(60);
                             if (!p.StartIntegratorFlag)
                             {
                                 
