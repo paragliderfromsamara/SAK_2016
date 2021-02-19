@@ -336,7 +336,7 @@ namespace NormaMeasure.Devices
 
         protected virtual bool DeviceInfoIsValid(DeviceInfo info)
         {
-           return (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion);
+           return !(info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion);
         }
 
         internal void InitConnection()
@@ -428,13 +428,16 @@ namespace NormaMeasure.Devices
                 {
                     if (!IsOnPCMode)p.PCModeFlag = true;
                     IsOnPCMode = true;
+                    Thread.Sleep(250);
                     p.MeasureLineNumber = (short)ClientId;
+                    Thread.Sleep(250);
                     isInited = true; //чтоб больше этого не делать, устанавливаем флажок
                 }
                 while (threadIsActive)
                 {
                     DeviceInfo info = p.GetDeviceInfo();
-                    if (DeviceInfoIsValid(info))
+                    Debug.WriteLine("------------------------PC_MODE_CONNECTION_CHECK---------------");
+                    if (!DeviceInfoIsValid(info))
                     {
                         IsConnected = false;
                         break;

@@ -631,7 +631,7 @@ namespace TeraMicroMeasure
                 SetMeasureStatus(MeasureStatus.STOPPED);
             }else if (measureStatus == MeasureStatus.STARTED && !xml_device.IsOnMeasureCycle)
             {
-                SetMeasureStatus(MeasureStatus.STOPPED);
+               SetMeasureStatus(MeasureStatus.STOPPED);
             }
         }
 

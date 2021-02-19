@@ -59,7 +59,6 @@ namespace NormaMeasure.Devices.Teraohmmeter
             {
                 p = new TOhmM_01_v1_CommandProtocol(PortName);
                 SendMeasureParamsToDevice(p);
-
                 while (threadIsActive)
                 {
                     if (!IsOnMeasureCycle)
@@ -107,90 +106,8 @@ namespace NormaMeasure.Devices.Teraohmmeter
                         }
                     }
 
-
-
-                    /*
-                    Debug.WriteLine($"-----------------{idx}--------------------------------PCModeMeasureThread-------------------------------");
-                    if (idx < 8)
-                    {
-                        Debug.WriteLine("------------------------MEASURE_START---------------");
-                        repeat_switch:
-                        switch(idx)
-                        {
-                            case 0:
-                                //p.PCModeFlag = true;
-                                //p.MeasureLineNumber = (short)ClientId;
-                                idx++;
-                                break;
-                            case 1:
-                                p.Temperature = temperature;
-                                idx++;
-                                goto repeat_switch;
-                            case 2:
-                                p.PolarDelay = polarDelay;
-                                idx++;
-                                goto repeat_switch;
-                            case 3:
-                                p.DepolarDelay = depolarDelay;
-                                idx++;
-                                goto repeat_switch;
-                            case 4:
-                                p.NormaValue = normaValue;
-                                idx++;
-                                goto repeat_switch;
-                            case 5:
-                                p.MaterialId = materialId;
-                                idx++;
-                                goto repeat_switch;
-                            case 6:
-                                p.CableLength = cableLength;
-                                idx++;
-                                goto repeat_switch;
-                            case 7:
-                                p.VoltageValue = voltageValue;
-                                idx++;
-                                goto repeat_switch;
-                            case 8:
-                                reinit:
-                                p.MeasureStartFlag = true;
-                                if (!p.MeasureStartFlag) goto reinit;
-                                else IsOnMeasureCycle = true;
-                                idx++;
-                                goto repeat_switch;
-                        }
-                    }
-                    if (readCounter % 3 == 0)
-                    {
-                        info = p.GetDeviceInfo();
-                        if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
-                        {
-                            IsConnected = false;
-                        }
-                        else
-                        {
-                            WorkStatus = info.WorkStatus;
-                        }
-                    }else if (readCounter % 3 == 1)
-                    {
-                        result = p.MeasureResult;
-                        ConvertedResult = result.ConvertedValue;
-                        RawResult = result.ConvertedByModeValue;
-                        MeasureStatusId = result.MeasureStatus;
-                        OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
-                    }
-                    else if (readCounter % 3 == 2)
-                    {
-                        if (p.MeasureLineNumber != ClientId)
-                        {
-                            threadIsActive = false;
-                            IsOnMeasureCycle = false;
-                            p.MeasureStartFlag = false;
-                        }
-                    }
-                    readCounter++;
-                    tryTimes = 50;
-                    */
                 }
+
                 p.Dispose();
                 //OnThreadWillFinish?.Invoke();
             }
@@ -220,6 +137,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
         {
             int tryTimes = 150;
             int idx = 3;
+            DeviceWorkStatus statusTmp;
             TOhmM_01_v1_CommandProtocol p = null;
             bool flag = true;
             try
@@ -247,10 +165,14 @@ namespace NormaMeasure.Devices.Teraohmmeter
                     }
                     else if (idx % 3 == 2 && !flag)
                     {
-                        if (p.WorkStatus == (int)DeviceWorkStatus.IDLE)
+                        statusTmp = (DeviceWorkStatus)p.WorkStatus;
+                        if (statusTmp == (int)DeviceWorkStatus.IDLE)
                         {
                             IsOnMeasureCycle = false;
                             threadIsActive = false;
+                        }else
+                        {
+                            WorkStatus = statusTmp; 
                         }
                     }
                     idx++;
