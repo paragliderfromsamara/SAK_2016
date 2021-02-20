@@ -51,6 +51,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
             uint measureCyclesCounter = 0;
             uint cyclesCounterWas = 0;
             bool integratorIsStart = false;
+            DeviceWorkStatus work_status_was;
             TOhmM_01_v1_CommandProtocol p = null;
             TeraMeasureResultStruct result;
             DeviceInfo info;
@@ -59,6 +60,8 @@ namespace NormaMeasure.Devices.Teraohmmeter
             {
                 p = new TOhmM_01_v1_CommandProtocol(PortName);
                 SendMeasureParamsToDevice(p);
+
+
                 while (threadIsActive)
                 {
                     if (!IsOnMeasureCycle)
@@ -68,6 +71,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                         IsOnMeasureCycle = p.MeasureStartFlag;
                         continue;
                     }
+                    work_status_was = WorkStatus;
                     WorkStatus = (DeviceWorkStatus)p.WorkStatus;
 
                     if (WorkStatus == DeviceWorkStatus.MEASURE)
@@ -104,6 +108,11 @@ namespace NormaMeasure.Devices.Teraohmmeter
                                 }
                             }
                         }
+                    }else if (WorkStatus == DeviceWorkStatus.IDLE && work_status_was == DeviceWorkStatus.DEPOLARIZATION)
+                    {
+                        //IsOnMeasureCycle = false;
+                        //threadIsActive = false;
+                        //break;
                     }
 
                 }

@@ -632,6 +632,14 @@ namespace TeraMicroMeasure
             }else if (measureStatus == MeasureStatus.STARTED && !xml_device.IsOnMeasureCycle)
             {
                SetMeasureStatus(MeasureStatus.STOPPED);
+            }else if (measureStatus == MeasureStatus.STARTED && xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION)
+            {
+                SetMeasureStatus(MeasureStatus.WILL_STOPPED);
+                if (measureState.MeasureStartFlag)
+                {
+                    measureState.MeasureStartFlag = false;
+                    MeasureStateOnFormChanged();
+                }
             }
         }
 

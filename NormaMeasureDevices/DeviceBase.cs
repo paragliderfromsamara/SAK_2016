@@ -430,7 +430,7 @@ namespace NormaMeasure.Devices
                     IsOnPCMode = true;
                     Thread.Sleep(250);
                     p.MeasureLineNumber = (short)ClientId;
-                    Thread.Sleep(250);
+                    Thread.Sleep(1000);
                     isInited = true; //чтоб больше этого не делать, устанавливаем флажок
                 }
                 while (threadIsActive)
