@@ -92,9 +92,11 @@ namespace NormaMeasure.Devices.Teraohmmeter
                                 MeasureStatusId = result.MeasureStatus;
                                 OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
                                 cyclesCounterWas = measureCyclesCounter;
-                                integratorIsStart = false;
-                                Debug.WriteLine($"COUNTER {cyclesCounterWas} -------------------");
-                                
+                                if (MeasureStatusId == (uint)DeviceMeasureResultStatus.SUCCESS)
+                                {
+                                    integratorIsStart = false;
+                                    Debug.WriteLine($"COUNTER {cyclesCounterWas} -------------------");
+                                }
                             }
                             else
                             {
