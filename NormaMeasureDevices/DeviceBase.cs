@@ -40,10 +40,11 @@ namespace NormaMeasure.Devices
     public class DeviceBase : IDisposable
     {
         public EventHandler OnDisconnected;
-        public EventHandler OnPCModeFlagChanged;
+       // public EventHandler OnPCModeFlagChanged;
         public EventHandler OnWorkStatusChanged;
         public EventHandler OnGetMeasureResult;
         public EventHandler OnMeasureCycleFlagChanged;
+        public EventHandler OnXMLStateChanged;
 
         private static object locker = new object();
         private bool thread_is_active = false;
@@ -77,7 +78,7 @@ namespace NormaMeasure.Devices
                     pc_mode_flag = value;
                     if (!pc_mode_flag) ClientId = -1;
                     if (xmlState != null) xmlState.IsOnPCMode = pc_mode_flag;
-                    OnPCModeFlagChanged?.Invoke(this, new EventArgs());
+                    OnXMLStateChanged?.Invoke(this, new EventArgs());//OnPCModeFlagChanged?.Invoke(this, new EventArgs());
                 }
             }
         }
@@ -256,8 +257,10 @@ namespace NormaMeasure.Devices
             {
                 client_id = value;
                 if (xmlState != null) xmlState.ClientId = value;
+                OnXMLStateChanged?.Invoke(this, new EventArgs());
             }
         }
+        protected int next_client_id = -1;
         // public DeviceStatus WorkStatus => work_status;
         private DeviceWorkStatus work_status = DeviceWorkStatus.DISCONNECTED;
         public DeviceWorkStatus WorkStatus
@@ -288,7 +291,7 @@ namespace NormaMeasure.Devices
 
         internal void ReleaseDeviceFromClient()
         {
-            ClientId = -1;
+            next_client_id = -1;
         }
 
         private uint serial_year = 2000;
@@ -318,7 +321,7 @@ namespace NormaMeasure.Devices
         /// <param name="cl_id"></param>
         public virtual void AssignToClient(int cl_id)
         {
-            ClientId = cl_id;
+            next_client_id = cl_id;//ClientId = cl_id;
             InitPCMode();
         }
 
@@ -340,7 +343,7 @@ namespace NormaMeasure.Devices
                     }
                     if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
                     {
-                        //work_status = DeviceStatus.DISCONNECTED;
+
                         IsConnected = false;
                     }
                     else
@@ -371,7 +374,6 @@ namespace NormaMeasure.Devices
 
         internal void InitConnection()
         {
-            //work_status = DeviceStatus.WAITING_FOR_COMMAND;
             IsConnected = true;
         }
 
@@ -391,7 +393,6 @@ namespace NormaMeasure.Devices
         public void InitMeasureFromXMLState(MeasureXMLState measure_state)
         {
             SetMeasureParametersFromMeasureXMLState(measure_state);
-            //IsOnMeasureCycle = true;
             InitPCModeMeasureThread();
         }
 
@@ -457,10 +458,11 @@ namespace NormaMeasure.Devices
                 if (!isInited)
                 {
                     if (!IsOnPCMode)p.PCModeFlag = true;
-                    IsOnPCMode = true;
                     Thread.Sleep(250);
-                    p.MeasureLineNumber = (short)ClientId;
-                    Thread.Sleep(1000);
+                    p.MeasureLineNumber = (short)next_client_id;
+                    Thread.Sleep(250);
+                    ClientId = p.MeasureLineNumber;
+                    IsOnPCMode = true;
                     isInited = true; //чтоб больше этого не делать, устанавливаем флажок
                 }
                 while (threadIsActive)
@@ -476,7 +478,13 @@ namespace NormaMeasure.Devices
                     {
                         WorkStatus = info.WorkStatus;
                     }
-                    if (p.MeasureLineNumber != ClientId) p.MeasureLineNumber = (short)ClientId;
+                    // проверяем актуальность ID клиента, 
+                    if (p.MeasureLineNumber != next_client_id)
+                    {
+                        p.MeasureLineNumber = (short)next_client_id;
+                        Thread.Sleep(250);
+                        ClientId = p.MeasureLineNumber;
+                    }
                     if (threadIsActive)
                     {
                         IsOnPCMode = p.PCModeFlag;
@@ -684,11 +692,12 @@ namespace NormaMeasure.Devices
         public void Dispose()
         {
             OnDisconnected = null;
-            OnPCModeFlagChanged = null;
+            //OnPCModeFlagChanged = null;
             OnMeasureCycleFlagChanged = null;
             OnWorkStatusChanged = null;
             OnThreadWillFinish = null;
             threadIsActive = false;
+            OnXMLStateChanged = null;
             //if (work_status == DeviceStatus.WAITING_FOR_COMMAND) work_status = DeviceStatus.WILL_DISCONNECT;
 
         }

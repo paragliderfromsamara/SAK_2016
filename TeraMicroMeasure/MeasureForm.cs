@@ -647,7 +647,7 @@ namespace TeraMicroMeasure
         {
             if (device_capture_status == DeviceCaptureStatus.WAITING_FOR_CONNECTION)
             {
-                if (device_state.ClientId == clientID)
+                if (device_state.ClientId == clientID && device_state.IsOnPCMode)
                 {
                     SetDeviceCaptureStatus(DeviceCaptureStatus.CONNECTED);
                     RefreshMeasureField(device_state);

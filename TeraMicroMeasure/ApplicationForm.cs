@@ -97,7 +97,7 @@ namespace TeraMicroMeasure
                 AddOrUpdateDeviceOnToolStrip(d);
 
                 //d.OnDisconnected += OnDeviceDisconnected_EventHandler;
-                d.OnPCModeFlagChanged += PCModeFlagChanged_Handler;
+                d.OnXMLStateChanged += DeviceXMLStateChanged_Handler;
                 d.OnWorkStatusChanged += WorkStatusChanged_Handler;
                 d.OnGetMeasureResult += OnGetMeasureResult_Handler;
                 d.OnMeasureCycleFlagChanged += OnMeasureCycleFlagChanged_Handler;
@@ -195,7 +195,7 @@ namespace TeraMicroMeasure
             }
         }
 
-        private void PCModeFlagChanged_Handler(object sender, EventArgs e)
+        private void DeviceXMLStateChanged_Handler(object sender, EventArgs e)
         {
             DeviceBase d = sender as DeviceBase;
             if (IsServerApp)
