@@ -43,7 +43,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                 resultStruct.IntegratorDifference = resultArr[3];
                 resultStruct.MeasuredIntegratorDifference = resultArr[4];
                 resultStruct.ConvertedValue = GetFloatFromUSHORT(resultArr[6], resultArr[5]);
-                resultStruct.ConvertedByModeValue = GetFloatFromUSHORT(resultArr[7], resultArr[8]);
+                resultStruct.ConvertedByModeValue = GetFloatFromUSHORT(resultArr[8], resultArr[7]);
                 if (resultStruct.ConvertedValue == 0 && resultStruct.MeasureStatus == (uint)TOhmM_01_MeasureStatus.ISTATUS_SUCCESS)
                 {
                     resultStruct.ConvertedByModeValue = resultStruct.ConvertedValue = float.MaxValue;

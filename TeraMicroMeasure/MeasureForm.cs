@@ -679,7 +679,23 @@ namespace TeraMicroMeasure
         private void RefreshMeasureField(DeviceXMLState xml_device)
         {
             deviceInfo.Text = $"{xml_device.TypeNameFull} {xml_device.Serial}\n{xml_device.WorkStatusText}";
-            resultField.Text = $"{xml_device.ConvertedResult}";
+            resultField.Text = GetResultFieldText(xml_device);
+        }
+
+        private string GetResultFieldText(DeviceXMLState xml_device)
+        {
+            if (xml_device.MeasureStatusId == (uint)DeviceMeasureResultStatus.SUCCESS)
+            {
+               // return $"{xml_device.ConvertedResult}";
+               return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";
+            }else if (xml_device.MeasureStatusId == 0)
+            {
+                return "";
+            }
+            else
+            {
+                return xml_device.MeasureStatusText;
+            }
         }
 
         public void DisconnectDeviceFromServerSide()

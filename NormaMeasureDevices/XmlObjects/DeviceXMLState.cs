@@ -25,6 +25,8 @@ namespace NormaMeasure.Devices.XmlObjects
         const string MeasureStatusText_TagName = "MeasureStatusText";
         const string IsOnMeasureCycle_TagName = "IsOnMeasureCycle";
 
+
+
         string serial;
         /// <summary>
         /// Серийный номер
@@ -232,6 +234,9 @@ namespace NormaMeasure.Devices.XmlObjects
                 }
             }
         }
+
+
+
         private uint measure_status_id;
         public uint MeasureStatusId
         {

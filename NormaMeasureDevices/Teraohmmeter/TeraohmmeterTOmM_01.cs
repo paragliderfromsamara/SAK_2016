@@ -87,8 +87,8 @@ namespace NormaMeasure.Devices.Teraohmmeter
                             {
                                 
                                 result = p.MeasureResult;
-                                ConvertedResult = result.ConvertedValue;
-                                RawResult = result.ConvertedByModeValue;
+                                RawResult = (result.ConvertedValue > 0.00001) ? result.ConvertedValue*1000.0 : 0; //Перевод в МОм
+                                ConvertedResult = (result.ConvertedByModeValue > 0.00001) ? result.ConvertedByModeValue * 1000.0 : 0; //Перевод в МОм
                                 MeasureStatusId = result.MeasureStatus;
                                 OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
                                 cyclesCounterWas = measureCyclesCounter;
@@ -243,6 +243,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
             MeasureStatusId = result.MeasureStatus;
             OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
         }
+
     }
 
     
