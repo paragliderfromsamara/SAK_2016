@@ -259,18 +259,20 @@ namespace NormaMeasure.Devices
             DeviceSerialNumAddr = 0x0002;
             DeviceModelVersionAddr = 0x0003;
             DeviceWorkStatusAddr = 0x0004;
+
             PCModeFlagAddr = 0x0080;
             MeasureLineNumberAddr = 0x0081;
             MeasureStartFlagAddr = 0x0082;
+            MeasureStatusAddr = 0x0083;
         }
 
         public float GetFloatFromUSHORT(ushort hight, ushort low)
         {
             byte[] bytes = new byte[4];
-            bytes[0] = (byte)(low >> 8);
-            bytes[1] = (byte)(hight & 0xFF);
-            bytes[2] = (byte)(hight >> 8);
-            bytes[3] = (byte)(low & 0xFF);
+            bytes[0] = 0;
+            bytes[1] = (byte)(hight >> 8);
+            bytes[2] = (byte)(low & 0xFF);
+            bytes[3] = (byte)(low >> 8);
             float value = BitConverter.ToSingle(bytes, 0);
             return value;
         }

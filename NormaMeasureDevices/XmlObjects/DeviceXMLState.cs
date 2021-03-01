@@ -22,7 +22,10 @@ namespace NormaMeasure.Devices.XmlObjects
         const string RawResult_TagName = "RawResult";
         const string ConvertedResult_TagName = "ConvertedResult";
         const string MeasureStatusId_TagName = "MeasureStatusId";
+        const string MeasureStatusText_TagName = "MeasureStatusText";
         const string IsOnMeasureCycle_TagName = "IsOnMeasureCycle";
+
+
 
         string serial;
         /// <summary>
@@ -231,6 +234,9 @@ namespace NormaMeasure.Devices.XmlObjects
                 }
             }
         }
+
+
+
         private uint measure_status_id;
         public uint MeasureStatusId
         {
@@ -249,6 +255,23 @@ namespace NormaMeasure.Devices.XmlObjects
             }
         }
 
+        private string measure_status_text = string.Empty;
+        public string MeasureStatusText
+        {
+            get
+            {
+                return measure_status_text;
+            }
+            set
+            {
+                bool f = measure_status_text != value;
+                if (f)
+                {
+                    measure_status_text = value;
+                    setChangedFlag(f);
+                }
+            }
+        }
 
         public DeviceXMLState(string innerXml) : base(innerXml)
         {
@@ -269,6 +292,8 @@ namespace NormaMeasure.Devices.XmlObjects
             RawResult = device.RawResult;
             ConvertedResult = device.ConvertedResult;
             IsOnMeasureCycle = device.IsOnMeasureCycle;
+            MeasureStatusId = device.MeasureStatusId;
+            MeasureStatusText = device.MeasureStatusText;
             id = $"{TypeId}-{Serial}";
         }
 
@@ -287,6 +312,7 @@ namespace NormaMeasure.Devices.XmlObjects
             setXmlProp(ConvertedResult_TagName, converted_result.ToString());
             setXmlProp(MeasureStatusId_TagName, measure_status_id.ToString());
             setXmlProp(IsOnMeasureCycle_TagName, (is_on_measure_cycle) ? "1" : "0");
+            setXmlProp(MeasureStatusText_TagName, measure_status_text);
         }
 
         protected override void buildFromXML()
@@ -304,6 +330,12 @@ namespace NormaMeasure.Devices.XmlObjects
             fillConvertedResult();
             fillMeasureStatusId();
             fillIsOnMeasureCycle();
+            fillMeasureStatusText();
+        }
+
+        private void fillMeasureStatusText()
+        {
+            measure_status_text = getXmlProp(MeasureStatusText_TagName);
         }
 
         private void fillIsOnMeasureCycle()

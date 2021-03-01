@@ -102,6 +102,7 @@ namespace TeraMicroMeasure
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
             SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
+            SetCapturedDeviceTypeId();
         }
 
         /// <summary>
@@ -111,9 +112,20 @@ namespace TeraMicroMeasure
         public MeasureForm(ClientXmlState client_state) : this(client_state.ClientID)
         {
             MeasureState = client_state.MeasureState;
+            
 
         }
 
+        private void SetCapturedDeviceTypeId()
+        {
+            captured_device_type = GetDeviceTypeByRadioBox();
+            //this.Text = captured_device_type.ToString();
+            // RleadRadioButton.Checked = true;
+            // MeasureTypeRadioButton_CheckedChanged(RleadRadioButton, new EventArgs());
+            // RefreshDeviceList();
+            // captured_device_type = DeviceType.Microohmmeter;
+
+        }
 
         private void InitPanels()
         {
@@ -138,6 +150,7 @@ namespace TeraMicroMeasure
         {
             int idx = 0;
             int i = -1;
+            if (CapturedDeviceType == DeviceType.Unknown) captured_device_type = GetDeviceTypeByRadioBox();
             availableDevices.Items.Clear();
             foreach(var d in remoteDevices.Values)
             {
@@ -173,6 +186,13 @@ namespace TeraMicroMeasure
                 availableDevices.Enabled = false;
                 availableDevices.Text = "Устройства отсутсвуют";
             }
+        }
+
+        private DeviceType GetDeviceTypeByRadioBox()
+        {
+            if (RleadRadioButton.Checked) return DeviceType.Microohmmeter;
+            else if (RizolRadioButton.Checked) return DeviceType.Teraohmmeter;
+            else return DeviceType.Unknown;
         }
 
         private void InitAverageCountComboBox()
@@ -338,13 +358,14 @@ namespace TeraMicroMeasure
                 if (rb == RizolRadioButton)
                 {
                     mId = MeasuredParameterType.Risol2;
-                    CapturedDeviceType = DeviceType.Teraohmmeter;
+                    //CapturedDeviceType = DeviceType.Teraohmmeter;
                 }
                 else if (rb == RleadRadioButton)
                 {
                     mId = MeasuredParameterType.Rleads;
-                    CapturedDeviceType = DeviceType.Microohmmeter;
+                    //CapturedDeviceType = DeviceType.Microohmmeter;
                 }
+                CapturedDeviceType = GetDeviceTypeByRadioBox();
                 measureState.MeasureTypeId = mId;
             }
             MeasureStateOnFormChanged();
@@ -610,7 +631,15 @@ namespace TeraMicroMeasure
                 SetMeasureStatus(MeasureStatus.STOPPED);
             }else if (measureStatus == MeasureStatus.STARTED && !xml_device.IsOnMeasureCycle)
             {
-                SetMeasureStatus(MeasureStatus.STOPPED);
+               SetMeasureStatus(MeasureStatus.STOPPED);
+            }else if (measureStatus == MeasureStatus.STARTED && (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION || xml_device.MeasureStatusId != (uint)DeviceMeasureResultStatus.SUCCESS))
+            {
+                SetMeasureStatus(MeasureStatus.WILL_STOPPED);
+                if (measureState.MeasureStartFlag)
+                {
+                    measureState.MeasureStartFlag = false;
+                    MeasureStateOnFormChanged();
+                }
             }
         }
 
@@ -618,7 +647,7 @@ namespace TeraMicroMeasure
         {
             if (device_capture_status == DeviceCaptureStatus.WAITING_FOR_CONNECTION)
             {
-                if (device_state.ClientId == clientID)
+                if (device_state.ClientId == clientID && device_state.IsOnPCMode)
                 {
                     SetDeviceCaptureStatus(DeviceCaptureStatus.CONNECTED);
                     RefreshMeasureField(device_state);
@@ -650,7 +679,23 @@ namespace TeraMicroMeasure
         private void RefreshMeasureField(DeviceXMLState xml_device)
         {
             deviceInfo.Text = $"{xml_device.TypeNameFull} {xml_device.Serial}\n{xml_device.WorkStatusText}";
-            resultField.Text = $"{xml_device.ConvertedResult}";
+            resultField.Text = GetResultFieldText(xml_device);
+        }
+
+        private string GetResultFieldText(DeviceXMLState xml_device)
+        {
+            if (xml_device.MeasureStatusId == (uint)DeviceMeasureResultStatus.SUCCESS)
+            {
+               // return $"{xml_device.ConvertedResult}";
+               return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";
+            }else if (xml_device.MeasureStatusId == 0)
+            {
+                return "";
+            }
+            else
+            {
+                return xml_device.MeasureStatusText;
+            }
         }
 
         public void DisconnectDeviceFromServerSide()

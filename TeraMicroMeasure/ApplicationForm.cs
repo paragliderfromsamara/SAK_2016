@@ -25,6 +25,9 @@ namespace TeraMicroMeasure
     {
         const int clientTryConnectionTimes = 5;
         int connectionTimesNow = clientTryConnectionTimes;
+        int deviceDisconnectTimes = 0;
+        int clientDisconnectedTimes = 0;
+        int failureCount = 0;
         bool IsServerApp
         {
             get
@@ -44,7 +47,7 @@ namespace TeraMicroMeasure
         Dictionary<int, MeasureForm> measureFormsList;
         DevicesDispatcher DeviceDispatcher;
         Dictionary<string, DeviceXMLState> xmlDevices = new Dictionary<string, DeviceXMLState>();
-
+        List<string> WillDisconnectDevice = new List<string>();
         public ApplicationForm()
         {
             AppTypeSelector appSel = new AppTypeSelector();
@@ -94,7 +97,7 @@ namespace TeraMicroMeasure
                 AddOrUpdateDeviceOnToolStrip(d);
 
                 //d.OnDisconnected += OnDeviceDisconnected_EventHandler;
-                d.OnPCModeFlagChanged += PCModeFlagChanged_Handler;
+                d.OnXMLStateChanged += DeviceXMLStateChanged_Handler;
                 d.OnWorkStatusChanged += WorkStatusChanged_Handler;
                 d.OnGetMeasureResult += OnGetMeasureResult_Handler;
                 d.OnMeasureCycleFlagChanged += OnMeasureCycleFlagChanged_Handler;
@@ -141,7 +144,7 @@ namespace TeraMicroMeasure
             bool has = false;
             string el_name = $"deviceToolStripLabel_{(int)d.TypeId}_{d.SerialYear}_{d.SerialNumber}";
             string text = $"{d.SerialWithShortName} ({d.WorkStatusText})";
-            foreach (var item in statusStrip.Items)
+            foreach (var item in bottomStatusMenu.Items)
             {
                 if (item.GetType().Name == typeof(ToolStripStatusLabel).Name)
                 {
@@ -159,7 +162,7 @@ namespace TeraMicroMeasure
                 ToolStripStatusLabel l = new ToolStripStatusLabel(text);
                 l.Name = el_name;
                 l.ForeColor = SystemColors.ControlLight;
-                statusStrip.Items.Add(l);
+                bottomStatusMenu.Items.Add(l);
             }
 
         }
@@ -192,7 +195,7 @@ namespace TeraMicroMeasure
             }
         }
 
-        private void PCModeFlagChanged_Handler(object sender, EventArgs e)
+        private void DeviceXMLStateChanged_Handler(object sender, EventArgs e)
         {
             DeviceBase d = sender as DeviceBase;
             if (IsServerApp)
@@ -276,6 +279,7 @@ namespace TeraMicroMeasure
         {
             this.Text = "Сервер измерений";
             initServerControl();
+            SettingsControl.SetClientId(0);
         }
 
         private void OnServerStatusChanged_Handler(object sender, EventArgs e)
@@ -513,6 +517,7 @@ namespace TeraMicroMeasure
                 ClientListChangedEventArgs a = e as ClientListChangedEventArgs;
                 SetOfflineStatusOnMeasureForm(a.OnFocusClientState);
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
+                failureCounter.Text = $"Отвалов от сервера {++clientDisconnectedTimes}";
                 if (!String.IsNullOrWhiteSpace(a.OnFocusClientState.MeasureState.CapturedDeviceSerial))
                 {
                     OnDeviceReleased_Handler(a.OnFocusClientState, new EventArgs());
@@ -725,7 +730,12 @@ namespace TeraMicroMeasure
 
         private void CheckDeviceListChanges(Dictionary<string, DeviceXMLState> devices)
         {
-            bool listWasChanged = false; 
+            bool listWasChanged = false;
+            List<string> disList = new List<string>();
+            foreach(var key in devices.Keys)
+            {
+                if (WillDisconnectDevice.Contains(key)) WillDisconnectDevice.Remove(key);
+            }
             if (devices.Values.Count > 0 && xmlDevices.Values.Count == 0)
             {
                 foreach (var key in devices.Keys)
@@ -738,22 +748,40 @@ namespace TeraMicroMeasure
             }
             else if (devices.Values.Count == 0 && xmlDevices.Values.Count > 0)
             {
+                
+                foreach (var key in xmlDevices.Keys)
+                {
+                    if (!WillDisconnectDevice.Contains(key))
+                    {
+                        disList.Add(key);
+                        WillDisconnectDevice.Add(key);
+                    }
+                  //  OnDeviceDisconnectedFromServer_Handler(d);
+                  //  disconnectedDevices.Text = $"Отключено раз:{++deviceDisconnectTimes}";
+                }
+                /*
                 foreach(var d in xmlDevices.Values)
                 {
+
                     OnDeviceDisconnectedFromServer_Handler(d);
+                    disconnectedDevices.Text = $"Отключено раз:{++deviceDisconnectTimes}";
                 }
                 xmlDevices.Clear();
                 listWasChanged = true;
+                */
             }
             else if (devices.Values.Count > 0 && xmlDevices.Values.Count > 0)
             {
                 foreach (var key in xmlDevices.Keys)
                 {
-                   if (!devices.ContainsKey(key))
+                  if (!devices.ContainsKey(key) && !WillDisconnectDevice.Contains(key))
                   {
-                    OnDeviceDisconnectedFromServer_Handler(xmlDevices[key]);
+                        WillDisconnectDevice.Add(key);
+                        disList.Add(key);
+                    /*OnDeviceDisconnectedFromServer_Handler(xmlDevices[key]);
                     xmlDevices.Remove(key);
-                    listWasChanged = true;
+                    disconnectedDevices.Text = $"Отключено раз:{++deviceDisconnectTimes}";
+                    listWasChanged = true;*/
                   }
                 }
                 foreach (var key in devices.Keys)
@@ -774,6 +802,10 @@ namespace TeraMicroMeasure
                     }
                 }
             }
+            if (disList.Count > 0)
+            {
+                DeviceDisconnectionTimer t = new DeviceDisconnectionTimer(DisconnectDeviceOnClientSideTimerTick_Handler, disList);
+            }
             if (listWasChanged) OnXmlDevicesListChanged_Handler();
         }
 
@@ -783,6 +815,24 @@ namespace TeraMicroMeasure
             {
                 f.SetXmlDeviceList(xmlDevices);
             }
+        }
+
+        private void DisconnectDeviceOnClientSideTimerTick_Handler(object o, EventArgs e)
+        {
+            bool f = false;
+            DeviceDisconnectionTimer t = o as DeviceDisconnectionTimer;
+            foreach(var key in t.DeviceKeys)
+            {
+                if (xmlDevices.ContainsKey(key) && WillDisconnectDevice.Contains(key))
+                {
+                    xmlDevices.Remove(key);
+                    disconnectedDevices.Text = $"Отключено раз:{++deviceDisconnectTimes}";
+                    
+                    f = true;
+                }
+            }
+            if (f) OnXmlDevicesListChanged_Handler();
+            t.Dispose();
         }
 
         private void OnDeviceChangedOnServer_Handler(DeviceXMLState xml_device)
@@ -837,6 +887,7 @@ namespace TeraMicroMeasure
                         connectionTimesNow = clientTryConnectionTimes;
                         break;
                     case TCP_CLIENT_STATUS.DISCONNECTED:
+                        failureCounter.Text = $"Отвалов от сервера {failureCount++}";
                         setClientButtonStatus(ClientStatus.disconnected);
                         break;
                     case TCP_CLIENT_STATUS.TRY_CONNECT:
@@ -985,7 +1036,8 @@ namespace TeraMicroMeasure
         {
             MeasureForm f = getOrCreateMeasureFormByClientId(SettingsControl.GetClientId());
             f.OnMeasureStateChanged += RefreshMeasureStateOnClientDispatcher;
-            f.Show();    
+            f.Show();
+            //if (!IsServerApp) f.SetXmlDeviceList(xmlDevices);
         }
 
         private void RefreshMeasureStateOnClientDispatcher(object sender, EventArgs e)
@@ -994,9 +1046,13 @@ namespace TeraMicroMeasure
             if (clientCommandDispatcher != null) clientCommandDispatcher.RefreshMeasureState(s);
         }
 
+
         #endregion
 
-
+        private void button1_Click(object sender, EventArgs e)
+        {
+            InitMeasureForm();
+        }
     }
 
     enum ClientStatus : int
@@ -1006,4 +1062,33 @@ namespace TeraMicroMeasure
         tryConnect
     }
 
+    class DeviceDisconnectionTimer : IDisposable
+    {
+        public List<string> DeviceKeys = new List<string>();
+        Thread thread;
+        EventHandler OnTimerEnd;
+        public DeviceDisconnectionTimer(EventHandler onTimerTick, List<string> keys)
+        {
+            DeviceKeys = keys;
+            OnTimerEnd += onTimerTick;
+            thread = new Thread(new ThreadStart(ThreadFunc));
+            thread.Start();
+        }
+
+
+
+        void ThreadFunc()
+        {
+            Thread.Sleep(1500);
+            OnTimerEnd?.Invoke(this, new EventArgs());
+        }
+
+        public void Dispose()
+        {
+            if (thread != null)
+            {
+                thread.Abort();
+            }
+        }
+    }
 }

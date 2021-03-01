@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TeraMicroMeasure.XmlObjects;
 using NormaMeasure.SocketControl;
 using NormaMeasure.SocketControl.TCPControlLib;
-//using System.Diagnostics;
+using System.Diagnostics;
 using System.Threading;
 using NormaMeasure.Devices.XmlObjects;
 using NormaMeasure.Devices;
@@ -52,6 +52,7 @@ namespace TeraMicroMeasure.CommandProcessors
     class ServerCommandDispatcher : IDisposable
     {
         TCPServerClientsControl clientsControl;
+        private List<string> WillDisconnectedIPList;
         private ServerXmlState _currentServerState;
         private NormaTCPClient currentTCPClient;
         public int ClientsConnected => currentServerState.Clients.Count;
@@ -94,6 +95,7 @@ namespace TeraMicroMeasure.CommandProcessors
 
         public ServerCommandDispatcher(TCPServerClientsControl _clients_control, ServerXmlState server_state, EventHandler on_client_id_changed, EventHandler on_client_measure_settings_changed, EventHandler on_measure_start_by_client, EventHandler on_measure_stop_by_client, EventHandler on_client_connected, EventHandler on_client_disconnected, EventHandler on_device_try_capture, EventHandler on_device_released)
         {
+            WillDisconnectedIPList = new List<string>();
             clientsControl = _clients_control;
             currentServerState = new ServerXmlState(server_state.InnerXml);
             clientsControl.OnClientMessageReceived += OnClientMessageReceived_Handler;
@@ -108,6 +110,7 @@ namespace TeraMicroMeasure.CommandProcessors
             OnClientDisconnected += on_client_disconnected;
             OnDeviceTryCapture += on_device_try_capture;
             OnDeviceReleased += on_device_released;
+
         }
 
         internal void RemoveDeviceFromServerState(DeviceType typeId, string serial)
@@ -126,6 +129,7 @@ namespace TeraMicroMeasure.CommandProcessors
             {
                 currentServerState.AddOrReplaceDevice(ds);
                 RefreshCurrentServerStateOnClientControl();
+                Debug.WriteLine(ds.InnerXml);
             }
         }
 
@@ -172,6 +176,7 @@ namespace TeraMicroMeasure.CommandProcessors
                     if (cs.IsValid)
                     {
                         ServerXmlState newState = new ServerXmlState(currentServerState.InnerXml);
+                        if (WillDisconnectedIPList.Contains(cs.ClientIP)) WillDisconnectedIPList.Remove(cs.ClientIP);
                         if (currentServerState.Clients.ContainsKey(cs.ClientIP))
                         {
                             ClientXmlState last_cs = currentServerState.Clients[cs.ClientIP];
@@ -232,6 +237,7 @@ namespace TeraMicroMeasure.CommandProcessors
             }
         }
 
+        /*
         private void OnClientDisconnected_Handler(object client, EventArgs e)
         {
             lock (locker)
@@ -247,6 +253,38 @@ namespace TeraMicroMeasure.CommandProcessors
                 }
             }
         }
+        */
+
+        private void OnClientDisconnected_Handler(object client, EventArgs e)
+        {
+            lock (locker)
+            {
+                NormaTCPClient cl = client as NormaTCPClient;
+                string ip = cl.RemoteIP as string;
+                if (currentServerState.Clients.ContainsKey(ip) && !WillDisconnectedIPList.Contains(ip))
+                {
+                    WillDisconnectedIPList.Add(ip);
+                    ClientDisconnectionTimer t = new ClientDisconnectionTimer(ClientDisconnectionTimer_Handler, ip);
+                }
+            }
+        }
+
+        private void ClientDisconnectionTimer_Handler(object sender, EventArgs e)
+        {
+            lock (locker)
+            {
+                ClientDisconnectionTimer t = sender as ClientDisconnectionTimer;
+                if (currentServerState.Clients.ContainsKey(t.ClientIp) && WillDisconnectedIPList.Contains(t.ClientIp))
+                {
+                    ClientXmlState cs = currentServerState.Clients[t.ClientIp];
+                    currentServerState.RemoveClient(t.ClientIp);
+                    RefreshCurrentServerStateOnClientControl();
+                    OnClientDisconnected?.Invoke(this, new ClientListChangedEventArgs(currentServerState, cs));
+                }
+                t.Dispose();
+            }
+        }
+
 
         public ClientXmlState GetClientStateByClientID(int client_id)
         {
@@ -261,6 +299,34 @@ namespace TeraMicroMeasure.CommandProcessors
         public void Dispose()
         {
             clientsControl.Dispose();
+        }
+    }
+
+    class ClientDisconnectionTimer : IDisposable
+    {
+        public string ClientIp;
+        Thread thread;
+        EventHandler OnTimerEnd;
+        public ClientDisconnectionTimer(EventHandler onTimerTick, string ip)
+        {
+            ClientIp = ip;
+            OnTimerEnd += onTimerTick;
+            thread = new Thread(new ThreadStart(ThreadFunc));
+            thread.Start();
+        }
+
+        void ThreadFunc()
+        {
+            Thread.Sleep(1500);
+            OnTimerEnd?.Invoke(this, new EventArgs());
+        }
+
+        public void Dispose()
+        {
+            if (thread != null)
+            {
+                thread.Abort();
+            }
         }
     }
 }

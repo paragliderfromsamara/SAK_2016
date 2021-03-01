@@ -368,11 +368,10 @@
             // 
             // resultField
             // 
-            this.resultField.AutoSize = true;
             this.resultField.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.resultField.Location = new System.Drawing.Point(159, 84);
+            this.resultField.Location = new System.Drawing.Point(17, 77);
             this.resultField.Name = "resultField";
-            this.resultField.Size = new System.Drawing.Size(250, 45);
+            this.resultField.Size = new System.Drawing.Size(482, 103);
             this.resultField.TabIndex = 1;
             this.resultField.Text = "106.56 ТОм⋅м";
             this.resultField.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

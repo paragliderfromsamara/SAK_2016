@@ -28,7 +28,9 @@ namespace NormaMeasure.Devices.Teraohmmeter
         ushort LengthBringingTypeIdAddr;
         ushort MaterialHeightAddr;
         ushort CableLengthMeasureIdAddr;
-
+        ushort MeasureCyclesCounterAddr;
+        ushort IntegratorStartValueAddr;
+        ushort StartIntegratorFlagAddr;
         public TeraMeasureResultStruct MeasureResult
         {
             get
@@ -41,7 +43,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                 resultStruct.IntegratorDifference = resultArr[3];
                 resultStruct.MeasuredIntegratorDifference = resultArr[4];
                 resultStruct.ConvertedValue = GetFloatFromUSHORT(resultArr[6], resultArr[5]);
-                resultStruct.ConvertedByModeValue = GetFloatFromUSHORT(resultArr[7], resultArr[8]);
+                resultStruct.ConvertedByModeValue = GetFloatFromUSHORT(resultArr[8], resultArr[7]);
                 if (resultStruct.ConvertedValue == 0 && resultStruct.MeasureStatus == (uint)TOhmM_01_MeasureStatus.ISTATUS_SUCCESS)
                 {
                     resultStruct.ConvertedByModeValue = resultStruct.ConvertedValue = float.MaxValue;
@@ -158,7 +160,47 @@ namespace NormaMeasure.Devices.Teraohmmeter
             }
         }
 
+        public uint StartIntegratorValue
+        {
+            get
+            {
+                return ReadSingleHolding(IntegratorStartValueAddr);
+            }set
+            {
+                WriteSingleHolding(IntegratorStartValueAddr, (ushort)value);
+            }
+        }
 
+        public bool StartIntegratorFlag
+        {
+            get
+            {
+                return ReadBoolValue(StartIntegratorFlagAddr);
+            }set
+            {
+                WriteBoolValue(StartIntegratorFlagAddr, value);
+            }
+        }
+
+        public uint MeasureCyclesCounter
+        {
+            get
+            {
+                return ReadSingleHolding(MeasureCyclesCounterAddr);
+            }
+        }
+
+        public uint MeasureModeId
+        {
+            get
+            {
+                return ReadSingleHolding(MeasureModeAddr);
+            }
+            set
+            {
+                WriteSingleHolding(MeasureModeAddr, (ushort)value);
+            }
+        }
 
         public TOhmM_01_v1_CommandProtocol(string port_name) : base(port_name)
         {
@@ -180,6 +222,9 @@ namespace NormaMeasure.Devices.Teraohmmeter
             MeasuredIntegratorDifferenceAddr = 0x0087;
             ConvertedResistanceValueAddr = 0x0088;
             ConvertedByMeasureModeResistanceValueAddr = 0x008A;
+            StartIntegratorFlagAddr = 0x0097;
+            MeasureCyclesCounterAddr = 0x0096;
+            IntegratorStartValueAddr = 0x0090;
 
             MeasureModeAddr = 0x0030;
             CableLengthAddr = 0x0031;

@@ -18,7 +18,9 @@ namespace NormaMeasure.Devices.Microohmmeter
 
         public override DeviceXMLState GetXMLState()
         {
-            return new MicroohmmeterXMLState(this);
+            return new DeviceXMLState(this);
         }
+
+
     }
 }

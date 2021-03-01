@@ -40,47 +40,52 @@ namespace NormaMeasure.Devices
     public class DeviceBase : IDisposable
     {
         public EventHandler OnDisconnected;
-        public EventHandler OnPCModeFlagChanged;
+       // public EventHandler OnPCModeFlagChanged;
         public EventHandler OnWorkStatusChanged;
         public EventHandler OnGetMeasureResult;
         public EventHandler OnMeasureCycleFlagChanged;
+        public EventHandler OnXMLStateChanged;
+        protected DeviceCommandProtocol CommandProtocol;
 
         private static object locker = new object();
-        private bool thread_is_active = false;
+        //private bool thread_is_active = false;
 
-        protected bool threadIsActive
-        {
-            get
-            {
-                return thread_is_active;
-            }set
-            {
-                lock(locker)
-                {
-                    thread_is_active = value;
-                }
-            }
-        }
+        //protected bool threadIsActive
+        //{
+        //    get
+        //    {
+         //       return thread_is_active;
+         //   }set
+         //   {
+          //      lock(locker)
+         //       {
+        //            thread_is_active = value;
+         //       }
+        //    }
+       // }
         
 
-        private bool pc_mode_flag = false;
+        private bool is_on_pc_mode = false;
         public bool IsOnPCMode
         {
             get
             {
-                return pc_mode_flag;
+                return is_on_pc_mode;
             }
             protected set
             {
-                if (value != pc_mode_flag)
+                if (value != is_on_pc_mode)
                 {
-                    pc_mode_flag = value;
-                    if (!pc_mode_flag) ClientId = -1;
-                    if (xmlState != null) xmlState.IsOnPCMode = pc_mode_flag;
-                    OnPCModeFlagChanged?.Invoke(this, new EventArgs());
+                    is_on_pc_mode = value;
+                    if (!is_on_pc_mode) ClientId = -1;
+                    if (xmlState != null) xmlState.IsOnPCMode = is_on_pc_mode;
+                    OnXMLStateChanged?.Invoke(this, new EventArgs());//OnPCModeFlagChanged?.Invoke(this, new EventArgs());
                 }
             }
         }
+
+        protected bool pc_mode_flag = false;
+        protected bool measure_cycle_flag = false;
 
         private bool is_on_measure_cycle = false;
         public bool IsOnMeasureCycle
@@ -121,11 +126,10 @@ namespace NormaMeasure.Devices
                         if (is_connected)
                         {
                             /*When flag is true*/
-                            InitConnectionCheckThread();
+                            InitConnectionThread();
                         }
                         else
                         {
-                            threadIsActive = false;
                             WorkStatus = DeviceWorkStatus.DISCONNECTED;
                             OnDisconnected?.Invoke(this, new EventArgs());
                         }
@@ -162,6 +166,31 @@ namespace NormaMeasure.Devices
                 }
             }
         }
+
+        public string MeasureStatusText
+        {
+            get
+            {
+                switch(measure_status_id)
+                {
+                    case (uint)DeviceMeasureResultStatus.SUCCESS:
+                        return "Успешно";
+                    case (uint)DeviceMeasureResultStatus.INTEGRATOR_IS_ON_NEGATIVE:
+                        return "Цепь под напряжением";
+                    case (uint)DeviceMeasureResultStatus.IN_WORK:
+                        return "В процессе";
+                    case (uint)DeviceMeasureResultStatus.RANGE_DOWN:
+                        return "Требуется диапазон ниже";
+                    case (uint)DeviceMeasureResultStatus.RANGE_UP:
+                        return "Требуется диапазон выше";
+                    case (uint)DeviceMeasureResultStatus.SHORT_CIRCUIT:
+                        return "Короткое замыкание";
+                    default:
+                        return $"Измерение прервано. Код прерывания:{measure_status_id}.";
+                }
+            }
+        }
+
 
         protected DeviceXMLState xmlState = null;
 
@@ -200,7 +229,12 @@ namespace NormaMeasure.Devices
             protected set
             {
                 measure_status_id = value;
-                if (xmlState != null) xmlState.MeasureStatusId = value;
+                if (xmlState != null)
+                {
+                    xmlState.MeasureStatusId = value;
+                    xmlState.MeasureStatusText = MeasureStatusText;    
+                }
+
             }
         }
 
@@ -226,8 +260,10 @@ namespace NormaMeasure.Devices
             {
                 client_id = value;
                 if (xmlState != null) xmlState.ClientId = value;
+                OnXMLStateChanged?.Invoke(this, new EventArgs());
             }
         }
+        protected int next_client_id = -1;
         // public DeviceStatus WorkStatus => work_status;
         private DeviceWorkStatus work_status = DeviceWorkStatus.DISCONNECTED;
         public DeviceWorkStatus WorkStatus
@@ -258,7 +294,10 @@ namespace NormaMeasure.Devices
 
         internal void ReleaseDeviceFromClient()
         {
-            ClientId = -1;
+            lock(locker)
+            {
+                next_client_id = -1;
+            }
         }
 
         private uint serial_year = 2000;
@@ -288,60 +327,35 @@ namespace NormaMeasure.Devices
         /// <param name="cl_id"></param>
         public virtual void AssignToClient(int cl_id)
         {
-            ClientId = cl_id;
-            InitPCMode();
+            lock (locker)
+            {
+                next_client_id = cl_id;//ClientId = cl_id;
+                InitPCMode();
+            }
         }
 
         protected virtual void CheckDeviceConnectionThreadFunc()
         {
-            int tryTimes = 50;
-            DeviceCommandProtocol p = null;
-            retry:
-            try
+            Debug.WriteLine("------------------------SIMPLE_CONNECTION_CHECK---------------");
+            DeviceInfo info = CommandProtocol.GetDeviceInfo();
+            if (!DeviceInfoIsValid(info))
             {
-                p = GetDeviceCommandProtocol();
-                while (threadIsActive)
-                {
-                    Debug.WriteLine("------------------------SIMPLE_CONNECTION_CHECK---------------");
-                    DeviceInfo info = p.GetDeviceInfo();
-                    if (IsOnPCMode)
-                    {
-                        p.PCModeFlag = IsOnPCMode = false;
-                    }
-                    if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
-                    {
-                        //work_status = DeviceStatus.DISCONNECTED;
-                        IsConnected = false;
-                    }
-                    else
-                    {
-                        WorkStatus = info.WorkStatus;
-                    }
-                    Thread.Sleep(800);
-                    tryTimes = 50;
-                }
-                p.Dispose();
-                OnThreadWillFinish?.Invoke();
-            }
-            catch(DeviceCommandProtocolException ex)
-            {
-                Debug.WriteLine("----------------------------M E S S A G E--------------------");
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.InnerException.Message);
-                Debug.WriteLine("----------------------------M E S S A G E--E N D--------------");
-                if (p != null) p.Dispose();
                 IsConnected = false;
             }
+            else
+            {
+                WorkStatus = info.WorkStatus;
+            }
+            Thread.Sleep(800);
         }
 
         protected virtual bool DeviceInfoIsValid(DeviceInfo info)
         {
-           return (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion);
+           return (info.type == this.TypeId && info.SerialNumber == this.SerialNumber && info.SerialYear == this.SerialYear && info.ModelVersion == this.ModelVersion);
         }
 
         internal void InitConnection()
         {
-            //work_status = DeviceStatus.WAITING_FOR_COMMAND;
             IsConnected = true;
         }
 
@@ -352,33 +366,32 @@ namespace NormaMeasure.Devices
 
         public void InitPCMode()
         {
-            if (!IsOnPCMode && WorkStatus == DeviceWorkStatus.IDLE)
+            lock (locker)
             {
-                InitPCModeCheckThread();
+                if (!IsOnPCMode && WorkStatus == DeviceWorkStatus.IDLE)
+                {
+                    pc_mode_flag = true;
+                }
             }
         }
 
         public void InitMeasureFromXMLState(MeasureXMLState measure_state)
         {
             SetMeasureParametersFromMeasureXMLState(measure_state);
-            //IsOnMeasureCycle = true;
             InitPCModeMeasureThread();
         }
 
-        public void InitPCModeMeasureThread()
+        protected virtual void InitPCModeMeasureThread()
         {
-            if (threadIsActive)
+            lock (locker)
             {
-                SetDeviceConnectionThreadFunction(new ThreadStart(PCModeMeasureThread), InitPCModeMeasureThread);
-            }
-            else
-            {
-                SetDeviceConnectionThreadFunction(new ThreadStart(PCModeMeasureThread), InitPCModeCheckThread);
+                measure_cycle_flag = true;
             }
         }
 
-        protected virtual void PCModeMeasureThread()
+        protected virtual void PCModeMeasureThreadFunction()
         {
+            //Инициализируется в дочерних классах
         }
 
         protected virtual void SetMeasureParametersFromMeasureXMLState(MeasureXMLState measure_state)
@@ -388,158 +401,106 @@ namespace NormaMeasure.Devices
 
         public void StopPCMode()
         {
-            if (IsOnPCMode) InitConnectionCheckThread();
-        }
-
-    
-
-        protected virtual void InitPCModeCheckThread()
-        {
-            if (threadIsActive)
+            // if (IsOnPCMode) InitConnectionCheckThread();
+            lock(locker)
             {
-                SetDeviceConnectionThreadFunction(new ThreadStart(PCModeThreadFunction), InitPCModeCheckThread);
-            }
-            else
-            {
-                SetDeviceConnectionThreadFunction(new ThreadStart(PCModeThreadFunction), InitConnectionCheckThread);
+                pc_mode_flag = false;
             }
         }
 
         protected void ThreadLoop()
         {
-            reload:
-            while(threadIsActive)
-            {
-               ThreadExecFunction?.Invoke();
-            }
-            OnThreadWillFinish?.Invoke();
-            if (threadIsActive) goto reload;
-        }
-
-
-        protected void PCModeThreadFunction()
-        {
-            bool isInited = false;
-            DeviceCommandProtocol p = null;
             try
             {
-                p = GetDeviceCommandProtocol();
-                if (!isInited)
+                CommandProtocol = GetDeviceCommandProtocol();
+                while (IsConnected)
                 {
-                    if (!IsOnPCMode)p.PCModeFlag = true;
-                    IsOnPCMode = true;
-                    p.MeasureLineNumber = (short)ClientId;
-                    isInited = true; //чтоб больше этого не делать, устанавливаем флажок
-                }
-                while (threadIsActive)
-                {
-                    DeviceInfo info = p.GetDeviceInfo();
-                    if (DeviceInfoIsValid(info))
+                    if (IsOnPCMode)
                     {
-                        IsConnected = false;
-                        break;
-                    }
-                    else
-                    {
-                        WorkStatus = info.WorkStatus;
-                    }
-                    if (p.MeasureLineNumber != ClientId) p.MeasureLineNumber = (short)ClientId;
-                    if (threadIsActive)
-                    {
-                        IsOnPCMode = p.PCModeFlag;
-                        if (!IsOnPCMode) threadIsActive = false;
-                    }
-                    /*
-                    if (!IsOnMeasureCycle && IsOnPCMode)
-                    {
-                        //Debug.WriteLine("ВЫКЛЮЧЕНИЕ ИЗМЕРИТЕЛЯ");
-                        if (isMeasureCycle)
+                        if (IsOnMeasureCycle)
                         {
-                            p.MeasureStartFlag = false;
-                            //Thread.Sleep(18);
-                            if (CheckDeviceIsOnMeasureCycle(p)) continue;
-                            isMeasureCycle = false;
-                        }
-                    }
-                    else if (IsOnMeasureCycle && IsOnPCMode)
-                    {
-                        if (!isMeasureCycle)
-                        {
-                            //Debug.WriteLine("ОТПРАВКА ПАРАМЕТРОВ");
-                            SendMeasureParamsToDevice(p);
-                            //Debug.WriteLine("ВКЛЮЧЕНИЕ ИЗМЕРИТЕЛЯ");
-                            p.MeasureStartFlag = true;
-                            //Thread.Sleep(20);
-                            //if (!CheckDeviceIsOnMeasureCycle(p)) continue;
-                            isMeasureCycle = true;
-                        }
-
-                    }
-
-                    if (idx == 0)
-                    {
-                        //Debug.WriteLine("ЧТЕНИЕ ОСНОВНОЙ ИНФОРМАЦИИ");
-                        DeviceInfo info = p.GetDeviceInfo();
-                        if (DeviceInfoIsValid(info))
-                        {
-                            IsConnected = false;
-                            break;
+                            if (!measure_cycle_flag)
+                            {
+                                MeasureStopThreadFunc();
+                            }else
+                            {
+                                PCModeMeasureThreadFunction();
+                            }
                         }
                         else
                         {
-                            WorkStatus = info.WorkStatus;
+                            if (measure_cycle_flag)
+                            {
+                                InitMeasureCycleOnDevice();
+                            }else
+                            {
+                                PCModeIdleThreadFunction();
+                            }
                         }
-                        idx++;
-                    }else if (idx == 1)
-                    {
-                        //Debug.WriteLine("ПРОВЕРКА MEASURE LINE NUMBER");
-                        if (p.MeasureLineNumber != ClientId) p.MeasureLineNumber = (short)ClientId;
-                        idx++;
-                    }else if (idx == 2)
-                    {
-                        //Debug.WriteLine("ПРОВЕРКА PC MODE FLAG");
-                        if (threadIsActive) threadIsActive = IsOnPCMode = p.PCModeFlag;
-                        if (!threadIsActive) break;
-                        idx++;
-                    }else if (idx == 3)
-                    {
-                        if (isMeasureCycle && IsOnMeasureCycle)
-                        {
-                            //Debug.WriteLine("ЧТЕНИЕ РЕЗУЛЬТАТА");
-                            ReadMeasureResult(p);
-                        }
-                        idx++;
-                    }else if (idx == 4)
-                    {
-                        if (isMeasureCycle && IsOnMeasureCycle)
-                        {
-                            //Debug.WriteLine("ЧТЕНИЕ START MEASURE FLAG");
-                            IsOnMeasureCycle = isMeasureCycle = p.MeasureStartFlag;
-                        }
-                        idx++;
                     }
-                    if (idx > 4) idx = 0;
-                    */
-                    //if (isMeasureCycle) Thread.Sleep(20);
-                    //tryTimes = 50;
+                    else
+                    {
+                        CheckDeviceConnectionThreadFunc();
+                        if (pc_mode_flag)
+                        {
+                            Debug.WriteLine("----------------------------InitPCModeOnDevice--------------------");
+                            InitPCModeOnDevice();
+                        }
+                        
+                    }
+                    //ThreadExecFunction?.Invoke();
                 }
-               
-                p.Dispose();
-                //OnThreadWillFinish?.Invoke();
+                OnThreadWillFinish?.Invoke();
+                if (CommandProtocol != null) CommandProtocol.Dispose();
             }
-            catch(DeviceCommandProtocolException ex)
+            catch (DeviceCommandProtocolException ex)
             {
-                Debug.WriteLine("----------------------------M E S S A G E--------------------");
+                Debug.WriteLine("----------------------------DeviceThreadFinished--------------------");
                 Debug.WriteLine(ex.Message);
                 Debug.WriteLine(ex.InnerException.Message);
-                Debug.WriteLine("----------------------------M E S S A G E--E N D--------------");
-                if (p != null) p.Dispose();
-                IsOnPCMode = false;
-                IsOnMeasureCycle = false;
-                //work_status = DeviceStatus.DISCONNECTED;
+                Debug.WriteLine("----------------------------DeviceThreadFinished END----------------");
+                if (CommandProtocol != null) CommandProtocol.Dispose();
                 IsConnected = false;
-
             }
+        }
+
+        protected virtual void InitMeasureCycleOnDevice()
+        {
+            
+        }
+
+        protected virtual void InitPCModeOnDevice()
+        {
+            CommandProtocol.PCModeFlag = true;
+            Thread.Sleep(250);
+            CommandProtocol.MeasureLineNumber = (short)ClientId;
+            Thread.Sleep(250);
+            IsOnPCMode = CommandProtocol.PCModeFlag;
+            Thread.Sleep(250);
+        }
+
+        protected void PCModeIdleThreadFunction()
+        {
+            DeviceInfo info = CommandProtocol.GetDeviceInfo();
+            Debug.WriteLine("------------------------PC_MODE_CONNECTION_CHECK---------------");
+            if (!DeviceInfoIsValid(info))
+            {
+                IsOnPCMode = pc_mode_flag = false;
+                Debug.WriteLine("Escape FROM CheckDeviceInfo");
+            }
+            else
+            {
+                WorkStatus = info.WorkStatus;
+                if (CommandProtocol.MeasureLineNumber != next_client_id)
+                {
+                    CommandProtocol.MeasureLineNumber = (short)next_client_id;
+                    //Thread.Sleep(250);
+                    ClientId = CommandProtocol.MeasureLineNumber;
+                }
+                IsOnPCMode = pc_mode_flag = CommandProtocol.PCModeFlag;
+                Debug.WriteLine($"Escape FROM Set PC MODE FLAG {pc_mode_flag}");
+            }
+            // проверяем актуальность ID клиента, 
         }
 
         protected virtual void ReadMeasureResult(DeviceCommandProtocol p)
@@ -552,7 +513,7 @@ namespace NormaMeasure.Devices
             return false;
         }
 
-        protected virtual void SendMeasureParamsToDevice(DeviceCommandProtocol p)
+        protected virtual void SendMeasureParamsToDevice()
         {
             
         }
@@ -562,27 +523,12 @@ namespace NormaMeasure.Devices
             return new DeviceCommandProtocol(PortName);
         }
 
-        protected void InitConnectionCheckThread()
+        protected void InitConnectionThread()
         {
-            if (threadIsActive)
+            if (ConnectionThread == null)
             {
-                SetDeviceConnectionThreadFunction(new ThreadStart(CheckDeviceConnectionThreadFunc), InitConnectionCheckThread);
-            }
-            else
-            {
-                SetDeviceConnectionThreadFunction(new ThreadStart(CheckDeviceConnectionThreadFunc));
-            }
-        }
-
-        private void InitMeasureStopThread()
-        {
-            if (threadIsActive)
-            {
-                SetDeviceConnectionThreadFunction(new ThreadStart(MeasureStopThreadFunc), InitMeasureStopThread);
-            }
-            else
-            {
-                SetDeviceConnectionThreadFunction(new ThreadStart(MeasureStopThreadFunc), InitPCModeCheckThread);
+                ConnectionThread = new Thread(new ThreadStart(ThreadLoop));
+                ConnectionThread.Start();
             }
         }
 
@@ -591,49 +537,13 @@ namespace NormaMeasure.Devices
 
         }
 
-        protected void SetDeviceConnectionThreadFunction(ThreadStart threadFunction, ConnectionTheadDelegate onThreadWillFinish = null)
-        {
-            
-            if (threadIsActive)
-            {
-                if (onThreadWillFinish != null) OnThreadWillFinish = onThreadWillFinish;
-                threadIsActive = false;
-            }
-            else
-            {
-                OnThreadWillFinish = (onThreadWillFinish != null) ? onThreadWillFinish : null;
-                ThreadExecFunction = threadFunction;
-                threadIsActive = true;
-                if (ConnectionThread == null)
-                {
-                    ConnectionThread = new Thread(new ThreadStart(ThreadLoop));
-                    ConnectionThread.Start();
-                }
-            }
-
-            /*
-        if (threadIsActive)
-        {
-            if (onThreadWillFinish != null) OnThreadWillFinish = onThreadWillFinish;
-            threadIsActive = false;
-
-        }
-        else
-        {
-            OnThreadWillFinish = (onThreadWillFinish != null) ? onThreadWillFinish : null;
-            ConnectionThread = new Thread(threadFunction);
-            threadIsActive = true;
-            ConnectionThread.Start();
-        }
-       */
-        }
-
         public DeviceBase(DeviceInfo info)
         {
             serial_year = info.SerialYear;
             serial_number = info.SerialNumber;
             model_version = info.ModelVersion;
             port_name = info.PortName;
+            work_status = info.WorkStatus;
         }
 
         public static bool IsAllowedDeviceType(byte typeId)
@@ -650,19 +560,23 @@ namespace NormaMeasure.Devices
         public void Dispose()
         {
             OnDisconnected = null;
-            OnPCModeFlagChanged = null;
+            //OnPCModeFlagChanged = null;
             OnMeasureCycleFlagChanged = null;
             OnWorkStatusChanged = null;
             OnThreadWillFinish = null;
-            threadIsActive = false;
+            //threadIsActive = false;
+            OnXMLStateChanged = null;
+            IsConnected = false;
             //if (work_status == DeviceStatus.WAITING_FOR_COMMAND) work_status = DeviceStatus.WILL_DISCONNECT;
 
         }
 
         public void StopMeasure()
         {
-            InitMeasureStopThread();
-            //IsOnMeasureCycle = false;
+            lock(locker)
+            {
+                if (IsOnMeasureCycle) measure_cycle_flag = false;
+            }
         }
 
 
@@ -700,6 +614,17 @@ namespace NormaMeasure.Devices
         POLARIZATION = 4,
         DEPOLARIZATION = 5,
         LOST_CIRCUIT_CORRECTION = 6
+    }
+
+    public enum DeviceMeasureResultStatus : uint
+    {
+        SUCCESS = 100,
+        IN_WORK = 105,   //
+        NEED_TO_REPEAT = 106,
+        RANGE_UP = 101,	//увеличить диапазон
+        RANGE_DOWN = 102,	//понизить диапазон
+        SHORT_CIRCUIT = 103, //короткое замыкание
+        INTEGRATOR_IS_ON_NEGATIVE = 104 //Интегратор в отрицательной области	
     }
 
 

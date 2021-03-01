@@ -25,7 +25,9 @@ namespace NormaMeasure.Devices.Teraohmmeter
         private uint normaValue = 10000;
         private uint normaValueMeasureId = 0;
         private TERA_MEASURE_MODE measureMode = TERA_MEASURE_MODE.RL;
-         
+
+        protected bool integratorIsStart = false;
+        protected uint MeasureCyclesCounter = 0;
         public TeraohmmeterTOmM_01(DeviceInfo info) : base(info)
         {
             type_id = DeviceType.Teraohmmeter;
@@ -43,158 +45,170 @@ namespace NormaMeasure.Devices.Teraohmmeter
             temperature = measure_state.Temperature;       
         }
 
-        protected override void PCModeMeasureThread()
+        protected override void InitMeasureCycleOnDevice()
         {
-            int tryTimes = 50;
-            int idx = 0;
-            int readCounter = 3;
-            TOhmM_01_v1_CommandProtocol p = null;
-            TeraMeasureResultStruct result;
-            DeviceInfo info;
-           // retry:
-            try
-            {
-                p = new TOhmM_01_v1_CommandProtocol(PortName);
-                SendMeasureParamsToDevice(p);
+            SendMeasureParamsToDevice();
+            CommandProtocol.MeasureStartFlag = true;
+            Thread.Sleep(200);
+            IsOnMeasureCycle = CommandProtocol.MeasureStartFlag;
+            integratorIsStart = false;
+            MeasureCyclesCounter = 0;
+        }
 
-                while (threadIsActive)
+        protected virtual void StartIntegrator()
+        {
+            TOhmM_01_v1_CommandProtocol p = CommandProtocol as TOhmM_01_v1_CommandProtocol;
+            p.StartIntegratorFlag = true;
+        }
+
+        protected override void PCModeMeasureThreadFunction()
+        {
+            uint cyclesCounterWas = MeasureCyclesCounter;
+            DeviceWorkStatus work_status_was;
+            TOhmM_01_v1_CommandProtocol p = CommandProtocol as TOhmM_01_v1_CommandProtocol;
+            TeraMeasureResultStruct result;
+
+            work_status_was = WorkStatus;
+            WorkStatus = (DeviceWorkStatus)p.WorkStatus;
+
+            if (WorkStatus == DeviceWorkStatus.MEASURE)
+            {
+                if (!integratorIsStart)
                 {
-                    if (!IsOnMeasureCycle)
+                    StartIntegrator();
+                    integratorIsStart = true;
+                }
+                else
+                {
+                    //Thread.Sleep(60);
+                    if (!p.StartIntegratorFlag)
                     {
-                        p.MeasureStartFlag = true;
-                        IsOnMeasureCycle = p.MeasureStartFlag;
-                        continue;
-                    }
-                    //WorkStatus = (DeviceWorkStatus)p.WorkStatus;
-                    if (readCounter++ % 3 == 0)
-                    {
-                        info = p.GetDeviceInfo();
-                        if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
-                        {
-                            IsConnected = false;
-                        }
-                        else
-                        {
-                            WorkStatus = info.WorkStatus;
-                        }
-                    }else
-                    {
+
                         result = p.MeasureResult;
-                        ConvertedResult = result.ConvertedValue;
-                        RawResult = result.ConvertedByModeValue;
+                        RawResult = (result.ConvertedValue > 0.00001) ? result.ConvertedValue * 1000.0 : 0; //Перевод в МОм
+                        ConvertedResult = (result.ConvertedByModeValue > 0.00001) ? result.ConvertedByModeValue * 1000.0 : 0; //Перевод в МОм
                         MeasureStatusId = result.MeasureStatus;
                         OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
+                        if (MeasureStatusId == (uint)DeviceMeasureResultStatus.SUCCESS)
+                        {
+                            integratorIsStart = false;
+                            Debug.WriteLine($"COUNTER {cyclesCounterWas} -------------------");
+                        }
+                    }
+                    else
+                    {
+                        MeasureCyclesCounter = p.MeasureCyclesCounter;
                         if (!p.PCModeFlag || p.MeasureLineNumber != ClientId)
                         {
-                            threadIsActive = false;
-                            IsOnMeasureCycle = false;
+                            measure_cycle_flag = false;
                             p.MeasureStartFlag = false;
-                            break;
                         }
                     }
+                }
+            }
+            else if (WorkStatus == DeviceWorkStatus.IDLE && work_status_was == DeviceWorkStatus.DEPOLARIZATION)
+            {
+                //IsOnMeasureCycle = false;
+                //threadIsActive = false;
+                //break;
+            }
+        }
+        /*
+        int tryTimes = 50;
+        int idx = 0;
+        int readCounter = 3;
+        uint measureCyclesCounter = 0;
+        uint cyclesCounterWas = 0;
+        bool integratorIsStart = false;
+        DeviceWorkStatus work_status_was;
+        TOhmM_01_v1_CommandProtocol p = null;
+        TeraMeasureResultStruct result;
+        DeviceInfo info;
+       // retry:
+        try
+        {
+            p = new TOhmM_01_v1_CommandProtocol(PortName);
+            SendMeasureParamsToDevice(p);
 
 
-                    /*
-                    Debug.WriteLine($"-----------------{idx}--------------------------------PCModeMeasureThread-------------------------------");
-                    if (idx < 8)
+            while (threadIsActive)
+            {
+                if (!IsOnMeasureCycle)
+                {
+                    p.MeasureStartFlag = true;
+
+                    IsOnMeasureCycle = p.MeasureStartFlag;
+                    continue;
+                }
+                work_status_was = WorkStatus;
+                WorkStatus = (DeviceWorkStatus)p.WorkStatus;
+
+                if (WorkStatus == DeviceWorkStatus.MEASURE)
+                {
+                    if (!integratorIsStart)
                     {
-                        Debug.WriteLine("------------------------MEASURE_START---------------");
-                        repeat_switch:
-                        switch(idx)
-                        {
-                            case 0:
-                                //p.PCModeFlag = true;
-                                //p.MeasureLineNumber = (short)ClientId;
-                                idx++;
-                                break;
-                            case 1:
-                                p.Temperature = temperature;
-                                idx++;
-                                goto repeat_switch;
-                            case 2:
-                                p.PolarDelay = polarDelay;
-                                idx++;
-                                goto repeat_switch;
-                            case 3:
-                                p.DepolarDelay = depolarDelay;
-                                idx++;
-                                goto repeat_switch;
-                            case 4:
-                                p.NormaValue = normaValue;
-                                idx++;
-                                goto repeat_switch;
-                            case 5:
-                                p.MaterialId = materialId;
-                                idx++;
-                                goto repeat_switch;
-                            case 6:
-                                p.CableLength = cableLength;
-                                idx++;
-                                goto repeat_switch;
-                            case 7:
-                                p.VoltageValue = voltageValue;
-                                idx++;
-                                goto repeat_switch;
-                            case 8:
-                                reinit:
-                                p.MeasureStartFlag = true;
-                                if (!p.MeasureStartFlag) goto reinit;
-                                else IsOnMeasureCycle = true;
-                                idx++;
-                                goto repeat_switch;
-                        }
-                    }
-                    if (readCounter % 3 == 0)
+                        p.StartIntegratorFlag = true;
+                        integratorIsStart = true;
+                    }else
                     {
-                        info = p.GetDeviceInfo();
-                        if (info.type != this.TypeId || info.SerialNumber != this.SerialNumber || info.SerialYear != this.SerialYear || info.ModelVersion != this.ModelVersion)
+                        //Thread.Sleep(60);
+                        if (!p.StartIntegratorFlag)
                         {
-                            IsConnected = false;
+
+                            result = p.MeasureResult;
+                            RawResult = (result.ConvertedValue > 0.00001) ? result.ConvertedValue*1000.0 : 0; //Перевод в МОм
+                            ConvertedResult = (result.ConvertedByModeValue > 0.00001) ? result.ConvertedByModeValue * 1000.0 : 0; //Перевод в МОм
+                            MeasureStatusId = result.MeasureStatus;
+                            OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
+                            cyclesCounterWas = measureCyclesCounter;
+                            if (MeasureStatusId == (uint)DeviceMeasureResultStatus.SUCCESS)
+                            {
+                                integratorIsStart = false;
+                                Debug.WriteLine($"COUNTER {cyclesCounterWas} -------------------");
+                            }
                         }
                         else
                         {
-                            WorkStatus = info.WorkStatus;
-                        }
-                    }else if (readCounter % 3 == 1)
-                    {
-                        result = p.MeasureResult;
-                        ConvertedResult = result.ConvertedValue;
-                        RawResult = result.ConvertedByModeValue;
-                        MeasureStatusId = result.MeasureStatus;
-                        OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
-                    }
-                    else if (readCounter % 3 == 2)
-                    {
-                        if (p.MeasureLineNumber != ClientId)
-                        {
-                            threadIsActive = false;
-                            IsOnMeasureCycle = false;
-                            p.MeasureStartFlag = false;
+                            measureCyclesCounter = p.MeasureCyclesCounter;
+                            if (!p.PCModeFlag || p.MeasureLineNumber != ClientId)
+                            {
+                                threadIsActive = false;
+                                IsOnMeasureCycle = false;
+                                p.MeasureStartFlag = false;
+                                break;
+                            }
                         }
                     }
-                    readCounter++;
-                    tryTimes = 50;
-                    */
-                }
-                p.Dispose();
-                //OnThreadWillFinish?.Invoke();
-            }
-            catch(DeviceCommandProtocolException ex)
-            {
-                Debug.WriteLine("----------------------------M E S S A G E--------------------");
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.InnerException.Message);
-                Debug.WriteLine("----------------------------M E S S A G E--E N D--------------");
-                if (p != null) p.Dispose();
-                if (threadIsActive)
+                }else if (WorkStatus == DeviceWorkStatus.IDLE && work_status_was == DeviceWorkStatus.DEPOLARIZATION)
                 {
-                    //if (tryTimes-- > 0) goto retry;
-                    IsConnected = false;
+                    //IsOnMeasureCycle = false;
+                    //threadIsActive = false;
+                    //break;
                 }
-                IsOnMeasureCycle = false;
 
             }
+
+            p.Dispose();
+            //OnThreadWillFinish?.Invoke();
         }
+        catch(DeviceCommandProtocolException ex)
+        {
+            Debug.WriteLine("----------------------------M E S S A G E--------------------");
+            Debug.WriteLine(ex.Message);
+            Debug.WriteLine(ex.InnerException.Message);
+            Debug.WriteLine("----------------------------M E S S A G E--E N D--------------");
+            if (p != null) p.Dispose();
+            if (threadIsActive)
+            {
+                //if (tryTimes-- > 0) goto retry;
+                IsConnected = false;
+            }
+            IsOnMeasureCycle = false;
+
+        }
+        
+    }
+    */
 
         public override DeviceXMLState GetXMLState()
         {
@@ -203,8 +217,30 @@ namespace NormaMeasure.Devices.Teraohmmeter
 
         protected override void MeasureStopThreadFunc()
         {
+            DeviceWorkStatus statusTmp;
+            TOhmM_01_v1_CommandProtocol p = CommandProtocol as TOhmM_01_v1_CommandProtocol;
+            if (p.MeasureStartFlag)
+            {
+                p.MeasureStartFlag = false;
+            }else
+            {
+                statusTmp = (DeviceWorkStatus)p.WorkStatus;
+                if (statusTmp != DeviceWorkStatus.POLARIZATION && statusTmp != DeviceWorkStatus.MEASURE && statusTmp != DeviceWorkStatus.DEPOLARIZATION)
+                {
+                    IsOnMeasureCycle = false;
+                }
+                else
+                {
+                    WorkStatus = statusTmp;
+                }
+            }
+
+
+            
+            /*
             int tryTimes = 150;
             int idx = 3;
+            DeviceWorkStatus statusTmp;
             TOhmM_01_v1_CommandProtocol p = null;
             bool flag = true;
             try
@@ -232,10 +268,14 @@ namespace NormaMeasure.Devices.Teraohmmeter
                     }
                     else if (idx % 3 == 2 && !flag)
                     {
-                        if (p.WorkStatus == (int)DeviceWorkStatus.IDLE)
+                        statusTmp = (DeviceWorkStatus)p.WorkStatus;
+                        if (statusTmp == (int)DeviceWorkStatus.IDLE)
                         {
                             IsOnMeasureCycle = false;
                             threadIsActive = false;
+                        }else
+                        {
+                            WorkStatus = statusTmp; 
                         }
                     }
                     idx++;
@@ -256,6 +296,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                 IsOnMeasureCycle = false;
                 IsConnected = false;
             }
+            */
         }
 
         protected override DeviceCommandProtocol GetDeviceCommandProtocol()
@@ -263,10 +304,9 @@ namespace NormaMeasure.Devices.Teraohmmeter
             return new TOhmM_01_v1_CommandProtocol(PortName);
         }
 
-        protected override void SendMeasureParamsToDevice(DeviceCommandProtocol protocol)
+        protected override void SendMeasureParamsToDevice()
         {
-            base.SendMeasureParamsToDevice(protocol);
-            TOhmM_01_v1_CommandProtocol p = protocol as TOhmM_01_v1_CommandProtocol;
+            TOhmM_01_v1_CommandProtocol p = CommandProtocol as TOhmM_01_v1_CommandProtocol;
             p.Temperature = temperature;
             p.PolarDelay = polarDelay;
             p.DepolarDelay = depolarDelay;
@@ -295,6 +335,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
             MeasureStatusId = result.MeasureStatus;
             OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
         }
+
     }
 
     

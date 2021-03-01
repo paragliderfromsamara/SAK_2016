@@ -36,14 +36,16 @@
             this.кабелиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.испытанияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.bottomStatusMenu = new System.Windows.Forms.StatusStrip();
             this.clientCounterStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.connectionStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.failureCounter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.disconnectedDevices = new System.Windows.Forms.ToolStripStatusLabel();
             this.topPanel = new System.Windows.Forms.Panel();
             this.switchConnectToServerButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
-            this.statusStrip.SuspendLayout();
+            this.bottomStatusMenu.SuspendLayout();
             this.topPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -111,17 +113,19 @@
             this.testLinesToolStripMenuItem.Size = new System.Drawing.Size(152, 21);
             this.testLinesToolStripMenuItem.Text = "Испытательные линии";
             // 
-            // statusStrip
+            // bottomStatusMenu
             // 
-            this.statusStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(69)))), ((int)(((byte)(128)))));
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bottomStatusMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(69)))), ((int)(((byte)(128)))));
+            this.bottomStatusMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clientCounterStatus,
-            this.connectionStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 873);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1496, 22);
-            this.statusStrip.TabIndex = 2;
-            this.statusStrip.Text = "statusStrip1";
+            this.connectionStatusLabel,
+            this.failureCounter,
+            this.disconnectedDevices});
+            this.bottomStatusMenu.Location = new System.Drawing.Point(0, 873);
+            this.bottomStatusMenu.Name = "bottomStatusMenu";
+            this.bottomStatusMenu.Size = new System.Drawing.Size(1496, 22);
+            this.bottomStatusMenu.TabIndex = 2;
+            this.bottomStatusMenu.Text = "statusStrip1";
             // 
             // clientCounterStatus
             // 
@@ -137,6 +141,20 @@
             this.connectionStatusLabel.Size = new System.Drawing.Size(205, 17);
             this.connectionStatusLabel.Text = "IP адрес: 192.168.100.220 Порт: 16000";
             this.connectionStatusLabel.Click += new System.EventHandler(this.serverStatusLabel_Click);
+            // 
+            // failureCounter
+            // 
+            this.failureCounter.ForeColor = System.Drawing.Color.FloralWhite;
+            this.failureCounter.Name = "failureCounter";
+            this.failureCounter.Size = new System.Drawing.Size(124, 17);
+            this.failureCounter.Text = "Отвалов от сервера 0";
+            // 
+            // disconnectedDevices
+            // 
+            this.disconnectedDevices.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.disconnectedDevices.Name = "disconnectedDevices";
+            this.disconnectedDevices.Size = new System.Drawing.Size(93, 17);
+            this.disconnectedDevices.Text = "отключено раз:";
             // 
             // topPanel
             // 
@@ -182,6 +200,7 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "";
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // ApplicationForm
             // 
@@ -190,19 +209,18 @@
             this.BackgroundImage = global::TeraMicroMeasure.Properties.Resources.backgroundMdi;
             this.ClientSize = new System.Drawing.Size(1496, 895);
             this.Controls.Add(this.topPanel);
-            this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.bottomStatusMenu);
             this.Controls.Add(this.menuStrip);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.IsMdiContainer = true;
-            this.MainMenuStrip = this.menuStrip;
             this.MinimumSize = new System.Drawing.Size(700, 500);
             this.Name = "ApplicationForm";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
-            this.statusStrip.ResumeLayout(false);
-            this.statusStrip.PerformLayout();
+            this.bottomStatusMenu.ResumeLayout(false);
+            this.bottomStatusMenu.PerformLayout();
             this.topPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -213,7 +231,7 @@
 
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.StatusStrip bottomStatusMenu;
         private System.Windows.Forms.Panel topPanel;
         private System.Windows.Forms.ToolStripStatusLabel clientCounterStatus;
         private System.Windows.Forms.ToolStripStatusLabel connectionStatusLabel;
@@ -225,6 +243,8 @@
         private System.Windows.Forms.ToolStripMenuItem настройкиСервераToolStripMenuItem;
         private System.Windows.Forms.Button switchConnectToServerButton;
         private System.Windows.Forms.ToolStripMenuItem testLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel failureCounter;
+        private System.Windows.Forms.ToolStripStatusLabel disconnectedDevices;
     }
 }
 
