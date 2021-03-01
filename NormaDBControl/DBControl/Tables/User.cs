@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NormaMeasure.DBControl.Tables
 {
-    [DBTable("users", "db_norma_sac", OldDBName = "bd_system", OldTableName = "familija_imja_ot")]
+    [DBTable("users", "db_norma_measure", OldDBName = "bd_system", OldTableName = "familija_imja_ot")]
     public class User : BaseEntity
     {
         private UserRole _role;

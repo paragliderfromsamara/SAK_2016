@@ -9,7 +9,7 @@ using NormaMeasure.DBControl;
 
 namespace NormaMeasure.DBControl.Tables
 {
-    [DBTable("cables", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "cables")]
+    [DBTable("cables", "db_norma_measure", OldDBName = "bd_cable", OldTableName = "cables")]
     public class Cable : BaseEntity
     {
 
@@ -522,7 +522,7 @@ namespace NormaMeasure.DBControl.Tables
     }
 
     
-    [DBTable("tested_cables", "db_norma_sac", OldDBName = "bd_isp", OldTableName = "cables")]
+    [DBTable("tested_cables", "db_norma_measure", OldDBName = "bd_isp", OldTableName = "cables")]
     public class TestedCable : Cable
     {
         public TestedCable(DataRowBuilder builder) : base(builder)

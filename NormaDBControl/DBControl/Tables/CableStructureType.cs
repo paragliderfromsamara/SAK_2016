@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NormaMeasure.DBControl.Tables
 {
-    [DBTable("cable_structure_types", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "tipy_poviv")]
+    [DBTable("cable_structure_types", "db_norma_measure", OldDBName = "bd_cable", OldTableName = "tipy_poviv")]
     public class CableStructureType : BaseEntity
     {
         public CableStructureType(DataRowBuilder builder) : base(builder)

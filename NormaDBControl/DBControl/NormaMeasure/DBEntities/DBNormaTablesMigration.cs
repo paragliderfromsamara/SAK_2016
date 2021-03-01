@@ -28,7 +28,7 @@ namespace NormaMeasure.DBControl.Norma
 
         static DBNormaTablesMigration()
         {
-            //dbName = "db_norma_sac";
+            //dbName = "db_norma_measure";
         }
 
         public DBNormaTablesMigration() : base()

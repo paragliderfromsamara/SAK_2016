@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NormaMeasure.DBControl.Tables
 {
-    [DBTable("baraban_types", "db_norma_sac", OldDBName = "bd_isp", OldTableName = "tipy_baraban")]
+    [DBTable("baraban_types", "db_norma_measure", OldDBName = "bd_isp", OldTableName = "tipy_baraban")]
     public class BarabanType : BaseEntity
     {
         public BarabanType(DataRowBuilder builder) : base(builder)

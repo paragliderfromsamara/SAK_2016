@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NormaMeasure.DBControl.Tables
 {
-    [DBTable("measured_parameter_types", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "ism_param")]
+    [DBTable("measured_parameter_types", "db_norma_measure", OldDBName = "bd_cable", OldTableName = "ism_param")]
     public class MeasuredParameterType : BaseEntity
     {
         public MeasuredParameterType(DataRowBuilder builder) : base(builder)

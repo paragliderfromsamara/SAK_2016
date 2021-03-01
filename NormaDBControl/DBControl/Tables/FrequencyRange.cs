@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NormaMeasure.DBControl.Tables
 {
-    [DBTable("frequency_ranges", "db_norma_sac", OldDBName = "bd_isp", OldTableName = "freq_diap")]
+    [DBTable("frequency_ranges", "db_norma_measure", OldDBName = "bd_isp", OldTableName = "freq_diap")]
     public class FrequencyRange : BaseEntity
     {
         public FrequencyRange(DataRowBuilder builder) : base(builder)

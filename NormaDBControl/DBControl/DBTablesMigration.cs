@@ -81,8 +81,8 @@ namespace NormaMeasure.DBControl
 
         public void InitDataBase()
         {
-            dropDB();
-            //checkAndCreateDB();
+            //dropDB();
+            checkAndCreateDB();
             CreateTables();
             FillSeeds();
             //MigrateData();

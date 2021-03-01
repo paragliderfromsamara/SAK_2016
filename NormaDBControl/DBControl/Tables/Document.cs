@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NormaMeasure.DBControl.Tables
 {
-    [DBTable("documents", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "norm_docum")]
+    [DBTable("documents", "db_norma_measure", OldDBName = "bd_cable", OldTableName = "norm_docum")]
     public class Document : BaseEntity
     {
         public Document(DataRowBuilder builder) : base(builder)

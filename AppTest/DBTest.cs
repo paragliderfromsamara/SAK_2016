@@ -46,12 +46,12 @@ namespace AppTest
         {
             DBEntityTable t = new DBEntityTable(typeof(Cable));
             t.PrimaryKey = new System.Data.DataColumn[] { t.Columns[0] };
-            string cs = String.Format("UserId={0};Server={1};Password={2}; CharacterSet=cp1251; Database=db_norma_sac;", "root", "localhost", "");
+            string cs = String.Format("UserId={0};Server={1};Password={2}; CharacterSet=cp1251; Database=db_norma_measure;", "root", "localhost", "");
             MySqlConnection Conn = new MySqlConnection(cs);
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM cables");
             MySqlDataAdapter ad = new MySqlDataAdapter("SELECT * FROM cables", Conn);
 
-            DataSet ds = new DataSet("db_norma_sac");
+            DataSet ds = new DataSet("db_norma_measure");
 
             ds.Tables.Add(t);
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NormaMeasure.DBControl.Tables
 {
-    [DBTable("length_bringing_types", "db_norma_sac", OldDBName = "bd_isp", OldTableName = "lpriv_tip")]
+    [DBTable("length_bringing_types", "db_norma_measure", OldDBName = "bd_isp", OldTableName = "lpriv_tip")]
     public class LengthBringingType : BaseEntity
     {
         public LengthBringingType(DataRowBuilder builder) : base(builder)

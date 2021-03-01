@@ -9,7 +9,7 @@ namespace NormaMeasure.DBControl.Tables
 {
 
 
-    [DBTable("isolation_materials", "db_norma_sac", OldDBName = "bd_cable", OldTableName = "materialy_izol")]
+    [DBTable("isolation_materials", "db_norma_measure", OldDBName = "bd_cable", OldTableName = "materialy_izol")]
     public class IsolationMaterial : BaseEntity
     {
         public IsolationMaterial(DataRowBuilder builder) : base(builder)

@@ -33,7 +33,7 @@ namespace NormaMeasure.DBControl.SAC
 
         public DBSACTablesMigration() : base()
         {
-            dbName = "db_norma_sac";
+            dbName = "db_norma_measure";
             tableTypes = new Type[]
             {
                typeof(Cable),
