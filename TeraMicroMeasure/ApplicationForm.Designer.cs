@@ -108,6 +108,7 @@
             this.испытанияToolStripMenuItem.Name = "испытанияToolStripMenuItem";
             this.испытанияToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.испытанияToolStripMenuItem.Text = "Испытания";
+            this.испытанияToolStripMenuItem.Click += new System.EventHandler(this.testsToolStripMenuItem_Click);
             // 
             // testLinesToolStripMenuItem
             // 

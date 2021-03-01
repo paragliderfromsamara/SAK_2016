@@ -59,7 +59,8 @@ namespace NormaMeasure.DBControl.DBNormaMeasure
                typeof(CableTestResult),
                typeof(TestedCable),
                typeof(TestedCableStructure),
-               typeof(TestedStructureMeasuredParameterData)
+               typeof(TestedStructureMeasuredParameterData),
+               typeof(MeasureDevice)
             };
             /*
             _tablesList = new DBTable[] 

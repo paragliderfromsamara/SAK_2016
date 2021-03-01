@@ -82,6 +82,7 @@
     <Compile Include="Tables\CableTest.cs" />
     <Compile Include="Tables\CableTestResult.cs" />
     <Compile Include="Tables\CableTestStatus.cs" />
+    <Compile Include="Tables\MeasureDevice.cs" />
     <Compile Include="Tables\Document.cs" />
     <Compile Include="DBNormaMeasure\Forms\CableForm.cs">
       <SubType>Form</SubType>

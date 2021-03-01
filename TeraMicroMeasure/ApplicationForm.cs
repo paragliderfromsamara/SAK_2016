@@ -1092,6 +1092,14 @@ namespace TeraMicroMeasure
             cForm.MdiParent = this;
             cForm.Show();
         }
+
+        private void testsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Form form = GetFormByTypeName(typeof(Ca).Name);
+            //CablesListForm cForm = (form == null) ? new CablesListForm() : form as CablesListForm;
+            //cForm.MdiParent = this;
+            //cForm.Show();
+        }
     }
 
     enum ClientStatus : int
