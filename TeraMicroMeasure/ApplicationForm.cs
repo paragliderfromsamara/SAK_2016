@@ -17,6 +17,8 @@ using TeraMicroMeasure.CommandProcessors;
 using NormaMeasure.SocketControl.TCPControlLib;
 using NormaMeasure.Devices;
 using NormaMeasure.Devices.XmlObjects;
+using NormaMeasure.DBControl.DBNormaMeasure;
+using NormaMeasure.DBControl.DBNormaMeasure.Forms;
 //using System.Diagnostics;
 
 namespace TeraMicroMeasure
@@ -279,7 +281,14 @@ namespace TeraMicroMeasure
         {
             this.Text = "Сервер измерений";
             initServerControl();
+            initDataBase();
             SettingsControl.SetClientId(0);
+        }
+
+        private void initDataBase()
+        {
+            DBNormaMeasureTablesMigration tm = new DBNormaMeasureTablesMigration();
+            tm.InitDataBase();
         }
 
         private void OnServerStatusChanged_Handler(object sender, EventArgs e)
@@ -1052,6 +1061,28 @@ namespace TeraMicroMeasure
         private void button1_Click(object sender, EventArgs e)
         {
             InitMeasureForm();
+        }
+
+        private void usersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = GetFormByTypeName(typeof(UsersForm).Name);
+            UsersForm uForm = (form == null) ? new UsersForm() : form as UsersForm;
+            uForm.MdiParent = this;
+            uForm.Show();
+        }
+
+        private Form GetFormByTypeName(string name)
+        {
+            Form form = null;
+            foreach(var f in this.MdiChildren)
+            {
+                if (f.GetType().Name == name)
+                {
+                    form = f;
+                    break;
+                }
+            }
+            return form;
         }
     }
 

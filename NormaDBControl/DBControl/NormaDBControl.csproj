@@ -74,7 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tables\Cable.cs" />
     <Compile Include="DBNormaMeasure\DBEntities\DBSACBase.cs" />
-    <Compile Include="DBNormaMeasure\DBEntities\DBSACTablesMigration.cs" />
+    <Compile Include="DBNormaMeasure\DBEntities\DBNormaMeasureTablesMigration.cs" />
     <Compile Include="DBNormaMeasure\DBEntities\QADocument.cs" />
     <Compile Include="Tables\CableStructure.cs" />
     <Compile Include="Tables\CableStructureMeasuredParameterData.cs" />

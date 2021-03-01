@@ -84,7 +84,7 @@ namespace NormaMeasure.DBControl
             //dropDB();
             checkAndCreateDB();
             CreateTables();
-            FillSeeds();
+            //FillSeeds();
             //MigrateData();
         }
 
