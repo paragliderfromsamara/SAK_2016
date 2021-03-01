@@ -5,7 +5,7 @@ using System.Data;
 
 
 
-namespace NormaMeasure.DBControl.SAC.Forms
+namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 {
     public partial class CableForm : Form
     {

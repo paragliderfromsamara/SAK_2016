@@ -1,4 +1,4 @@
-﻿namespace NormaMeasure.DBControl.SAC.Forms
+﻿namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 {
     partial class BarabanTypesControlForm
     {

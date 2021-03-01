@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NormaMeasure.DBControl.Tables;
 
-namespace NormaMeasure.DBControl.SAC.Forms
+namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 {
     public partial class BarabanTypesControlForm : DBEntityControlForm
     {

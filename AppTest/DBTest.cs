@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl;
-using NormaMeasure.DBControl.SAC;
+using NormaMeasure.DBControl.DBNormaMeasure;
 using NormaMeasure.DBControl.Tables;
 using MySql.Data.MySqlClient;
 using System.Data;
@@ -15,7 +15,7 @@ namespace AppTest
     {
         public static void Start()
         {
-            DBSACTablesMigration stm = new DBSACTablesMigration();
+            DBNormaMeasureTablesMigration stm = new DBNormaMeasureTablesMigration();
             stm.InitDataBase();
             Program.PrintTitle("Список таблиц базы данных");
             Console.WriteLine();

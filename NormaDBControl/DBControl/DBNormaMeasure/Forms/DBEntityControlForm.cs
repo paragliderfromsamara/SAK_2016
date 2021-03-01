@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data;
 
-namespace NormaMeasure.DBControl.SAC.Forms
+namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 {
     public partial class DBEntityControlForm : Form
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 
-namespace NormaMeasure.DBControl.SAC.DBEntities
+namespace NormaMeasure.DBControl.DBNormaMeasure.DBEntities
 {
     public class QADocumentNorma : DBSACBase
     {

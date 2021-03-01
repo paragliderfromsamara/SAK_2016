@@ -8,8 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
-using NormaMeasure.DBControl.SAC.DBEntities;
-using NormaMeasure.DBControl.SAC.Forms;
+using NormaMeasure.DBControl.DBNormaMeasure.DBEntities;
+using NormaMeasure.DBControl.DBNormaMeasure.Forms;
 using NormaMeasure.MeasureControl.SACMeasureForms;
 using NormaMeasure.Devices.SAC;
 
@@ -141,7 +141,7 @@ namespace NormaMeasure.SAC_APP
             //dm.createTables();
             //DBSACTablesMigration dbMigartion = new DBSACTablesMigration();
            // dbMigartion.InitDataBase();
-           // NormaMeasure.DBControl.SAC.DBEntities.CableOld c = new NormaMeasure.DBControl.SAC.DBEntities.CableOld();
+           // NormaMeasure.DBControl.DBNormaMeasure.DBEntities.CableOld c = new NormaMeasure.DBControl.DBNormaMeasure.DBEntities.CableOld();
             //string cols = DBSACTablesMigration.DocumentsTable.SelectQuery;
 
             //MessageBox.Show(cols);

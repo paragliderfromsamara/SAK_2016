@@ -6,9 +6,9 @@ using MySql.Data.MySqlClient;
 using System.Threading.Tasks;
 using NormaMeasure.DBControl.Tables;
 
-namespace NormaMeasure.DBControl.SAC
+namespace NormaMeasure.DBControl.DBNormaMeasure
 {
-    public class DBSACTablesMigration : DBTablesMigration
+    public class DBNormaMeasureTablesMigration : DBTablesMigration
     {
        // public static DBTable DocumentsTable
        // {
@@ -26,12 +26,12 @@ namespace NormaMeasure.DBControl.SAC
         //    }
         //}
 
-        static DBSACTablesMigration()
+        static DBNormaMeasureTablesMigration()
         {
             //dbName = "db_norma_sac";
         }
 
-        public DBSACTablesMigration() : base()
+        public DBNormaMeasureTablesMigration() : base()
         {
             dbName = "db_norma_measure";
             tableTypes = new Type[]
