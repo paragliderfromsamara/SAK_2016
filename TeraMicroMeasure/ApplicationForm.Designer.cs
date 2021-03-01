@@ -101,6 +101,7 @@
             this.кабелиToolStripMenuItem.Name = "кабелиToolStripMenuItem";
             this.кабелиToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.кабелиToolStripMenuItem.Text = "Кабели";
+            this.кабелиToolStripMenuItem.Click += new System.EventHandler(this.cablesToolStripMenuItem_Click);
             // 
             // испытанияToolStripMenuItem
             // 
