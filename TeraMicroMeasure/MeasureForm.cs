@@ -615,22 +615,7 @@ namespace TeraMicroMeasure
             bool devMeasFlag = xml_device.WorkStatusId == (int)DeviceWorkStatus.MEASURE || xml_device.WorkStatusId == (int)DeviceWorkStatus.POLARIZATION;
             bool clMeasFlag = MeasureIsStartedOnDevice;
             bool stMeasFlag = measureState.MeasureStartFlag;
-            //DeviceWorkStatus sts = (DeviceWorkStatus)xml_device.WorkStatusId;
-            /*
-            switch(sts)
-            {
-                case DeviceWorkStatus.MEASURE:
-                    if (measureStatus == MeasureStatus.WILL_START || xml_device.IsOnMeasureCycle) SetMeasureStatus(MeasureStatus.STARTED);
-                    break;
-                case DeviceWorkStatus.POLARIZATION:
-                    if (measureStatus == MeasureStatus.WILL_START) SetMeasureStatus(MeasureStatus.STARTED);
-                    break;
-                case DeviceWorkStatus.DEPOLARIZATION:
-                    break;
-                case DeviceWorkStatus.IDLE:
-                    if (measureStatus == MeasureStatus.WILL_STOPPED || measureStatus == MeasureStatus.STARTED) SetMeasureStatus(MeasureStatus.STOPPED);
-                    break;
-            }*/
+
             if (!devMeasFlag && stMeasFlag && !clMeasFlag)
             {
                 //запуск измерения
@@ -676,45 +661,7 @@ namespace TeraMicroMeasure
                 }
                 MeasureStateOnFormChanged();
             }
-            /*
-                if (devMeasFlag && stMeasFlag && !clMeasFlag)
-            {
-                processMeasureCycleStatusOnCaseBothSideConnection(xml_device);
-            }else if (!xml_device.IsOnMeasureCycle && MeasureIsStartedOnDevice)
-            {
-                processMeasureCycleStatusOnCaseClientOnlyConnection(xml_device);
-                MeasureIsStartedOnDevice = false;
-            }else if (xml_device.IsOnMeasureCycle && !MeasureIsStartedOnDevice)
-            {
-                   
-            }
-            else if (xml_device.IsOnMeasureCycle && !measureState.MeasureStartFlag)
-            {
-                processMeasureCycleStatusOnCaseServerSideConnection(xml_device);
-            }else if (!xml_device.IsOnMeasureCycle && !measureState.MeasureStartFlag)
-            {
-                processMeasureCycleStatusBothSideDisconnected(xml_device);
-            }*/
-            /*
-            if (measureStatus == MeasureStatus.WILL_START && xml_device.IsOnMeasureCycle)
-            {
-                SetMeasureStatus(MeasureStatus.STARTED);
-            }else if (measureStatus == MeasureStatus.WILL_STOPPED && !xml_device.IsOnMeasureCycle)
-            {
-                SetMeasureStatus(MeasureStatus.STOPPED);
-            }else if (measureStatus == MeasureStatus.STARTED && !xml_device.IsOnMeasureCycle)
-            {
-               SetMeasureStatus(MeasureStatus.STOPPED);
-            }else if (measureStatus == MeasureStatus.STARTED && (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION || xml_device.MeasureStatusId != (uint)DeviceMeasureResultStatus.SUCCESS))
-            {
-                SetMeasureStatus(MeasureStatus.WILL_STOPPED);
-                if (measureState.MeasureStartFlag)
-                {
-                    measureState.MeasureStartFlag = false;
-                    MeasureStateOnFormChanged();
-                }
-            }
-            */
+
         }
 
         private void processMeasureCycleStatusBothSideDisconnected(DeviceXMLState xml_device)

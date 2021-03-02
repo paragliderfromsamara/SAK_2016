@@ -93,6 +93,10 @@ namespace NormaMeasure.Devices.Teraohmmeter
                         {
                             integratorIsStart = false;
                             Debug.WriteLine($"COUNTER {cyclesCounterWas} -------------------");
+                        }else
+                        {
+                            measure_cycle_flag = false;
+                            p.MeasureStartFlag = false;
                         }
                     }
                     else
@@ -236,69 +240,6 @@ namespace NormaMeasure.Devices.Teraohmmeter
                     WorkStatus = statusTmp;
                 }
             }
-
-
-            
-            /*
-            int tryTimes = 150;
-            int idx = 3;
-            DeviceWorkStatus statusTmp;
-            TOhmM_01_v1_CommandProtocol p = null;
-            bool flag = true;
-            try
-            {
-                p = new TOhmM_01_v1_CommandProtocol(PortName);
-                Debug.WriteLine("MEASURE_STOP_THEAD ------ START");
-                while (threadIsActive)
-                {
-                   // while(flag)
-                   // {
-                   //     p.MeasureStartFlag = false;
-                   //     Thread.Sleep(15);
-                   //     flag = p.MeasureStartFlag;
-                   // }
-                    if (idx % 3 == 0)
-                    {
-                        if (flag) flag = p.MeasureStartFlag = false;
-                        else flag = p.MeasureStartFlag;
-                        
-                        //Thread.Sleep(5);
-                    }
-                    else if (idx % 3 == 1)
-                    {
-                        threadIsActive = IsOnPCMode = p.PCModeFlag;
-                    }
-                    else if (idx % 3 == 2 && !flag)
-                    {
-                        statusTmp = (DeviceWorkStatus)p.WorkStatus;
-                        if (statusTmp == (int)DeviceWorkStatus.IDLE)
-                        {
-                            IsOnMeasureCycle = false;
-                            threadIsActive = false;
-                        }else
-                        {
-                            WorkStatus = statusTmp; 
-                        }
-                    }
-                    idx++;
-                    tryTimes = 150;
-                }
-                p.Dispose();
-                Debug.WriteLine("MEASURE_STOP_THEAD ------ STOP");
-                //OnThreadWillFinish?.Invoke();
-            }
-            catch(DeviceCommandProtocolException ex)
-            {
-                Debug.WriteLine("----------------------------M E S S A G E--------------------");
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.InnerException.Message);
-                Debug.WriteLine("----------------------------M E S S A G E--E N D--------------");
-                if (p != null) p.Dispose();
-                IsOnPCMode = false;
-                IsOnMeasureCycle = false;
-                IsConnected = false;
-            }
-            */
         }
 
         protected override DeviceCommandProtocol GetDeviceCommandProtocol()
