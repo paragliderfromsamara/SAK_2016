@@ -834,6 +834,7 @@ namespace TeraMicroMeasure
             {
                 if (xmlDevices.ContainsKey(key) && WillDisconnectDevice.Contains(key))
                 {
+                    OnDeviceDisconnectedFromServer_Handler(xmlDevices[key]);
                     xmlDevices.Remove(key);
                     disconnectedDevices.Text = $"Отключено раз:{++deviceDisconnectTimes}";
                     
@@ -1126,7 +1127,7 @@ namespace TeraMicroMeasure
 
         void ThreadFunc()
         {
-            Thread.Sleep(1500);
+            Thread.Sleep(5000);
             OnTimerEnd?.Invoke(this, new EventArgs());
         }
 

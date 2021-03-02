@@ -21,11 +21,13 @@ namespace TeraMicroMeasure
     {
         bool IsOnline = false;
         int clientID;
+        bool MeasureIsStartedOnDevice;
         int tryMeasureStartCounter;
         private DeviceCaptureStatus device_capture_status;
         public DeviceCaptureStatus DeviceCaptureStatus => device_capture_status;
 
         private MeasureStatus measureStatus = MeasureStatus.STOPPED;
+        private DeviceXMLState current_device_state;
 
 
         public int ClientID
@@ -487,6 +489,7 @@ namespace TeraMicroMeasure
             measureState.MeasureStartFlag = false;
             ResetMeasureField();
             MeasureStateOnFormChanged();
+            current_device_state = null;
         }
 
         private void ResetMeasureField()
@@ -530,6 +533,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Text = "Пуск измерения";
                     startMeasureButton.Enabled = true;
                     deviceControlButton.Enabled = true;
+                    MeasureIsStartedOnDevice = false;
                     break;
                 case MeasureStatus.WILL_START:
                     startMeasureButton.Text = "Запускается...";
@@ -541,6 +545,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Text = "Остановить измерение";
                     startMeasureButton.Enabled = true;
                     deviceControlButton.Enabled = false;
+                    MeasureIsStartedOnDevice = true;
                     break;
                 case MeasureStatus.WILL_STOPPED:
                     startMeasureButton.Text = "Останавливается...";
@@ -595,18 +600,21 @@ namespace TeraMicroMeasure
                     {
                         CheckMeasureStatus(xml_device);
                         RefreshMeasureField(xml_device);
+                        current_device_state = new DeviceXMLState(xml_device.InnerXml);
                     }
                 }
                 else
                 {
                     RefreshMeasureField(xml_device);
                 }
-
             }
         }
 
         private void CheckMeasureStatus(DeviceXMLState xml_device)
         {
+            bool devMeasFlag = xml_device.WorkStatusId == (int)DeviceWorkStatus.MEASURE || xml_device.WorkStatusId == (int)DeviceWorkStatus.POLARIZATION;
+            bool clMeasFlag = MeasureIsStartedOnDevice;
+            bool stMeasFlag = measureState.MeasureStartFlag;
             //DeviceWorkStatus sts = (DeviceWorkStatus)xml_device.WorkStatusId;
             /*
             switch(sts)
@@ -623,6 +631,71 @@ namespace TeraMicroMeasure
                     if (measureStatus == MeasureStatus.WILL_STOPPED || measureStatus == MeasureStatus.STARTED) SetMeasureStatus(MeasureStatus.STOPPED);
                     break;
             }*/
+            if (!devMeasFlag && stMeasFlag && !clMeasFlag)
+            {
+                //запуск измерения
+
+            }else if (devMeasFlag && stMeasFlag && !clMeasFlag)
+            {
+                //измерение запущено
+                SetMeasureStatus(MeasureStatus.STARTED);
+                
+            }
+            else if (devMeasFlag && stMeasFlag && clMeasFlag)
+            {
+                //измерение идёт
+            }
+            else if (devMeasFlag && !stMeasFlag && clMeasFlag)
+            {
+                //Остановка измерения
+            }
+            else if (!devMeasFlag && !stMeasFlag && clMeasFlag)
+            {
+                //Измерение остановлено
+                if (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION)
+                {
+                    SetMeasureStatus(MeasureStatus.WILL_STOPPED);
+                }
+                else if (xml_device.WorkStatusId == (int)DeviceWorkStatus.IDLE)
+                {
+                    SetMeasureStatus(MeasureStatus.STOPPED);
+                }
+            }
+            else if (!devMeasFlag && stMeasFlag && clMeasFlag)
+            {
+                //Измерение остановлено на устройстве
+                measureState.MeasureStartFlag = false;
+
+                if (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION)
+                {
+                    SetMeasureStatus(MeasureStatus.WILL_STOPPED);
+                }
+                else if (xml_device.WorkStatusId == (int)DeviceWorkStatus.IDLE)
+                {
+                    SetMeasureStatus(MeasureStatus.STOPPED);
+                }
+                MeasureStateOnFormChanged();
+            }
+            /*
+                if (devMeasFlag && stMeasFlag && !clMeasFlag)
+            {
+                processMeasureCycleStatusOnCaseBothSideConnection(xml_device);
+            }else if (!xml_device.IsOnMeasureCycle && MeasureIsStartedOnDevice)
+            {
+                processMeasureCycleStatusOnCaseClientOnlyConnection(xml_device);
+                MeasureIsStartedOnDevice = false;
+            }else if (xml_device.IsOnMeasureCycle && !MeasureIsStartedOnDevice)
+            {
+                   
+            }
+            else if (xml_device.IsOnMeasureCycle && !measureState.MeasureStartFlag)
+            {
+                processMeasureCycleStatusOnCaseServerSideConnection(xml_device);
+            }else if (!xml_device.IsOnMeasureCycle && !measureState.MeasureStartFlag)
+            {
+                processMeasureCycleStatusBothSideDisconnected(xml_device);
+            }*/
+            /*
             if (measureStatus == MeasureStatus.WILL_START && xml_device.IsOnMeasureCycle)
             {
                 SetMeasureStatus(MeasureStatus.STARTED);
@@ -640,6 +713,66 @@ namespace TeraMicroMeasure
                     measureState.MeasureStartFlag = false;
                     MeasureStateOnFormChanged();
                 }
+            }
+            */
+        }
+
+        private void processMeasureCycleStatusBothSideDisconnected(DeviceXMLState xml_device)
+        {
+            SetMeasureStatus(MeasureStatus.STOPPED);
+        }
+
+        private void processMeasureCycleStatusOnCaseServerSideConnection(DeviceXMLState xml_device)
+        {
+            
+        }
+
+        private void processMeasureCycleStatusOnCaseClientOnlyConnection(DeviceXMLState xml_device)
+        {
+            switch (measureStatus)
+            {
+                case MeasureStatus.WILL_START:
+                case MeasureStatus.STARTED:
+                    if (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION)
+                    {
+                        SetMeasureStatus(MeasureStatus.WILL_STOPPED);
+                    }
+                    else if (xml_device.WorkStatusId == (int)DeviceWorkStatus.IDLE)
+                    {
+                        SetMeasureStatus(MeasureStatus.STOPPED);
+                    }
+                    break;
+            }
+            measureState.MeasureStartFlag = false;
+            MeasureStateOnFormChanged();
+        }
+
+        private void processMeasureCycleStatusOnCaseBothSideConnection(DeviceXMLState xml_device)
+        {
+            switch (measureStatus)
+            {
+                case MeasureStatus.STARTED:
+                    if (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION)
+                    {
+                        SetMeasureStatus(MeasureStatus.WILL_STOPPED);
+                    }
+                    break;
+                case MeasureStatus.WILL_START:
+                    if (xml_device.WorkStatusId == (int)DeviceWorkStatus.MEASURE || (xml_device.WorkStatusId == (int)DeviceWorkStatus.POLARIZATION))
+                    {
+                        SetMeasureStatus(MeasureStatus.STARTED);
+                    }
+                    else
+                    {
+                        SetMeasureStatus(MeasureStatus.STOPPED);
+                        if (measureState.MeasureStartFlag)
+                        {
+                            measureState.MeasureStartFlag = false;
+                            MeasureStateOnFormChanged();
+                        }
+                    }
+                    break;
+
             }
         }
 
@@ -718,6 +851,7 @@ namespace TeraMicroMeasure
                     measureState.MeasureStartFlag = true;
                     SetMeasureStatus(MeasureStatus.WILL_START);
                     MeasureStateOnFormChanged();
+                    MeasureIsStartedOnDevice = false;
                     break;
                 case MeasureStatus.STARTED:
                     measureState.MeasureStartFlag = false;

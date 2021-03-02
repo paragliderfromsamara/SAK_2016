@@ -106,8 +106,10 @@ namespace NormaMeasure.Devices.Teraohmmeter
                     }
                 }
             }
-            else if (WorkStatus == DeviceWorkStatus.IDLE && work_status_was == DeviceWorkStatus.DEPOLARIZATION)
+            else if (WorkStatus == DeviceWorkStatus.IDLE || work_status_was == DeviceWorkStatus.DEPOLARIZATION)
             {
+                measure_cycle_flag = false;
+                p.MeasureStartFlag = false;
                 //IsOnMeasureCycle = false;
                 //threadIsActive = false;
                 //break;
