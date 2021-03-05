@@ -44,7 +44,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                 resultStruct.MeasuredIntegratorDifference = resultArr[4];
                 resultStruct.ConvertedValue = GetFloatFromUSHORT(resultArr[6], resultArr[5]);
                 resultStruct.ConvertedByModeValue = GetFloatFromUSHORT(resultArr[8], resultArr[7]);
-                if (resultStruct.ConvertedValue == 0 && resultStruct.MeasureStatus == (uint)TOhmM_01_MeasureStatus.ISTATUS_SUCCESS)
+                if (resultStruct.ConvertedValue == 0 && resultStruct.MeasureStatus == (uint)DeviceMeasureStatus.SUCCESS)
                 {
                     resultStruct.ConvertedByModeValue = resultStruct.ConvertedValue = float.MaxValue;
                 }
@@ -247,10 +247,12 @@ namespace NormaMeasure.Devices.Teraohmmeter
         }
     }
 
+
+
     public struct TeraMeasureResultStruct
     {
-        public double ConvertedValue;
-        public double ConvertedByModeValue;
+        public float ConvertedValue;
+        public float ConvertedByModeValue;
         public uint Range;
         public uint TimeToReach;
         public uint MeasureStatus;
@@ -258,14 +260,4 @@ namespace NormaMeasure.Devices.Teraohmmeter
         public int MeasuredIntegratorDifference;
     }
 
-    public enum TOhmM_01_MeasureStatus : ushort
-    {
-        ISTATUS_SUCCESS = 100,
-        ISTATUS_RANGE_DOWN = 101,
-        ISTATUS_RANGE_UP = 102,
-        ISTATUS_SHORT_CIRCUIT = 103,
-        ISTATUS_INTEGRATOR_IS_ON_NEGATIVE = 104,
-        ISTATUS_IN_WORK = 105,
-
-    }
 }

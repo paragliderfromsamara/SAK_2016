@@ -294,6 +294,7 @@ namespace NormaMeasure.Devices.XmlObjects
             IsOnMeasureCycle = device.IsOnMeasureCycle;
             MeasureStatusId = device.MeasureStatusId;
             MeasureStatusText = device.MeasureStatusText;
+
             id = $"{TypeId}-{Serial}";
         }
 

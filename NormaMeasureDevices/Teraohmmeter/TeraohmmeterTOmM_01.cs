@@ -39,7 +39,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
         {
             polarDelay = measure_state.BeforeMeasureDelay;
             depolarDelay = measure_state.AfterMeasureDelay;
-            cableLength = measure_state.MeasuredCableLength;
+            cableLength = (uint)measure_state.MeasuredCableLength;
             voltageValue = measure_state.MeasureVoltage;
             materialId = measure_state.MeasuredMaterialID;
             temperature = measure_state.Temperature;       
@@ -89,7 +89,7 @@ namespace NormaMeasure.Devices.Teraohmmeter
                         ConvertedResult = (result.ConvertedByModeValue > 0.00001) ? result.ConvertedByModeValue * 1000.0 : 0; //Перевод в МОм
                         MeasureStatusId = result.MeasureStatus;
                         OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
-                        if (MeasureStatusId == (uint)DeviceMeasureResultStatus.SUCCESS)
+                        if (MeasureStatusId == (uint)DeviceMeasureStatus.SUCCESS)
                         {
                             integratorIsStart = false;
                             Debug.WriteLine($"COUNTER {cyclesCounterWas} -------------------");

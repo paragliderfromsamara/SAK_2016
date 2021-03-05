@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using NormaMeasure.Devices.XmlObjects;
+using System.Diagnostics;
 
 namespace NormaMeasure.Devices.Microohmmeter
 {
     public class Microohmmeter_uOmM_01m : DeviceBase
     {
-        private uint cableLength = 1000;
+        private float cableLength = 1000.0f;
         private uint beforeMeasureDelay = 200; // в миллисекундах
         private uint betweenMeasureDelay = 1; // в секундах
         private uint statMeasureTimes = 0;
@@ -18,6 +19,7 @@ namespace NormaMeasure.Devices.Microohmmeter
 
         protected uint MeasureCyclesCounter = 0;
         protected bool resultWaitFlag;
+
 
         private MICRO_MEASURE_MODE measureMode = MICRO_MEASURE_MODE.RL;
         public Microohmmeter_uOmM_01m(DeviceInfo info) : base(info)
@@ -27,13 +29,17 @@ namespace NormaMeasure.Devices.Microohmmeter
             type_name_full = "Микроомметр µОмМ-01м";
         }
 
+        protected override DeviceCommandProtocol GetDeviceCommandProtocol()
+        {
+            return new Micro_01_m_CommandProtocol(PortName);
+        }
+
         protected override void SetMeasureParametersFromMeasureXMLState(MeasureXMLState measure_state)
         {
             cableLength = measure_state.MeasuredCableLength;
             beforeMeasureDelay = measure_state.BeforeMeasureDelay;
             betweenMeasureDelay = measure_state.AfterMeasureDelay;
             statMeasureTimes = measure_state.AveragingTimes;
-            
         }
 
         protected override void InitMeasureCycleOnDevice()
@@ -48,7 +54,13 @@ namespace NormaMeasure.Devices.Microohmmeter
 
         protected override void SendMeasureParamsToDevice()
         {
-            base.SendMeasureParamsToDevice();
+            Micro_01_m_CommandProtocol p = CommandProtocol as Micro_01_m_CommandProtocol;
+            p.BeforeMeasureDelay = beforeMeasureDelay;
+            p.BetweenMeasureDelay = betweenMeasureDelay;
+            p.CableLength = cableLength;
+            p.MeasureModeId = (ushort)measureMode;
+            p.StatMeasureAmount = statMeasureTimes;
+            p.MeasureRangeId = (ushort)MICRO_MEASURE_RANGE.AUTO;
         }
 
         public override DeviceXMLState GetXMLState()
@@ -56,37 +68,44 @@ namespace NormaMeasure.Devices.Microohmmeter
             return new DeviceXMLState(this);
         }
 
+        protected void StartMeasure()
+        {
+            Micro_01_m_CommandProtocol p = CommandProtocol as Micro_01_m_CommandProtocol;
+            p.WaitResultFlag = true;
+        }
+
         protected override void PCModeMeasureThreadFunction()
         {
             uint cyclesCounterWas = MeasureCyclesCounter;
             DeviceWorkStatus work_status_was;
-             p = CommandProtocol as TOhmM_01_v1_CommandProtocol;
-            TeraMeasureResultStruct result;
+            Micro_01_m_CommandProtocol p = CommandProtocol as Micro_01_m_CommandProtocol;
+            MicroMeasureResultStruct result;
 
             work_status_was = WorkStatus;
             WorkStatus = (DeviceWorkStatus)p.WorkStatus;
 
             if (WorkStatus == DeviceWorkStatus.MEASURE)
             {
-                if (!integratorIsStart)
+                if (!resultWaitFlag)
                 {
-                    StartIntegrator();
-                    integratorIsStart = true;
+
+                    StartMeasure();
+                    resultWaitFlag = true;
                 }
                 else
                 {
                     //Thread.Sleep(60);
-                    if (!p.StartIntegratorFlag)
+                    if (!p.WaitResultFlag)
                     {
 
                         result = p.MeasureResult;
-                        RawResult = (result.ConvertedValue > 0.00001) ? result.ConvertedValue * 1000.0 : 0; //Перевод в МОм
-                        ConvertedResult = (result.ConvertedByModeValue > 0.00001) ? result.ConvertedByModeValue * 1000.0 : 0; //Перевод в МОм
+                        RawResult = result.ConvertedValue; 
+                        ConvertedResult = result.ConvertedByModeValue; 
                         MeasureStatusId = result.MeasureStatus;
                         OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
-                        if (MeasureStatusId == (uint)DeviceMeasureResultStatus.SUCCESS)
+                        if (MeasureStatusId == (uint)DeviceMeasureStatus.SUCCESS)
                         {
-                            integratorIsStart = false;
+                            resultWaitFlag = false;
                             Debug.WriteLine($"COUNTER {cyclesCounterWas} -------------------");
                         }
                         else
@@ -106,7 +125,7 @@ namespace NormaMeasure.Devices.Microohmmeter
                     }
                 }
             }
-            else if (WorkStatus == DeviceWorkStatus.IDLE || work_status_was == DeviceWorkStatus.DEPOLARIZATION)
+            else if (WorkStatus == DeviceWorkStatus.IDLE)
             {
                 measure_cycle_flag = false;
                 p.MeasureStartFlag = false;
@@ -115,12 +134,50 @@ namespace NormaMeasure.Devices.Microohmmeter
                 //break;
             }
         }
+
+        protected override void MeasureStopThreadFunc()
+        {
+            DeviceWorkStatus statusTmp;
+            Micro_01_m_CommandProtocol p = CommandProtocol as Micro_01_m_CommandProtocol;
+            if (p.MeasureStartFlag)
+            {
+                p.MeasureStartFlag = false;
+            }
+            else
+            {
+                statusTmp = (DeviceWorkStatus)p.WorkStatus;
+                if (statusTmp != DeviceWorkStatus.MEASURE)
+                {
+                    IsOnMeasureCycle = false;
+                }
+                else
+                {
+                    WorkStatus = statusTmp;
+                }
+            }
+        }
+
+       
+
     }
+
+
 
     enum MICRO_MEASURE_MODE : ushort
     {
         R = 0,
         RL = 2,
         p = 3
+    }
+
+    public enum MICRO_MEASURE_RANGE : ushort
+    {
+        AUTO = 0,
+        ONE = 1,
+        TWO = 2,
+        THREE = 3,
+        FOUR = 4,
+        FIVE = 5, 
+        SIX = 6
     }
 }

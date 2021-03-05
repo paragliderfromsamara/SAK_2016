@@ -31,6 +31,7 @@ namespace NormaMeasure.Devices
         protected ushort MeasureLineNumberAddr;
         protected ushort MeasureStartFlagAddr;
         protected ushort MeasureStatusAddr;
+        protected ushort MeasureRangeIdAddr;
 
 
         string comPortName;
@@ -99,6 +100,17 @@ namespace NormaMeasure.Devices
             get
             {
                 return ReadSingleHolding(MeasureStartFlagAddr);
+            }
+        }
+
+        public ushort MeasureRangeId
+        {
+            get
+            {
+                return ReadSingleHolding(MeasureRangeIdAddr);
+            }set
+            {
+                WriteSingleHolding(MeasureRangeIdAddr, value);
             }
         }
 
@@ -185,6 +197,21 @@ namespace NormaMeasure.Devices
             return ((value.Length > 0) ? value[0] : (ushort)0);
         }
 
+        protected double ReadFloatValue(ushort addr)
+        {
+            ushort[] arr = ReadHoldings(addr, (ushort)(addr+1));
+            return GetFloatFromUSHORT(arr);
+        }
+
+        protected void WriteFloatValue(ushort addr, float value)
+        {
+            byte[] arr = BitConverter.GetBytes(value);
+            ushort[] uArr = { 0, 0 };
+            uArr[0] = (ushort)(((ushort)arr[3] << (ushort)8) + (ushort)arr[2]);
+            uArr[1] = (ushort)(arr[1] << 8);
+            WriteMultipleHoldings(addr, uArr);
+        }
+
         protected ushort[] ReadHoldings(ushort addr_start, ushort addr_end)
         {
             int times = RETRY_SENDING_TIMES;
@@ -264,6 +291,12 @@ namespace NormaMeasure.Devices
             MeasureLineNumberAddr = 0x0081;
             MeasureStartFlagAddr = 0x0082;
             MeasureStatusAddr = 0x0083;
+            MeasureRangeIdAddr = 0x0047;
+        }
+
+        public float GetFloatFromUSHORT(ushort[] valArr)
+        {
+            return GetFloatFromUSHORT(valArr[1], valArr[0]);
         }
 
         public float GetFloatFromUSHORT(ushort hight, ushort low)

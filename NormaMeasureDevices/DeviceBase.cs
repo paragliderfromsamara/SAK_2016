@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NormaMeasure.Devices.XmlObjects;
 using NormaMeasure.Devices.Teraohmmeter;
+using NormaMeasure.Devices.Microohmmeter;
 using System.Diagnostics;
 
 
@@ -29,6 +30,14 @@ namespace NormaMeasure.Devices
         public uint RangeId;
         public uint MeasureStatus;
         public MeasureResultEventArgs(TeraMeasureResultStruct result)
+        {
+            RawValue = result.ConvertedValue;
+            ConvertedValue = result.ConvertedByModeValue;
+            RangeId = result.Range;
+            MeasureStatus = result.MeasureStatus;
+        }
+
+        public MeasureResultEventArgs(MicroMeasureResultStruct result)
         {
             RawValue = result.ConvertedValue;
             ConvertedValue = result.ConvertedByModeValue;
@@ -173,18 +182,24 @@ namespace NormaMeasure.Devices
             {
                 switch(measure_status_id)
                 {
-                    case (uint)DeviceMeasureResultStatus.SUCCESS:
+                    case (uint)DeviceMeasureStatus.SUCCESS:
                         return "Успешно";
-                    case (uint)DeviceMeasureResultStatus.INTEGRATOR_IS_ON_NEGATIVE:
+                    case (uint)DeviceMeasureStatus.INTEGRATOR_IS_ON_NEGATIVE:
                         return "Цепь под напряжением";
-                    case (uint)DeviceMeasureResultStatus.IN_WORK:
+                    case (uint)DeviceMeasureStatus.IN_WORK:
                         return "В процессе";
-                    case (uint)DeviceMeasureResultStatus.RANGE_DOWN:
+                    case (uint)DeviceMeasureStatus.RANGE_DOWN:
                         return "Требуется диапазон ниже";
-                    case (uint)DeviceMeasureResultStatus.RANGE_UP:
+                    case (uint)DeviceMeasureStatus.RANGE_UP:
                         return "Требуется диапазон выше";
-                    case (uint)DeviceMeasureResultStatus.SHORT_CIRCUIT:
+                    case (uint)DeviceMeasureStatus.SHORT_CIRCUIT:
                         return "Короткое замыкание";
+                    case (uint)DeviceMeasureStatus.BRAKE_CURRENT_LINE:
+                        return "Обрыв токовой цепи";
+                    case (uint)DeviceMeasureStatus.BRAKE_POTENTIAL_LINE:
+                        return "Обрыв потенциальной цепи";
+                    case (uint)DeviceMeasureStatus.CALCULATE_ERROR:
+                        return "Ошибка преобразования";
                     default:
                         return $"Измерение прервано. Код прерывания:{measure_status_id}.";
                 }
@@ -616,16 +631,16 @@ namespace NormaMeasure.Devices
         LOST_CIRCUIT_CORRECTION = 6
     }
 
-    public enum DeviceMeasureResultStatus : uint
-    {
-        SUCCESS = 100,
-        IN_WORK = 105,   //
-        NEED_TO_REPEAT = 106,
-        RANGE_UP = 101,	//увеличить диапазон
-        RANGE_DOWN = 102,	//понизить диапазон
-        SHORT_CIRCUIT = 103, //короткое замыкание
-        INTEGRATOR_IS_ON_NEGATIVE = 104 //Интегратор в отрицательной области	
-    }
+    //public enum DeviceMeasureResultStatus : uint
+    ///{
+    //    SUCCESS = 100,
+    //    IN_WORK = 105,   //
+    //    NEED_TO_REPEAT = 106,
+    //    RANGE_UP = 101,	//увеличить диапазон
+    //    RANGE_DOWN = 102,	//понизить диапазон
+    //    SHORT_CIRCUIT = 103, //короткое замыкание
+    //    INTEGRATOR_IS_ON_NEGATIVE = 104 //Интегратор в отрицательной области	
+    //}
 
 
     public class NormaDeviceException : Exception
@@ -635,4 +650,20 @@ namespace NormaMeasure.Devices
 
         }
     }
+
+    public enum DeviceMeasureStatus : ushort
+    {
+        SUCCESS = 100,
+        RANGE_DOWN = 101,
+        RANGE_UP = 102,
+        SHORT_CIRCUIT = 103,
+        INTEGRATOR_IS_ON_NEGATIVE = 104,
+        IN_WORK = 105,
+        BRAKE_CURRENT_LINE = 107,
+        BRAKE_POTENTIAL_LINE = 108,
+        CALCULATE_NO_ERROR = 109,
+        CALCULATE_ERROR = 110,
+        INTERRUPTED = 111,
+        PHASE_REVERSE = 112
+     }
 }

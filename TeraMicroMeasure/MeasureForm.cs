@@ -282,7 +282,7 @@ namespace TeraMicroMeasure
             {
                 measureState.MeasuredCableLength = 1000;
             }
-            cableLengthNumericUpDown.Value = measureState.MeasuredCableLength;
+            cableLengthNumericUpDown.Value = (decimal)measureState.MeasuredCableLength;
         }
 
         private void SetCableIDFromXmlState()
@@ -350,6 +350,8 @@ namespace TeraMicroMeasure
         private void MeasureTypeRadioButton_CheckedChanged_Common(object sender, EventArgs e)
         {
             voltagesGroupBox.Visible = RizolRadioButton.Checked;
+            polarDelayLbl.Text = RizolRadioButton.Checked ? "Выдержка, мин" : "Выдержка, мс";
+            depolTimeLbl.Text = RizolRadioButton.Checked ? "Разряд, с" : "Пауза, c";
         }
         private void MeasureTypeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
@@ -360,12 +362,10 @@ namespace TeraMicroMeasure
                 if (rb == RizolRadioButton)
                 {
                     mId = MeasuredParameterType.Risol2;
-                    //CapturedDeviceType = DeviceType.Teraohmmeter;
                 }
                 else if (rb == RleadRadioButton)
                 {
                     mId = MeasuredParameterType.Rleads;
-                    //CapturedDeviceType = DeviceType.Microohmmeter;
                 }
                 CapturedDeviceType = GetDeviceTypeByRadioBox();
                 measureState.MeasureTypeId = mId;
@@ -764,7 +764,7 @@ namespace TeraMicroMeasure
 
         private string GetResultFieldText(DeviceXMLState xml_device)
         {
-            if (xml_device.MeasureStatusId == (uint)DeviceMeasureResultStatus.SUCCESS)
+            if (xml_device.MeasureStatusId == (uint)DeviceMeasureStatus.SUCCESS)
             {
                // return $"{xml_device.ConvertedResult}";
                return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";

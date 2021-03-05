@@ -83,9 +83,9 @@ namespace NormaMeasure.Devices.XmlObjects
             }
         }
 
-        uint measured_cable_length = 1000;
+        float measured_cable_length = 1000.0f;
 
-        public uint MeasuredCableLength
+        public float MeasuredCableLength
         {
             get
             {
@@ -365,8 +365,8 @@ namespace NormaMeasure.Devices.XmlObjects
 
         private void fillMeasuredCableLengthFromXML()
         {
-            uint v = 1;
-            tryGetUIntXmlProp(measuredCableLength_TagName, out v);
+            float v = 1.0f;
+            tryGetFloatXmlProp(measuredCableLength_TagName, out v);
             if (v == 0) v = 1;
             measured_cable_length = v;
         }

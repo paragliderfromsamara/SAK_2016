@@ -185,9 +185,9 @@
             this.depolTimeLbl.AutoSize = true;
             this.depolTimeLbl.Location = new System.Drawing.Point(381, 36);
             this.depolTimeLbl.Name = "depolTimeLbl";
-            this.depolTimeLbl.Size = new System.Drawing.Size(72, 18);
+            this.depolTimeLbl.Size = new System.Drawing.Size(66, 18);
             this.depolTimeLbl.TabIndex = 8;
-            this.depolTimeLbl.Text = "Разряд, c";
+            this.depolTimeLbl.Text = "Пауза, c";
             // 
             // afterMeasureDelayUpDown
             // 
