@@ -1066,8 +1066,8 @@ namespace TeraMicroMeasure
 
         private void usersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = GetFormByTypeName(typeof(UsersForm).Name);
-            UsersForm uForm = (form == null) ? new UsersForm() : form as UsersForm;
+            Form form = GetFormByTypeName(typeof(UsersList).Name);
+            UsersList uForm = (form == null) ? new UsersList() : form as UsersList;
             uForm.MdiParent = this;
             uForm.Show();
         }

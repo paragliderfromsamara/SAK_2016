@@ -58,7 +58,6 @@ namespace NormaMeasure.DBControl.Tables
                 return base.Save();
             }catch(DBEntityException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Не удалось сохранить пользователя...", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
                 return false;
             }
         }

@@ -218,6 +218,7 @@
             this.IsMdiContainer = true;
             this.MinimumSize = new System.Drawing.Size(700, 500);
             this.Name = "ApplicationForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip.ResumeLayout(false);

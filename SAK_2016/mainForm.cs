@@ -43,7 +43,7 @@ namespace NormaMeasure.SAC_APP
         public SACHandMeasureForm HandMeasureForm = null;
 
 
-        private UsersForm usersForm;
+        private UsersList usersForm;
         private CablesListForm cablesListForm;
         private BarabanTypesControlForm barabanTypesControlForm;
 
@@ -131,7 +131,7 @@ namespace NormaMeasure.SAC_APP
 
         private void dbUsersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            usersForm = new UsersForm();
+            usersForm = new UsersList();
             initChildForm(usersForm);
         }
 

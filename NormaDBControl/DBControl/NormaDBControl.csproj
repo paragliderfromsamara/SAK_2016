@@ -59,11 +59,17 @@
     <Compile Include="DBNormaMeasure\Forms\DBEntityControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DBNormaMeasure\Forms\UsersForm.cs">
+    <Compile Include="DBNormaMeasure\Forms\UserForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DBNormaMeasure\Forms\UsersForm.Designer.cs">
-      <DependentUpon>UsersForm.cs</DependentUpon>
+    <Compile Include="DBNormaMeasure\Forms\UserForm.Designer.cs">
+      <DependentUpon>UserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBNormaMeasure\Forms\UsersList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBNormaMeasure\Forms\UsersList.Designer.cs">
+      <DependentUpon>UsersList.cs</DependentUpon>
     </Compile>
     <Compile Include="Tables\BarabanType.cs" />
     <Compile Include="Tables\BaseEntity.cs" />
@@ -123,8 +129,11 @@
     <EmbeddedResource Include="DBNormaMeasure\Forms\CablesListForm.resx">
       <DependentUpon>CablesListForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DBNormaMeasure\Forms\UsersForm.resx">
-      <DependentUpon>UsersForm.cs</DependentUpon>
+    <EmbeddedResource Include="DBNormaMeasure\Forms\UserForm.resx">
+      <DependentUpon>UserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBNormaMeasure\Forms\UsersList.resx">
+      <DependentUpon>UsersList.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

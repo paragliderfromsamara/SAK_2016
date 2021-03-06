@@ -76,6 +76,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AppTypeSelector";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AppTypeSelector";
             this.TopMost = true;
             this.ResumeLayout(false);
