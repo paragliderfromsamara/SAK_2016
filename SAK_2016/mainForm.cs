@@ -184,7 +184,7 @@ namespace NormaMeasure.SAC_APP
 
         private void dbCableToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            cablesListForm = new CablesListForm();
+            cablesListForm = new CablesListForm(CABLE_FORM_TYPE.SAK);
             initChildForm(cablesListForm);
         }
 

@@ -1089,7 +1089,7 @@ namespace TeraMicroMeasure
         private void cablesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form form = GetFormByTypeName(typeof(CablesListForm).Name);
-            CablesListForm cForm = (form == null) ? new CablesListForm() : form as CablesListForm;
+            CablesListForm cForm = (form == null) ? new CablesListForm(CABLE_FORM_TYPE.TERA_MICRO) : form as CablesListForm;
             cForm.MdiParent = this;
             cForm.Show();
         }

@@ -56,6 +56,12 @@
     <Compile Include="DBNormaMeasure\Forms\BarabanTypesControlForm.Designer.cs">
       <DependentUpon>BarabanTypesControlForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DBNormaMeasure\Forms\CableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBNormaMeasure\Forms\CableForm.Designer.cs">
+      <DependentUpon>CableForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DBNormaMeasure\Forms\DBEntityControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,11 +96,11 @@
     <Compile Include="Tables\CableTestStatus.cs" />
     <Compile Include="Tables\MeasureDevice.cs" />
     <Compile Include="Tables\Document.cs" />
-    <Compile Include="DBNormaMeasure\Forms\CableForm.cs">
+    <Compile Include="DBNormaMeasure\Forms\CableFormSAC.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DBNormaMeasure\Forms\CableForm.Designer.cs">
-      <DependentUpon>CableForm.cs</DependentUpon>
+    <Compile Include="DBNormaMeasure\Forms\CableFormSAC.Designer.cs">
+      <DependentUpon>CableFormSAC.cs</DependentUpon>
     </Compile>
     <Compile Include="DBNormaMeasure\Forms\CablesListForm.cs">
       <SubType>Form</SubType>
@@ -125,6 +131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DBNormaMeasure\Forms\CableForm.resx">
       <DependentUpon>CableForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBNormaMeasure\Forms\CableFormSAC.resx">
+      <DependentUpon>CableFormSAC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DBNormaMeasure\Forms\CablesListForm.resx">
       <DependentUpon>CablesListForm.cs</DependentUpon>

@@ -13,9 +13,11 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 {
     public partial class CablesListForm : Form
     {
-        private List<CableForm> cableForms = new List<CableForm>();
-        public CablesListForm()
+        CABLE_FORM_TYPE cableFormType; 
+        private List<CableFormSAC> cableForms = new List<CableFormSAC>();
+        public CablesListForm(CABLE_FORM_TYPE cable_form_type)
         {
+            cableFormType = cable_form_type;
             InitializeComponent();
             InitCablesList();
             FillCablesList();
@@ -42,7 +44,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
         private void newCableFormButton_Click(object sender, EventArgs e)
         {
 
-            CableForm draftCableForm = FindDraftCableFormInList();
+            CableFormSAC draftCableForm = FindDraftCableFormInList();
             if (draftCableForm == null) CreateNewCableForm();
             else doFocusToCableForm(draftCableForm);
 
@@ -50,7 +52,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 
         }
 
-        private void doFocusToCableForm(CableForm cable_form)
+        private void doFocusToCableForm(CableFormSAC cable_form)
         {
             if (cable_form.WindowState == FormWindowState.Minimized)
             {
@@ -61,7 +63,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 
         private void CreateNewCableForm()
         {
-            CableForm draftCableForm = new CableForm();
+            CableFormSAC draftCableForm = new CableFormSAC();
             if (draftCableForm.Cable == null)
             {
                 draftCableForm.Close();
@@ -77,7 +79,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 
         private void CreatEditCableForm(uint cable_id)
         {
-            CableForm cable_form = new CableForm(cable_id);
+            CableFormSAC cable_form = new CableFormSAC(cable_id);
             if (cable_form.Cable == null)
             {
                 cable_form.Close();
@@ -96,7 +98,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             Cable copiedCable = Cable.find_by_cable_id(cable_id);
             if (copiedCable != null)
             {
-                CableForm cable_form = new CableForm(copiedCable);
+                CableFormSAC cable_form = new CableFormSAC(copiedCable);
 
                 if (cable_form.Cable == null)
                 {
@@ -115,18 +117,18 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 
         }
 
-        private CableForm FindDraftCableFormInList()
+        private CableFormSAC FindDraftCableFormInList()
         {
-            foreach(CableForm cf in cableForms)
+            foreach(CableFormSAC cf in cableForms)
             {
                 if (cf.IsNew) return cf;
             }
             return null;
         }
 
-        private CableForm FindCableFormByCableId(uint cable_id)
+        private CableFormSAC FindCableFormByCableId(uint cable_id)
         {
-            foreach (CableForm cf in cableForms)
+            foreach (CableFormSAC cf in cableForms)
             {
                 if (cf.Cable.CableId == cable_id) return cf;
             }
@@ -135,7 +137,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 
         private void cableForm_Closed(object sender, EventArgs e)
         {
-            CableForm f = sender as CableForm;
+            CableFormSAC f = sender as CableFormSAC;
             uint cabId = f.Cable.CableId;
             cableForms.Remove(f);
             FillCablesList();
@@ -161,7 +163,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             if (cablesList.SelectedRows.Count > 0)
             {
                 uint cable_id = (uint)cablesList.SelectedRows[0].Cells["cable_id"].Value;
-                CableForm cf = FindCableFormByCableId(cable_id);
+                CableFormSAC cf = FindCableFormByCableId(cable_id);
                 if (cf == null) CreatEditCableForm(cable_id);
                 else doFocusToCableForm(cf);
             }
@@ -202,5 +204,11 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             
 
         }
+    }
+
+    public enum CABLE_FORM_TYPE
+    {
+        SAK, 
+        TERA_MICRO
     }
 }
