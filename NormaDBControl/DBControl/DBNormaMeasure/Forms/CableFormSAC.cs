@@ -49,7 +49,6 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             fillDRBringingFormuls();
             fillDRFormuls();
             fillLengthBringingTypes();
-            
         }
 */
         protected override void fillStructureTypes()
@@ -82,49 +81,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
         */
 
 
-        private void saveCableButton_Click(object sender, System.EventArgs e)
-        {
-            if (!checkSelectedDocument()) return;
-            if (!saveCableStructures()) return;
-            cable.IsDraft = false;
-            if (cable.Save())
-            {
-                fillFormByCable();
-                MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-            }
 
-        }
-
-
-
-
-
-        private bool checkSelectedDocument()
-        {
-            bool f = true;
-            string docName = cable.QADocument.ShortName;
-            if (cable.QADocument.RowState == DataRowState.Added)
-            {
-                string tableName = string.Empty;
-                f = cable.QADocument.Save();
-                if (f)
-                {
-                    tableName = reloadDocumentsDS();
-                    DocumentNumber_input.Refresh();
-                    cable.DocumentId = cable.QADocument.DocumentId;
-                    foreach (DataRow r in cableFormDataSet.Tables[tableName].Rows)
-                    {
-                        Document d = (Document)r;
-                        if (d.ShortName == docName)
-                        {
-                            DocumentNumber_input.SelectedValue = d.DocumentId;
-                            break;
-                        }
-                    }
-                }
-            }
-            return f;
-        }
 
 
 
@@ -154,10 +111,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
        
 
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+
 
 
        
@@ -176,16 +130,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             }
 
         }
-        private bool saveCableStructures()
-        {
-            bool isSave = true;
-            foreach (CableStructure s in cable.CableStructures.Rows)
-            {
-               if (s.RowState != DataRowState.Deleted) isSave &= s.Save();
-               
-            }
-            return isSave;
-        }
+
 
 
 

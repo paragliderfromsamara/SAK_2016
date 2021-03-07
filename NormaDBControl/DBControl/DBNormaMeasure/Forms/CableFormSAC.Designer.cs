@@ -153,13 +153,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(129, 10);
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.closeNoSaveButton.Location = new System.Drawing.Point(129, 10);
             // 
             // saveCableButton
             // 
             this.saveCableButton.Location = new System.Drawing.Point(3, 10);
-            this.saveCableButton.Click += new System.EventHandler(this.saveCableButton_Click);
             // 
             // groupBox1
             // 
@@ -264,7 +262,9 @@
             this.Controls.Add(this.structureTypesComboBox);
             this.Controls.Add(this.CableStructureTabs);
             this.Controls.Add(this.groupBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximizeBox = false;
             this.Name = "CableFormSAC";
             this.Text = "CableForm";
             this.Controls.SetChildIndex(this.groupBox1, 0);

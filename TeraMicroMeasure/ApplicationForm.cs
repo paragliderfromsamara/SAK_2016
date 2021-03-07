@@ -30,6 +30,7 @@ namespace TeraMicroMeasure
         int deviceDisconnectTimes = 0;
         int clientDisconnectedTimes = 0;
         int failureCount = 0;
+       
         bool IsServerApp
         {
             get
@@ -57,6 +58,7 @@ namespace TeraMicroMeasure
             if (appSel.ShowDialog() == DialogResult.OK)
             {
                 InitializeComponent();
+                ColorMDIBg();
                 InitCulture();
                 initStatusBar();
                 initTopBar();
@@ -105,6 +107,22 @@ namespace TeraMicroMeasure
                 d.OnMeasureCycleFlagChanged += OnMeasureCycleFlagChanged_Handler;
             }
 
+        }
+
+        void ColorMDIBg()
+        {
+            foreach (Control control in this.Controls)
+            {
+                // #2
+                MdiClient client = control as MdiClient;
+                if (!(client == null))
+                {
+                    // #3
+                    client.BackColor = Color.FromArgb(37, 44, 63);
+                    // 4#
+                    break;
+                }
+            }
         }
 
         private void OnMeasureCycleFlagChanged_Handler(object sender, EventArgs e)

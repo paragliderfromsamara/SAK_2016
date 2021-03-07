@@ -209,7 +209,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::TeraMicroMeasure.Properties.Resources.backgroundMdi;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1496, 895);
             this.Controls.Add(this.topPanel);
             this.Controls.Add(this.bottomStatusMenu);

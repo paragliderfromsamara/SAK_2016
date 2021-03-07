@@ -50,21 +50,26 @@
             this.label13 = new System.Windows.Forms.Label();
             this.Notes_input = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
             this.saveCableButton = new System.Windows.Forms.Button();
+            this.closeNoSaveButton = new System.Windows.Forms.Button();
+            this.dataTable1 = new System.Data.DataTable();
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             this.SuspendLayout();
             // 
             // cableFormDataSet
             // 
             this.cableFormDataSet.DataSetName = "NewDataSet";
+            this.cableFormDataSet.Tables.AddRange(new System.Data.DataTable[] {
+            this.dataTable1});
             // 
             // CableMark_input
             // 
+            this.CableMark_input.DataSource = this.cableFormDataSet;
             this.CableMark_input.FormattingEnabled = true;
             this.CableMark_input.Location = new System.Drawing.Point(22, 56);
             this.CableMark_input.Name = "CableMark_input";
@@ -127,6 +132,7 @@
             // 
             // DocumentNumber_input
             // 
+            this.DocumentNumber_input.DataSource = this.cableFormDataSet;
             this.DocumentNumber_input.FormattingEnabled = true;
             this.DocumentNumber_input.Location = new System.Drawing.Point(22, 110);
             this.DocumentNumber_input.Name = "DocumentNumber_input";
@@ -270,21 +276,11 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panel1.Controls.Add(this.saveCableButton);
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.closeNoSaveButton);
             this.panel1.Location = new System.Drawing.Point(22, 275);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(370, 45);
             this.panel1.TabIndex = 32;
-            // 
-            // button1
-            // 
-            this.button1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button1.Location = new System.Drawing.Point(129, 7);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(172, 32);
-            this.button1.TabIndex = 26;
-            this.button1.Text = "Закрыть без сохранения";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // saveCableButton
             // 
@@ -295,6 +291,22 @@
             this.saveCableButton.TabIndex = 0;
             this.saveCableButton.Text = "Сохранить";
             this.saveCableButton.UseVisualStyleBackColor = true;
+            this.saveCableButton.Click += new System.EventHandler(this.saveCableButton_Click);
+            // 
+            // closeNoSaveButton
+            // 
+            this.closeNoSaveButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.closeNoSaveButton.Location = new System.Drawing.Point(129, 7);
+            this.closeNoSaveButton.Name = "closeNoSaveButton";
+            this.closeNoSaveButton.Size = new System.Drawing.Size(172, 32);
+            this.closeNoSaveButton.TabIndex = 26;
+            this.closeNoSaveButton.Text = "Закрыть без сохранения";
+            this.closeNoSaveButton.UseVisualStyleBackColor = true;
+            this.closeNoSaveButton.Click += new System.EventHandler(this.closeNoSaveButton_Click);
+            // 
+            // dataTable1
+            // 
+            this.dataTable1.TableName = "Table1";
             // 
             // CableForm
             // 
@@ -326,6 +338,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).EndInit();
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -354,7 +367,8 @@
         protected System.Windows.Forms.Label label13;
         protected System.Windows.Forms.RichTextBox Notes_input;
         protected System.Windows.Forms.Panel panel1;
-        protected System.Windows.Forms.Button button1;
+        protected System.Windows.Forms.Button closeNoSaveButton;
         protected System.Windows.Forms.Button saveCableButton;
+        private System.Data.DataTable dataTable1;
     }
 }
