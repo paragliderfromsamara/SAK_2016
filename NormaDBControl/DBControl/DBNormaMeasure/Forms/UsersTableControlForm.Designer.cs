@@ -33,7 +33,8 @@
             // btnNewRecordFormInit
             // 
             this.btnNewRecordFormInit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnNewRecordFormInit.Visible = false;
+            this.btnNewRecordFormInit.Size = new System.Drawing.Size(201, 45);
+            this.btnNewRecordFormInit.Text = "Новый пользователь";
             // 
             // UsersTableControlForm
             // 
@@ -43,7 +44,10 @@
             this.ClientSize = new System.Drawing.Size(1361, 903);
             this.Name = "UsersTableControlForm";
             this.Text = "UsersTableControlForm";
+            this.Controls.SetChildIndex(this.dataPanel, 0);
+            this.Controls.SetChildIndex(this.btnNewRecordFormInit, 0);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

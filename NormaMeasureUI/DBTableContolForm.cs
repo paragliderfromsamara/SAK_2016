@@ -99,18 +99,27 @@ namespace NormaMeasure.UI
 
         }
 
-        protected virtual void BeforeDataLoad()
+        protected virtual void HideOnBeforeLoadModeEntities()
         {
             dgEntities.Visible = false;
             btnNewRecordFormInit.Visible = false;
+        }
+
+        protected virtual void ShowAfterLoadModeEntities()
+        {
+            dgEntities.Visible = true;
+            btnNewRecordFormInit.Visible = AllowAddEntity;
+        }
+
+        protected virtual void BeforeDataLoad()
+        {
             InitLoadStatusLabelAnimation();
         }
 
         protected virtual void AfterDataLoad()
         {
-            dgEntities.Visible = true;
-            btnNewRecordFormInit.Visible = AllowAddEntity;
             DeinitLoadStatusLabelAnimation();
+            ShowAfterLoadModeEntities();
         }
 
         async protected void FillDataGridAsync()
@@ -157,9 +166,8 @@ namespace NormaMeasure.UI
 
         protected void InitLoadStatusLabelAnimation()
         {
-            loadStatusLabelPointsCounter = 4;
+            loadStatusLabelPointsCounter = 2;
             loadStatusLabel.Text = loadStatusText;
-            loadStatusLabel.Visible = true;
             loadStatusLabelTimer.Enabled = true;
         }
 
@@ -167,11 +175,21 @@ namespace NormaMeasure.UI
         {
             string points = string.Empty;
             loadStatusLabelPointsCounter++;
-            for(int i = 0; i < loadStatusLabelPointsCounter % 4; i++)
+            if (loadStatusLabelPointsCounter == 4)
             {
-                points += ".";
+                HideOnBeforeLoadModeEntities();
+                loadStatusLabel.Visible = true;
+
             }
-            loadStatusLabel.Text = $"{loadStatusText}{points}";
+            if (loadStatusLabelPointsCounter >= 4)
+            {
+                for (int i = 0; i < loadStatusLabelPointsCounter % 4; i++)
+                {
+                    points += ".";
+                }
+                loadStatusLabel.Text = $"{loadStatusText}{points}";
+            }
+
 
         }
         #endregion

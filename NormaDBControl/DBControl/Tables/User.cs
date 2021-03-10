@@ -56,7 +56,7 @@ namespace NormaMeasure.DBControl.Tables
             try
             {
                 return base.Save();
-            }catch(DBEntityException ex)
+            }catch(DBEntityException)
             {
                 return false;
             }

@@ -56,6 +56,12 @@
     <Compile Include="DBNormaMeasure\Forms\BarabanTypesControlForm.Designer.cs">
       <DependentUpon>BarabanTypesControlForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DBNormaMeasure\Forms\BarabanTypesTableControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBNormaMeasure\Forms\BarabanTypesTableControlForm.Designer.cs">
+      <DependentUpon>BarabanTypesTableControlForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DBNormaMeasure\Forms\CableForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +73,12 @@
     </Compile>
     <Compile Include="DBNormaMeasure\Forms\CableFormTeraMicro.Designer.cs">
       <DependentUpon>CableFormTeraMicro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBNormaMeasure\Forms\CablesTableControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBNormaMeasure\Forms\CablesTableControlForm.Designer.cs">
+      <DependentUpon>CablesTableControlForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DBNormaMeasure\Forms\DBEntityControlForm.cs">
       <SubType>Form</SubType>
