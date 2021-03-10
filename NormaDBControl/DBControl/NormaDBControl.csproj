@@ -62,6 +62,12 @@
     <Compile Include="DBNormaMeasure\Forms\CableForm.Designer.cs">
       <DependentUpon>CableForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DBNormaMeasure\Forms\CableFormTeraMicro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBNormaMeasure\Forms\CableFormTeraMicro.Designer.cs">
+      <DependentUpon>CableFormTeraMicro.cs</DependentUpon>
+    </Compile>
     <Compile Include="DBNormaMeasure\Forms\DBEntityControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +83,13 @@
     <Compile Include="DBNormaMeasure\Forms\UsersList.Designer.cs">
       <DependentUpon>UsersList.cs</DependentUpon>
     </Compile>
+    <Compile Include="DBNormaMeasure\Forms\UsersTableControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBNormaMeasure\Forms\UsersTableControlForm.Designer.cs">
+      <DependentUpon>UsersTableControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBSettingsControl.cs" />
     <Compile Include="Tables\BarabanType.cs" />
     <Compile Include="Tables\BaseEntity.cs" />
     <Compile Include="DBAttributes.cs" />
@@ -135,6 +148,9 @@
     <EmbeddedResource Include="DBNormaMeasure\Forms\CableFormSAC.resx">
       <DependentUpon>CableFormSAC.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DBNormaMeasure\Forms\CableFormTeraMicro.resx">
+      <DependentUpon>CableFormTeraMicro.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DBNormaMeasure\Forms\CablesListForm.resx">
       <DependentUpon>CablesListForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -144,8 +160,15 @@
     <EmbeddedResource Include="DBNormaMeasure\Forms\UsersList.resx">
       <DependentUpon>UsersList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DBNormaMeasure\Forms\UsersTableControlForm.resx">
+      <DependentUpon>UsersTableControlForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NormaMeasureUI\NormaMeasureUI.csproj">
+      <Project>{283dc7f4-14ad-42f7-bd4c-005e338e3e34}</Project>
+      <Name>NormaMeasureUI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NormaMeasureUtils\NormaMeasureUtils.csproj">
       <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
       <Name>NormaMeasureUtils</Name>

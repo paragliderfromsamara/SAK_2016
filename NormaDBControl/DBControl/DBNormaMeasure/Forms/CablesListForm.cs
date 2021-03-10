@@ -14,7 +14,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
     public partial class CablesListForm : Form
     {
         CABLE_FORM_TYPE cableFormType; 
-        private List<CableFormSAC> cableForms = new List<CableFormSAC>();
+        private List<CableForm> cableForms = new List<CableForm>();
         public CablesListForm(CABLE_FORM_TYPE cable_form_type)
         {
             cableFormType = cable_form_type;
@@ -43,16 +43,12 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 
         private void newCableFormButton_Click(object sender, EventArgs e)
         {
-
-            CableFormSAC draftCableForm = FindDraftCableFormInList();
+            CableForm draftCableForm = FindDraftCableFormInList();
             if (draftCableForm == null) CreateNewCableForm();
             else doFocusToCableForm(draftCableForm);
-
-
-
         }
 
-        private void doFocusToCableForm(CableFormSAC cable_form)
+        private void doFocusToCableForm(CableForm cable_form)
         {
             if (cable_form.WindowState == FormWindowState.Minimized)
             {
@@ -63,7 +59,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 
         private void CreateNewCableForm()
         {
-            CableFormSAC draftCableForm = new CableFormSAC();
+            CableForm draftCableForm = (cableFormType == CABLE_FORM_TYPE.SAK) ? (CableForm)(new CableFormSAC()) : (CableForm)(new CableFormTeraMicro());
             if (draftCableForm.Cable == null)
             {
                 draftCableForm.Close();
@@ -117,9 +113,9 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 
         }
 
-        private CableFormSAC FindDraftCableFormInList()
+        private CableForm FindDraftCableFormInList()
         {
-            foreach(CableFormSAC cf in cableForms)
+            foreach(CableForm cf in cableForms)
             {
                 if (cf.IsNew) return cf;
             }
@@ -137,7 +133,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
 
         private void cableForm_Closed(object sender, EventArgs e)
         {
-            CableFormSAC f = sender as CableFormSAC;
+            CableForm f = sender as CableForm;
             uint cabId = f.Cable.CableId;
             cableForms.Remove(f);
             FillCablesList();

@@ -31,84 +31,24 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.barabanTypesDS = new System.Data.DataSet();
-            this.barabanTypeList = new System.Windows.Forms.DataGridView();
-            this.baraban_type_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.newBarabanType = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.addBarabanType = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.barabanName = new System.Windows.Forms.TextBox();
-            this.closeForm = new System.Windows.Forms.Button();
+            this.barabanTypeList = new System.Windows.Forms.DataGridView();
+            this.baraban_type_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.barabanTypesDS)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barabanTypeList)).BeginInit();
             this.newBarabanType.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.barabanTypeList)).BeginInit();
             this.SuspendLayout();
             // 
             // barabanTypesDS
             // 
             this.barabanTypesDS.DataSetName = "NewDataSet";
-            // 
-            // barabanTypeList
-            // 
-            this.barabanTypeList.AllowUserToAddRows = false;
-            this.barabanTypeList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.barabanTypeList.BackgroundColor = System.Drawing.Color.LightGray;
-            this.barabanTypeList.ColumnHeadersHeight = 41;
-            this.barabanTypeList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.baraban_type_id,
-            this.name,
-            this.Weight});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.NullValue = "-";
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.barabanTypeList.DefaultCellStyle = dataGridViewCellStyle1;
-            this.barabanTypeList.GridColor = System.Drawing.SystemColors.ButtonShadow;
-            this.barabanTypeList.Location = new System.Drawing.Point(12, 113);
-            this.barabanTypeList.Name = "barabanTypeList";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Teal;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.barabanTypeList.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            this.barabanTypeList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.barabanTypeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.barabanTypeList.Size = new System.Drawing.Size(596, 294);
-            this.barabanTypeList.TabIndex = 1;
-            // 
-            // baraban_type_id
-            // 
-            this.baraban_type_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.baraban_type_id.DataPropertyName = "baraban_type_id";
-            this.baraban_type_id.Frozen = true;
-            this.baraban_type_id.HeaderText = "id";
-            this.baraban_type_id.MinimumWidth = 100;
-            this.baraban_type_id.Name = "baraban_type_id";
-            this.baraban_type_id.ReadOnly = true;
-            // 
-            // name
-            // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.name.DataPropertyName = "baraban_type_name";
-            this.name.FillWeight = 90.28419F;
-            this.name.HeaderText = "Наименование типа";
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            // 
-            // Weight
-            // 
-            this.Weight.DataPropertyName = "baraban_weight";
-            this.Weight.HeaderText = "Вес, кг";
-            this.Weight.MinimumWidth = 100;
-            this.Weight.Name = "Weight";
-            this.Weight.ReadOnly = true;
             // 
             // newBarabanType
             // 
@@ -168,31 +108,85 @@
             this.barabanName.TabIndex = 0;
             this.barabanName.TextChanged += new System.EventHandler(this.barabanName_TextChanged);
             // 
-            // closeForm
+            // barabanTypeList
             // 
-            this.closeForm.Location = new System.Drawing.Point(12, 422);
-            this.closeForm.Name = "closeForm";
-            this.closeForm.Size = new System.Drawing.Size(124, 37);
-            this.closeForm.TabIndex = 3;
-            this.closeForm.Text = "Закрыть окно";
-            this.closeForm.UseVisualStyleBackColor = true;
-            this.closeForm.Click += new System.EventHandler(this.closeForm_Click);
+            this.barabanTypeList.AllowUserToAddRows = false;
+            this.barabanTypeList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.barabanTypeList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.barabanTypeList.BackgroundColor = System.Drawing.Color.LightGray;
+            this.barabanTypeList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.barabanTypeList.ColumnHeadersHeight = 41;
+            this.barabanTypeList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.baraban_type_id,
+            this.name,
+            this.Weight});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.NullValue = "-";
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.barabanTypeList.DefaultCellStyle = dataGridViewCellStyle1;
+            this.barabanTypeList.GridColor = System.Drawing.SystemColors.ButtonShadow;
+            this.barabanTypeList.Location = new System.Drawing.Point(12, 113);
+            this.barabanTypeList.Name = "barabanTypeList";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Teal;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.barabanTypeList.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            this.barabanTypeList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.barabanTypeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.barabanTypeList.Size = new System.Drawing.Size(596, 294);
+            this.barabanTypeList.TabIndex = 1;
+            // 
+            // baraban_type_id
+            // 
+            this.baraban_type_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.baraban_type_id.DataPropertyName = "baraban_type_id";
+            this.baraban_type_id.Frozen = true;
+            this.baraban_type_id.HeaderText = "id";
+            this.baraban_type_id.MinimumWidth = 100;
+            this.baraban_type_id.Name = "baraban_type_id";
+            this.baraban_type_id.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.name.DataPropertyName = "baraban_type_name";
+            this.name.FillWeight = 90.28419F;
+            this.name.HeaderText = "Наименование типа";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // Weight
+            // 
+            this.Weight.DataPropertyName = "baraban_weight";
+            this.Weight.HeaderText = "Вес, кг";
+            this.Weight.MinimumWidth = 100;
+            this.Weight.Name = "Weight";
+            this.Weight.ReadOnly = true;
             // 
             // BarabanTypesControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(620, 480);
-            this.Controls.Add(this.closeForm);
+            this.ClientSize = new System.Drawing.Size(620, 420);
             this.Controls.Add(this.newBarabanType);
             this.Controls.Add(this.barabanTypeList);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "BarabanTypesControlForm";
             this.Text = "Типы барабанов";
             ((System.ComponentModel.ISupportInitialize)(this.barabanTypesDS)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barabanTypeList)).EndInit();
             this.newBarabanType.ResumeLayout(false);
             this.newBarabanType.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.barabanTypeList)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -210,6 +204,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn Weight;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button closeForm;
     }
 }

@@ -48,122 +48,160 @@
             // 
             // CableMark_input
             // 
-            this.CableMark_input.Location = new System.Drawing.Point(12, 24);
+            this.CableMark_input.Location = new System.Drawing.Point(16, 35);
+            this.CableMark_input.Margin = new System.Windows.Forms.Padding(4);
+            this.CableMark_input.Size = new System.Drawing.Size(229, 26);
             // 
             // CableStructures_input
             // 
-            this.CableStructures_input.Location = new System.Drawing.Point(191, 25);
+            this.CableStructures_input.Location = new System.Drawing.Point(255, 35);
+            this.CableStructures_input.Margin = new System.Windows.Forms.Padding(4);
+            this.CableStructures_input.Size = new System.Drawing.Size(906, 26);
             this.CableStructures_input.TabIndex = 3;
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(188, 9);
+            this.label2.Location = new System.Drawing.Point(251, 12);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.TabIndex = 4;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(9, 9);
+            this.label1.Location = new System.Drawing.Point(13, 13);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.TabIndex = 2;
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(188, 55);
+            this.label4.Location = new System.Drawing.Point(252, 78);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.TabIndex = 8;
             // 
             // DocumentName_input
             // 
-            this.DocumentName_input.Location = new System.Drawing.Point(191, 72);
+            this.DocumentName_input.Location = new System.Drawing.Point(255, 100);
+            this.DocumentName_input.Margin = new System.Windows.Forms.Padding(4);
+            this.DocumentName_input.Size = new System.Drawing.Size(906, 26);
             this.DocumentName_input.TabIndex = 7;
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(9, 55);
+            this.label3.Location = new System.Drawing.Point(13, 78);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.TabIndex = 6;
             // 
             // DocumentNumber_input
             // 
-            this.DocumentNumber_input.Location = new System.Drawing.Point(12, 71);
+            this.DocumentNumber_input.Location = new System.Drawing.Point(16, 100);
+            this.DocumentNumber_input.Margin = new System.Windows.Forms.Padding(4);
+            this.DocumentNumber_input.Size = new System.Drawing.Size(229, 26);
             this.DocumentNumber_input.TabIndex = 5;
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(293, 112);
+            this.label7.Location = new System.Drawing.Point(391, 155);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.TabIndex = 15;
             // 
             // Ucover_input
             // 
-            this.Ucover_input.Location = new System.Drawing.Point(296, 128);
+            this.Ucover_input.Location = new System.Drawing.Point(395, 177);
+            this.Ucover_input.Margin = new System.Windows.Forms.Padding(4);
+            this.Ucover_input.Size = new System.Drawing.Size(132, 26);
             this.Ucover_input.TabIndex = 14;
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(188, 112);
+            this.label6.Location = new System.Drawing.Point(251, 155);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.TabIndex = 13;
             // 
             // linearMass_input
             // 
-            this.linearMass_input.Location = new System.Drawing.Point(191, 128);
+            this.linearMass_input.Location = new System.Drawing.Point(255, 177);
+            this.linearMass_input.Margin = new System.Windows.Forms.Padding(4);
+            this.linearMass_input.Size = new System.Drawing.Size(129, 26);
             this.linearMass_input.TabIndex = 12;
             // 
             // BuildLength_input
             // 
-            this.BuildLength_input.Location = new System.Drawing.Point(12, 128);
+            this.BuildLength_input.Location = new System.Drawing.Point(16, 177);
+            this.BuildLength_input.Margin = new System.Windows.Forms.Padding(4);
+            this.BuildLength_input.Size = new System.Drawing.Size(231, 26);
             this.BuildLength_input.TabIndex = 11;
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(9, 112);
+            this.label5.Location = new System.Drawing.Point(12, 155);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.TabIndex = 10;
             // 
             // CodeKCH_input
             // 
-            this.CodeKCH_input.Location = new System.Drawing.Point(744, 128);
+            this.CodeKCH_input.Location = new System.Drawing.Point(992, 177);
+            this.CodeKCH_input.Margin = new System.Windows.Forms.Padding(4);
+            this.CodeKCH_input.Size = new System.Drawing.Size(169, 26);
             this.CodeKCH_input.TabIndex = 25;
             // 
             // CodeOKP_input
             // 
-            this.CodeOKP_input.Location = new System.Drawing.Point(635, 128);
+            this.CodeOKP_input.Location = new System.Drawing.Point(847, 177);
+            this.CodeOKP_input.Margin = new System.Windows.Forms.Padding(4);
+            this.CodeOKP_input.Size = new System.Drawing.Size(132, 26);
             this.CodeOKP_input.TabIndex = 24;
             // 
             // label12
             // 
-            this.label12.Location = new System.Drawing.Point(741, 112);
+            this.label12.Location = new System.Drawing.Point(988, 155);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.TabIndex = 21;
             // 
             // label11
             // 
-            this.label11.Location = new System.Drawing.Point(632, 112);
+            this.label11.Location = new System.Drawing.Point(843, 155);
+            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.TabIndex = 20;
             // 
             // label13
             // 
-            this.label13.Location = new System.Drawing.Point(9, 157);
+            this.label13.Location = new System.Drawing.Point(13, 220);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.TabIndex = 23;
             // 
             // Notes_input
             // 
-            this.Notes_input.Location = new System.Drawing.Point(12, 175);
+            this.Notes_input.Location = new System.Drawing.Point(16, 242);
+            this.Notes_input.Margin = new System.Windows.Forms.Padding(4);
+            this.Notes_input.Size = new System.Drawing.Size(1145, 57);
             this.Notes_input.TabIndex = 22;
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(9, 800);
-            this.panel1.Size = new System.Drawing.Size(370, 47);
+            this.panel1.Location = new System.Drawing.Point(12, 1108);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.Size = new System.Drawing.Size(493, 65);
             this.panel1.TabIndex = 31;
             // 
-            // button1
+            // closeNoSaveButton
             // 
-            this.closeNoSaveButton.Location = new System.Drawing.Point(129, 10);
+            this.closeNoSaveButton.Location = new System.Drawing.Point(172, 14);
+            this.closeNoSaveButton.Margin = new System.Windows.Forms.Padding(4);
+            this.closeNoSaveButton.Size = new System.Drawing.Size(229, 44);
             // 
             // saveCableButton
             // 
-            this.saveCableButton.Location = new System.Drawing.Point(3, 10);
+            this.saveCableButton.FlatAppearance.BorderSize = 0;
+            this.saveCableButton.Location = new System.Drawing.Point(4, 14);
+            this.saveCableButton.Margin = new System.Windows.Forms.Padding(4);
+            this.saveCableButton.Size = new System.Drawing.Size(149, 44);
             // 
             // groupBox1
             // 
-            this.groupBox1.Location = new System.Drawing.Point(418, 98);
+            this.groupBox1.Location = new System.Drawing.Point(557, 136);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(208, 61);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Size = new System.Drawing.Size(277, 84);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Изб. давление, кгс/см^2";
@@ -216,10 +254,11 @@
             // 
             // CableStructureTabs
             // 
-            this.CableStructureTabs.Location = new System.Drawing.Point(12, 272);
+            this.CableStructureTabs.Location = new System.Drawing.Point(16, 377);
+            this.CableStructureTabs.Margin = new System.Windows.Forms.Padding(4);
             this.CableStructureTabs.Name = "CableStructureTabs";
             this.CableStructureTabs.SelectedIndex = 0;
-            this.CableStructureTabs.Size = new System.Drawing.Size(860, 522);
+            this.CableStructureTabs.Size = new System.Drawing.Size(1145, 723);
             this.CableStructureTabs.TabIndex = 27;
             this.CableStructureTabs.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.CableStructureTabs_Deselecting);
             this.CableStructureTabs.VisibleChanged += new System.EventHandler(this.CableStructureTabs_VisibleChanged);
@@ -228,16 +267,18 @@
             // 
             this.structureTypesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.structureTypesComboBox.FormattingEnabled = true;
-            this.structureTypesComboBox.Location = new System.Drawing.Point(12, 235);
+            this.structureTypesComboBox.Location = new System.Drawing.Point(15, 331);
+            this.structureTypesComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.structureTypesComboBox.Name = "structureTypesComboBox";
-            this.structureTypesComboBox.Size = new System.Drawing.Size(173, 21);
+            this.structureTypesComboBox.Size = new System.Drawing.Size(229, 26);
             this.structureTypesComboBox.TabIndex = 28;
             // 
             // addStructureButton
             // 
-            this.addStructureButton.Location = new System.Drawing.Point(191, 234);
+            this.addStructureButton.Location = new System.Drawing.Point(254, 323);
+            this.addStructureButton.Margin = new System.Windows.Forms.Padding(4);
             this.addStructureButton.Name = "addStructureButton";
-            this.addStructureButton.Size = new System.Drawing.Size(145, 23);
+            this.addStructureButton.Size = new System.Drawing.Size(193, 40);
             this.addStructureButton.TabIndex = 29;
             this.addStructureButton.Text = "Добавить структуру";
             this.addStructureButton.UseVisualStyleBackColor = true;
@@ -246,24 +287,25 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 219);
+            this.label10.Location = new System.Drawing.Point(11, 309);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(81, 13);
+            this.label10.Size = new System.Drawing.Size(111, 18);
             this.label10.TabIndex = 30;
             this.label10.Text = "Тип структуры";
             // 
             // CableFormSAC
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(887, 883);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(241)))), ((int)(((byte)(255)))));
+            this.ClientSize = new System.Drawing.Size(1176, 1223);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.addStructureButton);
             this.Controls.Add(this.structureTypesComboBox);
             this.Controls.Add(this.CableStructureTabs);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "CableFormSAC";
             this.Text = "CableForm";

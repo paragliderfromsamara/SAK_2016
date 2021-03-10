@@ -23,6 +23,7 @@ namespace NormaMeasure.SocketControl.TCPControlLib
         int localPortWas;
         string remoteIPWas;
         int remotePortWas;
+        bool isPartOfSettingsMenu = false;
 
         bool isItServer => controller.IsServerSettings;
         TCPSettingsController controller;
@@ -79,8 +80,11 @@ namespace NormaMeasure.SocketControl.TCPControlLib
             }
             else
             {
+                int delta = serverSettingsPanel.Height + 15;
                 serverSettingsPanel.Visible = false;
-                this.Height -= serverSettingsPanel.Height - 15;
+                this.Height -= delta;
+                saveButton.Top -= (delta);
+                cancelButton.Top -= (delta);
             }
         }
 
@@ -105,11 +109,19 @@ namespace NormaMeasure.SocketControl.TCPControlLib
                         controller.serverPortOnSettingsFile = remotePort;
                     }
                 }
+                if (isPartOfSettingsMenu) MessageBox.Show("Настройки успешно обновлены", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }catch(TCPSettingsControllerException ex)
             {
                 MessageBox.Show(ex.Message, "Неверный формат TCP параметров");
             }
            // if (lo)
+        }
+
+        private void TCPSettingsForm_Load(object sender, EventArgs e)
+        {
+            isPartOfSettingsMenu = this.Parent.GetType().Name == "TabPage";
+            cancelButton.Visible = !isPartOfSettingsMenu;
+            InitLocalIPComboBox();
         }
     }
 }

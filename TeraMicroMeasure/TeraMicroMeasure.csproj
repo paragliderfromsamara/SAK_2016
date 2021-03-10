@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppForm.Designer.cs">
+      <DependentUpon>AppForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AppTypeSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,6 +67,24 @@
     </Compile>
     <Compile Include="CommandProcessors\ClientCommandDispatcher.cs" />
     <Compile Include="CommandProcessors\ServerCommandDispatcher.cs" />
+    <Compile Include="Forms\DataBaseSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DataBaseSettingsForm.Designer.cs">
+      <DependentUpon>DataBaseSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DataBaseTablesControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DataBaseTablesControlForm.Designer.cs">
+      <DependentUpon>DataBaseTablesControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MeasureForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +102,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ApplicationForm.resx">
       <DependentUpon>ApplicationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DataBaseSettingsForm.resx">
+      <DependentUpon>DataBaseSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DataBaseTablesControlForm.resx">
+      <DependentUpon>DataBaseTablesControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MeasureForm.resx">
       <DependentUpon>MeasureForm.cs</DependentUpon>
@@ -113,6 +146,10 @@
     <ProjectReference Include="..\NormaMeasureDevices\NormaMeasureDevices.csproj">
       <Project>{95c559b4-3dd7-471e-a601-e464bd041336}</Project>
       <Name>NormaMeasureDevices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NormaMeasureUI\NormaMeasureUI.csproj">
+      <Project>{283dc7f4-14ad-42f7-bd4c-005e338e3e34}</Project>
+      <Name>NormaMeasureUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\NormaMeasureUtils\NormaMeasureUtils.csproj">
       <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>

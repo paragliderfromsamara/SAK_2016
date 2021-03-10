@@ -27,6 +27,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
         {
             base.InitDesign();
             InitializeComponent();
+
         }
 
 
@@ -164,6 +165,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             CableStructureTabs.TabPages.Add(tp);
             CableStructureTabs.SelectedTab = tp;
             CableStructureTabs.Visible = true;
+
         }
 
         /// <summary>
@@ -221,7 +223,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             }
             else
             {
-                this.Height = 900 - CableStructureTabs.Height;
+                this.Height = this.Height - CableStructureTabs.Height;
             }
             panel1.Top = this.Height - panel1.Height*2;
         }
@@ -233,10 +235,17 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
         public CableStructureTabPage(CableStructure structure, DataSet cableFormDS)
         {
             this.CableStructure = structure;
+            InitDesign();
             DrawElements();
             FillFromDataSet(cableFormDS);
             FillCableStructureData();
             InitTabPage();
+        }
+
+        private void InitDesign()
+        {
+            this.BackColor = System.Drawing.Color.FromArgb(237, 241, 255);
+            this.Width = 800;
         }
 
 
@@ -540,7 +549,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             EnabledBringingLengthCellStyle.SelectionBackColor = DisabledBringingLengthCellStyle.SelectionBackColor = EnabledCellStyle.SelectionBackColor;
 
             MeasuredParamsDataGridView = new DataGridView();
-            MeasuredParamsDataGridView.Size = new System.Drawing.Size(600, 350);
+            MeasuredParamsDataGridView.Size = new System.Drawing.Size(800, 350);
             MeasuredParamsDataGridView.Parent = this;
             MeasuredParamsDataGridView.AllowUserToAddRows = false;
             MeasuredParamsDataGridView.AllowUserToResizeColumns = false;
@@ -548,6 +557,8 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             MeasuredParamsDataGridView.AllowUserToOrderColumns = false;
             MeasuredParamsDataGridView.AutoGenerateColumns = false;
             MeasuredParamsDataGridView.MultiSelect = false;
+            MeasuredParamsDataGridView.ColumnHeadersHeight = 30;
+
 
             parameterTypeNameColumn = new DataGridViewTextBoxColumn();
             parameterTypeNameColumn.Name = "parameter_type_name_column";
@@ -609,7 +620,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             bringingLengthColumn.HeaderText = "Lприв, м";
             bringingLengthColumn.DataPropertyName = "length_bringing";
             bringingLengthColumn.Name = "length_bringing_column_01";
-            bringingLengthColumn.Width = 60;
+            bringingLengthColumn.Width = 75;
 
             bool hasFreqParameters = CableStructure.HasFreqParameters;
 
@@ -646,6 +657,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             freqRangeIdColumn.DataPropertyName = "frequency_range_id";
             freqRangeIdColumn.Name = "frequency_range_id_column";
             freqRangeIdColumn.Visible = false;
+            
 
             lengthBringingTypeIdColumn = new DataGridViewTextBoxColumn();
             lengthBringingTypeIdColumn.DataPropertyName = "length_bringing_type_id";
@@ -660,6 +672,7 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
             cableStructureIdColumn = new DataGridViewTextBoxColumn();
             cableStructureIdColumn.Name = "cable_structure_id_column";
             cableStructureIdColumn.DataPropertyName = "cable_structure_id";
+
             cableStructureIdColumn.Visible = false;
 
             lengthBringingMeasureTitleColumn = new DataGridViewTextBoxColumn();
@@ -703,8 +716,6 @@ namespace NormaMeasure.DBControl.DBNormaMeasure.Forms
                 lengthBringtingMeasureNameColumn,
                 deleteParameterTypeButtonColumn
             });
-
-            
             //
             // MeasuredParamsDataGridView.CellValueChanged += MeasuredParamsDataGridView_CellValueChanged;
             //MeasuredParamsDataGridView.CurrentCellChanged += MeasuredParamsDataGridView_CurrentCellChanged;

@@ -10,15 +10,15 @@ using MySql.Data.MySqlClient;
 
 namespace NormaMeasure.DBControl
 {
-    class MySQLDBControl : IDisposable
+    public class MySQLDBControl : IDisposable
     {
         #region Данные класса DBControl
         public MySqlConnection MyConn;
         MySqlCommand MC;
         private string _db_name = "";
-        private string _userName = "root";
-        private string _userPassword = "";
-        private string _server = "localhost";
+        private string _userName = DBSettingsControl.UserName;
+        private string _userPassword = DBSettingsControl.Password;
+        private string _server = DBSettingsControl.ServerHost;
 
         public string DBName
         {
@@ -93,13 +93,13 @@ namespace NormaMeasure.DBControl
             }
             catch (MySqlException ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //throw new DBException(ex.ErrorCode, "MySQL сервер не доступен!  ");
+                //MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new DBException(ex.ErrorCode, "MySQL сервер не доступен!  ");
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //throw new DBException(0, "MySQL сервер не доступен!  ");
+                throw new DBException(0, "MySQL сервер не доступен!  ");
             }
         }
 
@@ -127,17 +127,19 @@ namespace NormaMeasure.DBControl
                 MC.ExecuteScalar();
                 MyConn.Close();
                 _db_name = db_name;
-                flag = true;
+                DBSettingsControl.IsEnabled = flag = true;
             }
             catch (MySqlException ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //throw new DBException(ex.ErrorCode, "MySQL сервер не доступен!  ");
+                //MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DBSettingsControl.IsEnabled = false;
+                throw new DBException(ex.ErrorCode, "MySQL сервер не доступен!  ");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //throw new DBException(0, "MySQL сервер не доступен!  ");
+                //MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DBSettingsControl.IsEnabled = false;
+                throw new DBException(0, "MySQL сервер не доступен!  ");
             }
             return flag;
         }
@@ -213,12 +215,12 @@ namespace NormaMeasure.DBControl
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show("Не найден файл 'sql_queries.xml'! Повторная установка приложения поможет решить эту проблему!  ", "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show("Не найден файл 'sql_queries.xml'! Повторная установка приложения поможет решить эту проблему!  ", "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new DBException("");
             }
             catch (XmlException ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show(ex.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new DBException("");
             }
         }
@@ -239,8 +241,8 @@ namespace NormaMeasure.DBControl
             }
             catch (MySqlException ex)
             {
-                MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString() + " SQL команда: " + comm, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw new DBException("");
+                //MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString() + " SQL команда: " + comm, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new DBException($"{ex.Message} № {ex.ErrorCode}\n\nSQL команда:\n\n{comm}");
             }
         }
         //------------------------------------------------------------------------------------------------------------------------
@@ -267,8 +269,8 @@ namespace NormaMeasure.DBControl
                     goto repeat;
                 }else
                 {
-                    MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString() + " " + ex.Number.ToString() + " SQL команда: " + comm, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    throw new DBException("");
+                    //MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString() + " " + ex.Number.ToString() + " SQL команда: " + comm, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw new DBException($"{ex.Message} № {ex.ErrorCode}\n\nSQL команда:\n\n{comm}");
                 }
             }
         }

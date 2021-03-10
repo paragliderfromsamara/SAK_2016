@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.usersListTable = new System.Windows.Forms.DataGridView();
             this.user_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.full_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,8 +55,12 @@
             // 
             this.usersListTable.AllowUserToAddRows = false;
             this.usersListTable.AllowUserToDeleteRows = false;
+            this.usersListTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.usersListTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.usersListTable.BackgroundColor = System.Drawing.Color.LightGray;
+            this.usersListTable.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.usersListTable.ColumnHeadersHeight = 30;
             this.usersListTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.user_id,
@@ -72,17 +76,17 @@
             this.usersListTable.Location = new System.Drawing.Point(12, 96);
             this.usersListTable.MultiSelect = false;
             this.usersListTable.Name = "usersListTable";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.NullValue = "-";
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Teal;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.usersListTable.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.NullValue = "-";
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Teal;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.usersListTable.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.usersListTable.RowTemplate.ContextMenuStrip = this.RowContextMenuStrip;
             this.usersListTable.RowTemplate.Height = 30;
             this.usersListTable.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.usersListTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.usersListTable.Size = new System.Drawing.Size(952, 458);
+            this.usersListTable.Size = new System.Drawing.Size(925, 458);
             this.usersListTable.StandardTab = true;
             this.usersListTable.TabIndex = 13;
             // 
@@ -209,7 +213,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(978, 576);
+            this.ClientSize = new System.Drawing.Size(949, 566);
             this.Controls.Add(this.addUserButton);
             this.Controls.Add(this.usersListTable);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
