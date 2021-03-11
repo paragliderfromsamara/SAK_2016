@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NormaMeasure.Utils;
+using NormaLib.Utils;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 
-namespace NormaMeasure.SocketControl.TCPControlLib
+namespace NormaLib.SocketControl.TCPControlLib
 {
     public class TCPSettingsControllerException : FormatException
     {

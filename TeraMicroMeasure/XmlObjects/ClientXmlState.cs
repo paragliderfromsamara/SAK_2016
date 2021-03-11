@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NormaMeasure.Utils;
-using NormaMeasure.Devices.XmlObjects;
+using NormaLib.Utils;
+using NormaLib.Devices.XmlObjects;
 //using System.Diagnostics;
 using System.Windows.Forms;
 

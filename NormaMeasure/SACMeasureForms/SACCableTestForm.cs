@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NormaMeasure.DBControl;
-using NormaMeasure.DBControl.Tables;
+using NormaLib.DBControl;
+using NormaLib.DBControl.Tables;
 using NormaMeasure.MeasureControl.SAC;
-using NormaMeasure.Devices.SAC;
+using NormaLib.Devices.SAC;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {

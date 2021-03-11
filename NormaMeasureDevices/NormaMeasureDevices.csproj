@@ -88,13 +88,9 @@
     <Compile Include="XmlObjects\TeraohmmetrXMLState.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">
-      <Project>{6828dd40-1488-46d6-8f70-db5ef38c463f}</Project>
-      <Name>NormaDBControl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NormaMeasureUtils\NormaMeasureUtils.csproj">
-      <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
-      <Name>NormaMeasureUtils</Name>
+    <ProjectReference Include="..\NormaLib\NormaLib.csproj">
+      <Project>{84c6f6eb-caf6-46ba-9e23-0e0e0bff8a89}</Project>
+      <Name>NormaLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

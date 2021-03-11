@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NormaMeasure.Utils;
+using NormaLib.Utils;
 using System.Diagnostics;
-using NormaMeasure.Devices;
+using NormaLib.Devices;
 
 namespace TeraMicroMeasure
 {

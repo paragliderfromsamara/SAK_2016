@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
 using System.Threading.Tasks;
-using NormaMeasure.DBControl.Tables;
+using NormaLib.DBControl.Tables;
 
-namespace NormaMeasure.DBControl.Norma
+namespace NormaLib.DBControl.Norma
 {
     public class DBNormaTablesMigration : DBTablesMigration
     {

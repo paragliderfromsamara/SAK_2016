@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaMeasure.MeasureControl;
-using NormaMeasure.DBControl.Tables;
+using NormaLib.DBControl.Tables;
 using System.Threading;
 
 namespace NormaMeasure.MeasureControl.SAC

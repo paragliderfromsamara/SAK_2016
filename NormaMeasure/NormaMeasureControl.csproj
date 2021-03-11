@@ -76,13 +76,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">
-      <Project>{6828dd40-1488-46d6-8f70-db5ef38c463f}</Project>
-      <Name>NormaDBControl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NormaMeasureDevices\NormaMeasureDevices.csproj">
-      <Project>{95c559b4-3dd7-471e-a601-e464bd041336}</Project>
-      <Name>NormaMeasureDevices</Name>
+    <ProjectReference Include="..\NormaLib\NormaLib.csproj">
+      <Project>{84c6f6eb-caf6-46ba-9e23-0e0e0bff8a89}</Project>
+      <Name>NormaLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

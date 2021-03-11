@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NormaMeasure.Devices;
-using NormaMeasure.Devices.SAC;
+using NormaLib.Devices;
+using NormaLib.Devices.SAC;
 
 namespace AppTest
 {
@@ -37,7 +37,7 @@ namespace AppTest
             }
         }
 
-        private static void Commutator_OnCommutator_StateChanged(NormaMeasure.Devices.SAC.SACUnits.CPSCommutator commutator)
+        private static void Commutator_OnCommutator_StateChanged(NormaLib.Devices.SAC.SACUnits.CPSCommutator commutator)
         {
             Console.WriteLine($"{commutator.State[0]} {commutator.State[1]}");
         }

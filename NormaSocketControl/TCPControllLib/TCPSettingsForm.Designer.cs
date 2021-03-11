@@ -1,4 +1,4 @@
-﻿namespace NormaMeasure.SocketControl.TCPControlLib
+﻿namespace NormaLib..SocketControl.TCPControlLib
 {
     partial class TCPSettingsForm
     {

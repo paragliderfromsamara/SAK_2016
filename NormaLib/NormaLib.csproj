@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{84C6F6EB-CAF6-46BA-9E23-0E0E0BFF8A89}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NormaLib</RootNamespace>
+    <AssemblyName>NormaLib</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Modbus">
+      <HintPath>..\NormaMeasureDevices\MODBUS_LIB\Modbus.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\NormaDBControl\DBControl\bin\Debug\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DBControl\DBAttributes.cs" />
+    <Compile Include="DBControl\DBEntityBase.cs" />
+    <Compile Include="DBControl\DBEntityTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\DBEntities\DBNormaMeasureTablesMigration.cs" />
+    <Compile Include="DBControl\DBNormaMeasure\DBEntities\DBSACBase.cs" />
+    <Compile Include="DBControl\DBNormaMeasure\DBEntities\QADocument.cs" />
+    <Compile Include="DBControl\DBNormaMeasure\Forms\BarabanTypesControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\BarabanTypesControlForm.Designer.cs">
+      <DependentUpon>BarabanTypesControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\BarabanTypesTableControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\BarabanTypesTableControlForm.Designer.cs">
+      <DependentUpon>BarabanTypesTableControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CableForm.Designer.cs">
+      <DependentUpon>CableForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CableFormSAC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CableFormSAC.Designer.cs">
+      <DependentUpon>CableFormSAC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CableFormTeraMicro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CableFormTeraMicro.Designer.cs">
+      <DependentUpon>CableFormTeraMicro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CablesListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CablesListForm.Designer.cs">
+      <DependentUpon>CablesListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CablesTableControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\CablesTableControlForm.Designer.cs">
+      <DependentUpon>CablesTableControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\DBEntityControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\UserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\UserForm.Designer.cs">
+      <DependentUpon>UserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\UsersList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\UsersList.Designer.cs">
+      <DependentUpon>UsersList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\UsersTableControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\UsersTableControlForm.Designer.cs">
+      <DependentUpon>UsersTableControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBControl\DBSettingsControl.cs" />
+    <Compile Include="DBControl\DBTablesMigration.cs" />
+    <Compile Include="DBControl\MySQLDBControl.cs" />
+    <Compile Include="DBControl\ServiceFunctions.cs" />
+    <Compile Include="DBControl\Tables\BarabanType.cs" />
+    <Compile Include="DBControl\Tables\BaseEntity.cs" />
+    <Compile Include="DBControl\Tables\Cable.cs" />
+    <Compile Include="DBControl\Tables\CableStructure.cs" />
+    <Compile Include="DBControl\Tables\CableStructureMeasuredParameterData.cs" />
+    <Compile Include="DBControl\Tables\CableStructureType.cs" />
+    <Compile Include="DBControl\Tables\CableTest.cs" />
+    <Compile Include="DBControl\Tables\CableTestResult.cs" />
+    <Compile Include="DBControl\Tables\CableTestStatus.cs" />
+    <Compile Include="DBControl\Tables\Document.cs" />
+    <Compile Include="DBControl\Tables\dRBringingFormula.cs" />
+    <Compile Include="DBControl\Tables\dRFormula.cs" />
+    <Compile Include="DBControl\Tables\FrequencyRange.cs" />
+    <Compile Include="DBControl\Tables\IsolationMaterial.cs" />
+    <Compile Include="DBControl\Tables\LeadMaterial.cs" />
+    <Compile Include="DBControl\Tables\LeadTestStatus.cs" />
+    <Compile Include="DBControl\Tables\LengthBringingType.cs" />
+    <Compile Include="DBControl\Tables\MeasureDevice.cs" />
+    <Compile Include="DBControl\Tables\MeasuredParameterData.cs" />
+    <Compile Include="DBControl\Tables\MeasuredParameterType.cs" />
+    <Compile Include="DBControl\Tables\ReleasedBaraban.cs" />
+    <Compile Include="DBControl\Tables\User.cs" />
+    <Compile Include="DBControl\Tables\UserRole.cs" />
+    <Compile Include="Devices\COMDeviceFinder.cs" />
+    <Compile Include="Devices\DeviceBase.cs" />
+    <Compile Include="Devices\DeviceBaseOld.cs" />
+    <Compile Include="Devices\DeviceCommandProtocol.cs" />
+    <Compile Include="Devices\DevicesDispatcher.cs" />
+    <Compile Include="Devices\Microohmmeter\Microohmmeter_uOmM_01m.cs" />
+    <Compile Include="Devices\Microohmmeter\Micro_01_m_CommandProtocol.cs" />
+    <Compile Include="Devices\SAC\SACCPS.cs" />
+    <Compile Include="Devices\SAC\SACMeasurePoint.cs" />
+    <Compile Include="Devices\SAC\SACTable.cs" />
+    <Compile Include="Devices\SAC\SACTestPlan.cs" />
+    <Compile Include="Devices\SAC\SACUnits\CPSCommutator.cs" />
+    <Compile Include="Devices\SAC\SACUnits\CPSMeasureUnit.cs" />
+    <Compile Include="Devices\SAC\SACUnits\FrequencyGenerator.cs" />
+    <Compile Include="Devices\SAC\SACUnits\HightVoltageTestUnit.cs" />
+    <Compile Include="Devices\SAC\SACUnits\PairCommutator.cs" />
+    <Compile Include="Devices\SAC\SACUnits\SACUnit.cs" />
+    <Compile Include="Devices\SAC\SACUnits\U110.cs" />
+    <Compile Include="Devices\SAC\SACUnits\U120.cs" />
+    <Compile Include="Devices\SAC\SACUnits\U130.cs" />
+    <Compile Include="Devices\SAC\SACUnits\U160.cs" />
+    <Compile Include="Devices\SAC\SACUnits\USICommutator.cs" />
+    <Compile Include="Devices\SAC\SAC_Device.cs" />
+    <Compile Include="Devices\SAC\TableMap_testForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Devices\SAC\TableMap_testForm.Designer.cs">
+      <DependentUpon>TableMap_testForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\TableMap.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\TeraohmmeterTOmM_01.cs" />
+    <Compile Include="Devices\Teraohmmeter\TOhmM_01_v1_CommandProtocol.cs" />
+    <Compile Include="Devices\XmlObjects\DeviceXMLState.cs" />
+    <Compile Include="Devices\XmlObjects\MeasureXMLState.cs" />
+    <Compile Include="Devices\XmlObjects\MicroohmmeterXMLState.cs" />
+    <Compile Include="Devices\XmlObjects\TeraohmmetrXMLState.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketControl\NormaServer.cs" />
+    <Compile Include="SocketControl\NormaServerClient.cs" />
+    <Compile Include="SocketControl\NormaTCPClient.cs" />
+    <Compile Include="SocketControl\TCPControllLib\TCPClientConnetctionControl.cs" />
+    <Compile Include="SocketControl\TCPControllLib\TCPServer.cs" />
+    <Compile Include="SocketControl\TCPControllLib\TCPServerClientsControl.cs" />
+    <Compile Include="SocketControl\TCPControllLib\TCPSettingsController.cs" />
+    <Compile Include="SocketControl\TCPControllLib\TCPSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SocketControl\TCPControllLib\TCPSettingsForm.Designer.cs">
+      <DependentUpon>TCPSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ChildForms\BlankForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ChildForms\BlankForm.Designer.cs">
+      <DependentUpon>BlankForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ChildForms\NormaSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ChildForms\NormaSettingsForm.Designer.cs">
+      <DependentUpon>NormaSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ChildFormTabControlled.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ChildFormTabControlled.Designer.cs">
+      <DependentUpon>ChildFormTabControlled.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\DBTableContolForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DBTableContolForm.Designer.cs">
+      <DependentUpon>DBTableContolForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\NormaUIColors.cs" />
+    <Compile Include="UI\UIMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UIMainForm.Designer.cs">
+      <DependentUpon>UIMainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\IniFile.cs" />
+    <Compile Include="Utils\NormaXmlObject.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\BarabanTypesControlForm.resx">
+      <DependentUpon>BarabanTypesControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\CableForm.resx">
+      <DependentUpon>CableForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\CableFormSAC.resx">
+      <DependentUpon>CableFormSAC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\CableFormTeraMicro.resx">
+      <DependentUpon>CableFormTeraMicro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\CablesListForm.resx">
+      <DependentUpon>CablesListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\UserForm.resx">
+      <DependentUpon>UserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\UsersList.resx">
+      <DependentUpon>UsersList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\UsersTableControlForm.resx">
+      <DependentUpon>UsersTableControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\SAC\TableMap_testForm.resx">
+      <DependentUpon>TableMap_testForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SocketControl\TCPControllLib\TCPSettingsForm.resx">
+      <DependentUpon>TCPSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ChildForms\BlankForm.resx">
+      <DependentUpon>BlankForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ChildForms\NormaSettingsForm.resx">
+      <DependentUpon>NormaSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ChildFormTabControlled.resx">
+      <DependentUpon>ChildFormTabControlled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\DBTableContolForm.resx">
+      <DependentUpon>DBTableContolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UIMainForm.resx">
+      <DependentUpon>UIMainForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DBControl\NormaDBControlClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ProtocolBuilder\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

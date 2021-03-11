@@ -139,25 +139,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NormaDBControl\DBControl\NormaDBControl.csproj">
-      <Project>{6828dd40-1488-46d6-8f70-db5ef38c463f}</Project>
-      <Name>NormaDBControl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NormaMeasureDevices\NormaMeasureDevices.csproj">
-      <Project>{95c559b4-3dd7-471e-a601-e464bd041336}</Project>
-      <Name>NormaMeasureDevices</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NormaMeasureUI\NormaMeasureUI.csproj">
-      <Project>{283dc7f4-14ad-42f7-bd4c-005e338e3e34}</Project>
-      <Name>NormaMeasureUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NormaMeasureUtils\NormaMeasureUtils.csproj">
-      <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
-      <Name>NormaMeasureUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NormaSocketControl\NormaMeasureSocketControl.csproj">
-      <Project>{8a1d8281-0ac9-4129-8b74-42facbdb47aa}</Project>
-      <Name>NormaMeasureSocketControl</Name>
+    <ProjectReference Include="..\NormaLib\NormaLib.csproj">
+      <Project>{84c6f6eb-caf6-46ba-9e23-0e0e0bff8a89}</Project>
+      <Name>NormaLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

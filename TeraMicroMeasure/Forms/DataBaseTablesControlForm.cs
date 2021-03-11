@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NormaMeasure.UI;
-using NormaMeasure.DBControl.DBNormaMeasure.Forms;
+using NormaLib.UI;
+using NormaLib.DBControl.DBNormaMeasure.Forms;
 
 namespace TeraMicroMeasure.Forms
 {
@@ -36,9 +36,9 @@ namespace TeraMicroMeasure.Forms
                 case 2:
                     return new CablesTableControlForm();//new CablesListForm(CABLE_FORM_TYPE.TERA_MICRO);
                 case 3:
-                    return new NormaMeasure.UI.ChildForms.BlankForm();
+                    return new NormaLib.UI.ChildForms.BlankForm();
                 default:
-                    return new NormaMeasure.UI.ChildForms.BlankForm();
+                    return new NormaLib.UI.ChildForms.BlankForm();
             }
         }
     }

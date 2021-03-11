@@ -58,12 +58,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NormaMeasureUtils\NormaMeasureUtils.csproj">
-      <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
-      <Name>NormaMeasureUtils</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="TCPControllLib\TCPSettingsForm.resx">
       <DependentUpon>TCPSettingsForm.cs</DependentUpon>
     </EmbeddedResource>

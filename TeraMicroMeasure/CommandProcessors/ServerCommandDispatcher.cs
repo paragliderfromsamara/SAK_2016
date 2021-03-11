@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeraMicroMeasure.XmlObjects;
-using NormaMeasure.SocketControl;
-using NormaMeasure.SocketControl.TCPControlLib;
+using NormaLib.SocketControl;
+using NormaLib.SocketControl.TCPControlLib;
 using System.Diagnostics;
 using System.Threading;
-using NormaMeasure.Devices.XmlObjects;
-using NormaMeasure.Devices;
+using NormaLib.Devices.XmlObjects;
+using NormaLib.Devices;
 
 namespace TeraMicroMeasure.CommandProcessors
 {

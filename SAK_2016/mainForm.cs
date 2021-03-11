@@ -8,10 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
-using NormaMeasure.DBControl.DBNormaMeasure.DBEntities;
-using NormaMeasure.DBControl.DBNormaMeasure.Forms;
+using NormaLib.DBControl.DBNormaMeasure.DBEntities;
+using NormaLib.DBControl.DBNormaMeasure.Forms;
 using NormaMeasure.MeasureControl.SACMeasureForms;
-using NormaMeasure.Devices.SAC;
+using NormaLib.Devices.SAC;
 
 
 
@@ -141,7 +141,7 @@ namespace NormaMeasure.SAC_APP
             //dm.createTables();
             //DBSACTablesMigration dbMigartion = new DBSACTablesMigration();
            // dbMigartion.InitDataBase();
-           // NormaMeasure.DBControl.DBNormaMeasure.DBEntities.CableOld c = new NormaMeasure.DBControl.DBNormaMeasure.DBEntities.CableOld();
+           // NormaLib.DBControl.DBNormaMeasure.DBEntities.CableOld c = new NormaLib.DBControl.DBNormaMeasure.DBEntities.CableOld();
             //string cols = DBSACTablesMigration.DocumentsTable.SelectQuery;
 
             //MessageBox.Show(cols);
@@ -221,7 +221,7 @@ namespace NormaMeasure.SAC_APP
            else tableToolStripLabel.Text = $"Стол №{sacDevice.table.DeviceId} ({sacDevice.table.PortName})";
         }
 
-        private void Table_OnDataReceive(Devices.DeviceBaseOld device)
+        private void Table_OnDataReceive(NormaLib.Devices.DeviceBaseOld device)
         {
             MessageBox.Show("Принят номер стола");
         }

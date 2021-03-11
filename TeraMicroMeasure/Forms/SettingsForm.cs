@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NormaMeasure.SocketControl.TCPControlLib;
-using NormaMeasure.UI;
+using NormaLib.SocketControl.TCPControlLib;
+using NormaLib.UI;
 using System.Diagnostics;
 
 namespace TeraMicroMeasure.Forms
@@ -36,7 +36,7 @@ namespace TeraMicroMeasure.Forms
                 case 1:
                     return new DataBaseSettingsForm();
                 default:
-                    return new NormaMeasure.UI.ChildForms.BlankForm();
+                    return new NormaLib.UI.ChildForms.BlankForm();
             }
         }
     }

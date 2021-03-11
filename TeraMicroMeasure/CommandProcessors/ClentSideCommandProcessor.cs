@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NormaMeasure.Utils;
+using NormaLib.Utils;
 using TeraMicroMeasure.XmlObjects;
-using NormaMeasure.SocketControl.TCPControlLib;
-using NormaMeasure.SocketControl;
+using NormaLib.SocketControl.TCPControlLib;
+using NormaLib.SocketControl;
 using System.Diagnostics;
 
 

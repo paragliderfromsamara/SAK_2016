@@ -7,18 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NormaMeasure.SocketControl;
+using NormaLib.SocketControl;
 using System.Globalization;
 using System.Threading;
-using NormaMeasure.Utils;
+using NormaLib.Utils;
 using System.Xml;
 using TeraMicroMeasure.XmlObjects;
 using TeraMicroMeasure.CommandProcessors;
-using NormaMeasure.SocketControl.TCPControlLib;
-using NormaMeasure.Devices;
-using NormaMeasure.Devices.XmlObjects;
-using NormaMeasure.DBControl.DBNormaMeasure;
-using NormaMeasure.DBControl.DBNormaMeasure.Forms;
+using NormaLib.SocketControl.TCPControlLib;
+using NormaLib.Devices;
+using NormaLib.Devices.XmlObjects;
+using NormaLib.DBControl.DBNormaMeasure;
+using NormaLib.DBControl.DBNormaMeasure.Forms;
 //using System.Diagnostics;
 
 namespace TeraMicroMeasure

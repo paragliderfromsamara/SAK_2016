@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NormaMeasure.Devices.SAC;
-using NormaMeasure.Devices.SAC.SACUnits;
+using NormaLib.Devices.SAC;
+using NormaLib.Devices.SAC.SACUnits;
 using System.Threading;
 using System.Diagnostics;
 

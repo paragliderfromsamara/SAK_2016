@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="NormaLib.DBControl.DBEntityBase">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIwIAYQAAAAAFAAgDAAAgJAAwAQAIBCAAAAQAEgoA=</HashCode>
+      <FileName>DBEntityBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.BarabanType" Collapsed="true">
+    <Position X="4.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgIIAQACAAAAAAAJAAAAABAAAAADAgAIBABAAAAAA=</HashCode>
+      <FileName>Tables\BarabanType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.BaseEntity" Collapsed="true">
+    <Position X="26.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AwQQKoAAEACKAAAAAACAAAABAAJoF0gYQABAOgAEgJA=</HashCode>
+      <FileName>Tables\BaseEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.DBEntityException" Collapsed="true">
+    <Position X="51.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Tables\BaseEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.Cable" Collapsed="true">
+    <Position X="26.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>0AogIIgQA4ECAJGBQAAgQIxoCQKAkBAAQIAggE0QESA=</HashCode>
+      <FileName>Tables\Cable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.TestedCable" Collapsed="true">
+    <Position X="26.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAABAAEAAAACQAQgBAAAAAAAAAABAA=</HashCode>
+      <FileName>Tables\Cable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.CableStructure" Collapsed="true">
+    <Position X="44.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAFQINAkAiVCKIAAIgAABzAgUApAEBghQAaBmUAAIEU=</HashCode>
+      <FileName>Tables\CableStructure.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.TestedCableStructure" Collapsed="true">
+    <Position X="44.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAgAAACAgAAAAAAABAACAAAAAAAA=</HashCode>
+      <FileName>Tables\CableStructure.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.CableStructureMeasuredParameterData" Collapsed="true">
+    <Position X="11" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABAAIgAQiDAqAgoAQAABAAFQZDABBAAgQAkmGgAKEA=</HashCode>
+      <FileName>Tables\CableStructureMeasuredParameterData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.TestedStructureMeasuredParameterData" Collapsed="true">
+    <Position X="11" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAIAA=</HashCode>
+      <FileName>Tables\CableStructureMeasuredParameterData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.CableStructureType" Collapsed="true">
+    <Position X="29" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgABAQCggAAIAQhAAAAIADAAAAgAAAAAAIIAACAAA=</HashCode>
+      <FileName>Tables\CableStructureType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.CableTest" Collapsed="true">
+    <Position X="38" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tables\CableTest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.CableTest_File" Collapsed="true">
+    <Position X="51.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tables\CableTest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.CableTestResultCollection" Collapsed="true">
+    <Position X="53.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tables\CableTest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.CableTestResult" Collapsed="true">
+    <Position X="13.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAIEIAAAAEBAAQAgEAAEAAQAAEDAAABGQAAAAEQEIEA=</HashCode>
+      <FileName>Tables\CableTestResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.CableTestStatus" Collapsed="true">
+    <Position X="20" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAIAAAIAAAggAAAAAQAAAAAAAIAAAAAAAQAAAAAAAg=</HashCode>
+      <FileName>Tables\CableTestStatus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.Document" Collapsed="true">
+    <Position X="31.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAggIIgAAAACAIAAAAACAAAAAEAAAIAAAJAAAAAAAAA=</HashCode>
+      <FileName>Tables\Document.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.dRBringingFormula" Collapsed="true">
+    <Position X="40.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABkAEAABAAAAAAAAAAAAAAAAAAABAAACAAAAAAAAAA=</HashCode>
+      <FileName>Tables\dRBringingFormula.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.dRFormula" Collapsed="true">
+    <Position X="47" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABkAEAABAAAAAAAEAAAAAAAAAAABAAACBAACAAAAAA=</HashCode>
+      <FileName>Tables\dRFormula.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.FrequencyRange" Collapsed="true">
+    <Position X="6.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAgAAAAAAAAAABAACAAAIAAABAiEAAACA=</HashCode>
+      <FileName>Tables\FrequencyRange.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.IsolationMaterial" Collapsed="true">
+    <Position X="15.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAQAAAAAAgAAAAAAAAAAIAEAAAA=</HashCode>
+      <FileName>Tables\IsolationMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.LeadMaterial" Collapsed="true">
+    <Position X="22.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgABAAAAAAAAAAAAQAAAAAAgAAAAAAAAAAIBEAAAA=</HashCode>
+      <FileName>Tables\LeadMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.LeadTestStatus" Collapsed="true">
+    <Position X="33.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAIAAAACAAAAAEARAAAAAAAAAAAAAABAAAAAAg=</HashCode>
+      <FileName>Tables\LeadTestStatus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.LengthBringingType" Collapsed="true">
+    <Position X="42.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAACACAACAgAAAAAYAIAAAAAABgAAAAAAAAABA=</HashCode>
+      <FileName>Tables\LengthBringingType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.MeasuredParameterData" Collapsed="true">
+    <Position X="49.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABkACAAQAAAAgEggAAAAICAIQAABAAAAAIBgCEAACAA=</HashCode>
+      <FileName>Tables\MeasuredParameterData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.MeasuredParameterType" Collapsed="true">
+    <Position X="8.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wAAQEAAQECggAgIgAhAAhEIAQAEAQxEQgBFUgAigIQA=</HashCode>
+      <FileName>Tables\MeasuredParameterType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.ReleasedBaraban" Collapsed="true">
+    <Position X="17.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAEAgAAAAARgAAAgIAA=</HashCode>
+      <FileName>Tables\ReleasedBaraban.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.User" Collapsed="true">
+    <Position X="24.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgIMKAUAAAIIIEUADAAIgAAAAAAAACBIABAIAQkBg=</HashCode>
+      <FileName>Tables\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormaLib.DBControl.Tables.UserRole" Collapsed="true">
+    <Position X="35.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAIAAABAAAACAAAAAACgAIAAAEQAACAAAAAAAIgA=</HashCode>
+      <FileName>Tables\UserRole.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

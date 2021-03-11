@@ -64,12 +64,6 @@
       <LastGenOutput>ProtocolSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NormaMeasureUtils\NormaMeasureUtils.csproj">
-      <Project>{055f17ff-367e-4395-82ba-0c38a23092f6}</Project>
-      <Name>NormaMeasureUtils</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

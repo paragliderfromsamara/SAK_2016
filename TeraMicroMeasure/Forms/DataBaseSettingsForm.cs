@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NormaMeasure.UI;
-using NormaMeasure.DBControl;
+using NormaLib.UI;
+using NormaLib.DBControl;
 
 namespace TeraMicroMeasure.Forms
 {

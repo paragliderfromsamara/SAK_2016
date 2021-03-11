@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace NormaMeasure.DBControl.DBNormaMeasure.DBEntities
+namespace NormaLib.DBControl.DBNormaMeasure.DBEntities
 {
     public abstract class DBNormaBase : DBEntityBase
     {

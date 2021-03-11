@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NormaMeasure.Devices.SAC;
-using NormaMeasure.DBControl.Tables;
+using NormaLib.Devices.SAC;
+using NormaLib.DBControl.Tables;
 using System.Threading;
 
 namespace NormaMeasure.MeasureControl.SAC

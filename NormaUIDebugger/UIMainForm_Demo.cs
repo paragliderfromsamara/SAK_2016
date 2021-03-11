@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NormaMeasure.UI;
+using NormaLib.UI;
 namespace NormaUIDebugger
 {
     public partial class UIMainForm_Demo : UIMainForm

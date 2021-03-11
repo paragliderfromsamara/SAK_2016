@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NormaMeasure.Devices.SAC;
+using NormaLib.Devices.SAC;
 using NormaMeasure.MeasureControl.SAC;
-using NormaMeasure.DBControl.Tables;
+using NormaLib.DBControl.Tables;
 
 namespace NormaMeasure.MeasureControl.SACMeasureForms
 {

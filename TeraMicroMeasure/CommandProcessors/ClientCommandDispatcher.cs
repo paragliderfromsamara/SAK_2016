@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NormaMeasure.SocketControl;
-using NormaMeasure.SocketControl.TCPControlLib;
+using NormaLib.SocketControl;
+using NormaLib.SocketControl.TCPControlLib;
 using TeraMicroMeasure.XmlObjects;
 using System.Windows.Forms;
-using NormaMeasure.Devices.XmlObjects;
+using NormaLib.Devices.XmlObjects;
 
 namespace TeraMicroMeasure.CommandProcessors
 {

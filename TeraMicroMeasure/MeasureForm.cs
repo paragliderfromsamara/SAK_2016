@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TeraMicroMeasure.XmlObjects;
-using NormaMeasure.Devices;
-using NormaMeasure.Devices.XmlObjects;
-using NormaMeasure.DBControl.Tables;
+using NormaLib.Devices;
+using NormaLib.Devices.XmlObjects;
+using NormaLib.DBControl.Tables;
 
 namespace TeraMicroMeasure
 {
