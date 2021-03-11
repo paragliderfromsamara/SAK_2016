@@ -45,7 +45,7 @@ namespace NormaLib.DBControl.Tables
             }
             catch (DBEntityException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Не удалось добавить тип барабана...", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                //System.Windows.Forms.MessageBox.Show(ex.Message, "Не удалось добавить тип барабана...", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
                 return false;
             }
         }

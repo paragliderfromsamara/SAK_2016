@@ -20,6 +20,52 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             
         }
 
+        protected override void InitNewEntityForm()
+        {
+            BarabanType t = BarabanType.build();
+            BarabanTypeForm f = new BarabanTypeForm(t, BarabanTypes);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                FillDataGridAsync();
+            }
+        }
+
+        protected override void EditEntityHandler(DataGridViewRow selectedRow)
+        {
+            base.EditEntityHandler(selectedRow);
+            BarabanType t = GetBarabanTypeByDataGridRow(selectedRow);
+            BarabanTypeForm f = new BarabanTypeForm(t);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                FillDataGridAsync();
+            }
+        }
+
+        private BarabanType GetBarabanTypeByDataGridRow(DataGridViewRow r)
+        {
+            BarabanType u = null;
+            uint bt_id = 0;
+            if (UInt32.TryParse(r.Cells["baraban_type_id_column"].Value.ToString(), out bt_id))
+            {
+                u = SelectBarabanTypeInListById(bt_id);
+            }
+            return u;
+        }
+
+
+        private BarabanType SelectBarabanTypeInListById(uint id)
+        {
+            DataRow[] r = BarabanTypes.Select($"baraban_type_id = {id}");
+            if (r.Length > 0)
+            {
+                return (BarabanType)r[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         protected override void InitDesign()
         {
             base.InitDesign();
@@ -29,7 +75,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         protected override void ApplyUserRights()
         {
             AllowAddEntity = true;
-            AllowEditEntity = false;
+            AllowEditEntity = true;
             AllowRemoveEntity = false;
             base.ApplyUserRights();
         }
@@ -38,7 +84,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             List < DataGridViewColumn > list = base.BuildColumnsForDataGrid();
             list.Add(BuildDataGridTextColumn("baraban_type_id", "ID", true));
-            list.Add(BuildDataGridTextColumn("baraban_type_name", "Наименование барабана", true));
+            list.Add(BuildDataGridTextColumn("baraban_type_name", "Наименование типа барабана", true));
             list.Add(BuildDataGridTextColumn("baraban_weight", "Вес, кг", true));
             return list;
         }

@@ -120,6 +120,7 @@ namespace NormaLib.UI
         {
             DeinitLoadStatusLabelAnimation();
             ShowAfterLoadModeEntities();
+            foreach (DataGridViewRow r in dgEntities.SelectedRows) r.Selected = false;
         }
 
         async protected void FillDataGridAsync()

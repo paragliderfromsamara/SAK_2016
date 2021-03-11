@@ -69,6 +69,12 @@
     <Compile Include="DBControl\DBNormaMeasure\Forms\BarabanTypesTableControlForm.Designer.cs">
       <DependentUpon>BarabanTypesTableControlForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\BarabanTypreForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DBControl\DBNormaMeasure\Forms\BarabanTypreForm.Designer.cs">
+      <DependentUpon>BarabanTypreForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DBControl\DBNormaMeasure\Forms\CableForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -236,6 +242,9 @@
   <ItemGroup>
     <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\BarabanTypesControlForm.resx">
       <DependentUpon>BarabanTypesControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\BarabanTypreForm.resx">
+      <DependentUpon>BarabanTypreForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\CableForm.resx">
       <DependentUpon>CableForm.cs</DependentUpon>

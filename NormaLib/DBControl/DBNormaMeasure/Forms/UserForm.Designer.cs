@@ -46,6 +46,8 @@
             // 
             // lastName
             // 
+            this.lastName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lastName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lastName.Location = new System.Drawing.Point(23, 46);
             this.lastName.Name = "lastName";
             this.lastName.Size = new System.Drawing.Size(184, 24);
@@ -62,6 +64,8 @@
             // 
             // name
             // 
+            this.name.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.name.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.name.Location = new System.Drawing.Point(239, 46);
             this.name.Name = "name";
             this.name.Size = new System.Drawing.Size(185, 24);
@@ -78,6 +82,8 @@
             // 
             // thirdName
             // 
+            this.thirdName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.thirdName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.thirdName.Location = new System.Drawing.Point(22, 107);
             this.thirdName.Name = "thirdName";
             this.thirdName.Size = new System.Drawing.Size(185, 24);
@@ -94,6 +100,8 @@
             // 
             // tabNum
             // 
+            this.tabNum.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tabNum.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabNum.Location = new System.Drawing.Point(239, 107);
             this.tabNum.Name = "tabNum";
             this.tabNum.Size = new System.Drawing.Size(185, 24);
@@ -110,27 +118,37 @@
             // 
             // saveBurtton
             // 
+            this.saveBurtton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(214)))), ((int)(((byte)(37)))));
             this.saveBurtton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.saveBurtton.Location = new System.Drawing.Point(23, 245);
+            this.saveBurtton.FlatAppearance.BorderSize = 0;
+            this.saveBurtton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.saveBurtton.ForeColor = System.Drawing.Color.White;
+            this.saveBurtton.Location = new System.Drawing.Point(22, 245);
             this.saveBurtton.Name = "saveBurtton";
-            this.saveBurtton.Size = new System.Drawing.Size(185, 37);
+            this.saveBurtton.Size = new System.Drawing.Size(185, 40);
             this.saveBurtton.TabIndex = 6;
             this.saveBurtton.Text = "Сохранить";
-            this.saveBurtton.UseVisualStyleBackColor = true;
+            this.saveBurtton.UseVisualStyleBackColor = false;
             this.saveBurtton.Click += new System.EventHandler(this.saveBurtton_Click);
             // 
             // cancelButton
             // 
+            this.cancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(44)))), ((int)(((byte)(91)))));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(240, 245);
+            this.cancelButton.FlatAppearance.BorderSize = 0;
+            this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cancelButton.ForeColor = System.Drawing.Color.Gainsboro;
+            this.cancelButton.Location = new System.Drawing.Point(239, 245);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(185, 37);
+            this.cancelButton.Size = new System.Drawing.Size(185, 40);
             this.cancelButton.TabIndex = 7;
             this.cancelButton.Text = "Отмена";
-            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.UseVisualStyleBackColor = false;
             // 
             // passwodText
             // 
+            this.passwodText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.passwodText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.passwodText.Location = new System.Drawing.Point(22, 181);
             this.passwodText.Name = "passwodText";
             this.passwodText.Size = new System.Drawing.Size(185, 24);
@@ -149,6 +167,7 @@
             // 
             this.userRole.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.userRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.userRole.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.userRole.FormattingEnabled = true;
             this.userRole.Location = new System.Drawing.Point(239, 179);
             this.userRole.Name = "userRole";
@@ -168,6 +187,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(451, 312);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.userRole);
@@ -184,8 +204,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lastName);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(55)))), ((int)(((byte)(96)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "UserForm";

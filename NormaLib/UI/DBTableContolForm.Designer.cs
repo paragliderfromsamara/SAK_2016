@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataPanel = new System.Windows.Forms.Panel();
             this.dgEntities = new System.Windows.Forms.DataGridView();
@@ -65,19 +66,35 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgEntities.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgEntities.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dgEntities.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(54)))), ((int)(((byte)(87)))));
+            this.dgEntities.BackgroundColor = System.Drawing.Color.White;
             this.dgEntities.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgEntities.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dgEntities.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgEntities.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle1.NullValue = "-";
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(3);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgEntities.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgEntities.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgEntities.ContextMenuStrip = this.contextTableMenu;
+            this.dgEntities.EnableHeadersVisualStyles = false;
             this.dgEntities.Location = new System.Drawing.Point(12, 15);
             this.dgEntities.Name = "dgEntities";
             this.dgEntities.ReadOnly = true;
+            this.dgEntities.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgEntities.RowHeadersVisible = false;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             dataGridViewCellStyle2.NullValue = "-";
             dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Teal;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(108)))), ((int)(((byte)(205)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Gainsboro;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgEntities.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dgEntities.RowTemplate.Height = 30;
@@ -121,9 +138,9 @@
             this.btnNewRecordFormInit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNewRecordFormInit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnNewRecordFormInit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.btnNewRecordFormInit.Location = new System.Drawing.Point(12, 12);
+            this.btnNewRecordFormInit.Location = new System.Drawing.Point(12, 23);
             this.btnNewRecordFormInit.Name = "btnNewRecordFormInit";
-            this.btnNewRecordFormInit.Size = new System.Drawing.Size(150, 45);
+            this.btnNewRecordFormInit.Size = new System.Drawing.Size(175, 30);
             this.btnNewRecordFormInit.TabIndex = 1;
             this.btnNewRecordFormInit.Text = "Новая запись";
             this.btnNewRecordFormInit.UseVisualStyleBackColor = false;
@@ -154,7 +171,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1361, 903);
             this.Controls.Add(this.loadStatusLabel);
             this.Controls.Add(this.btnNewRecordFormInit);
@@ -173,6 +190,7 @@
 
         #endregion
 
+        protected System.Windows.Forms.DataGridViewCellStyle dataGridViewColumnHeadersStyle;
         protected System.Windows.Forms.Panel dataPanel;
         public System.Windows.Forms.DataGridView dgEntities;
         private System.Windows.Forms.Label loadStatusLabel;
