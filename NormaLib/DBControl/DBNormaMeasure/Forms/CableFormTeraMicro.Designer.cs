@@ -32,7 +32,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.panelControlButtons.SuspendLayout();
             this.SuspendLayout();
             // 
             // CableMark_input
@@ -137,9 +137,9 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(26, 763);
-            this.panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel1.Size = new System.Drawing.Size(494, 62);
+            this.panelControlButtons.Location = new System.Drawing.Point(26, 763);
+            this.panelControlButtons.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panelControlButtons.Size = new System.Drawing.Size(494, 62);
             // 
             // closeNoSaveButton
             // 
@@ -168,7 +168,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).EndInit();
-            this.panel1.ResumeLayout(false);
+            this.panelControlButtons.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

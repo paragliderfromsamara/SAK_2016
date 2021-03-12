@@ -37,6 +37,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             if (editCable != null)
             {
                 CableForm f = new CableForm(editCable.CableId);
+
                 if (f.ShowDialog() == DialogResult.OK)
                 {
                     FillDataGridAsync();

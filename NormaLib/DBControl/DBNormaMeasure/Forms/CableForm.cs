@@ -13,6 +13,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 {
     public partial class CableForm : Form
     {
+        private bool isOnInitForm;
         private bool isNew = false;
         public bool IsNew => isNew;
         protected Cable cable;
@@ -43,9 +44,12 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         protected virtual void InitFormByAssignedCable()
         {
+            isOnInitForm = true;
             FillDBData();
             fillFormByCable();
             initStructureTabPage();
+            isOnInitForm = false;
+
         }
 
 
@@ -73,6 +77,53 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         protected virtual void InitDesign()
         {
             InitializeComponent();
+            SetParametersDataGridViewStyle();
+        }
+
+        private void SetParametersDataGridViewStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle parameterNameHeaderStyle = new DataGridViewCellStyle();
+            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            parameterNameCellStyle.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            parameterNameCellStyle.ForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.NullValue = "-";
+            parameterNameCellStyle.Padding = new System.Windows.Forms.Padding(3);
+            parameterNameCellStyle.SelectionBackColor = parameterNameCellStyle.BackColor;
+            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.Gainsboro; 
+            parameterNameCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+
+
+            parameter_type_name_column.CellTemplate.Style = BuildParameterNameCellStyle();
+            parameter_type_name_column.HeaderCell.Style = BuildParameterNameHeaderStyle();
+    
+            parameter_type_name_column.HeaderCell.ContextMenuStrip = addMeasurerParameterContextMenu;
+
+            dgMeasuredParameters.CellClick += DgMeasuredParameters_CellClick;
+            dgMeasuredParameters.CellMouseMove += DgMeasuredParameters_CellMouseMove;
+        }
+
+        private void DgMeasuredParameters_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+        {
+           if (e.ColumnIndex == 0 && e.RowIndex == -1)
+            {
+                Cursor.Current = Cursors.Hand;
+            }
+            else
+            {
+                Cursor.Current = Cursors.Arrow;
+            }
+        }
+
+        private void DgMeasuredParameters_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1 && e.ColumnIndex == 0)
+            {
+                parameter_type_name_column.HeaderCell.ContextMenuStrip.Show(Cursor.Position);
+            }
+
         }
 
         protected virtual void FillDBData()
@@ -97,22 +148,38 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         private void fillDRFormuls()
         {
-            cableFormDataSet.Tables.Add(dRFormula.get_all_as_table());
+            DBEntityTable t = dRFormula.get_all_as_table();
+            cableFormDataSet.Tables.Add(t);
+            cbDRCalculatingFormula.DataSource = t;
+            cbDRCalculatingFormula.DisplayMember = dRFormula.FormulaDescription_ColumnName;
+            cbDRCalculatingFormula.ValueMember = dRFormula.FormulaId_ColumnName;
         }
 
         private void fillDRBringingFormuls()
         {
-            cableFormDataSet.Tables.Add(dRBringingFormula.get_all_as_table());
+            DBEntityTable t = dRBringingFormula.get_all_as_table();
+            cableFormDataSet.Tables.Add(t);
+            cbDRBringingFormula.DataSource = t;
+            cbDRBringingFormula.DisplayMember = dRBringingFormula.FormulaDescription_ColumnName;
+            cbDRBringingFormula.ValueMember = dRBringingFormula.FormulaId_ColumnName;
         }
 
         private void fillIsolationMaterials()
         {
+            DBEntityTable t = IsolationMaterial.get_all_as_table();
             cableFormDataSet.Tables.Add(IsolationMaterial.get_all_as_table());
+            cbIsolationMaterial.DataSource = t;
+            cbIsolationMaterial.DisplayMember = IsolationMaterial.MaterialName_ColumnName;
+            cbIsolationMaterial.ValueMember = IsolationMaterial.MaterialId_ColumnName;
         }
 
         private void fillLeadMaterials()
         {
+            DBEntityTable t = LeadMaterial.get_all_as_table();
             cableFormDataSet.Tables.Add(LeadMaterial.get_all_as_table());
+            cbLeadMaterial.DataSource = t;
+            cbLeadMaterial.DisplayMember = LeadMaterial.MaterialName_ColumnName;
+            cbLeadMaterial.ValueMember = LeadMaterial.MaterialId_ColumnName;
         }
 
         protected virtual void fillStructureTypes()
@@ -358,17 +425,12 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         int currentStructureId = 0;
         int nextStrucureId = 0;
-        bool firstInit = false;
         CableStructure draftStructure;
         CableStructure currentStructure => currentStructureId < tabControl1.TabCount - 1 ? (CableStructure)(Cable.CableStructures.Rows[currentStructureId]) : draftStructure; 
 
         private void cbStructureType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!firstInit)
-            {
-                firstInit = true;
-                return;
-            }
+            if (isOnInitForm) return;
             DataRow[] rows = cableFormDataSet.Tables["cable_structure_types"].Select($"{CableStructureType.TypeId_ColumnName} = {(uint)cbStructureType.SelectedValue}");
             currentStructure.StructureType = (rows.Length > 0) ? (CableStructureType)rows[0] : null;
             tabControl1.SelectedTab.Text = currentStructure.StructureTitle;
@@ -440,7 +502,36 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
             cbStructureType.SelectedValue = currentStructure.StructureTypeId;
+            cbLeadMaterial.SelectedValue = currentStructure.LeadMaterialTypeId;
+            cbIsolationMaterial.SelectedValue = currentStructure.IsolationMaterialId;
+            cbDRCalculatingFormula.SelectedValue = currentStructure.DRFormulaId;
+            cbDRBringingFormula.SelectedValue = currentStructure.DRBringingFormulaId;
+            tbLeadDiameter.Text = currentStructure.LeadDiameter.ToString();
+            nudRrealElementsAmount.Value = currentStructure.RealAmount;
+            nudDisplayedElementAmount.Value = currentStructure.DisplayedAmount;
+            nudLeadToLeadVoltage.Value = currentStructure.LeadToLeadTestVoltage;
+            nudLeadToShieldVoltage.Value = currentStructure.LeadToShieldTestVoltage;
+            cbGroupCapacity.Checked = currentStructure.WorkCapacityGroup;
+            nudNumberInGroup.Value = currentStructure.GroupedAmount;
+            nudWaveResistance.Value = (decimal)currentStructure.WaveResistance;
+
+            fillMeasuredParametersData();
         }
+
+        private void fillMeasuredParametersData()
+        {
+            MeasuredParametersBindingSource.DataSource = currentStructure.MeasuredParameters;
+            dgMeasuredParameters.Refresh();
+        }
+
+        /// <summary>
+        /// Обновляем данные DataGridView после изменения списка MeasuredParameters
+        /// </summary>
+        private void RefreshDataGridView()
+        {
+            MeasuredParametersBindingSource.ResetBindings(false);
+        }
+
 
         private void ReplacePanelToCurrentPage()
         {
@@ -471,6 +562,152 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             tp.TabIndex = 0;
             tp.UseVisualStyleBackColor = true;
             tabControl1.TabPages.Add(tp);
+        }
+
+        private void cbLeadMaterial_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+            currentStructure.LeadMaterialTypeId = (uint)cbLeadMaterial.SelectedValue;
+        }
+
+        private void cbIsolationMaterial_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+             currentStructure.IsolationMaterialId = (uint)cbIsolationMaterial.SelectedValue;
+        }
+
+        private void cbDRCalculatingFormula_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+            currentStructure.DRFormulaId = (uint)cbDRCalculatingFormula.SelectedValue;
+        }
+
+        private void cbDRBringingFormula_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+            currentStructure.DRBringingFormulaId = (uint)cbDRBringingFormula.SelectedValue;
+        }
+
+        private void tbLeadDiameter_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !ServiceFunctions.DoubleCharChecker(e.KeyChar);
+        }
+
+        private void tbLeadDiameter_TextChanged(object sender, EventArgs e)
+        {
+            float v = currentStructure.LeadDiameter;
+            if (String.IsNullOrWhiteSpace(tbLeadDiameter.Text)) return;
+            if (float.TryParse(tbLeadDiameter.Text, out v))
+            {
+                currentStructure.LeadDiameter = v;
+            }else
+            {
+                tbLeadDiameter.Text = v.ToString();
+                MessageBox.Show("Неверный формат величины диаметра жил", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void nudRrealElementsAmount_ValueChanged(object sender, EventArgs e)
+        {
+            uint real = (uint)nudRrealElementsAmount.Value;
+            uint nominal = (uint)nudDisplayedElementAmount.Value;
+            currentStructure.RealAmount = real;
+            if (real < nominal)
+            {
+                nudDisplayedElementAmount.Value = real;
+            }
+        }
+
+        private void nudDisplayedElementAmount_ValueChanged(object sender, EventArgs e)
+        {
+            uint real = (uint)nudRrealElementsAmount.Value;
+            uint nominal = (uint)nudDisplayedElementAmount.Value;
+            currentStructure.DisplayedAmount = nominal;
+            if (nominal > real)
+            {
+                nudRrealElementsAmount.Value = nominal;
+            }
+        }
+
+        private uint ProcWrittenVoltage(object sender, uint valWas)
+        {
+            NumericUpDown input = sender as NumericUpDown;
+            uint val = (uint)input.Value;
+            
+            if (val > 0 && val < 500)
+            {
+                input.Value = valWas < val ? 500 : 0;
+                return (uint)input.Value;
+            }
+            else
+            {
+                return val;
+            }
+        }
+
+        private void numericUpDown5_ValueChanged(object sender, EventArgs e)
+        {
+            currentStructure.LeadToLeadTestVoltage = ProcWrittenVoltage(sender, currentStructure.LeadToLeadTestVoltage);
+        }
+
+        private void numericUpDown6_ValueChanged(object sender, EventArgs e)
+        {
+            currentStructure.LeadToShieldTestVoltage = ProcWrittenVoltage(sender, currentStructure.LeadToShieldTestVoltage);
+        }
+
+        private void cbGroupCapacity_CheckedChanged(object sender, EventArgs e)
+        {
+            currentStructure.WorkCapacityGroup = cbGroupCapacity.Checked;
+        }
+
+        private void nudWaveResistance_ValueChanged(object sender, EventArgs e)
+        {
+            currentStructure.WaveResistance = (uint)nudWaveResistance.Value;
+        }
+
+        private void nudNumberInGroup_ValueChanged(object sender, EventArgs e)
+        {
+            currentStructure.GroupedAmount = (uint)nudNumberInGroup.Value;
+        }
+
+        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameCellStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
+            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            parameterNameCellStyle.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            parameterNameCellStyle.ForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.NullValue = "-";
+            parameterNameCellStyle.Padding = new System.Windows.Forms.Padding(3);
+            parameterNameCellStyle.SelectionBackColor = parameterNameCellStyle.BackColor;
+            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            return parameterNameCellStyle;
+        }
+
+        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameHeaderStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
+            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(201)))), ((int)(((byte)(0)))));
+            style.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            style.ForeColor = System.Drawing.Color.Gainsboro;
+            style.NullValue = "-";
+            style.Padding = new System.Windows.Forms.Padding(3);
+       
+            style.SelectionBackColor = System.Drawing.SystemColors.Highlight; 
+            style.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+            return style;
+        }
+
+        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameHeaderStyle_Hovered()
+        {
+            System.Windows.Forms.DataGridViewCellStyle style = BuildParameterNameHeaderStyle();
+            style.ForeColor = style.SelectionForeColor;
+            style.BackColor = style.SelectionBackColor;
+            return style;
         }
     }
 }

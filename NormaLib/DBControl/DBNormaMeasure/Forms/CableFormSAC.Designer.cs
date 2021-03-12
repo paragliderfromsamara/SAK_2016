@@ -41,7 +41,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.panelControlButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Pmin_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pmax_input)).BeginInit();
             this.SuspendLayout();
@@ -177,10 +177,10 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(16, 1145);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
-            this.panel1.Size = new System.Drawing.Size(517, 65);
-            this.panel1.TabIndex = 31;
+            this.panelControlButtons.Location = new System.Drawing.Point(16, 1145);
+            this.panelControlButtons.Margin = new System.Windows.Forms.Padding(4);
+            this.panelControlButtons.Size = new System.Drawing.Size(517, 65);
+            this.panelControlButtons.TabIndex = 31;
             // 
             // closeNoSaveButton
             // 
@@ -328,13 +328,13 @@
             this.Controls.SetChildIndex(this.label13, 0);
             this.Controls.SetChildIndex(this.CodeOKP_input, 0);
             this.Controls.SetChildIndex(this.CodeKCH_input, 0);
-            this.Controls.SetChildIndex(this.panel1, 0);
+            this.Controls.SetChildIndex(this.panelControlButtons, 0);
             this.Controls.SetChildIndex(this.CableMark_input, 0);
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).EndInit();
-            this.panel1.ResumeLayout(false);
+            this.panelControlButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Pmin_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pmax_input)).EndInit();
             this.ResumeLayout(false);

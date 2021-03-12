@@ -27,7 +27,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             base.InitDesign();
             InitializeComponent();
-
+            panelControlButtons.Visible = true;
         }
 
 
@@ -225,7 +225,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             {
                 this.Height = this.Height - CableStructureTabs.Height;
             }
-            panel1.Top = this.Height - panel1.Height*2;
+            panelControlButtons.Top = this.Height - panelControlButtons.Height*2;
         }
     }
 
@@ -330,7 +330,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             uint val = (uint)input.Value;
             if (val > 0 && val < 500)
             {
-                input.Value = valWas < 500 ? 500 : 0;
+                input.Value = valWas < 501 ? 500 : 0;
                 return valWas;
             }
             else
