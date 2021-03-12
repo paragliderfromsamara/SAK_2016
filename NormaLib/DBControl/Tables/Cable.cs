@@ -57,6 +57,23 @@ namespace NormaLib.DBControl.Tables
             this.CableStructures.Rows.Clear();
         }
 
+        public bool RemoveStructure(CableStructure structure)
+        {
+            bool f = true;
+          
+            DataRow[] rows = cableStructures.Select($"{CableStructure.StructureId_ColumnName} = {structure.CableStructureId}");
+            if (rows.Length > 0)
+            {
+                if (!structure.IsNewRecord()) f = structure.Destroy();
+                if (f && rows.Length > 0) cableStructures.Rows.Remove(rows[0]);
+            }else
+            {
+                f = false;
+            }
+            return f;
+        }
+
+
         public CableStructure AddCableStructure(uint cable_structure_type_id)
         {
             Random r = new Random();

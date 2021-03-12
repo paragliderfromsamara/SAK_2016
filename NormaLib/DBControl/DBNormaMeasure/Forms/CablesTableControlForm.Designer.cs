@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Text = "CablesTableControlForm";
+            this.btnNewRecordFormInit.Text = "Новый кабель";
         }
 
         #endregion

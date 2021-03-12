@@ -177,23 +177,18 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(12, 1108);
+            this.panel1.Location = new System.Drawing.Point(16, 1145);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
-            this.panel1.Size = new System.Drawing.Size(493, 65);
+            this.panel1.Size = new System.Drawing.Size(517, 65);
             this.panel1.TabIndex = 31;
             // 
             // closeNoSaveButton
             // 
-            this.closeNoSaveButton.Location = new System.Drawing.Point(172, 14);
-            this.closeNoSaveButton.Margin = new System.Windows.Forms.Padding(4);
-            this.closeNoSaveButton.Size = new System.Drawing.Size(229, 44);
+            this.closeNoSaveButton.FlatAppearance.BorderSize = 0;
             // 
             // saveCableButton
             // 
             this.saveCableButton.FlatAppearance.BorderSize = 0;
-            this.saveCableButton.Location = new System.Drawing.Point(4, 14);
-            this.saveCableButton.Margin = new System.Windows.Forms.Padding(4);
-            this.saveCableButton.Size = new System.Drawing.Size(149, 44);
             // 
             // groupBox1
             // 
@@ -298,7 +293,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(241)))), ((int)(((byte)(255)))));
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1176, 1223);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.addStructureButton);

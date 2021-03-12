@@ -45,7 +45,10 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             FillDBData();
             fillFormByCable();
+            initStructureTabPage();
         }
+
+
 
         protected virtual void fillFormByCable()
         {
@@ -115,8 +118,21 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         protected virtual void fillStructureTypes()
         {
             DBEntityTable t = CableStructureType.get_all_as_table();
+            DataTable forView;
+            CableStructureType undefinedCableStructureType = (CableStructureType)t.NewRow();
+            undefinedCableStructureType.StructureLeadsAmount = 0;
+            undefinedCableStructureType.StructureTypeName = "Не выбран";
+            undefinedCableStructureType.StructureMeasuredParameters = "";
+            undefinedCableStructureType.StructureLeadsAmount = 0;
+            undefinedCableStructureType.StructureTypeId = 0;
+            t.Rows.Add(undefinedCableStructureType);
             cableFormDataSet.Tables.Add(t);
-
+            DataView dv = t.DefaultView;
+            dv.Sort = $"{CableStructureType.TypeId_ColumnName} ASC";
+            forView = dv.ToTable(true, new string[] { CableStructureType.TypeName_ColumnName, CableStructureType.TypeId_ColumnName });
+            cbStructureType.DataSource = forView;
+            cbStructureType.DisplayMember = CableStructureType.TypeName_ColumnName;
+            cbStructureType.ValueMember = CableStructureType.TypeId_ColumnName;
         }
 
         protected virtual void fillDocuments()
@@ -297,7 +313,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 fillFormByCable();
                 MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
-
         }
 
 
@@ -337,10 +352,125 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             foreach (CableStructure s in cable.CableStructures.Rows)
             {
                 if (s.RowState != DataRowState.Deleted) isSave &= s.Save();
-
             }
             return isSave;
         }
 
+        int currentStructureId = 0;
+        int nextStrucureId = 0;
+        bool firstInit = false;
+        CableStructure draftStructure;
+        CableStructure currentStructure => currentStructureId < tabControl1.TabCount - 1 ? (CableStructure)(Cable.CableStructures.Rows[currentStructureId]) : draftStructure; 
+
+        private void cbStructureType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!firstInit)
+            {
+                firstInit = true;
+                return;
+            }
+            DataRow[] rows = cableFormDataSet.Tables["cable_structure_types"].Select($"{CableStructureType.TypeId_ColumnName} = {(uint)cbStructureType.SelectedValue}");
+            currentStructure.StructureType = (rows.Length > 0) ? (CableStructureType)rows[0] : null;
+            tabControl1.SelectedTab.Text = currentStructure.StructureTitle;
+            if (currentStructure == draftStructure && currentStructure.StructureTypeId != 0)
+            {
+                Cable.CableStructures.Rows.Add(draftStructure);
+                MakeDraftStructure();
+                btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
+            }
+        }
+
+        private void initStructureTabPage()
+        {
+            if (cable.CableStructures.Rows.Count > 0)
+            {
+                tabControl1.TabPages.Clear();
+                foreach (CableStructure s in cable.CableStructures.Rows)
+                {
+                    AddTabPage(s.StructureTitle);
+                }
+                AddTabPage("Новая структура");
+                ReplacePanelToCurrentPage();
+                FillStructurePageForCurrentRow();
+            }
+            MakeDraftStructure();
+            btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
+        }
+
+        private CableStructure MakeDraftStructure()
+        {
+            draftStructure = (CableStructure)Cable.CableStructures.NewRow();
+            draftStructure.CableStructureId = 0;
+            draftStructure.CableId = Cable.CableId;
+            draftStructure.LeadDiameter = 0.4f;
+            draftStructure.LeadMaterialTypeId = 1;
+            draftStructure.IsolationMaterialId = 1;
+            draftStructure.DRBringingFormulaId = 1;
+            draftStructure.DRFormulaId = 1;
+            draftStructure.LeadDiameter = 0.1f;
+            draftStructure.WaveResistance = 0;
+            draftStructure.WorkCapacityGroup = false;
+            draftStructure.LeadToLeadTestVoltage = 0;
+            draftStructure.LeadToShieldTestVoltage = 0;
+            draftStructure.GroupedAmount = 0;
+            draftStructure.DisplayedAmount = 1;
+            draftStructure.RealAmount = 1;
+          
+            if (tabControl1.TabPages.Count == Cable.CableStructures.Rows.Count)
+            {
+                AddTabPage("Новая структура");
+            }
+            return draftStructure;
+        }
+
+        bool delTabFlag = false;
+        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (currentStructure != draftStructure && !delTabFlag) e.Cancel = !currentStructure.Save();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentStructureId = tabControl1.SelectedIndex;
+            ReplacePanelToCurrentPage();
+            FillStructurePageForCurrentRow();
+        }
+
+        private void FillStructurePageForCurrentRow()
+        {
+            btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
+            cbStructureType.SelectedValue = currentStructure.StructureTypeId;
+        }
+
+        private void ReplacePanelToCurrentPage()
+        {
+            tabControl1.TabPages[tabControl1.SelectedIndex].Controls.Add(structureDataContainer);
+        }
+
+        private void btnRemoveCurrentStructure_Click(object sender, EventArgs e)
+        {
+            if (tabControl1.TabCount == 1) return;
+            CableStructure delStruct = currentStructure;
+            int delStructIndex = currentStructureId;
+            int nextStructureId;
+            nextStructureId = (currentStructureId > 0) ? currentStructureId - 1 : 1;
+            delTabFlag = true;
+            tabControl1.SelectedIndex = nextStructureId;
+            delTabFlag = Cable.RemoveStructure(delStruct);
+            if (delTabFlag) tabControl1.TabPages[delStructIndex].Dispose();
+            delTabFlag = false;
+            currentStructureId = tabControl1.SelectedIndex;
+        }
+
+        private void AddTabPage(string text)
+        {
+            TabPage tp = new TabPage(text);
+            tp.Location = new System.Drawing.Point(4, 27);
+            tp.Padding = new System.Windows.Forms.Padding(3);
+            tp.Size = new System.Drawing.Size(862, 371);
+            tp.TabIndex = 0;
+            tp.UseVisualStyleBackColor = true;
+            tabControl1.TabPages.Add(tp);
+        }
     }
 }

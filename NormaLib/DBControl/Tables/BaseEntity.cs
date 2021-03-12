@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using NormaLib.Utils;
+using System.Diagnostics;
 
 namespace NormaLib.DBControl.Tables
 {
@@ -172,9 +173,11 @@ namespace NormaLib.DBControl.Tables
             bool wasAdded = false;
             if (this.Table.PrimaryKey.Length > 0)
             {
+                Debug.WriteLine("Create with primary key");
                 wasAdded = createWithPrimaryKey();
             }else
             {
+                Debug.WriteLine("Create no primary key");
                 wasAdded = createWithoutPrimaryKey();
             }
             string insertQuery = makeInsertQuery();
@@ -198,8 +201,8 @@ namespace NormaLib.DBControl.Tables
             //System.Windows.Forms.MessageBox.Show($"after {afterId} prev {prevId} status {status} {this.GetType().Name}");
 
             completed = (afterId > prevId) && status == 0;
-            if (completed) this[t.PrimaryKey[0].ColumnName] = (uint)afterId; 
-
+            if (completed) this[t.PrimaryKey[0].ColumnName] = (uint)afterId;
+            Debug.WriteLine($"{t.PrimaryKey[0].ColumnName} = {this[t.PrimaryKey[0].ColumnName]}");
             return afterId > prevId;
         }
 

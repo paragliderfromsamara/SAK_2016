@@ -20,6 +20,56 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             
         }
 
+        protected override void InitNewEntityForm()
+        {
+            base.InitNewEntityForm();
+            Cable cable = Cable.GetDraft();
+            CableForm form = new CableForm(cable.CableId);
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                FillDataGridAsync();
+            }
+        }
+
+        protected override void EditEntityHandler(DataGridViewRow selectedRow)
+        {
+            Cable editCable = GetCableByDataGridRow(selectedRow);
+            if (editCable != null)
+            {
+                CableForm f = new CableForm(editCable.CableId);
+                if (f.ShowDialog() == DialogResult.OK)
+                {
+                    FillDataGridAsync();
+                }
+            }
+            
+        }
+
+        private Cable GetCableByDataGridRow(DataGridViewRow r)
+        {
+            Cable c = null;
+            uint c_id = 0;
+            if (UInt32.TryParse(r.Cells[$"{Cable.CableId_ColumnName}_column"].Value.ToString(), out c_id))
+            {
+                c = SelectCableInListById(c_id);
+            }
+            return c;
+        }
+
+
+        private Cable SelectCableInListById(uint id)
+        {
+            DataRow[] r = CablesTable.Select($"{Cable.CableId_ColumnName} = {id}");
+            if (r.Length > 0)
+            {
+                return (Cable)r[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         protected override void InitDesign()
         {
             base.InitDesign();

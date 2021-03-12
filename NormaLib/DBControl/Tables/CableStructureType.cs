@@ -109,11 +109,12 @@ namespace NormaLib.DBControl.Tables
 
         private DBEntityTable measuredParameterTypes;
 
-
-        public const uint Lead = 1;
-        public const uint Pair = 2;
-        public const uint Triplet = 3;
-        public const uint Quattro = 4;
-        public const uint HightFreqQuattro = 5; 
+        public const uint Undefined = 1;
+        public const uint Lead = 2;
+        public const uint Pair = 3;
+        public const uint Triplet = 4;
+        public const uint Quattro = 5;
+        public const uint HightFreqQuattro = 6; 
+        
     }
 }

@@ -136,8 +136,22 @@ namespace NormaLib.DBControl.Tables
         {
             DBEntityTable t = new DBEntityTable(typeof(CableStructure));
             CableStructure s = (CableStructure)t.NewRow();
+            s.CableStructureId = 666;
             s.CableId = cableId;
+            s.LeadDiameter = 0.4f;
+            s.LeadMaterialTypeId = 1;
+            s.IsolationMaterialId = 1;
+            s.DRBringingFormulaId = 1;
+            s.DRFormulaId = 1;
             s.LeadDiameter = 0.1f;
+            s.WaveResistance = 0;
+            s.WorkCapacityGroup = false;
+            s.LeadToLeadTestVoltage = 0;
+            s.LeadToShieldTestVoltage = 0;
+            s.GroupedAmount = 0;
+            s.DisplayedAmount = 1;
+            s.RealAmount = 1;
+            
             return s;
         }
 
@@ -422,7 +436,7 @@ namespace NormaLib.DBControl.Tables
         {
             get
             {
-                return $"{StructureType.StructureLeadsAmount}x{DisplayedAmount}x{LeadDiameter}";
+                return $"{((StructureType == null) ? "0" : StructureType.StructureLeadsAmount.ToString())}x{DisplayedAmount}x{LeadDiameter}";
             }
         }
         public CableStructureType StructureType
@@ -438,7 +452,7 @@ namespace NormaLib.DBControl.Tables
             set
             {
                 this.structureType = value;
-                this.StructureTypeId = this.structureType.StructureTypeId;
+                this.StructureTypeId = (structureType == null) ? 0 : this.structureType.StructureTypeId;
             }
         }
 
