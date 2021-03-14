@@ -66,6 +66,11 @@ namespace NormaLib.DBControl.Tables
             return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} < {K2} AND NOT {ParameterTypeId_ColumnName} IN ({Risol2}, {Risol3}, {Risol4}) ", typeof(MeasuredParameterType));
         }
 
+        public static DBEntityTable get_all_as_table_for_cable_structure_form()
+        {
+            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < {K2}", typeof(MeasuredParameterType));
+        }
+
         public static DBEntityTable get_all_as_table_for_cable_structure_form(string ids)
         {
             return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < {K2} AND {ParameterTypeId_ColumnName} IN ({ids})", typeof(MeasuredParameterType));
@@ -78,6 +83,13 @@ namespace NormaLib.DBControl.Tables
             foreach (MeasuredParameterType type in t.Rows) types.Add(type);
             return types.ToArray();
 
+        }
+
+        public static DBEntityTable get_parameter_types_for_cable_structures()
+        {
+            List<string> excludedIds = new List<string>();
+            excludedIds.Add(Calling.ToString());
+            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} NOT IN ({String.Join(",", excludedIds)})", typeof(MeasuredParameterType));
         }
 
         public static DBEntityTable get_all_by_ids(uint[] ids)

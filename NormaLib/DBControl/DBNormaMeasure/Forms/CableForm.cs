@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NormaLib.DBControl.Tables;
+using System.Diagnostics;
 
 namespace NormaLib.DBControl.DBNormaMeasure.Forms
 {
@@ -103,11 +104,39 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
             dgMeasuredParameters.CellClick += DgMeasuredParameters_CellClick;
             dgMeasuredParameters.CellMouseMove += DgMeasuredParameters_CellMouseMove;
+
+            delButtonColumn.CellTemplate.Style = delButtonColumn.HeaderCell.Style = BuildDelButtonCellStyle();
+            delButtonColumn.HeaderCell.ToolTipText = "Удалить все";
+
+            DisabledCellStyle = new DataGridViewCellStyle();
+            DisabledCellStyle.BackColor = System.Drawing.Color.Moccasin;
+            DisabledCellStyle.SelectionBackColor = System.Drawing.Color.Moccasin;
+            DisabledCellStyle.ForeColor = System.Drawing.Color.Moccasin;
+            DisabledCellStyle.SelectionForeColor = System.Drawing.Color.Moccasin;
+
+            EnabledCellStyle = new DataGridViewCellStyle();
+            EnabledCellStyle.BackColor = System.Drawing.Color.White;
+            EnabledCellStyle.SelectionBackColor = System.Drawing.Color.PowderBlue;
+            EnabledCellStyle.ForeColor = System.Drawing.Color.Black;
+            EnabledCellStyle.SelectionForeColor = System.Drawing.Color.MidnightBlue;
+
+
+            DisabledBringingLengthCellStyle = new DataGridViewCellStyle();
+            DisabledBringingLengthCellStyle.ForeColor = EnabledCellStyle.BackColor;
+            DisabledBringingLengthCellStyle.SelectionForeColor = EnabledCellStyle.SelectionBackColor;
+
+            EnabledBringingLengthCellStyle = new DataGridViewCellStyle();
+            EnabledBringingLengthCellStyle.ForeColor = EnabledCellStyle.ForeColor;
+            EnabledBringingLengthCellStyle.SelectionForeColor = EnabledCellStyle.SelectionForeColor;
+
+            EnabledBringingLengthCellStyle.BackColor = DisabledBringingLengthCellStyle.BackColor = EnabledCellStyle.BackColor;
+            EnabledBringingLengthCellStyle.SelectionBackColor = DisabledBringingLengthCellStyle.SelectionBackColor = EnabledCellStyle.SelectionBackColor;
+
         }
 
         private void DgMeasuredParameters_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
-           if (e.ColumnIndex == 0 && e.RowIndex == -1)
+           if (e.ColumnIndex == 0 && e.RowIndex == -1 || e.ColumnIndex == delButtonColumn.Index)
             {
                 Cursor.Current = Cursors.Hand;
             }
@@ -122,20 +151,36 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             if (e.RowIndex == -1 && e.ColumnIndex == 0)
             {
                 parameter_type_name_column.HeaderCell.ContextMenuStrip.Show(Cursor.Position);
+            }else if (e.ColumnIndex == delButtonColumn.Index)
+            {
+                MessageBox.Show("Вы уверены что хотите удалить?");
+                RemoveParameterDataByIndex(e.RowIndex);
             }
 
         }
+
+
 
         protected virtual void FillDBData()
         {
             fillCableMarks();
             fillDocuments();
+            fillMeasuredParameterTypes();
             fillStructureTypes();
             fillLeadMaterials();
             fillIsolationMaterials();
             fillDRBringingFormuls();
             fillDRFormuls();
             fillLengthBringingTypes();
+        }
+
+        private void fillMeasuredParameterTypes()
+        {
+            List<ToolStripMenuItem> mItems = new List<ToolStripMenuItem>();
+            DBEntityTable t = MeasuredParameterType.get_all_as_table_for_cable_structure_form();
+            cableFormDataSet.Tables.Add(t);
+            foreach (var dr in t.Rows) mItems.Add(BuildParameterTypesContextMenuItem(dr as MeasuredParameterType));
+            addMeasurerParameterContextMenu.Items.AddRange(mItems.ToArray());
         }
 
 
@@ -424,22 +469,62 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         }
 
         int currentStructureId = 0;
-        int nextStrucureId = 0;
         CableStructure draftStructure;
         CableStructure currentStructure => currentStructureId < tabControl1.TabCount - 1 ? (CableStructure)(Cable.CableStructures.Rows[currentStructureId]) : draftStructure; 
 
         private void cbStructureType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (isOnInitForm) return;
-            DataRow[] rows = cableFormDataSet.Tables["cable_structure_types"].Select($"{CableStructureType.TypeId_ColumnName} = {(uint)cbStructureType.SelectedValue}");
-            currentStructure.StructureType = (rows.Length > 0) ? (CableStructureType)rows[0] : null;
+            if (isOnInitForm || cbStructureType.SelectedIndex == selIndexWas) return;
+            selIndexWas = cbStructureType.SelectedIndex;
+            Debug.WriteLine("cbStructureType_SelectedIndexChanged");
+            currentStructure.StructureType = GetSelectedCableStructureType();
             tabControl1.SelectedTab.Text = currentStructure.StructureTitle;
             if (currentStructure == draftStructure && currentStructure.StructureTypeId != 0)
             {
-                Cable.CableStructures.Rows.Add(draftStructure);
-                MakeDraftStructure();
-                btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
+                //Добавляем новую структуру
+                if (draftStructure.Save())
+                {
+                    Cable.CableStructures.Rows.Add(draftStructure);
+                    MakeDraftStructure();
+                    btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
+                    fillMeasuredParametersData();
+                }
             }
+            RefreshAddMeasureParametersContextMenu();
+            if (ExcludedParameterTypes.Length > 0) DeleteExcludedMeasureParametersFromCableStructure();
+  
+        }
+
+        private void RefreshAddMeasureParametersContextMenu()
+        {
+            IEnumerable<uint> excludedParams = ExcludedParameterTypes.Select((v) => ((MeasuredParameterType)v).ParameterTypeId);
+            foreach (ToolStripMenuItem menuItem in addMeasurerParameterContextMenu.Items)
+            {
+                if (menuItem.Tag.GetType().Name == typeof(MeasuredParameterType).Name) menuItem.Visible = menuItem.Enabled = !excludedParams.Contains((menuItem.Tag as MeasuredParameterType).ParameterTypeId);
+            } 
+        }
+
+        private void DeleteExcludedMeasureParametersFromCableStructure()
+        {
+            //throw new NotImplementedException();
+            IEnumerable<string> ids = ExcludedParameterTypes.Select((ept) => ((MeasuredParameterType)ept).ParameterTypeId.ToString());
+            DataRow[] rData = currentStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", ids)})");
+            foreach(CableStructureMeasuredParameterData csmpd in rData)
+            {
+                if (csmpd.Destroy()) currentStructure.MeasuredParameters.Rows.Remove(csmpd);
+            }
+            if (rData.Length > 0) RefreshDataGridView();
+        }
+
+        /// <summary>
+        /// Возвращает 
+        /// </summary>
+        /// <returns></returns>
+        private CableStructureType GetSelectedCableStructureType()
+        {
+            DataRow[] rows = cableFormDataSet.Tables["cable_structure_types"].Select($"{CableStructureType.TypeId_ColumnName} = {(uint)cbStructureType.SelectedValue}");
+            
+            return (rows.Length > 0) ? (CableStructureType)rows[0] : null;
         }
 
         private void initStructureTabPage()
@@ -456,7 +541,64 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 FillStructurePageForCurrentRow();
             }
             MakeDraftStructure();
+            InitParameterTypesContextMenu();
             btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
+        }
+
+        private void InitParameterTypesContextMenu()
+        {
+            RefreshExcludedParameterTypes();
+            RefreshAddMeasureParametersContextMenu();
+        }
+
+        private ToolStripMenuItem BuildParameterTypesContextMenuItem(MeasuredParameterType pType)
+        {
+            ToolStripMenuItem item = new ToolStripMenuItem(pType.ParameterName);
+            item.ForeColor = Color.Gainsboro;
+            item.Tag = pType;
+            item.Click += Item_Click;
+            item.Visible = item.Enabled = false;
+            item.ToolTipText = pType.Description;
+            return item;
+        }
+
+        private void Item_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem i = sender as ToolStripMenuItem;
+            if (i.Tag.GetType() == typeof(MeasuredParameterType))
+                AddMeasuredParameterData(i.Tag as MeasuredParameterType);
+            else
+            {
+                List<MeasuredParameterType> pTypes = new List<MeasuredParameterType>();
+                foreach (ToolStripMenuItem item in addMeasurerParameterContextMenu.Items)
+                {
+                    if (item.Tag.GetType().Name == typeof(MeasuredParameterType).Name && item.Enabled)
+                    {
+                        pTypes.Add(item.Tag as MeasuredParameterType);
+                    }
+                }
+                AddMeasuredParameterDataRange(pTypes.ToArray());  
+            }
+        }
+
+        private void AddMeasuredParameterData(MeasuredParameterType pType)
+        {
+            MeasuredParameterType[] t = { pType };
+            AddMeasuredParameterDataRange(t);
+        }
+
+        private void AddMeasuredParameterDataRange(MeasuredParameterType[] pTypes)
+        {
+           foreach(var pt in pTypes)
+            {
+                CableStructureMeasuredParameterData pData = (CableStructureMeasuredParameterData)currentStructure.MeasuredParameters.NewRow();
+                pData.ParameterType = pt;
+                pData.AssignedStructure = currentStructure;
+                pData.MeasuredParameterDataId = 0;
+                pData.LengthBringingTypeId = LengthBringingType.NoBringing;
+                currentStructure.MeasuredParameters.Rows.Add(pData);
+            }
+            RefreshDataGridView();
         }
 
         private CableStructure MakeDraftStructure()
@@ -496,6 +638,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             currentStructureId = tabControl1.SelectedIndex;
             ReplacePanelToCurrentPage();
             FillStructurePageForCurrentRow();
+            InitParameterTypesContextMenu();
         }
 
         private void FillStructurePageForCurrentRow()
@@ -516,12 +659,13 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             nudWaveResistance.Value = (decimal)currentStructure.WaveResistance;
 
             fillMeasuredParametersData();
+            selIndexWas = cbStructureType.SelectedIndex;
         }
 
         private void fillMeasuredParametersData()
         {
             MeasuredParametersBindingSource.DataSource = currentStructure.MeasuredParameters;
-            dgMeasuredParameters.Refresh();
+            RefreshDataGridView();
         }
 
         /// <summary>
@@ -670,6 +814,103 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             currentStructure.GroupedAmount = (uint)nudNumberInGroup.Value;
         }
 
+        private void dgMeasuredParameters_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+             for(int i = 0; i< dgMeasuredParameters.Rows.Count; i++)
+              {
+                    InitRowByParameterType(dgMeasuredParameters.Rows[i]);
+              }
+            dgMeasuredParameters.Sort(dgMeasuredParameters.Columns[parameter_type_id_column.Name], System.ComponentModel.ListSortDirection.Ascending);
+            //deleteAllMeasuredParametersDataButton.Enabled = MeasuredParamsDataGridView.Rows.Count > 0;
+        }
+
+
+
+        private void InitRowByParameterType(DataGridViewRow r)
+        {
+            try
+            {
+                DataGridViewTextBoxCell cell = r.Cells[parameter_type_id_column.Name] as DataGridViewTextBoxCell;
+
+                uint val = 0;
+                uint.TryParse($"{cell.Value}", out val);
+
+                bool isFreqParams = MeasuredParameterType.IsItFreqParameter(val);
+                bool hasMaxValue = MeasuredParameterType.IsHasMaxLimit(val);
+                bool hasMinValue = MeasuredParameterType.IsHasMinLimit(val);
+                bool allowBringingLength = MeasuredParameterType.AllowBringingLength(val) && ((uint)r.Cells[lengthBringingTypeIdColumn.Name].Value == LengthBringingType.ForAnotherLengthInMeters);
+
+                r.Cells[parameter_type_name_column.Name].ToolTipText = r.Cells[parameterTypeDescriptionColumn.Name].Value.ToString();
+                r.Cells[freqMaxColumn.Name].ReadOnly = r.Cells[freqStepColumn.Name].ReadOnly = r.Cells[frequencyMinColumn.Name].ReadOnly = !isFreqParams;
+
+
+                r.Cells[minValueColumn.Name].ReadOnly = !hasMinValue;
+                r.Cells[maxValueColumn.Name].ReadOnly = !hasMaxValue;
+                r.Cells[percentColumn.Name].ReadOnly = false;
+                r.Cells[lengthBringingTypeIdColumn.Name].ReadOnly = false;
+                r.Cells[lengthBringingColumn.Name].ReadOnly = !allowBringingLength;
+
+                refreshReadOnlyCellColor(r);
+
+            }
+            catch (NullReferenceException) { }
+
+        }
+
+        private void refreshReadOnlyCellColor(DataGridViewRow row)
+        {
+            string[] ExceptedColumns = new string[] {
+                parameter_type_name_column.Name,
+                parameterTypeMeasureColumn.Name
+            };
+            foreach (DataGridViewCell c in row.Cells)
+            {
+                if (!c.Visible || Array.IndexOf(ExceptedColumns, c.OwningColumn.Name) > -1) continue;
+                else if (lengthBringingColumn.Name == c.OwningColumn.Name)
+                {
+                    ReStyleBringingLengthColumnByBringingLengthType(c.OwningRow);
+                }
+                else
+                {
+                    c.Style = c.ReadOnly ? DisabledCellStyle : EnabledCellStyle;
+                }
+            }
+        }
+
+        private void ReStyleBringingLengthColumnByBringingLengthType(DataGridViewRow r)
+        {
+            uint blId = (uint)r.Cells[lengthBringingTypeIdColumn.Name].Value;
+            uint pTypeId = (uint)r.Cells[parameter_type_id_column.Name].Value;
+            DataGridViewCell cell = r.Cells[lengthBringingColumn.Name];
+            if (MeasuredParameterType.AllowBringingLength(pTypeId))
+            {
+                cell.ReadOnly = blId != LengthBringingType.ForAnotherLengthInMeters;
+                cell.Style = (blId == LengthBringingType.NoBringing) ? DisabledBringingLengthCellStyle : EnabledBringingLengthCellStyle;
+            }
+            else
+            {
+                cell.ReadOnly = true;
+                cell.Style = DisabledCellStyle;
+            }
+   
+        }
+
+        private void RemoveParameterDataByIndex(int rowIndex)
+        {
+            int start = rowIndex == -1 ? 0 : rowIndex;
+            int end = rowIndex == -1 ? currentStructure.MeasuredParameters.Rows.Count-1 : rowIndex;
+            bool willDelete = rowIndex == -1 ? MessageBox.Show("Вы уверены, что хотите удалить все измеряемые параметры из текущей структуры?") == DialogResult.OK : true;
+            if (!willDelete) return;
+            MessageBox.Show($"{start} - {end} from {currentStructure.MeasuredParameters.Rows.Count}");
+            for(int i = start; i <= end; i++)
+            {
+                CableStructureMeasuredParameterData mpd = currentStructure.MeasuredParameters.Rows[i] as CableStructureMeasuredParameterData;
+                MessageBox.Show(i.ToString());
+                willDelete = (!mpd.IsNewRecord()) ? mpd.Destroy() : true;
+                if (willDelete) currentStructure.MeasuredParameters.Rows.Remove(mpd);
+            }
+        }
+
         private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameCellStyle()
         {
             System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
@@ -702,12 +943,113 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             return style;
         }
 
-        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameHeaderStyle_Hovered()
+        private System.Windows.Forms.DataGridViewCellStyle BuildDelButtonCellStyle()
         {
-            System.Windows.Forms.DataGridViewCellStyle style = BuildParameterNameHeaderStyle();
-            style.ForeColor = style.SelectionForeColor;
-            style.BackColor = style.SelectionBackColor;
+            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
+            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            style.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            style.ForeColor = System.Drawing.Color.Gainsboro;
+            style.NullValue = "x";
+            style.Padding = new System.Windows.Forms.Padding(3);
+
+            style.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            style.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
             return style;
         }
+
+        private void addMeasurerParameterContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            if (cbStructureType.SelectedIndex == 0)
+            {
+               MessageBox.Show("Чтобы добавить измеряемые параметры, необходимо выбрать тип структуры", "Не выбран тип структуры", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               e.Cancel = true;
+            }
+        }
+
+        int selIndexWas = 0;
+        private void cbStructureType_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Debug.WriteLine($"cbStructureType_SelectionChangeCommitted {cbStructureType.SelectedValue}");
+           // int nextStructureId = (int)cbStructureType.SelectedValue;
+           if (!GetAgreementToStructureTypeChanged())
+            {
+                cbStructureType.SelectedIndex = selIndexWas;
+            }
+        }
+
+        private bool GetAgreementToStructureTypeChanged()
+        {
+            CableStructureType t = GetSelectedCableStructureType();
+            if (selIndexWas == 0)
+            {
+                if (cbStructureType.SelectedIndex != 0)
+                {
+                    RefreshExcludedParameterTypes();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                } 
+            }else
+            {
+                if (cbStructureType.SelectedIndex != 0)
+                {
+                    RefreshExcludedParameterTypes();
+                    return HasAgreeToChangeAStructureType();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        private bool HasAgreeToChangeAStructureType()
+        {
+            string measuredParametersToDestroy = string.Empty;
+            FillMeasuredParametersToDelete(out measuredParametersToDestroy);
+            Debug.WriteLine("Check agreement HasAgreeToChangeAStructureType");
+            if (!string.IsNullOrWhiteSpace(measuredParametersToDestroy))
+            {
+                return MessageBox.Show($"При изменении типа структуры из списка измеряемых параметров будут исключены:\n\n{measuredParametersToDestroy}\n\nВы согласны?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+            } else return true;
+        }
+
+        private void FillMeasuredParametersToDelete(out string deletedParameters)
+        {
+            List<string> names = new List<string>();
+            deletedParameters = "";
+            if (ExcludedParameterTypes.Length > 0 && currentStructure.MeasuredParameters.Rows.Count > 0)
+            {
+                IEnumerable<string> val = ExcludedParameterTypes.Select((v) => (v as MeasuredParameterType).ParameterTypeId.ToString());
+                DataRow[] rows = currentStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", val)})");
+                val = rows.Select((v) => (v as CableStructureMeasuredParameterData).ParameterName);
+                if (val.Count() > 0)deletedParameters = string.Join(", ", val) + ";";
+            }
+        }
+
+        DataRow[] ExcludedParameterTypes;
+        private void RefreshExcludedParameterTypes()
+        {
+            CableStructureType t = GetSelectedCableStructureType();
+            string[] nextStructureTypeParamIDs = t.StructureMeasuredParameters.Split(',');
+            List<string> allStructureTypeParamIDs = new List<string>();
+            foreach (MeasuredParameterType mpt in cableFormDataSet.Tables["measured_parameter_types"].Rows) allStructureTypeParamIDs.Add(mpt.ParameterTypeId.ToString());
+            IEnumerable<string> v = allStructureTypeParamIDs.ToArray().Except(nextStructureTypeParamIDs);
+            if (v.Count<string>() > 0)
+            {
+                ExcludedParameterTypes = cableFormDataSet.Tables["measured_parameter_types"].Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(", ", v)})");
+            }
+            else
+            {
+                ExcludedParameterTypes = new DataRow[] { };
+            }
+        }
+
+
     }
 }

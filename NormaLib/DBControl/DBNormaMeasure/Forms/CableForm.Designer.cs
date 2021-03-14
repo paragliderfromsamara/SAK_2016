@@ -60,6 +60,20 @@
             this.structureDataContainer = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dgMeasuredParameters = new System.Windows.Forms.DataGridView();
+            this.parameter_type_name_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.parameter_type_id_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.parameterTypeDescriptionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.parameterTypeMeasureColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.minValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.maxValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.percentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lengthBringingTypeIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.resultMeasureColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lengthBringingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.frequencyMinColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.freqMaxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.freqStepColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delButtonColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MeasuredParametersBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.cbGroupCapacity = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -92,24 +106,7 @@
             this.cbStructureType = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.addMeasurerParameterContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.rжToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cрToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rизол1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rизол2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rизол3ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rизол4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.parameter_type_name_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.parameter_type_id_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.parameterTypeDescriptionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.parameterTypeMeasureColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.minValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.maxValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.percentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.resultMeasureColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lengthBringingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.frequencyMinColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.freqMaxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.freqStepColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AddAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
@@ -463,17 +460,20 @@
             this.minValueColumn,
             this.maxValueColumn,
             this.percentColumn,
+            this.lengthBringingTypeIdColumn,
             this.resultMeasureColumn,
             this.lengthBringingColumn,
             this.frequencyMinColumn,
             this.freqMaxColumn,
-            this.freqStepColumn});
+            this.freqStepColumn,
+            this.delButtonColumn});
             this.dgMeasuredParameters.DataSource = this.MeasuredParametersBindingSource;
             this.dgMeasuredParameters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgMeasuredParameters.EnableHeadersVisualStyles = false;
             this.dgMeasuredParameters.Location = new System.Drawing.Point(0, 0);
             this.dgMeasuredParameters.MultiSelect = false;
             this.dgMeasuredParameters.Name = "dgMeasuredParameters";
+            this.dgMeasuredParameters.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dgMeasuredParameters.RowHeadersVisible = false;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -487,6 +487,143 @@
             this.dgMeasuredParameters.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgMeasuredParameters.Size = new System.Drawing.Size(693, 447);
             this.dgMeasuredParameters.TabIndex = 0;
+            this.dgMeasuredParameters.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgMeasuredParameters_RowsAdded);
+            // 
+            // parameter_type_name_column
+            // 
+            this.parameter_type_name_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.parameter_type_name_column.DataPropertyName = "parameter_name";
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Transparent;
+            this.parameter_type_name_column.DefaultCellStyle = dataGridViewCellStyle2;
+            this.parameter_type_name_column.FillWeight = 91.57822F;
+            this.parameter_type_name_column.HeaderText = "+";
+            this.parameter_type_name_column.MinimumWidth = 40;
+            this.parameter_type_name_column.Name = "parameter_type_name_column";
+            this.parameter_type_name_column.ReadOnly = true;
+            this.parameter_type_name_column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.parameter_type_name_column.ToolTipText = "Добавить параметр";
+            this.parameter_type_name_column.Width = 40;
+            // 
+            // parameter_type_id_column
+            // 
+            this.parameter_type_id_column.DataPropertyName = "parameter_type_id";
+            this.parameter_type_id_column.HeaderText = "ID параметра";
+            this.parameter_type_id_column.Name = "parameter_type_id_column";
+            this.parameter_type_id_column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.parameter_type_id_column.Visible = false;
+            // 
+            // parameterTypeDescriptionColumn
+            // 
+            this.parameterTypeDescriptionColumn.DataPropertyName = "parameter_description";
+            this.parameterTypeDescriptionColumn.HeaderText = "Описание параметра";
+            this.parameterTypeDescriptionColumn.Name = "parameterTypeDescriptionColumn";
+            this.parameterTypeDescriptionColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.parameterTypeDescriptionColumn.Visible = false;
+            // 
+            // parameterTypeMeasureColumn
+            // 
+            this.parameterTypeMeasureColumn.DataPropertyName = "parameter_measure";
+            this.parameterTypeMeasureColumn.HeaderText = "Мера";
+            this.parameterTypeMeasureColumn.MinimumWidth = 10;
+            this.parameterTypeMeasureColumn.Name = "parameterTypeMeasureColumn";
+            this.parameterTypeMeasureColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.parameterTypeMeasureColumn.Visible = false;
+            // 
+            // minValueColumn
+            // 
+            this.minValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.minValueColumn.DataPropertyName = "min_value";
+            this.minValueColumn.FillWeight = 228.4264F;
+            this.minValueColumn.HeaderText = "Min";
+            this.minValueColumn.MinimumWidth = 50;
+            this.minValueColumn.Name = "minValueColumn";
+            this.minValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.minValueColumn.Width = 50;
+            // 
+            // maxValueColumn
+            // 
+            this.maxValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.maxValueColumn.DataPropertyName = "max_value";
+            this.maxValueColumn.FillWeight = 83.9467F;
+            this.maxValueColumn.HeaderText = "Max";
+            this.maxValueColumn.MinimumWidth = 50;
+            this.maxValueColumn.Name = "maxValueColumn";
+            this.maxValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.maxValueColumn.Width = 50;
+            // 
+            // percentColumn
+            // 
+            this.percentColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.percentColumn.DataPropertyName = "percent";
+            this.percentColumn.FillWeight = 83.9467F;
+            this.percentColumn.HeaderText = "%";
+            this.percentColumn.MinimumWidth = 50;
+            this.percentColumn.Name = "percentColumn";
+            this.percentColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.percentColumn.Width = 50;
+            // 
+            // lengthBringingTypeIdColumn
+            // 
+            this.lengthBringingTypeIdColumn.DataPropertyName = "length_bringing_type_id";
+            this.lengthBringingTypeIdColumn.HeaderText = "ID типа длины приведения";
+            this.lengthBringingTypeIdColumn.Name = "lengthBringingTypeIdColumn";
+            this.lengthBringingTypeIdColumn.Visible = false;
+            // 
+            // resultMeasureColumn
+            // 
+            this.resultMeasureColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.resultMeasureColumn.DataPropertyName = "result_measure";
+            this.resultMeasureColumn.FillWeight = 82.42039F;
+            this.resultMeasureColumn.HeaderText = "Ед. изм.";
+            this.resultMeasureColumn.Name = "resultMeasureColumn";
+            this.resultMeasureColumn.ReadOnly = true;
+            this.resultMeasureColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.resultMeasureColumn.Width = 74;
+            // 
+            // lengthBringingColumn
+            // 
+            this.lengthBringingColumn.DataPropertyName = "length_bringing";
+            this.lengthBringingColumn.FillWeight = 82.42039F;
+            this.lengthBringingColumn.HeaderText = "Lприв, м";
+            this.lengthBringingColumn.Name = "lengthBringingColumn";
+            this.lengthBringingColumn.ReadOnly = true;
+            this.lengthBringingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // frequencyMinColumn
+            // 
+            this.frequencyMinColumn.DataPropertyName = "frequency_min";
+            this.frequencyMinColumn.FillWeight = 82.42039F;
+            this.frequencyMinColumn.HeaderText = "fmin, кГц";
+            this.frequencyMinColumn.Name = "frequencyMinColumn";
+            this.frequencyMinColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // freqMaxColumn
+            // 
+            this.freqMaxColumn.DataPropertyName = "frequency_max";
+            this.freqMaxColumn.FillWeight = 82.42039F;
+            this.freqMaxColumn.HeaderText = "fmax, кГц";
+            this.freqMaxColumn.Name = "freqMaxColumn";
+            this.freqMaxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // freqStepColumn
+            // 
+            this.freqStepColumn.DataPropertyName = "frequency_step";
+            this.freqStepColumn.FillWeight = 82.42039F;
+            this.freqStepColumn.HeaderText = "fшаг, кГц";
+            this.freqStepColumn.Name = "freqStepColumn";
+            this.freqStepColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // delButtonColumn
+            // 
+            this.delButtonColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.delButtonColumn.HeaderText = "x";
+            this.delButtonColumn.MinimumWidth = 40;
+            this.delButtonColumn.Name = "delButtonColumn";
+            this.delButtonColumn.ReadOnly = true;
+            this.delButtonColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.delButtonColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.delButtonColumn.ToolTipText = "Удалить";
+            this.delButtonColumn.Width = 40;
             // 
             // cbGroupCapacity
             // 
@@ -807,6 +944,7 @@
             this.cbStructureType.Size = new System.Drawing.Size(241, 26);
             this.cbStructureType.TabIndex = 0;
             this.cbStructureType.SelectedIndexChanged += new System.EventHandler(this.cbStructureType_SelectedIndexChanged);
+            this.cbStructureType.SelectionChangeCommitted += new System.EventHandler(this.cbStructureType_SelectionChangeCommitted);
             // 
             // tabControl1
             // 
@@ -824,167 +962,23 @@
             // 
             // addMeasurerParameterContextMenu
             // 
+            this.addMeasurerParameterContextMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            this.addMeasurerParameterContextMenu.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.addMeasurerParameterContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.rжToolStripMenuItem,
-            this.cрToolStripMenuItem,
-            this.rизол1ToolStripMenuItem,
-            this.rизол2ToolStripMenuItem,
-            this.rизол3ToolStripMenuItem,
-            this.rизол4ToolStripMenuItem});
+            this.AddAllToolStripMenuItem});
             this.addMeasurerParameterContextMenu.Name = "addMeasurerParameterContextMenu";
-            this.addMeasurerParameterContextMenu.Size = new System.Drawing.Size(114, 136);
+            this.addMeasurerParameterContextMenu.ShowImageMargin = false;
+            this.addMeasurerParameterContextMenu.Size = new System.Drawing.Size(148, 28);
+            this.addMeasurerParameterContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.addMeasurerParameterContextMenu_Opening);
             // 
-            // rжToolStripMenuItem
+            // AddAllToolStripMenuItem
             // 
-            this.rжToolStripMenuItem.Name = "rжToolStripMenuItem";
-            this.rжToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.rжToolStripMenuItem.Text = "Rж";
-            // 
-            // cрToolStripMenuItem
-            // 
-            this.cрToolStripMenuItem.Name = "cрToolStripMenuItem";
-            this.cрToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.cрToolStripMenuItem.Text = "Cр";
-            // 
-            // rизол1ToolStripMenuItem
-            // 
-            this.rизол1ToolStripMenuItem.Name = "rизол1ToolStripMenuItem";
-            this.rизол1ToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.rизол1ToolStripMenuItem.Text = "Rизол1";
-            // 
-            // rизол2ToolStripMenuItem
-            // 
-            this.rизол2ToolStripMenuItem.Name = "rизол2ToolStripMenuItem";
-            this.rизол2ToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.rизол2ToolStripMenuItem.Text = "Rизол2";
-            // 
-            // rизол3ToolStripMenuItem
-            // 
-            this.rизол3ToolStripMenuItem.Name = "rизол3ToolStripMenuItem";
-            this.rизол3ToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.rизол3ToolStripMenuItem.Text = "Rизол3";
-            // 
-            // rизол4ToolStripMenuItem
-            // 
-            this.rизол4ToolStripMenuItem.Name = "rизол4ToolStripMenuItem";
-            this.rизол4ToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.rизол4ToolStripMenuItem.Text = "Rизол4";
-            // 
-            // parameter_type_name_column
-            // 
-            this.parameter_type_name_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.parameter_type_name_column.DataPropertyName = "parameter_name";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Transparent;
-            this.parameter_type_name_column.DefaultCellStyle = dataGridViewCellStyle2;
-            this.parameter_type_name_column.FillWeight = 91.57822F;
-            this.parameter_type_name_column.HeaderText = "+";
-            this.parameter_type_name_column.MinimumWidth = 40;
-            this.parameter_type_name_column.Name = "parameter_type_name_column";
-            this.parameter_type_name_column.ReadOnly = true;
-            this.parameter_type_name_column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.parameter_type_name_column.ToolTipText = "Добавить параметр";
-            this.parameter_type_name_column.Width = 40;
-            // 
-            // parameter_type_id_column
-            // 
-            this.parameter_type_id_column.DataPropertyName = "parameter_type_id";
-            this.parameter_type_id_column.HeaderText = "ID параметра";
-            this.parameter_type_id_column.Name = "parameter_type_id_column";
-            this.parameter_type_id_column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.parameter_type_id_column.Visible = false;
-            // 
-            // parameterTypeDescriptionColumn
-            // 
-            this.parameterTypeDescriptionColumn.DataPropertyName = "parameter_description";
-            this.parameterTypeDescriptionColumn.HeaderText = "Описание параметра";
-            this.parameterTypeDescriptionColumn.Name = "parameterTypeDescriptionColumn";
-            this.parameterTypeDescriptionColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.parameterTypeDescriptionColumn.Visible = false;
-            // 
-            // parameterTypeMeasureColumn
-            // 
-            this.parameterTypeMeasureColumn.DataPropertyName = "parameter_measure";
-            this.parameterTypeMeasureColumn.HeaderText = "Мера";
-            this.parameterTypeMeasureColumn.Name = "parameterTypeMeasureColumn";
-            this.parameterTypeMeasureColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.parameterTypeMeasureColumn.Visible = false;
-            // 
-            // minValueColumn
-            // 
-            this.minValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.minValueColumn.DataPropertyName = "min_value";
-            this.minValueColumn.FillWeight = 228.4264F;
-            this.minValueColumn.HeaderText = "Min";
-            this.minValueColumn.MinimumWidth = 50;
-            this.minValueColumn.Name = "minValueColumn";
-            this.minValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.minValueColumn.Width = 50;
-            // 
-            // maxValueColumn
-            // 
-            this.maxValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.maxValueColumn.DataPropertyName = "max_value";
-            this.maxValueColumn.FillWeight = 83.9467F;
-            this.maxValueColumn.HeaderText = "Max";
-            this.maxValueColumn.MinimumWidth = 50;
-            this.maxValueColumn.Name = "maxValueColumn";
-            this.maxValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.maxValueColumn.Width = 50;
-            // 
-            // percentColumn
-            // 
-            this.percentColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.percentColumn.DataPropertyName = "percent";
-            this.percentColumn.FillWeight = 83.9467F;
-            this.percentColumn.HeaderText = "%";
-            this.percentColumn.MinimumWidth = 40;
-            this.percentColumn.Name = "percentColumn";
-            this.percentColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.percentColumn.Width = 40;
-            // 
-            // resultMeasureColumn
-            // 
-            this.resultMeasureColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.resultMeasureColumn.DataPropertyName = "result_measure";
-            this.resultMeasureColumn.FillWeight = 82.42039F;
-            this.resultMeasureColumn.HeaderText = "Ед. изм.";
-            this.resultMeasureColumn.Name = "resultMeasureColumn";
-            this.resultMeasureColumn.ReadOnly = true;
-            this.resultMeasureColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.resultMeasureColumn.Width = 74;
-            // 
-            // lengthBringingColumn
-            // 
-            this.lengthBringingColumn.DataPropertyName = "length_bringing";
-            this.lengthBringingColumn.FillWeight = 82.42039F;
-            this.lengthBringingColumn.HeaderText = "Lприв, м";
-            this.lengthBringingColumn.Name = "lengthBringingColumn";
-            this.lengthBringingColumn.ReadOnly = true;
-            this.lengthBringingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // frequencyMinColumn
-            // 
-            this.frequencyMinColumn.DataPropertyName = "frequency_min";
-            this.frequencyMinColumn.FillWeight = 82.42039F;
-            this.frequencyMinColumn.HeaderText = "fmin, кГц";
-            this.frequencyMinColumn.Name = "frequencyMinColumn";
-            this.frequencyMinColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // freqMaxColumn
-            // 
-            this.freqMaxColumn.DataPropertyName = "frequency_max";
-            this.freqMaxColumn.FillWeight = 82.42039F;
-            this.freqMaxColumn.HeaderText = "fmax, кГц";
-            this.freqMaxColumn.Name = "freqMaxColumn";
-            this.freqMaxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // freqStepColumn
-            // 
-            this.freqStepColumn.DataPropertyName = "frequency_step";
-            this.freqStepColumn.FillWeight = 82.42039F;
-            this.freqStepColumn.HeaderText = "fшаг, кГц";
-            this.freqStepColumn.Name = "freqStepColumn";
-            this.freqStepColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.AddAllToolStripMenuItem.ForeColor = System.Drawing.Color.Gainsboro;
+            this.AddAllToolStripMenuItem.Name = "AddAllToolStripMenuItem";
+            this.AddAllToolStripMenuItem.Size = new System.Drawing.Size(147, 24);
+            this.AddAllToolStripMenuItem.Tag = "0";
+            this.AddAllToolStripMenuItem.Text = "Добавить все";
+            this.AddAllToolStripMenuItem.Click += new System.EventHandler(this.Item_Click);
             // 
             // CableForm
             // 
@@ -1106,12 +1100,7 @@
         private System.Windows.Forms.DataGridView dgMeasuredParameters;
         private System.Windows.Forms.BindingSource MeasuredParametersBindingSource;
         private System.Windows.Forms.ContextMenuStrip addMeasurerParameterContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem rжToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cрToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rизол1ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rизол2ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rизол3ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rизол4ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddAllToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn parameter_type_name_column;
         private System.Windows.Forms.DataGridViewTextBoxColumn parameter_type_id_column;
         private System.Windows.Forms.DataGridViewTextBoxColumn parameterTypeDescriptionColumn;
@@ -1119,10 +1108,16 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn minValueColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn maxValueColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn percentColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn lengthBringingTypeIdColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn resultMeasureColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn lengthBringingColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn frequencyMinColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn freqMaxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn freqStepColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn delButtonColumn;
+        private System.Windows.Forms.DataGridViewCellStyle DisabledCellStyle;
+        private System.Windows.Forms.DataGridViewCellStyle EnabledCellStyle;
+        private System.Windows.Forms.DataGridViewCellStyle EnabledBringingLengthCellStyle;
+        private System.Windows.Forms.DataGridViewCellStyle DisabledBringingLengthCellStyle;
     }
 }

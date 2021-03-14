@@ -192,6 +192,11 @@
     <Compile Include="Devices\XmlObjects\MicroohmmeterXMLState.cs" />
     <Compile Include="Devices\XmlObjects\TeraohmmetrXMLState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SocketControl\NormaServer.cs" />
     <Compile Include="SocketControl\NormaServerClient.cs" />
     <Compile Include="SocketControl\NormaTCPClient.cs" />
@@ -269,6 +274,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Devices\SAC\TableMap_testForm.resx">
       <DependentUpon>TableMap_testForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SocketControl\TCPControllLib\TCPSettingsForm.resx">
       <DependentUpon>TCPSettingsForm.cs</DependentUpon>
