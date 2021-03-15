@@ -491,7 +491,7 @@ namespace NormaLib.DBControl.Tables
 
         private void RefreshResultMeasure()
         {
-            string delimiter = ParameterType.IsIsolationResistance ? "•" : "/";
+            string delimiter = ParameterType.IsIsolationResistance ? "×" : "/";
             if (!MeasuredParameterType.AllowBringingLength(ParameterTypeId)) return;
 
 

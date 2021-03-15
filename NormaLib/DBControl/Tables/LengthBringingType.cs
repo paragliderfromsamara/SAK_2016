@@ -14,7 +14,7 @@ namespace NormaLib.DBControl.Tables
         {
         }
 
-        internal static DataTable get_all_as_table()
+        internal static DBEntityTable get_all_as_table()
         {
             return get_all(typeof(LengthBringingType));
         }

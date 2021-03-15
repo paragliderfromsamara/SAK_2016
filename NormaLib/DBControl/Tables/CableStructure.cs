@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace NormaLib.DBControl.Tables
 {
@@ -87,7 +88,9 @@ namespace NormaLib.DBControl.Tables
             bool flag = true;
             foreach(CableStructureMeasuredParameterData cdmpd in MeasuredParameters.Rows)
             {
+                
                 if (cdmpd.RowState == DataRowState.Deleted) continue;
+                Debug.WriteLine("");
                 cdmpd.CableStructureId = this.CableStructureId;
                 flag &= cdmpd.Save();
             }
@@ -498,8 +501,31 @@ namespace NormaLib.DBControl.Tables
         {
             get
             {
-                DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
-                return StructureType.MeasuredParameterTypes.Select($"{t.PrimaryKey[0].ColumnName} IN ({MeasuredParameterType.al}, {MeasuredParameterType.Ao}, {MeasuredParameterType.Az})").Count() > 0;
+                try
+                {
+                    DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
+                    return StructureType.MeasuredParameterTypes.Select($"{t.PrimaryKey[0].ColumnName} IN ({MeasuredParameterType.al}, {MeasuredParameterType.Ao}, {MeasuredParameterType.Az})").Count() > 0;
+                }
+                catch(NullReferenceException)
+                {
+                    return false;
+                }
+              
+            }
+        }
+
+        public bool HasFreqMeasuredParameterData
+        {
+            get
+            {
+                try
+                {
+                    return MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({MeasuredParameterType.al}, {MeasuredParameterType.Ao}, {MeasuredParameterType.Az})").Count() > 0;
+                }
+                catch (NullReferenceException)
+                {
+                    return false;
+                }
             }
         }
 

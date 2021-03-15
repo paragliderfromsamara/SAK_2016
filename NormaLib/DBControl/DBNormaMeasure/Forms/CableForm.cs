@@ -81,86 +81,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             SetParametersDataGridViewStyle();
         }
 
-        private void SetParametersDataGridViewStyle()
-        {
-            System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle parameterNameHeaderStyle = new DataGridViewCellStyle();
-            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
-            parameterNameCellStyle.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            parameterNameCellStyle.ForeColor = System.Drawing.Color.Gainsboro;
-            parameterNameCellStyle.NullValue = "-";
-            parameterNameCellStyle.Padding = new System.Windows.Forms.Padding(3);
-            parameterNameCellStyle.SelectionBackColor = parameterNameCellStyle.BackColor;
-            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.Gainsboro; 
-            parameterNameCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-
-
-
-            parameter_type_name_column.CellTemplate.Style = BuildParameterNameCellStyle();
-            parameter_type_name_column.HeaderCell.Style = BuildParameterNameHeaderStyle();
-    
-            parameter_type_name_column.HeaderCell.ContextMenuStrip = addMeasurerParameterContextMenu;
-
-            dgMeasuredParameters.CellClick += DgMeasuredParameters_CellClick;
-            dgMeasuredParameters.CellMouseMove += DgMeasuredParameters_CellMouseMove;
-
-            delButtonColumn.CellTemplate.Style = delButtonColumn.HeaderCell.Style = BuildDelButtonCellStyle();
-            delButtonColumn.HeaderCell.ToolTipText = "Удалить все";
-
-            DisabledCellStyle = new DataGridViewCellStyle();
-            DisabledCellStyle.BackColor = System.Drawing.Color.Moccasin;
-            DisabledCellStyle.SelectionBackColor = System.Drawing.Color.Moccasin;
-            DisabledCellStyle.ForeColor = System.Drawing.Color.Moccasin;
-            DisabledCellStyle.SelectionForeColor = System.Drawing.Color.Moccasin;
-
-            EnabledCellStyle = new DataGridViewCellStyle();
-            EnabledCellStyle.BackColor = System.Drawing.Color.White;
-            EnabledCellStyle.SelectionBackColor = System.Drawing.Color.PowderBlue;
-            EnabledCellStyle.ForeColor = System.Drawing.Color.Black;
-            EnabledCellStyle.SelectionForeColor = System.Drawing.Color.MidnightBlue;
-
-
-            DisabledBringingLengthCellStyle = new DataGridViewCellStyle();
-            DisabledBringingLengthCellStyle.ForeColor = EnabledCellStyle.BackColor;
-            DisabledBringingLengthCellStyle.SelectionForeColor = EnabledCellStyle.SelectionBackColor;
-
-            EnabledBringingLengthCellStyle = new DataGridViewCellStyle();
-            EnabledBringingLengthCellStyle.ForeColor = EnabledCellStyle.ForeColor;
-            EnabledBringingLengthCellStyle.SelectionForeColor = EnabledCellStyle.SelectionForeColor;
-
-            EnabledBringingLengthCellStyle.BackColor = DisabledBringingLengthCellStyle.BackColor = EnabledCellStyle.BackColor;
-            EnabledBringingLengthCellStyle.SelectionBackColor = DisabledBringingLengthCellStyle.SelectionBackColor = EnabledCellStyle.SelectionBackColor;
-
-        }
-
-        private void DgMeasuredParameters_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
-        {
-           if (e.ColumnIndex == 0 && e.RowIndex == -1 || e.ColumnIndex == delButtonColumn.Index)
-            {
-                Cursor.Current = Cursors.Hand;
-            }
-            else
-            {
-                Cursor.Current = Cursors.Arrow;
-            }
-        }
-
-        private void DgMeasuredParameters_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex == -1 && e.ColumnIndex == 0)
-            {
-                parameter_type_name_column.HeaderCell.ContextMenuStrip.Show(Cursor.Position);
-            }else if (e.ColumnIndex == delButtonColumn.Index)
-            {
-                MessageBox.Show("Вы уверены что хотите удалить?");
-                RemoveParameterDataByIndex(e.RowIndex);
-            }
-
-        }
-
-
-
         protected virtual void FillDBData()
         {
             fillCableMarks();
@@ -184,11 +104,81 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         }
 
 
+        #region BringingLengthContextMenu control
+
+        private void LengthBringingColumnContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (dgMeasuredParameters.SelectedCells.Count != 1)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                e.Cancel = !MeasuredParameterType.AllowBringingLength((uint)dgMeasuredParameters.Rows[dgMeasuredParameters.SelectedCells[0].RowIndex].Cells[parameter_type_id_column.Name].Value);//MeasuredParamsDataGridView.Rows[MeasuredParamsDataGridView.SelectedCells[0].RowIndex].Cells[bringingLengthColumn.Name].ReadOnly;
+            }
+            if (!e.Cancel)
+            {
+                DataGridViewCell c = dgMeasuredParameters.Rows[dgMeasuredParameters.SelectedCells[0].RowIndex].Cells[lengthBringingTypeIdColumn.Name];
+                foreach (ParameterTypesToolStripItem item in contextMenuBringingLength.Items)
+                {
+                    LengthBringingType t = item.Entity as LengthBringingType;
+                    if (t.TypeId.ToString() != c.Value.ToString())
+                    {
+                        item.Enabled = true;
+                        item.BackColor = System.Drawing.Color.Transparent;
+                    }
+                    else
+                    {
+                        item.Enabled = false;
+                        item.BackColor = EnabledCellStyle.SelectionBackColor;
+                    }
+
+                }
+            }
+        }
+
+        private ToolStripMenuItem BuildLengthBringingToolStripMenuItem(LengthBringingType lBringType)
+        {
+            ToolStripMenuItem item = new ToolStripMenuItem();
+            item.Text = lBringType.BringingName;
+            item.Click += BuildLengthBringingToolStripMenuItem_Click;
+            item.Tag = lBringType;
+            return item;
+        }
+
+        DataGridViewRow lBringEditRow;
+        private void BuildLengthBringingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            LengthBringingType t = item.Tag as LengthBringingType;
+            lBringEditRow.Cells[lengthBringingTypeIdColumn.Index].Value = t.TypeId;
+            InitRowByParameterType(lBringEditRow);
+            //MessageBox.Show(sender.GetType().Name);
+        }
+
+        private void ShowBringingLengthContextMenu(DataGridViewCell e)
+        {
+            //contextMenuBringingLength
+            uint lBtypeId = (uint)e.OwningRow.Cells[lengthBringingTypeIdColumn.Index].Value;
+            foreach(ToolStripMenuItem i in contextMenuBringingLength.Items)
+            {
+                LengthBringingType t = i.Tag as LengthBringingType;
+                i.Checked = t.TypeId == lBtypeId;
+            }
+            contextMenuBringingLength.Show(Cursor.Position);
+            lBringEditRow = e.OwningRow;
+        }
+        #endregion
+
         #region Заполнение cableFormDataSet необходимыми таблицами
 
         private void fillLengthBringingTypes()
         {
-            cableFormDataSet.Tables.Add(LengthBringingType.get_all_as_table());
+            DBEntityTable t = LengthBringingType.get_all_as_table();
+            cableFormDataSet.Tables.Add(t);
+            IEnumerable<ToolStripMenuItem> mItems = t.RowsAsArray().Select((data) => BuildLengthBringingToolStripMenuItem((LengthBringingType)data));
+            contextMenuBringingLength.Items.Clear();
+            contextMenuBringingLength.Items.AddRange(mItems.ToArray());
         }
 
         private void fillDRFormuls()
@@ -271,6 +261,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         #endregion
 
+        #region Управление нормативным документом
         protected virtual string reloadDocumentsDS()
         {
             DataTable docs = Document.get_all_as_table();
@@ -338,6 +329,35 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 cable.QADocument = d;
             }
         }
+
+        private bool checkSelectedDocument()
+        {
+            bool f = true;
+            string docName = cable.QADocument.ShortName;
+            if (cable.QADocument.RowState == DataRowState.Added)
+            {
+                string tableName = string.Empty;
+                f = cable.QADocument.Save();
+                if (f)
+                {
+                    tableName = reloadDocumentsDS();
+                    DocumentNumber_input.Refresh();
+                    cable.DocumentId = cable.QADocument.DocumentId;
+                    foreach (DataRow r in cableFormDataSet.Tables[tableName].Rows)
+                    {
+                        Document d = (Document)r;
+                        if (d.ShortName == docName)
+                        {
+                            DocumentNumber_input.SelectedValue = d.DocumentId;
+                            break;
+                        }
+                    }
+                }
+            }
+            return f;
+        }
+        #endregion
+
 
         protected void CodeKCH_input_TextChanged(object sender, EventArgs e)
         {
@@ -429,35 +449,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
 
 
-
-
-        private bool checkSelectedDocument()
-        {
-            bool f = true;
-            string docName = cable.QADocument.ShortName;
-            if (cable.QADocument.RowState == DataRowState.Added)
-            {
-                string tableName = string.Empty;
-                f = cable.QADocument.Save();
-                if (f)
-                {
-                    tableName = reloadDocumentsDS();
-                    DocumentNumber_input.Refresh();
-                    cable.DocumentId = cable.QADocument.DocumentId;
-                    foreach (DataRow r in cableFormDataSet.Tables[tableName].Rows)
-                    {
-                        Document d = (Document)r;
-                        if (d.ShortName == docName)
-                        {
-                            DocumentNumber_input.SelectedValue = d.DocumentId;
-                            break;
-                        }
-                    }
-                }
-            }
-            return f;
-        }
-
         private bool saveCableStructures()
         {
             bool isSave = true;
@@ -468,32 +459,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             return isSave;
         }
 
-        int currentStructureId = 0;
-        CableStructure draftStructure;
-        CableStructure currentStructure => currentStructureId < tabControl1.TabCount - 1 ? (CableStructure)(Cable.CableStructures.Rows[currentStructureId]) : draftStructure; 
 
-        private void cbStructureType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (isOnInitForm || cbStructureType.SelectedIndex == selIndexWas) return;
-            selIndexWas = cbStructureType.SelectedIndex;
-            Debug.WriteLine("cbStructureType_SelectedIndexChanged");
-            currentStructure.StructureType = GetSelectedCableStructureType();
-            tabControl1.SelectedTab.Text = currentStructure.StructureTitle;
-            if (currentStructure == draftStructure && currentStructure.StructureTypeId != 0)
-            {
-                //Добавляем новую структуру
-                if (draftStructure.Save())
-                {
-                    Cable.CableStructures.Rows.Add(draftStructure);
-                    MakeDraftStructure();
-                    btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
-                    fillMeasuredParametersData();
-                }
-            }
-            RefreshAddMeasureParametersContextMenu();
-            if (ExcludedParameterTypes.Length > 0) DeleteExcludedMeasureParametersFromCableStructure();
-  
-        }
 
         private void RefreshAddMeasureParametersContextMenu()
         {
@@ -529,21 +495,22 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         private void initStructureTabPage()
         {
+            tabControl1.TabPages.Clear();
             if (cable.CableStructures.Rows.Count > 0)
             {
-                tabControl1.TabPages.Clear();
                 foreach (CableStructure s in cable.CableStructures.Rows)
                 {
-                    AddTabPage(s.StructureTitle);
+                    AddTabPage(s);
                 }
-                AddTabPage("Новая структура");
-                ReplacePanelToCurrentPage();
-                FillStructurePageForCurrentRow();
             }
-            MakeDraftStructure();
+            AddTabPage(MakeDraftStructure());
+            ReplacePanelToCurrentPage();
+            FillStructurePageForCurrentStructure();
             InitParameterTypesContextMenu();
-            btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
+            btnRemoveCurrentStructure.Visible = !currentStructure.IsNewRecord();
         }
+
+        #region методы для AddMeasureParameterContextMenu 
 
         private void InitParameterTypesContextMenu()
         {
@@ -556,13 +523,22 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             ToolStripMenuItem item = new ToolStripMenuItem(pType.ParameterName);
             item.ForeColor = Color.Gainsboro;
             item.Tag = pType;
-            item.Click += Item_Click;
+            item.Click += AddMeasureParameterContextMenuItem_Click;
             item.Visible = item.Enabled = false;
             item.ToolTipText = pType.Description;
             return item;
         }
 
-        private void Item_Click(object sender, EventArgs e)
+        private void addMeasurerParameterContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            if (cbStructureType.SelectedIndex == 0)
+            {
+                MessageBox.Show("Чтобы добавить измеряемые параметры, необходимо выбрать тип структуры", "Не выбран тип структуры", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                e.Cancel = true;
+            }
+        }
+
+        private void AddMeasureParameterContextMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem i = sender as ToolStripMenuItem;
             if (i.Tag.GetType() == typeof(MeasuredParameterType))
@@ -577,33 +553,54 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                         pTypes.Add(item.Tag as MeasuredParameterType);
                     }
                 }
-                AddMeasuredParameterDataRange(pTypes.ToArray());  
+                AddMeasuredParameterDataRange(pTypes.ToArray());
             }
         }
 
-        private void AddMeasuredParameterData(MeasuredParameterType pType)
+        #endregion
+
+
+        #region Управление TabPage структур
+        private void btnRemoveCurrentStructure_Click(object sender, EventArgs e)
         {
-            MeasuredParameterType[] t = { pType };
-            AddMeasuredParameterDataRange(t);
+            /*
+            if (tabControl1.TabCount == 1) return;
+            CableStructure delStruct = currentStructure;
+            int delStructIndex = currentStructureId;
+            int nextStructureId;
+            nextStructureId = (currentStructureId > 0) ? currentStructureId - 1 : 1;
+            delTabFlag = true;
+            tabControl1.SelectedIndex = nextStructureId;
+            delTabFlag = Cable.RemoveStructure(delStruct);
+            if (delTabFlag) tabControl1.TabPages[delStructIndex].Dispose();
+            delTabFlag = false;
+            currentStructureId = tabControl1.SelectedIndex;
+            */
         }
 
-        private void AddMeasuredParameterDataRange(MeasuredParameterType[] pTypes)
+        private void AddTabPage(CableStructure s)
         {
-           foreach(var pt in pTypes)
-            {
-                CableStructureMeasuredParameterData pData = (CableStructureMeasuredParameterData)currentStructure.MeasuredParameters.NewRow();
-                pData.ParameterType = pt;
-                pData.AssignedStructure = currentStructure;
-                pData.MeasuredParameterDataId = 0;
-                pData.LengthBringingTypeId = LengthBringingType.NoBringing;
-                currentStructure.MeasuredParameters.Rows.Add(pData);
-            }
-            RefreshDataGridView();
+            TabPage tp = new TabPage(s.StructureTypeId == 0 ? "Новая структура" : s.StructureTitle );
+            tp.Tag = s;
+            tp.Location = new System.Drawing.Point(4, 27);
+            tp.Padding = new System.Windows.Forms.Padding(3);
+            tp.Size = new System.Drawing.Size(862, 371);
+            tp.TabIndex = 0;
+            tp.UseVisualStyleBackColor = true;
+            tabControl1.TabPages.Add(tp);
+        }
+
+        /// <summary>
+        /// Перенос панели настроек на текущую страницу
+        /// </summary>
+        private void ReplacePanelToCurrentPage()
+        {
+            tabControl1.TabPages[tabControl1.SelectedIndex].Controls.Add(structureDataContainer);
         }
 
         private CableStructure MakeDraftStructure()
         {
-            draftStructure = (CableStructure)Cable.CableStructures.NewRow();
+            CableStructure draftStructure = (CableStructure)Cable.CableStructures.NewRow();
             draftStructure.CableStructureId = 0;
             draftStructure.CableId = Cable.CableId;
             draftStructure.LeadDiameter = 0.4f;
@@ -619,31 +616,54 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             draftStructure.GroupedAmount = 0;
             draftStructure.DisplayedAmount = 1;
             draftStructure.RealAmount = 1;
-          
-            if (tabControl1.TabPages.Count == Cable.CableStructures.Rows.Count)
-            {
-                AddTabPage("Новая структура");
-            }
             return draftStructure;
         }
 
         bool delTabFlag = false;
+
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if (currentStructure != draftStructure && !delTabFlag) e.Cancel = !currentStructure.Save();
+            //if (currentStructure != draftStructure && !delTabFlag) e.Cancel = !SaveCurrentStructure();
+            ///currentStructureId = tabControl1.SelectedIndex;
+            isOnInitForm = true;
+            ReplacePanelToCurrentPage();
+            FillStructurePageForCurrentStructure();
+            InitParameterTypesContextMenu();
+            StructureIdLbl.Text = $"StructureId = {currentStructure.CableStructureId}";
+            isOnInitForm = false;
+            
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            currentStructureId = tabControl1.SelectedIndex;
-            ReplacePanelToCurrentPage();
-            FillStructurePageForCurrentRow();
-            InitParameterTypesContextMenu();
+
         }
 
-        private void FillStructurePageForCurrentRow()
+        private void tabControl1_Deselecting(object sender, TabControlCancelEventArgs e)
         {
-            btnRemoveCurrentStructure.Visible = currentStructure != draftStructure;
+            Debug.WriteLine($"{currentStructure.CableStructureId}");
+            if (!currentStructure.IsNewRecord() && !delTabFlag) e.Cancel = !SaveCurrentStructure();
+        }
+
+        private bool SaveCurrentStructure()
+        {
+            bool f;
+            Debug.WriteLine($"До сохранения {currentStructure.RowState.ToString()}");
+
+            if (currentStructure.IsNewRecord())
+            {
+                cable.CableStructures.Rows.Add(currentStructure);
+            }
+            f = currentStructure.Save();
+            Debug.WriteLine($"После сохранения {currentStructure.RowState.ToString()} {f}");
+            return f;
+        }
+
+
+
+        private void FillStructurePageForCurrentStructure()
+        {
+            btnRemoveCurrentStructure.Visible = !currentStructure.IsNewRecord();
             cbStructureType.SelectedValue = currentStructure.StructureTypeId;
             cbLeadMaterial.SelectedValue = currentStructure.LeadMaterialTypeId;
             cbIsolationMaterial.SelectedValue = currentStructure.IsolationMaterialId;
@@ -661,11 +681,22 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             fillMeasuredParametersData();
             selIndexWas = cbStructureType.SelectedIndex;
         }
+        #endregion
 
+
+        #region MeasuredParametersData DataGridControl
+        /// <summary>
+        /// Заполнение таблицы измеряемых параметров
+        /// </summary>
         private void fillMeasuredParametersData()
         {
             MeasuredParametersBindingSource.DataSource = currentStructure.MeasuredParameters;
+        }
+
+        private void MeasuredParametersBindingSource_DataSourceChanged(object sender, EventArgs e)
+        {
             RefreshDataGridView();
+
         }
 
         /// <summary>
@@ -673,41 +704,279 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         /// </summary>
         private void RefreshDataGridView()
         {
+            freqMaxColumn.Visible = frequencyMinColumn.Visible = freqStepColumn.Visible = DoesFreqParamsInclude();
             MeasuredParametersBindingSource.ResetBindings(false);
         }
 
-
-        private void ReplacePanelToCurrentPage()
+        private void dgMeasuredParameters_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            tabControl1.TabPages[tabControl1.SelectedIndex].Controls.Add(structureDataContainer);
+            for (int i = 0; i < dgMeasuredParameters.Rows.Count; i++)
+            {
+                InitRowByParameterType(dgMeasuredParameters.Rows[i]);
+            }
+            dgMeasuredParameters.Sort(dgMeasuredParameters.Columns[parameter_type_id_column.Name], System.ComponentModel.ListSortDirection.Ascending);
+            //freqMaxColumn.Visible = frequencyMinColumn.Visible = freqStepColumn.Visible = currentStructure.HasFreqMeasuredParameterData;
+
+            //deleteAllMeasuredParametersDataButton.Enabled = MeasuredParamsDataGridView.Rows.Count > 0;
         }
 
-        private void btnRemoveCurrentStructure_Click(object sender, EventArgs e)
+        private void refreshReadOnlyCellColor(DataGridViewRow row)
         {
-            if (tabControl1.TabCount == 1) return;
-            CableStructure delStruct = currentStructure;
-            int delStructIndex = currentStructureId;
-            int nextStructureId;
-            nextStructureId = (currentStructureId > 0) ? currentStructureId - 1 : 1;
-            delTabFlag = true;
-            tabControl1.SelectedIndex = nextStructureId;
-            delTabFlag = Cable.RemoveStructure(delStruct);
-            if (delTabFlag) tabControl1.TabPages[delStructIndex].Dispose();
-            delTabFlag = false;
-            currentStructureId = tabControl1.SelectedIndex;
+            string[] ExceptedColumns = new string[] {
+                parameter_type_name_column.Name,
+                parameterTypeMeasureColumn.Name,
+                resultMeasureColumn.Name
+            };
+            foreach (DataGridViewCell c in row.Cells)
+            {
+                if (!c.Visible || Array.IndexOf(ExceptedColumns, c.OwningColumn.Name) > -1) continue;
+                else if (lengthBringingColumn.Name == c.OwningColumn.Name)
+                {
+                    ReStyleBringingLengthColumnByBringingLengthType(c.OwningRow);
+                }
+                else if (c.OwningColumn.Name != delButtonColumn.Name)
+                {
+                    c.Style = c.ReadOnly ? DisabledCellStyle : EnabledCellStyle;
+                }
+            }
+        } 
+
+        private void RemoveParameterDataByIndex(int rowIndex)
+        {
+            int start = rowIndex == -1 ? 0 : rowIndex;
+            int end = rowIndex == -1 ? currentStructure.MeasuredParameters.Rows.Count - 1 : rowIndex;
+            bool willDelete = rowIndex == -1 ? MessageBox.Show("Вы уверены, что хотите удалить все измеряемые параметры из текущей структуры?") == DialogResult.OK : true;
+            if (!willDelete) return;
+            MessageBox.Show($"{start} - {end} from {currentStructure.MeasuredParameters.Rows.Count}");
+            for (int i = start; i <= end; i++)
+            {
+                CableStructureMeasuredParameterData mpd = currentStructure.MeasuredParameters.Rows[i] as CableStructureMeasuredParameterData;
+                MessageBox.Show(i.ToString());
+                willDelete = (!mpd.IsNewRecord()) ? mpd.Destroy() : true;
+                if (willDelete) currentStructure.MeasuredParameters.Rows.Remove(mpd);
+            }
         }
 
-        private void AddTabPage(string text)
+
+
+        private void FillMeasuredParametersToDelete(out string deletedParameters)
         {
-            TabPage tp = new TabPage(text);
-            tp.Location = new System.Drawing.Point(4, 27);
-            tp.Padding = new System.Windows.Forms.Padding(3);
-            tp.Size = new System.Drawing.Size(862, 371);
-            tp.TabIndex = 0;
-            tp.UseVisualStyleBackColor = true;
-            tabControl1.TabPages.Add(tp);
+            List<string> names = new List<string>();
+            deletedParameters = "";
+            if (ExcludedParameterTypes.Length > 0 && currentStructure.MeasuredParameters.Rows.Count > 0)
+            {
+                IEnumerable<string> val = ExcludedParameterTypes.Select((v) => (v as MeasuredParameterType).ParameterTypeId.ToString());
+                DataRow[] rows = currentStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", val)})");
+                val = rows.Select((v) => (v as CableStructureMeasuredParameterData).ParameterName);
+                if (val.Count() > 0) deletedParameters = string.Join(", ", val) + ";";
+            }
         }
 
+        DataRow[] ExcludedParameterTypes;
+        private void RefreshExcludedParameterTypes()
+        {
+            CableStructureType t = GetSelectedCableStructureType();
+            string[] nextStructureTypeParamIDs = t.StructureMeasuredParameters.Split(',');
+            List<string> allStructureTypeParamIDs = new List<string>();
+            foreach (MeasuredParameterType mpt in cableFormDataSet.Tables["measured_parameter_types"].Rows) allStructureTypeParamIDs.Add(mpt.ParameterTypeId.ToString());
+            IEnumerable<string> v = allStructureTypeParamIDs.ToArray().Except(nextStructureTypeParamIDs);
+            if (v.Count<string>() > 0)
+            {
+                ExcludedParameterTypes = cableFormDataSet.Tables["measured_parameter_types"].Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(", ", v)})");
+            }
+            else
+            {
+                ExcludedParameterTypes = new DataRow[] { };
+            }
+        }
+
+        private bool DoesFreqParamsInclude()
+        {
+            if (currentStructure.MeasuredParameters.Rows.Count > 0)
+                return currentStructure.HasFreqMeasuredParameterData;
+            else
+                return false;
+        }
+
+        #endregion
+
+        #region События DataGridView
+        private void DgMeasuredParameters_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex == -1 || e.ColumnIndex == delButtonColumn.Index)
+            {
+                Cursor.Current = Cursors.Hand;
+            }
+            else
+            {
+                Cursor.Current = Cursors.Arrow;
+            }
+
+
+        }
+
+
+
+        private void DgMeasuredParameters_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == delButtonColumn.Index)
+            {
+                MessageBox.Show("Вы уверены что хотите удалить?");
+                RemoveParameterDataByIndex(e.RowIndex);
+            }
+        }
+        private void dgMeasuredParameters_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.ColumnIndex == lengthBringingColumn.Index && e.RowIndex != -1)
+                {
+                    DataGridViewCell c = dgMeasuredParameters.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    ShowBringingLengthContextMenu(c);
+                }
+            }
+        }
+
+        private void dgMeasuredParameters_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex == parameter_type_name_column.Index)
+            {
+                parameter_type_name_column.HeaderCell.ContextMenuStrip.Show(Cursor.Position);
+            }
+        }
+
+        private void dgMeasuredParameters_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgMeasuredParameters.IsCurrentCellDirty)
+            {
+                dgMeasuredParameters.CommitEdit(DataGridViewDataErrorContexts.CurrentCellChange);
+            }
+        }
+        #endregion
+
+
+        #region DataGridView управление стилями
+
+        private void SetParametersDataGridViewStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle parameterNameHeaderStyle = new DataGridViewCellStyle();
+            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            parameterNameCellStyle.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            parameterNameCellStyle.ForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.NullValue = "-";
+            parameterNameCellStyle.Padding = new System.Windows.Forms.Padding(3);
+            parameterNameCellStyle.SelectionBackColor = parameterNameCellStyle.BackColor;
+            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+
+
+            parameter_type_name_column.CellTemplate.Style = BuildParameterNameCellStyle();
+            parameter_type_name_column.HeaderCell.Style = BuildParameterNameHeaderStyle();
+
+            parameter_type_name_column.HeaderCell.ContextMenuStrip = addMeasurerParameterContextMenu;
+
+            dgMeasuredParameters.CellClick += DgMeasuredParameters_CellClick;
+            dgMeasuredParameters.CellMouseMove += DgMeasuredParameters_CellMouseMove;
+
+            delButtonColumn.CellTemplate.Style = delButtonColumn.HeaderCell.Style = BuildDelButtonCellStyle();
+            delButtonColumn.HeaderCell.ToolTipText = "Удалить все";
+
+            DisabledCellStyle = new DataGridViewCellStyle();
+            DisabledCellStyle.BackColor = System.Drawing.Color.Moccasin;
+            DisabledCellStyle.SelectionBackColor = System.Drawing.Color.Moccasin;
+            DisabledCellStyle.ForeColor = System.Drawing.Color.Moccasin;
+            DisabledCellStyle.SelectionForeColor = System.Drawing.Color.Moccasin;
+
+            EnabledCellStyle = new DataGridViewCellStyle();
+            EnabledCellStyle.BackColor = System.Drawing.Color.White;
+            EnabledCellStyle.SelectionBackColor = System.Drawing.Color.PowderBlue;
+            EnabledCellStyle.ForeColor = System.Drawing.Color.Black;
+            EnabledCellStyle.SelectionForeColor = System.Drawing.Color.MidnightBlue;
+
+
+            DisabledBringingLengthCellStyle = new DataGridViewCellStyle();
+            DisabledBringingLengthCellStyle.ForeColor = EnabledCellStyle.BackColor;
+            DisabledBringingLengthCellStyle.SelectionForeColor = EnabledCellStyle.SelectionBackColor;
+
+            EnabledBringingLengthCellStyle = new DataGridViewCellStyle();
+            EnabledBringingLengthCellStyle.ForeColor = EnabledCellStyle.ForeColor;
+            EnabledBringingLengthCellStyle.SelectionForeColor = EnabledCellStyle.SelectionForeColor;
+
+            EnabledBringingLengthCellStyle.BackColor = DisabledBringingLengthCellStyle.BackColor = EnabledCellStyle.BackColor;
+            EnabledBringingLengthCellStyle.SelectionBackColor = DisabledBringingLengthCellStyle.SelectionBackColor = EnabledCellStyle.SelectionBackColor;
+
+        }
+        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameCellStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
+            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            parameterNameCellStyle.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            parameterNameCellStyle.ForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.NullValue = "-";
+            parameterNameCellStyle.Padding = new System.Windows.Forms.Padding(3);
+            parameterNameCellStyle.SelectionBackColor = parameterNameCellStyle.BackColor;
+            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            return parameterNameCellStyle;
+        }
+
+        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameHeaderStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
+            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(201)))), ((int)(((byte)(0)))));
+            style.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            style.ForeColor = System.Drawing.Color.Gainsboro;
+            style.NullValue = "-";
+            style.Padding = new System.Windows.Forms.Padding(3);
+
+            style.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            style.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+            return style;
+        }
+
+        private System.Windows.Forms.DataGridViewCellStyle BuildDelButtonCellStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
+            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            style.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            style.ForeColor = System.Drawing.Color.Gainsboro;
+            style.NullValue = "x";
+            style.Padding = new System.Windows.Forms.Padding(3);
+
+            style.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            style.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+            return style;
+        }
+
+        private void ReStyleBringingLengthColumnByBringingLengthType(DataGridViewRow r)
+        {
+            uint blId = (uint)r.Cells[lengthBringingTypeIdColumn.Name].Value;
+            uint pTypeId = (uint)r.Cells[parameter_type_id_column.Name].Value;
+            DataGridViewCell cell = r.Cells[lengthBringingColumn.Name];
+            if (MeasuredParameterType.AllowBringingLength(pTypeId))
+            {
+                cell.ReadOnly = blId != LengthBringingType.ForAnotherLengthInMeters;
+                cell.Style = (blId == LengthBringingType.NoBringing) ? DisabledBringingLengthCellStyle : EnabledBringingLengthCellStyle;
+            }
+            else
+            {
+                cell.ReadOnly = true;
+                cell.Style = DisabledCellStyle;
+            }
+        }
+        #endregion
+
+        #region Управление параметрами структуры
         private void cbLeadMaterial_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (isOnInitForm) return;
@@ -717,7 +986,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         private void cbIsolationMaterial_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (isOnInitForm) return;
-             currentStructure.IsolationMaterialId = (uint)cbIsolationMaterial.SelectedValue;
+            currentStructure.IsolationMaterialId = (uint)cbIsolationMaterial.SelectedValue;
         }
 
         private void cbDRCalculatingFormula_SelectedIndexChanged(object sender, EventArgs e)
@@ -744,7 +1013,8 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             if (float.TryParse(tbLeadDiameter.Text, out v))
             {
                 currentStructure.LeadDiameter = v;
-            }else
+            }
+            else
             {
                 tbLeadDiameter.Text = v.ToString();
                 MessageBox.Show("Неверный формат величины диаметра жил", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -777,7 +1047,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             NumericUpDown input = sender as NumericUpDown;
             uint val = (uint)input.Value;
-            
+
             if (val > 0 && val < 500)
             {
                 input.Value = valWas < val ? 500 : 0;
@@ -814,18 +1084,10 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             currentStructure.GroupedAmount = (uint)nudNumberInGroup.Value;
         }
 
-        private void dgMeasuredParameters_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-             for(int i = 0; i< dgMeasuredParameters.Rows.Count; i++)
-              {
-                    InitRowByParameterType(dgMeasuredParameters.Rows[i]);
-              }
-            dgMeasuredParameters.Sort(dgMeasuredParameters.Columns[parameter_type_id_column.Name], System.ComponentModel.ListSortDirection.Ascending);
-            //deleteAllMeasuredParametersDataButton.Enabled = MeasuredParamsDataGridView.Rows.Count > 0;
-        }
-
-
-
+        /// <summary>
+        /// Инициализация строки таблицы измеряемых параметров в соответствии с описываемым ей параметром
+        /// </summary>
+        /// <param name="r"></param>
         private void InitRowByParameterType(DataGridViewRow r)
         {
             try
@@ -857,124 +1119,12 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         }
 
-        private void refreshReadOnlyCellColor(DataGridViewRow row)
-        {
-            string[] ExceptedColumns = new string[] {
-                parameter_type_name_column.Name,
-                parameterTypeMeasureColumn.Name
-            };
-            foreach (DataGridViewCell c in row.Cells)
-            {
-                if (!c.Visible || Array.IndexOf(ExceptedColumns, c.OwningColumn.Name) > -1) continue;
-                else if (lengthBringingColumn.Name == c.OwningColumn.Name)
-                {
-                    ReStyleBringingLengthColumnByBringingLengthType(c.OwningRow);
-                }
-                else
-                {
-                    c.Style = c.ReadOnly ? DisabledCellStyle : EnabledCellStyle;
-                }
-            }
-        }
-
-        private void ReStyleBringingLengthColumnByBringingLengthType(DataGridViewRow r)
-        {
-            uint blId = (uint)r.Cells[lengthBringingTypeIdColumn.Name].Value;
-            uint pTypeId = (uint)r.Cells[parameter_type_id_column.Name].Value;
-            DataGridViewCell cell = r.Cells[lengthBringingColumn.Name];
-            if (MeasuredParameterType.AllowBringingLength(pTypeId))
-            {
-                cell.ReadOnly = blId != LengthBringingType.ForAnotherLengthInMeters;
-                cell.Style = (blId == LengthBringingType.NoBringing) ? DisabledBringingLengthCellStyle : EnabledBringingLengthCellStyle;
-            }
-            else
-            {
-                cell.ReadOnly = true;
-                cell.Style = DisabledCellStyle;
-            }
-   
-        }
-
-        private void RemoveParameterDataByIndex(int rowIndex)
-        {
-            int start = rowIndex == -1 ? 0 : rowIndex;
-            int end = rowIndex == -1 ? currentStructure.MeasuredParameters.Rows.Count-1 : rowIndex;
-            bool willDelete = rowIndex == -1 ? MessageBox.Show("Вы уверены, что хотите удалить все измеряемые параметры из текущей структуры?") == DialogResult.OK : true;
-            if (!willDelete) return;
-            MessageBox.Show($"{start} - {end} from {currentStructure.MeasuredParameters.Rows.Count}");
-            for(int i = start; i <= end; i++)
-            {
-                CableStructureMeasuredParameterData mpd = currentStructure.MeasuredParameters.Rows[i] as CableStructureMeasuredParameterData;
-                MessageBox.Show(i.ToString());
-                willDelete = (!mpd.IsNewRecord()) ? mpd.Destroy() : true;
-                if (willDelete) currentStructure.MeasuredParameters.Rows.Remove(mpd);
-            }
-        }
-
-        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameCellStyle()
-        {
-            System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
-            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
-            parameterNameCellStyle.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            parameterNameCellStyle.ForeColor = System.Drawing.Color.Gainsboro;
-            parameterNameCellStyle.NullValue = "-";
-            parameterNameCellStyle.Padding = new System.Windows.Forms.Padding(3);
-            parameterNameCellStyle.SelectionBackColor = parameterNameCellStyle.BackColor;
-            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.Gainsboro;
-            parameterNameCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            return parameterNameCellStyle;
-        }
-
-        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameHeaderStyle()
-        {
-            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
-            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(201)))), ((int)(((byte)(0)))));
-            style.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            style.ForeColor = System.Drawing.Color.Gainsboro;
-            style.NullValue = "-";
-            style.Padding = new System.Windows.Forms.Padding(3);
-       
-            style.SelectionBackColor = System.Drawing.SystemColors.Highlight; 
-            style.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-
-            return style;
-        }
-
-        private System.Windows.Forms.DataGridViewCellStyle BuildDelButtonCellStyle()
-        {
-            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
-            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            style.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            style.ForeColor = System.Drawing.Color.Gainsboro;
-            style.NullValue = "x";
-            style.Padding = new System.Windows.Forms.Padding(3);
-
-            style.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            style.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-
-            return style;
-        }
-
-        private void addMeasurerParameterContextMenu_Opening(object sender, CancelEventArgs e)
-        {
-            if (cbStructureType.SelectedIndex == 0)
-            {
-               MessageBox.Show("Чтобы добавить измеряемые параметры, необходимо выбрать тип структуры", "Не выбран тип структуры", MessageBoxButtons.OK, MessageBoxIcon.Information);
-               e.Cancel = true;
-            }
-        }
-
         int selIndexWas = 0;
         private void cbStructureType_SelectionChangeCommitted(object sender, EventArgs e)
         {
             Debug.WriteLine($"cbStructureType_SelectionChangeCommitted {cbStructureType.SelectedValue}");
-           // int nextStructureId = (int)cbStructureType.SelectedValue;
-           if (!GetAgreementToStructureTypeChanged())
+            // int nextStructureId = (int)cbStructureType.SelectedValue;
+            if (!GetAgreementToStructureTypeChanged())
             {
                 cbStructureType.SelectedIndex = selIndexWas;
             }
@@ -993,8 +1143,9 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 else
                 {
                     return false;
-                } 
-            }else
+                }
+            }
+            else
             {
                 if (cbStructureType.SelectedIndex != 0)
                 {
@@ -1016,39 +1167,77 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             if (!string.IsNullOrWhiteSpace(measuredParametersToDestroy))
             {
                 return MessageBox.Show($"При изменении типа структуры из списка измеряемых параметров будут исключены:\n\n{measuredParametersToDestroy}\n\nВы согласны?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
-            } else return true;
+            }
+            else return true;
         }
 
-        private void FillMeasuredParametersToDelete(out string deletedParameters)
+        //int currentStructureId = 0;
+        //CableStructure draftStructure;
+        CableStructure currentStructure
         {
-            List<string> names = new List<string>();
-            deletedParameters = "";
-            if (ExcludedParameterTypes.Length > 0 && currentStructure.MeasuredParameters.Rows.Count > 0)
+            get
             {
-                IEnumerable<string> val = ExcludedParameterTypes.Select((v) => (v as MeasuredParameterType).ParameterTypeId.ToString());
-                DataRow[] rows = currentStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", val)})");
-                val = rows.Select((v) => (v as CableStructureMeasuredParameterData).ParameterName);
-                if (val.Count() > 0)deletedParameters = string.Join(", ", val) + ";";
+                return tabControl1.SelectedTab.Tag == null ? MakeDraftStructure() : tabControl1.SelectedTab.Tag as CableStructure;
+
+                //currentStructureId < tabControl1.TabCount - 1 ? (CableStructure)(Cable.CableStructures.Rows[currentStructureId]) : draftStructure;
+                
             }
         }
 
-        DataRow[] ExcludedParameterTypes;
-        private void RefreshExcludedParameterTypes()
+        private void cbStructureType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CableStructureType t = GetSelectedCableStructureType();
-            string[] nextStructureTypeParamIDs = t.StructureMeasuredParameters.Split(',');
-            List<string> allStructureTypeParamIDs = new List<string>();
-            foreach (MeasuredParameterType mpt in cableFormDataSet.Tables["measured_parameter_types"].Rows) allStructureTypeParamIDs.Add(mpt.ParameterTypeId.ToString());
-            IEnumerable<string> v = allStructureTypeParamIDs.ToArray().Except(nextStructureTypeParamIDs);
-            if (v.Count<string>() > 0)
+            if (isOnInitForm || cbStructureType.SelectedIndex == selIndexWas) return;
+            selIndexWas = cbStructureType.SelectedIndex;
+            currentStructure.StructureType = GetSelectedCableStructureType();
+            tabControl1.SelectedTab.Text = currentStructure.StructureTitle;
+            if (currentStructure.IsNewRecord() && currentStructure.StructureTypeId != 0)
             {
-                ExcludedParameterTypes = cableFormDataSet.Tables["measured_parameter_types"].Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(", ", v)})");
+                //Добавляем новую структуру
+                if (SaveCurrentStructure())
+                {
+                    AddTabPage(MakeDraftStructure());
+                    btnRemoveCurrentStructure.Visible = !currentStructure.IsNewRecord();
+                    fillMeasuredParametersData();
+                }
             }
-            else
-            {
-                ExcludedParameterTypes = new DataRow[] { };
-            }
+            RefreshAddMeasureParametersContextMenu();
+            if (ExcludedParameterTypes.Length > 0) DeleteExcludedMeasureParametersFromCableStructure();
+            /*
+            
+            
+            Debug.WriteLine("cbStructureType_SelectedIndexChanged");
+            
+            
+            
+
+            */
         }
+        #endregion
+
+        #region Добавлени, удаление, редактирование CableStructureMeasuredParameters
+        private void AddMeasuredParameterData(MeasuredParameterType pType)
+        {
+            MeasuredParameterType[] t = { pType };
+            AddMeasuredParameterDataRange(t);
+        }
+
+        private void AddMeasuredParameterDataRange(MeasuredParameterType[] pTypes)
+        {
+            foreach (var pt in pTypes)
+            {
+                CableStructureMeasuredParameterData pData = (CableStructureMeasuredParameterData)currentStructure.MeasuredParameters.NewRow();
+                pData.ParameterType = pt;
+                pData.AssignedStructure = currentStructure;
+                pData.MeasuredParameterDataId = 0;
+                pData.LengthBringingTypeId = LengthBringingType.NoBringing;
+                currentStructure.MeasuredParameters.Rows.Add(pData);
+            }
+            RefreshDataGridView();
+        }
+
+
+
+        #endregion
 
 
     }
