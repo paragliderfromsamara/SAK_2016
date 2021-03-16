@@ -95,15 +95,27 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         protected override List<DataGridViewColumn> BuildColumnsForDataGrid()
         {
             List < DataGridViewColumn > cols = base.BuildColumnsForDataGrid();
+            DataGridViewColumn full_name_column = BuildDataGridTextColumn("full_cable_name", "Марка", true);
+            DataGridViewColumn okp = BuildDataGridTextColumn("code_okp", "ОКП", true);
+            DataGridViewColumn kch = BuildDataGridTextColumn("code_kch", "КЧ", true);
+            DataGridViewColumn standart = BuildDataGridTextColumn("short_name", "Норматив", true);
+
+            full_name_column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            okp.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            okp.MinimumWidth = 180;
+            kch.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            standart.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            standart.MinimumWidth = 150;
+
             cols.Add(BuildDataGridTextColumn("cable_id", "ID", true));
             cols.Add(BuildDataGridTextColumn("name", "Марка"));
             cols.Add(BuildDataGridTextColumn("struct_name", "Структура"));
-            cols.Add(BuildDataGridTextColumn("full_cable_name", "Марка", true));
+            cols.Add(full_name_column);
             cols.Add(BuildDataGridTextColumn("notes", "Примечание", true));
-            cols.Add(BuildDataGridTextColumn("short_name", "Норматив", true));
+            cols.Add(standart);
             cols.Add(BuildDataGridTextColumn("full_name", "Норматив"));
-            cols.Add(BuildDataGridTextColumn("code_okp", "ОКП", true));
-            cols.Add(BuildDataGridTextColumn("code_kch", "КЧ", true));
+            cols.Add(okp);
+            cols.Add(kch);
             cols.Add(BuildDataGridTextColumn("linear_mass", "Погонная масса, кг"));
             cols.Add(BuildDataGridTextColumn("build_length", "Строительная длина, км"));
             cols.Add(BuildDataGridTextColumn("document_id", "ID документа"));

@@ -376,7 +376,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             {
                 if (s.RowState != DataRowState.Deleted) strName += $"{s.StructureTitle} ";
             }
-            CableStructures_input.Text = strName;
+            CableStructures_input.Text = strName.Trim();
         }
 
         protected void CableStructures_input_TextChanged(object sender, System.EventArgs e)
@@ -493,9 +493,21 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             return (rows.Length > 0) ? (CableStructureType)rows[0] : null;
         }
 
+        private void CableStructures_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            RefreshStructuresName();
+        }
+
+        private void CableStructures_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            RefreshStructuresName();
+        }
+
         private void initStructureTabPage()
         {
             tabControl1.TabPages.Clear();
+            cable.CableStructures.RowChanged += CableStructures_RowChanged;
+            cable.CableStructures.RowDeleted += CableStructures_RowDeleted;
             if (cable.CableStructures.Rows.Count > 0)
             {
                 foreach (CableStructure s in cable.CableStructures.Rows)
@@ -563,19 +575,16 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         #region Управление TabPage структур
         private void btnRemoveCurrentStructure_Click(object sender, EventArgs e)
         {
-            /*
             if (tabControl1.TabCount == 1) return;
             CableStructure delStruct = currentStructure;
-            int delStructIndex = currentStructureId;
+            int delStructIndex = tabControl1.SelectedIndex;
             int nextStructureId;
-            nextStructureId = (currentStructureId > 0) ? currentStructureId - 1 : 1;
+            nextStructureId = (delStructIndex > 0) ? delStructIndex - 1 : 1;
             delTabFlag = true;
             tabControl1.SelectedIndex = nextStructureId;
             delTabFlag = Cable.RemoveStructure(delStruct);
             if (delTabFlag) tabControl1.TabPages[delStructIndex].Dispose();
-            delTabFlag = false;
-            currentStructureId = tabControl1.SelectedIndex;
-            */
+            delTabFlag = false;           
         }
 
         private void AddTabPage(CableStructure s)
@@ -705,6 +714,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         private void RefreshDataGridView()
         {
             freqMaxColumn.Visible = frequencyMinColumn.Visible = freqStepColumn.Visible = DoesFreqParamsInclude();
+            delButtonColumn.Visible = currentStructure.MeasuredParameters.Rows.Count > 0;
             MeasuredParametersBindingSource.ResetBindings(false);
         }
 
@@ -714,7 +724,8 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             {
                 InitRowByParameterType(dgMeasuredParameters.Rows[i]);
             }
-            dgMeasuredParameters.Sort(dgMeasuredParameters.Columns[parameter_type_id_column.Name], System.ComponentModel.ListSortDirection.Ascending);
+            MeasuredParametersBindingSource.Sort = $"{MeasuredParameterType.ParameterTypeId_ColumnName} ASC";
+            //dgMeasuredParameters.Sort(dgMeasuredParameters.Columns[parameter_type_id_column.Name], System.ComponentModel.ListSortDirection.Ascending);
             //freqMaxColumn.Visible = frequencyMinColumn.Visible = freqStepColumn.Visible = currentStructure.HasFreqMeasuredParameterData;
 
             //deleteAllMeasuredParametersDataButton.Enabled = MeasuredParamsDataGridView.Rows.Count > 0;
@@ -741,21 +752,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             }
         } 
 
-        private void RemoveParameterDataByIndex(int rowIndex)
-        {
-            int start = rowIndex == -1 ? 0 : rowIndex;
-            int end = rowIndex == -1 ? currentStructure.MeasuredParameters.Rows.Count - 1 : rowIndex;
-            bool willDelete = rowIndex == -1 ? MessageBox.Show("Вы уверены, что хотите удалить все измеряемые параметры из текущей структуры?") == DialogResult.OK : true;
-            if (!willDelete) return;
-            MessageBox.Show($"{start} - {end} from {currentStructure.MeasuredParameters.Rows.Count}");
-            for (int i = start; i <= end; i++)
-            {
-                CableStructureMeasuredParameterData mpd = currentStructure.MeasuredParameters.Rows[i] as CableStructureMeasuredParameterData;
-                MessageBox.Show(i.ToString());
-                willDelete = (!mpd.IsNewRecord()) ? mpd.Destroy() : true;
-                if (willDelete) currentStructure.MeasuredParameters.Rows.Remove(mpd);
-            }
-        }
+
 
 
 
@@ -819,9 +816,8 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         private void DgMeasuredParameters_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == delButtonColumn.Index)
+            if (e.ColumnIndex == delButtonColumn.Index && currentStructure.MeasuredParameters.Rows.Count > 0)
             {
-                MessageBox.Show("Вы уверены что хотите удалить?");
                 RemoveParameterDataByIndex(e.RowIndex);
             }
         }
@@ -1235,6 +1231,21 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             RefreshDataGridView();
         }
 
+        private void RemoveParameterDataByIndex(int rowIndex)
+        {
+            int start = rowIndex == -1 ? 0 : rowIndex;
+            int end = rowIndex == -1 ? currentStructure.MeasuredParameters.Rows.Count - 1 : rowIndex;
+            bool willDelete = rowIndex == -1 ? MessageBox.Show("Вы уверены, что хотите удалить все измеряемые параметры из текущей структуры?") == DialogResult.OK : true;
+            if (!willDelete) return;
+            for (int i = end; i >= start; i--)
+            {
+                CableStructureMeasuredParameterData mpd = currentStructure.MeasuredParameters.Rows[i] as CableStructureMeasuredParameterData;
+                willDelete = (!mpd.IsNewRecord()) ? mpd.Destroy() : true;
+                if (willDelete) currentStructure.MeasuredParameters.Rows.Remove(mpd);
+                
+            }
+            RefreshDataGridView();
+        }
 
 
         #endregion
