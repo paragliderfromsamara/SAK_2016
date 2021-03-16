@@ -30,6 +30,12 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        public static Cable GetCableCopy(uint cable_id)
+        {
+            Cable c = find_by_cable_id(cable_id);
+            return c == null ? null : GetCableCopy(c);
+        }
+
         public static Cable GetCableCopy(Cable copiedCable)
         {
             DBEntityTable t = new DBEntityTable(typeof(Cable));
@@ -171,7 +177,6 @@ namespace NormaLib.DBControl.Tables
             validateCableMark();
             validateNormDoc();
             validateStructuresCount();
-            
         }
 
         private void validateStructuresCount()

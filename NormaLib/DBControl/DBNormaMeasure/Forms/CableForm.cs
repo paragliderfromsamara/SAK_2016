@@ -39,8 +39,13 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             isNew = true;
             InitDesign();
-            cable = Cable.GetCableCopy(copiedCable);
+            cable = Cable.GetCableCopy(copiedCable.CableId);
             if (cable != null) InitFormByAssignedCable();
+            else
+            {
+                Close();
+                MessageBox.Show("Выбранный кабель для копирования отсутствует в базе данных", "Кабель не найден", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         protected virtual void InitFormByAssignedCable()
@@ -50,7 +55,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             fillFormByCable();
             initStructureTabPage();
             isOnInitForm = false;
-
         }
 
 
@@ -1213,15 +1217,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             }
             RefreshAddMeasureParametersContextMenu();
             if (ExcludedParameterTypes.Length > 0) DeleteExcludedMeasureParametersFromCableStructure();
-            /*
-            
-            
-            Debug.WriteLine("cbStructureType_SelectedIndexChanged");
-            
-            
-            
-
-            */
         }
         #endregion
 

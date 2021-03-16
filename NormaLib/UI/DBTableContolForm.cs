@@ -238,7 +238,7 @@ namespace NormaLib.UI
         /// При переопределении в дочерних классах вызывать метод базового класса в начале
         /// </summary>
         /// <returns></returns>
-        private bool CheckToolStripAllow()
+        protected virtual bool CheckToolStripAllow()
         {
             editEntityTooStripButton.Enabled = AllowEditEntity & HasSelectedOneRow;
             removeEntityToolStripItem.Enabled = AllowRemoveEntity & HasSelectedRows;

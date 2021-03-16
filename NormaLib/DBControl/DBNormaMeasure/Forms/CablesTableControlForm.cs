@@ -15,6 +15,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
     public partial class CablesTableControlForm : DBTableContolForm
     {
         protected DBEntityTable CablesTable;
+        protected ToolStripMenuItem createFromCableToolStripItem;
         public CablesTableControlForm() : base()
         {
             
@@ -25,6 +26,16 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             base.InitNewEntityForm();
             Cable cable = Cable.GetDraft();
             CableForm form = new CableForm(cable.CableId);
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                FillDataGridAsync();
+            }
+        }
+
+        protected virtual void InitNewEntityForm(Cable template_cable)
+        {
+            base.InitNewEntityForm();
+            CableForm form = new CableForm(template_cable);
             if (form.ShowDialog() == DialogResult.OK)
             {
                 FillDataGridAsync();
@@ -71,10 +82,55 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             }
         }
 
+
+
+
         protected override void InitDesign()
         {
             base.InitDesign();
             InitializeComponent();
+            CreateAdditionaButtonsForContextMenu();
+        }
+
+        private void CreateAdditionaButtonsForContextMenu()
+        {
+            createFromCableToolStripItem = new ToolStripMenuItem();
+            createFromCableToolStripItem.Name = "createCableFromExist";
+            createFromCableToolStripItem.Text = "Создать из...";
+            createFromCableToolStripItem.Click += createCableFromExistItem_Click;
+            contextTableMenu.Items.Add(createFromCableToolStripItem);
+        }
+
+        private void createCableFromExistItem_Click(object sender, EventArgs e)
+        {
+            if (HasSelectedOneRow)
+            {
+                InitNewEntityForm(GetCableByDataGridRow(dgEntities.SelectedRows[0]));
+            }
+        }
+
+        protected override void RemoveEntityHandler(DataGridViewSelectedRowCollection selectedRows)
+        {
+            if (selectedRows.Count > 0)
+            {
+                string msg = selectedRows.Count == 1 ? "Выбранный кабель будет удалён безвозвратно.\n\nВы уверены?" : "Выбранные кабели будут удалены безвозвратно.\n\nВы уверены?";
+                int i = 0;
+                if (MessageBox.Show(msg, "Вопрос", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    foreach(DataGridViewRow r in selectedRows)
+                    {
+                        Cable c = GetCableByDataGridRow(r);
+                        if (c != null)
+                        { if (c.Destroy()) i++; }
+                    }
+                    base.RemoveEntityHandler(selectedRows);
+                    if (i >= 1)
+                        MessageBox.Show(i == 1 ? "Кабель успешно удалён" : "Кабели успешно удалены", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    else
+                        MessageBox.Show(selectedRows.Count == 1 ? "Не удалось удалить кабель" : "Не удалось удалить выбранные кабели", "Ошибка", MessageBoxButtons.OK);
+                    FillDataGridAsync();
+                }
+            }
         }
 
         protected override void ApplyUserRights()
@@ -82,6 +138,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             AllowAddEntity = true;
             AllowEditEntity = true;
             AllowRemoveEntity = true;
+            createFromCableToolStripItem.Enabled = AllowAddEntity;
             base.ApplyUserRights();
         }
 
@@ -90,6 +147,12 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             CablesTable = Cable.get_all_including_docs();
             AddOrMergeTableToFormDataSet(CablesTable);
             return CablesTable;
+        }
+
+        protected override bool CheckToolStripAllow()
+        {
+            createFromCableToolStripItem.Enabled = AllowEditEntity & HasSelectedOneRow;
+            return createFromCableToolStripItem.Enabled | base.CheckToolStripAllow();
         }
 
         protected override List<DataGridViewColumn> BuildColumnsForDataGrid()
