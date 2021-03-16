@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
+           // ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
             this.panelControlButtons.SuspendLayout();
@@ -81,9 +81,9 @@
             // 
             // Ucover_input
             // 
-            this.Ucover_input.Location = new System.Drawing.Point(435, 183);
-            this.Ucover_input.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Ucover_input.Size = new System.Drawing.Size(131, 26);
+           // this.Ucover_input.Location = new System.Drawing.Point(435, 183);
+           // this.Ucover_input.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+          //  this.Ucover_input.Size = new System.Drawing.Size(131, 26);
             // 
             // label6
             // 
@@ -165,7 +165,7 @@
             this.Name = "CableFormTeraMicro";
             this.Text = "CableFormTeraMicro";
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).EndInit();
             this.panelControlButtons.ResumeLayout(false);

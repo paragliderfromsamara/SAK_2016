@@ -128,6 +128,42 @@ namespace NormaLib.DBControl.Tables
             return t;    
         }
 
+        public static DBEntityTable get_PminValues()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable), DBEntityTableMode.NoColumns);
+            t.TableName = "p_min_values";
+            t.Columns.Add("value");
+            string q = $"{t.SelectQuery} WHERE {IsDraftFlag_ColumnName} = 0 ORDER BY {PMin_ColumnName} ASC";
+            string selectString = $" DISTINCT {PMin_ColumnName} AS value ";
+            q = q.Replace("*", selectString);
+            t.FillByQuery(q);
+            return t;
+        }
+
+        public static DBEntityTable get_PmaxValues()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable), DBEntityTableMode.NoColumns);
+            t.TableName = "p_max_values";
+            t.Columns.Add("value");
+            string q = $"{t.SelectQuery} WHERE {IsDraftFlag_ColumnName} = 0 ORDER BY {PMax_ColumnName} ASC";
+            string selectString = $" DISTINCT {PMax_ColumnName} AS value ";
+            q = q.Replace("*", selectString);
+            t.FillByQuery(q);
+            return t;
+        }
+
+        public static DBEntityTable get_CoverTestVoltageValues()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(Cable), DBEntityTableMode.NoColumns);
+            t.TableName = "cover_voltage_values";
+            t.Columns.Add("value");
+            string q = $"{t.SelectQuery} WHERE {IsDraftFlag_ColumnName} = 0 ORDER BY {UCover_ColumnName} ASC";
+            string selectString = $" DISTINCT {UCover_ColumnName} AS value ";
+            q = q.Replace("*", selectString);
+            t.FillByQuery(q);
+            return t;
+        }
+
         protected override void ValidateActions()
         {
             base.ValidateActions();

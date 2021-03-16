@@ -23,6 +23,30 @@ namespace NormaLib.DBControl.Tables
             return structure;
         }
 
+        public static DBEntityTable get_LeadDiameterValues()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableStructure), DBEntityTableMode.NoColumns);
+            t.TableName = "lead_diameter_values";
+            t.Columns.Add("value");
+            string q = $"{t.SelectQuery} ORDER BY {LeadDiameter_ColumnName} ASC";
+            string selectString = $" DISTINCT {LeadDiameter_ColumnName} AS value ";
+            q = q.Replace("*", selectString);
+            t.FillByQuery(q);
+            return t;
+        }
+
+        public static DBEntityTable get_WaveResistanceValues()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableStructure), DBEntityTableMode.NoColumns);
+            t.TableName = "wave_resistance_values";
+            t.Columns.Add("value");
+            string q = $"{t.SelectQuery} ORDER BY {WaveResistance_ColumnName} ASC";
+            string selectString = $" DISTINCT {WaveResistance_ColumnName} AS value ";
+            q = q.Replace("*", selectString);
+            t.FillByQuery(q);
+            return t;
+        }
+
         public void CopyFromStructure(CableStructure structure)
         {
             this.FillColsFromEntity(structure);

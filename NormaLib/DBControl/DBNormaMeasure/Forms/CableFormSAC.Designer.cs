@@ -38,7 +38,7 @@
             this.addStructureButton = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
             this.panelControlButtons.SuspendLayout();
@@ -105,10 +105,10 @@
             // 
             // Ucover_input
             // 
-            this.Ucover_input.Location = new System.Drawing.Point(395, 177);
-            this.Ucover_input.Margin = new System.Windows.Forms.Padding(4);
-            this.Ucover_input.Size = new System.Drawing.Size(132, 26);
-            this.Ucover_input.TabIndex = 14;
+            //this.Ucover_input.Location = new System.Drawing.Point(395, 177);
+            //this.Ucover_input.Margin = new System.Windows.Forms.Padding(4);
+            //this.Ucover_input.Size = new System.Drawing.Size(132, 26);
+            //this.Ucover_input.TabIndex = 14;
             // 
             // label6
             // 
@@ -320,7 +320,7 @@
             this.Controls.SetChildIndex(this.BuildLength_input, 0);
             this.Controls.SetChildIndex(this.linearMass_input, 0);
             this.Controls.SetChildIndex(this.label6, 0);
-            this.Controls.SetChildIndex(this.Ucover_input, 0);
+           // this.Controls.SetChildIndex(this.Ucover_input, 0);
             this.Controls.SetChildIndex(this.label7, 0);
             this.Controls.SetChildIndex(this.label11, 0);
             this.Controls.SetChildIndex(this.label12, 0);
@@ -331,7 +331,7 @@
             this.Controls.SetChildIndex(this.panelControlButtons, 0);
             this.Controls.SetChildIndex(this.CableMark_input, 0);
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).EndInit();
             this.panelControlButtons.ResumeLayout(false);

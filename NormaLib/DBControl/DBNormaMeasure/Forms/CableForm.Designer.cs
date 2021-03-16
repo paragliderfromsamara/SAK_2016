@@ -42,7 +42,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.DocumentNumber_input = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.Ucover_input = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.linearMass_input = new System.Windows.Forms.NumericUpDown();
             this.BuildLength_input = new System.Windows.Forms.NumericUpDown();
@@ -58,7 +57,8 @@
             this.closeNoSaveButton = new System.Windows.Forms.Button();
             this.newTabPage = new System.Windows.Forms.TabPage();
             this.structureDataContainer = new System.Windows.Forms.Panel();
-            this.StructureIdLbl = new System.Windows.Forms.Label();
+            this.cbLeadDiameters = new System.Windows.Forms.ComboBox();
+            this.cbWaveResistance = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dgMeasuredParameters = new System.Windows.Forms.DataGridView();
@@ -79,43 +79,46 @@
             this.lengthBringingTypeIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BringingLengthMeasureTitleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MeasuredParametersBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cbGroupCapacity = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.cbDRBringingFormula = new System.Windows.Forms.ComboBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.cbDRCalculatingFormula = new System.Windows.Forms.ComboBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.nudLeadToShieldVoltage = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
+            this.nudLeadToLeadVoltage = new System.Windows.Forms.NumericUpDown();
+            this.nudNumberInGroup = new System.Windows.Forms.NumericUpDown();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.cbIsolationMaterial = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.tbLeadDiameter = new System.Windows.Forms.TextBox();
             this.cbLeadMaterial = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.nudRrealElementsAmount = new System.Windows.Forms.NumericUpDown();
+            this.nudDisplayedElementAmount = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
             this.btnRemoveCurrentStructure = new System.Windows.Forms.Button();
+            this.structureType = new System.Windows.Forms.Label();
+            this.cbStructureType = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.addMeasurerParameterContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.AddAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuBringingLength = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cbStructureType = new System.Windows.Forms.ComboBox();
-            this.structureType = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.nudDisplayedElementAmount = new System.Windows.Forms.NumericUpDown();
-            this.nudRrealElementsAmount = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.nudWaveResistance = new System.Windows.Forms.NumericUpDown();
-            this.label17 = new System.Windows.Forms.Label();
-            this.nudNumberInGroup = new System.Windows.Forms.NumericUpDown();
-            this.nudLeadToLeadVoltage = new System.Windows.Forms.NumericUpDown();
-            this.label18 = new System.Windows.Forms.Label();
-            this.nudLeadToShieldVoltage = new System.Windows.Forms.NumericUpDown();
-            this.label19 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.cbDRCalculatingFormula = new System.Windows.Forms.ComboBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.cbDRBringingFormula = new System.Windows.Forms.ComboBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.cbGroupCapacity = new System.Windows.Forms.CheckBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.cbPmax = new System.Windows.Forms.ComboBox();
+            this.cbPmin = new System.Windows.Forms.ComboBox();
+            this.cbVoltageOfCoverTest = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
             this.panelControlButtons.SuspendLayout();
@@ -124,18 +127,18 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgMeasuredParameters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MeasuredParametersBindingSource)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLeadToShieldVoltage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLeadToLeadVoltage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudNumberInGroup)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudRrealElementsAmount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDisplayedElementAmount)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.addMeasurerParameterContextMenu.SuspendLayout();
             this.contextMenuBringingLength.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudDisplayedElementAmount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudRrealElementsAmount)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudWaveResistance)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudNumberInGroup)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudLeadToLeadVoltage)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudLeadToShieldVoltage)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // cableFormDataSet
@@ -223,19 +226,6 @@
             this.label7.Size = new System.Drawing.Size(138, 18);
             this.label7.TabIndex = 21;
             this.label7.Text = "U исп. оболочки, В";
-            // 
-            // Ucover_input
-            // 
-            this.Ucover_input.Location = new System.Drawing.Point(211, 168);
-            this.Ucover_input.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.Ucover_input.Name = "Ucover_input";
-            this.Ucover_input.Size = new System.Drawing.Size(148, 26);
-            this.Ucover_input.TabIndex = 20;
-            this.Ucover_input.ValueChanged += new System.EventHandler(this.Ucover_input_ValueChanged);
             // 
             // label6
             // 
@@ -332,7 +322,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(391, 147);
+            this.label13.Location = new System.Drawing.Point(582, 148);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(92, 18);
             this.label13.TabIndex = 31;
@@ -343,9 +333,9 @@
             this.Notes_input.BackColor = System.Drawing.Color.White;
             this.Notes_input.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Notes_input.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Notes_input.Location = new System.Drawing.Point(394, 168);
+            this.Notes_input.Location = new System.Drawing.Point(585, 168);
             this.Notes_input.Name = "Notes_input";
-            this.Notes_input.Size = new System.Drawing.Size(612, 80);
+            this.Notes_input.Size = new System.Drawing.Size(421, 80);
             this.Notes_input.TabIndex = 30;
             this.Notes_input.Text = "";
             this.Notes_input.TextChanged += new System.EventHandler(this.Notes_input_TextChanged);
@@ -386,7 +376,7 @@
             this.closeNoSaveButton.Name = "closeNoSaveButton";
             this.closeNoSaveButton.Size = new System.Drawing.Size(241, 40);
             this.closeNoSaveButton.TabIndex = 26;
-            this.closeNoSaveButton.Text = "Закрыть без сохранения";
+            this.closeNoSaveButton.Text = "Закрыть";
             this.closeNoSaveButton.UseVisualStyleBackColor = false;
             this.closeNoSaveButton.Click += new System.EventHandler(this.closeNoSaveButton_Click);
             // 
@@ -403,7 +393,8 @@
             // 
             // structureDataContainer
             // 
-            this.structureDataContainer.Controls.Add(this.StructureIdLbl);
+            this.structureDataContainer.Controls.Add(this.cbLeadDiameters);
+            this.structureDataContainer.Controls.Add(this.cbWaveResistance);
             this.structureDataContainer.Controls.Add(this.label22);
             this.structureDataContainer.Controls.Add(this.panel1);
             this.structureDataContainer.Controls.Add(this.cbGroupCapacity);
@@ -411,12 +402,10 @@
             this.structureDataContainer.Controls.Add(this.groupBox2);
             this.structureDataContainer.Controls.Add(this.nudNumberInGroup);
             this.structureDataContainer.Controls.Add(this.label17);
-            this.structureDataContainer.Controls.Add(this.nudWaveResistance);
             this.structureDataContainer.Controls.Add(this.label16);
             this.structureDataContainer.Controls.Add(this.cbIsolationMaterial);
             this.structureDataContainer.Controls.Add(this.label15);
             this.structureDataContainer.Controls.Add(this.label14);
-            this.structureDataContainer.Controls.Add(this.tbLeadDiameter);
             this.structureDataContainer.Controls.Add(this.cbLeadMaterial);
             this.structureDataContainer.Controls.Add(this.label10);
             this.structureDataContainer.Controls.Add(this.groupBox1);
@@ -429,14 +418,25 @@
             this.structureDataContainer.Size = new System.Drawing.Size(974, 577);
             this.structureDataContainer.TabIndex = 0;
             // 
-            // StructureIdLbl
+            // cbLeadDiameters
             // 
-            this.StructureIdLbl.AutoSize = true;
-            this.StructureIdLbl.Location = new System.Drawing.Point(785, 40);
-            this.StructureIdLbl.Name = "StructureIdLbl";
-            this.StructureIdLbl.Size = new System.Drawing.Size(52, 18);
-            this.StructureIdLbl.TabIndex = 22;
-            this.StructureIdLbl.Text = "label23";
+            this.cbLeadDiameters.FormattingEnabled = true;
+            this.cbLeadDiameters.Location = new System.Drawing.Point(459, 37);
+            this.cbLeadDiameters.Name = "cbLeadDiameters";
+            this.cbLeadDiameters.Size = new System.Drawing.Size(128, 26);
+            this.cbLeadDiameters.TabIndex = 24;
+            this.cbLeadDiameters.TextChanged += new System.EventHandler(this.cbLeadDiameters_TextChanged);
+            this.cbLeadDiameters.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numFormatCheckerOn_KeyPress);
+            // 
+            // cbWaveResistance
+            // 
+            this.cbWaveResistance.FormattingEnabled = true;
+            this.cbWaveResistance.Location = new System.Drawing.Point(138, 170);
+            this.cbWaveResistance.Name = "cbWaveResistance";
+            this.cbWaveResistance.Size = new System.Drawing.Size(108, 26);
+            this.cbWaveResistance.TabIndex = 23;
+            this.cbWaveResistance.TextChanged += new System.EventHandler(this.cbWaveResistance_TextChanged);
+            this.cbWaveResistance.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numFormatCheckerOn_KeyPress);
             // 
             // label22
             // 
@@ -520,6 +520,7 @@
             this.dgMeasuredParameters.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgMeasuredParameters_CellMouseClick);
             this.dgMeasuredParameters.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgMeasuredParameters_ColumnHeaderMouseClick);
             this.dgMeasuredParameters.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgMeasuredParameters_CurrentCellDirtyStateChanged);
+            this.dgMeasuredParameters.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgMeasuredParameters_DataError);
             this.dgMeasuredParameters.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgMeasuredParameters_RowsAdded);
             // 
             // parameter_type_name_column
@@ -678,6 +679,151 @@
             // 
             this.MeasuredParametersBindingSource.DataSourceChanged += new System.EventHandler(this.MeasuredParametersBindingSource_DataSourceChanged);
             // 
+            // cbGroupCapacity
+            // 
+            this.cbGroupCapacity.AutoSize = true;
+            this.cbGroupCapacity.Location = new System.Drawing.Point(21, 539);
+            this.cbGroupCapacity.Name = "cbGroupCapacity";
+            this.cbGroupCapacity.Size = new System.Drawing.Size(97, 22);
+            this.cbGroupCapacity.TabIndex = 19;
+            this.cbGroupCapacity.Text = "Ср группы";
+            this.cbGroupCapacity.UseVisualStyleBackColor = true;
+            this.cbGroupCapacity.CheckedChanged += new System.EventHandler(this.cbGroupCapacity_CheckedChanged);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.cbDRBringingFormula);
+            this.groupBox3.Controls.Add(this.label21);
+            this.groupBox3.Controls.Add(this.cbDRCalculatingFormula);
+            this.groupBox3.Controls.Add(this.label20);
+            this.groupBox3.Location = new System.Drawing.Point(8, 366);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(241, 160);
+            this.groupBox3.TabIndex = 17;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Омическая ассиметрия";
+            // 
+            // cbDRBringingFormula
+            // 
+            this.cbDRBringingFormula.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDRBringingFormula.FormattingEnabled = true;
+            this.cbDRBringingFormula.Location = new System.Drawing.Point(14, 112);
+            this.cbDRBringingFormula.Name = "cbDRBringingFormula";
+            this.cbDRBringingFormula.Size = new System.Drawing.Size(212, 26);
+            this.cbDRBringingFormula.TabIndex = 18;
+            this.cbDRBringingFormula.SelectedIndexChanged += new System.EventHandler(this.cbDRBringingFormula_SelectedIndexChanged);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(11, 91);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(153, 18);
+            this.label21.TabIndex = 19;
+            this.label21.Text = "Формула приведения";
+            // 
+            // cbDRCalculatingFormula
+            // 
+            this.cbDRCalculatingFormula.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDRCalculatingFormula.FormattingEnabled = true;
+            this.cbDRCalculatingFormula.Location = new System.Drawing.Point(14, 52);
+            this.cbDRCalculatingFormula.Name = "cbDRCalculatingFormula";
+            this.cbDRCalculatingFormula.Size = new System.Drawing.Size(212, 26);
+            this.cbDRCalculatingFormula.TabIndex = 18;
+            this.cbDRCalculatingFormula.SelectedIndexChanged += new System.EventHandler(this.cbDRCalculatingFormula_SelectedIndexChanged);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(11, 31);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(154, 18);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "Формула вычисления";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label19);
+            this.groupBox2.Controls.Add(this.nudLeadToShieldVoltage);
+            this.groupBox2.Controls.Add(this.label18);
+            this.groupBox2.Controls.Add(this.nudLeadToLeadVoltage);
+            this.groupBox2.Location = new System.Drawing.Point(8, 260);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(241, 100);
+            this.groupBox2.TabIndex = 16;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Испытательные напряжения, В";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(126, 31);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(87, 18);
+            this.label19.TabIndex = 17;
+            this.label19.Text = "жила-экран";
+            // 
+            // nudLeadToShieldVoltage
+            // 
+            this.nudLeadToShieldVoltage.Location = new System.Drawing.Point(130, 52);
+            this.nudLeadToShieldVoltage.Maximum = new decimal(new int[] {
+            3000,
+            0,
+            0,
+            0});
+            this.nudLeadToShieldVoltage.Name = "nudLeadToShieldVoltage";
+            this.nudLeadToShieldVoltage.Size = new System.Drawing.Size(96, 26);
+            this.nudLeadToShieldVoltage.TabIndex = 2;
+            this.nudLeadToShieldVoltage.ValueChanged += new System.EventHandler(this.numericUpDown6_ValueChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(11, 31);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(85, 18);
+            this.label18.TabIndex = 1;
+            this.label18.Text = "жила-жила";
+            // 
+            // nudLeadToLeadVoltage
+            // 
+            this.nudLeadToLeadVoltage.Location = new System.Drawing.Point(14, 52);
+            this.nudLeadToLeadVoltage.Maximum = new decimal(new int[] {
+            3000,
+            0,
+            0,
+            0});
+            this.nudLeadToLeadVoltage.Name = "nudLeadToLeadVoltage";
+            this.nudLeadToLeadVoltage.Size = new System.Drawing.Size(97, 26);
+            this.nudLeadToLeadVoltage.TabIndex = 0;
+            this.nudLeadToLeadVoltage.ValueChanged += new System.EventHandler(this.numericUpDown5_ValueChanged);
+            // 
+            // nudNumberInGroup
+            // 
+            this.nudNumberInGroup.Location = new System.Drawing.Point(139, 215);
+            this.nudNumberInGroup.Name = "nudNumberInGroup";
+            this.nudNumberInGroup.Size = new System.Drawing.Size(110, 26);
+            this.nudNumberInGroup.TabIndex = 15;
+            this.nudNumberInGroup.ValueChanged += new System.EventHandler(this.nudNumberInGroup_ValueChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(8, 210);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(88, 36);
+            this.label17.TabIndex = 14;
+            this.label17.Text = "Элементов \nв пучке";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(8, 165);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(111, 36);
+            this.label16.TabIndex = 12;
+            this.label16.Text = "Волновое\nсопротивление";
+            // 
             // cbIsolationMaterial
             // 
             this.cbIsolationMaterial.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -706,15 +852,6 @@
             this.label14.TabIndex = 9;
             this.label14.Text = "Диаметр жил, мм";
             // 
-            // tbLeadDiameter
-            // 
-            this.tbLeadDiameter.Location = new System.Drawing.Point(459, 37);
-            this.tbLeadDiameter.Name = "tbLeadDiameter";
-            this.tbLeadDiameter.Size = new System.Drawing.Size(128, 26);
-            this.tbLeadDiameter.TabIndex = 8;
-            this.tbLeadDiameter.TextChanged += new System.EventHandler(this.tbLeadDiameter_TextChanged);
-            this.tbLeadDiameter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbLeadDiameter_KeyPress);
-            // 
             // cbLeadMaterial
             // 
             this.cbLeadMaterial.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -734,6 +871,83 @@
             this.label10.TabIndex = 6;
             this.label10.Text = "Материал жил";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.nudRrealElementsAmount);
+            this.groupBox1.Controls.Add(this.nudDisplayedElementAmount);
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Location = new System.Drawing.Point(8, 69);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(241, 91);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Количество элементов";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(126, 26);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(100, 18);
+            this.label9.TabIndex = 6;
+            this.label9.Text = "Номинальное";
+            // 
+            // nudRrealElementsAmount
+            // 
+            this.nudRrealElementsAmount.Location = new System.Drawing.Point(14, 47);
+            this.nudRrealElementsAmount.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.nudRrealElementsAmount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudRrealElementsAmount.Name = "nudRrealElementsAmount";
+            this.nudRrealElementsAmount.Size = new System.Drawing.Size(97, 26);
+            this.nudRrealElementsAmount.TabIndex = 3;
+            this.nudRrealElementsAmount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudRrealElementsAmount.ValueChanged += new System.EventHandler(this.nudRrealElementsAmount_ValueChanged);
+            // 
+            // nudDisplayedElementAmount
+            // 
+            this.nudDisplayedElementAmount.Location = new System.Drawing.Point(129, 47);
+            this.nudDisplayedElementAmount.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.nudDisplayedElementAmount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudDisplayedElementAmount.Name = "nudDisplayedElementAmount";
+            this.nudDisplayedElementAmount.Size = new System.Drawing.Size(97, 26);
+            this.nudDisplayedElementAmount.TabIndex = 4;
+            this.nudDisplayedElementAmount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudDisplayedElementAmount.ValueChanged += new System.EventHandler(this.nudDisplayedElementAmount_ValueChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(11, 26);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(95, 18);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "Фактическое";
+            // 
             // btnRemoveCurrentStructure
             // 
             this.btnRemoveCurrentStructure.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -749,6 +963,26 @@
             this.btnRemoveCurrentStructure.UseVisualStyleBackColor = false;
             this.btnRemoveCurrentStructure.Click += new System.EventHandler(this.btnRemoveCurrentStructure_Click);
             // 
+            // structureType
+            // 
+            this.structureType.AutoSize = true;
+            this.structureType.Location = new System.Drawing.Point(7, 16);
+            this.structureType.Name = "structureType";
+            this.structureType.Size = new System.Drawing.Size(111, 18);
+            this.structureType.TabIndex = 1;
+            this.structureType.Text = "Тип структуры";
+            // 
+            // cbStructureType
+            // 
+            this.cbStructureType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbStructureType.FormattingEnabled = true;
+            this.cbStructureType.Location = new System.Drawing.Point(8, 37);
+            this.cbStructureType.Name = "cbStructureType";
+            this.cbStructureType.Size = new System.Drawing.Size(241, 26);
+            this.cbStructureType.TabIndex = 0;
+            this.cbStructureType.SelectedIndexChanged += new System.EventHandler(this.cbStructureType_SelectedIndexChanged);
+            this.cbStructureType.SelectionChangeCommitted += new System.EventHandler(this.cbStructureType_SelectionChangeCommitted);
+            // 
             // tabControl1
             // 
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -762,7 +996,6 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(988, 626);
             this.tabControl1.TabIndex = 33;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             this.tabControl1.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Deselecting);
             // 
@@ -808,260 +1041,73 @@
             this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem2.Text = "toolStripMenuItem2";
             // 
-            // cbStructureType
+            // groupBox4
             // 
-            this.cbStructureType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbStructureType.FormattingEnabled = true;
-            this.cbStructureType.Location = new System.Drawing.Point(8, 37);
-            this.cbStructureType.Name = "cbStructureType";
-            this.cbStructureType.Size = new System.Drawing.Size(241, 26);
-            this.cbStructureType.TabIndex = 0;
-            this.cbStructureType.SelectedIndexChanged += new System.EventHandler(this.cbStructureType_SelectedIndexChanged);
-            this.cbStructureType.SelectionChangeCommitted += new System.EventHandler(this.cbStructureType_SelectionChangeCommitted);
+            this.groupBox4.Controls.Add(this.label24);
+            this.groupBox4.Controls.Add(this.label23);
+            this.groupBox4.Controls.Add(this.cbPmax);
+            this.groupBox4.Controls.Add(this.cbPmin);
+            this.groupBox4.Location = new System.Drawing.Point(378, 149);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(198, 100);
+            this.groupBox4.TabIndex = 34;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Изб. давление, кг/см^2";
             // 
-            // structureType
+            // label24
             // 
-            this.structureType.AutoSize = true;
-            this.structureType.Location = new System.Drawing.Point(7, 16);
-            this.structureType.Name = "structureType";
-            this.structureType.Size = new System.Drawing.Size(111, 18);
-            this.structureType.TabIndex = 1;
-            this.structureType.Text = "Тип структуры";
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(3, 33);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(31, 18);
+            this.label24.TabIndex = 3;
+            this.label24.Text = "min";
             // 
-            // label8
+            // label23
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(11, 26);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(95, 18);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "Фактическое";
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(102, 33);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(37, 18);
+            this.label23.TabIndex = 2;
+            this.label23.Text = "max";
             // 
-            // nudDisplayedElementAmount
+            // cbPmax
             // 
-            this.nudDisplayedElementAmount.Location = new System.Drawing.Point(129, 47);
-            this.nudDisplayedElementAmount.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.nudDisplayedElementAmount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nudDisplayedElementAmount.Name = "nudDisplayedElementAmount";
-            this.nudDisplayedElementAmount.Size = new System.Drawing.Size(97, 26);
-            this.nudDisplayedElementAmount.TabIndex = 4;
-            this.nudDisplayedElementAmount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nudDisplayedElementAmount.ValueChanged += new System.EventHandler(this.nudDisplayedElementAmount_ValueChanged);
+            this.cbPmax.FormattingEnabled = true;
+            this.cbPmax.Location = new System.Drawing.Point(105, 54);
+            this.cbPmax.Name = "cbPmax";
+            this.cbPmax.Size = new System.Drawing.Size(85, 26);
+            this.cbPmax.TabIndex = 1;
+            this.cbPmax.TextChanged += new System.EventHandler(this.cbPmax_TextChanged);
+            this.cbPmax.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numFormatCheckerOn_KeyPress);
             // 
-            // nudRrealElementsAmount
+            // cbPmin
             // 
-            this.nudRrealElementsAmount.Location = new System.Drawing.Point(14, 47);
-            this.nudRrealElementsAmount.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.nudRrealElementsAmount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nudRrealElementsAmount.Name = "nudRrealElementsAmount";
-            this.nudRrealElementsAmount.Size = new System.Drawing.Size(97, 26);
-            this.nudRrealElementsAmount.TabIndex = 3;
-            this.nudRrealElementsAmount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nudRrealElementsAmount.ValueChanged += new System.EventHandler(this.nudRrealElementsAmount_ValueChanged);
+            this.cbPmin.FormattingEnabled = true;
+            this.cbPmin.Location = new System.Drawing.Point(6, 54);
+            this.cbPmin.Name = "cbPmin";
+            this.cbPmin.Size = new System.Drawing.Size(85, 26);
+            this.cbPmin.TabIndex = 0;
+            this.cbPmin.TextChanged += new System.EventHandler(this.cbPmin_TextChanged);
+            this.cbPmin.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numFormatCheckerOn_KeyPress);
             // 
-            // label9
+            // cbVoltageOfCoverTest
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(126, 26);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(100, 18);
-            this.label9.TabIndex = 6;
-            this.label9.Text = "Номинальное";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.nudRrealElementsAmount);
-            this.groupBox1.Controls.Add(this.nudDisplayedElementAmount);
-            this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Location = new System.Drawing.Point(8, 69);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(241, 91);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Количество элементов";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(8, 165);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(111, 36);
-            this.label16.TabIndex = 12;
-            this.label16.Text = "Волновое\nсопротивление";
-            // 
-            // nudWaveResistance
-            // 
-            this.nudWaveResistance.Location = new System.Drawing.Point(139, 170);
-            this.nudWaveResistance.Name = "nudWaveResistance";
-            this.nudWaveResistance.Size = new System.Drawing.Size(110, 26);
-            this.nudWaveResistance.TabIndex = 13;
-            this.nudWaveResistance.ValueChanged += new System.EventHandler(this.nudWaveResistance_ValueChanged);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(8, 210);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(88, 36);
-            this.label17.TabIndex = 14;
-            this.label17.Text = "Элементов \nв пучке";
-            // 
-            // nudNumberInGroup
-            // 
-            this.nudNumberInGroup.Location = new System.Drawing.Point(139, 215);
-            this.nudNumberInGroup.Name = "nudNumberInGroup";
-            this.nudNumberInGroup.Size = new System.Drawing.Size(110, 26);
-            this.nudNumberInGroup.TabIndex = 15;
-            this.nudNumberInGroup.ValueChanged += new System.EventHandler(this.nudNumberInGroup_ValueChanged);
-            // 
-            // nudLeadToLeadVoltage
-            // 
-            this.nudLeadToLeadVoltage.Location = new System.Drawing.Point(14, 52);
-            this.nudLeadToLeadVoltage.Maximum = new decimal(new int[] {
-            3000,
-            0,
-            0,
-            0});
-            this.nudLeadToLeadVoltage.Name = "nudLeadToLeadVoltage";
-            this.nudLeadToLeadVoltage.Size = new System.Drawing.Size(97, 26);
-            this.nudLeadToLeadVoltage.TabIndex = 0;
-            this.nudLeadToLeadVoltage.ValueChanged += new System.EventHandler(this.numericUpDown5_ValueChanged);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(11, 31);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(85, 18);
-            this.label18.TabIndex = 1;
-            this.label18.Text = "жила-жила";
-            // 
-            // nudLeadToShieldVoltage
-            // 
-            this.nudLeadToShieldVoltage.Location = new System.Drawing.Point(130, 52);
-            this.nudLeadToShieldVoltage.Maximum = new decimal(new int[] {
-            3000,
-            0,
-            0,
-            0});
-            this.nudLeadToShieldVoltage.Name = "nudLeadToShieldVoltage";
-            this.nudLeadToShieldVoltage.Size = new System.Drawing.Size(96, 26);
-            this.nudLeadToShieldVoltage.TabIndex = 2;
-            this.nudLeadToShieldVoltage.ValueChanged += new System.EventHandler(this.numericUpDown6_ValueChanged);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(126, 31);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(87, 18);
-            this.label19.TabIndex = 17;
-            this.label19.Text = "жила-экран";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label19);
-            this.groupBox2.Controls.Add(this.nudLeadToShieldVoltage);
-            this.groupBox2.Controls.Add(this.label18);
-            this.groupBox2.Controls.Add(this.nudLeadToLeadVoltage);
-            this.groupBox2.Location = new System.Drawing.Point(8, 260);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(241, 100);
-            this.groupBox2.TabIndex = 16;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Испытательные напряжения, В";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(11, 31);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(154, 18);
-            this.label20.TabIndex = 0;
-            this.label20.Text = "Формула вычисления";
-            // 
-            // cbDRCalculatingFormula
-            // 
-            this.cbDRCalculatingFormula.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDRCalculatingFormula.FormattingEnabled = true;
-            this.cbDRCalculatingFormula.Location = new System.Drawing.Point(14, 52);
-            this.cbDRCalculatingFormula.Name = "cbDRCalculatingFormula";
-            this.cbDRCalculatingFormula.Size = new System.Drawing.Size(212, 26);
-            this.cbDRCalculatingFormula.TabIndex = 18;
-            this.cbDRCalculatingFormula.SelectedIndexChanged += new System.EventHandler(this.cbDRCalculatingFormula_SelectedIndexChanged);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(11, 91);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(153, 18);
-            this.label21.TabIndex = 19;
-            this.label21.Text = "Формула приведения";
-            // 
-            // cbDRBringingFormula
-            // 
-            this.cbDRBringingFormula.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDRBringingFormula.FormattingEnabled = true;
-            this.cbDRBringingFormula.Location = new System.Drawing.Point(14, 112);
-            this.cbDRBringingFormula.Name = "cbDRBringingFormula";
-            this.cbDRBringingFormula.Size = new System.Drawing.Size(212, 26);
-            this.cbDRBringingFormula.TabIndex = 18;
-            this.cbDRBringingFormula.SelectedIndexChanged += new System.EventHandler(this.cbDRBringingFormula_SelectedIndexChanged);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.cbDRBringingFormula);
-            this.groupBox3.Controls.Add(this.label21);
-            this.groupBox3.Controls.Add(this.cbDRCalculatingFormula);
-            this.groupBox3.Controls.Add(this.label20);
-            this.groupBox3.Location = new System.Drawing.Point(8, 366);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(241, 160);
-            this.groupBox3.TabIndex = 17;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Омическая ассиметрия";
-            // 
-            // cbGroupCapacity
-            // 
-            this.cbGroupCapacity.AutoSize = true;
-            this.cbGroupCapacity.Location = new System.Drawing.Point(21, 539);
-            this.cbGroupCapacity.Name = "cbGroupCapacity";
-            this.cbGroupCapacity.Size = new System.Drawing.Size(97, 22);
-            this.cbGroupCapacity.TabIndex = 19;
-            this.cbGroupCapacity.Text = "Ср группы";
-            this.cbGroupCapacity.UseVisualStyleBackColor = true;
-            this.cbGroupCapacity.CheckedChanged += new System.EventHandler(this.cbGroupCapacity_CheckedChanged);
+            this.cbVoltageOfCoverTest.FormattingEnabled = true;
+            this.cbVoltageOfCoverTest.Location = new System.Drawing.Point(211, 167);
+            this.cbVoltageOfCoverTest.Name = "cbVoltageOfCoverTest";
+            this.cbVoltageOfCoverTest.Size = new System.Drawing.Size(148, 26);
+            this.cbVoltageOfCoverTest.TabIndex = 35;
+            this.cbVoltageOfCoverTest.TextChanged += new System.EventHandler(this.cbVoltageOfCoverTest_TextChanged);
+            this.cbVoltageOfCoverTest.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numFormatCheckerOn_KeyPress);
             // 
             // CableForm
             // 
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1034, 962);
+            this.Controls.Add(this.cbVoltageOfCoverTest);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.Notes_input);
             this.Controls.Add(this.panelControlButtons);
@@ -1071,7 +1117,6 @@
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.Ucover_input);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.linearMass_input);
             this.Controls.Add(this.BuildLength_input);
@@ -1090,7 +1135,6 @@
             this.Name = "CableForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Ucover_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).EndInit();
             this.panelControlButtons.ResumeLayout(false);
@@ -1100,21 +1144,22 @@
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgMeasuredParameters)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MeasuredParametersBindingSource)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLeadToShieldVoltage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudLeadToLeadVoltage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudNumberInGroup)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudRrealElementsAmount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudDisplayedElementAmount)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.addMeasurerParameterContextMenu.ResumeLayout(false);
             this.contextMenuBringingLength.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.nudDisplayedElementAmount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudRrealElementsAmount)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudWaveResistance)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudNumberInGroup)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudLeadToLeadVoltage)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudLeadToShieldVoltage)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1131,7 +1176,6 @@
         protected System.Windows.Forms.Label label3;
         protected System.Windows.Forms.ComboBox DocumentNumber_input;
         protected System.Windows.Forms.Label label7;
-        protected System.Windows.Forms.NumericUpDown Ucover_input;
         protected System.Windows.Forms.Label label6;
         protected System.Windows.Forms.NumericUpDown linearMass_input;
         protected System.Windows.Forms.NumericUpDown BuildLength_input;
@@ -1152,7 +1196,6 @@
         private System.Windows.Forms.ComboBox cbIsolationMaterial;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox tbLeadDiameter;
         private System.Windows.Forms.ComboBox cbLeadMaterial;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Panel panel1;
@@ -1168,7 +1211,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuBringingLength;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.Label StructureIdLbl;
         private System.Windows.Forms.DataGridViewTextBoxColumn parameter_type_name_column;
         private System.Windows.Forms.DataGridViewTextBoxColumn parameter_type_id_column;
         private System.Windows.Forms.DataGridViewTextBoxColumn parameterTypeDescriptionColumn;
@@ -1198,7 +1240,6 @@
         private System.Windows.Forms.NumericUpDown nudLeadToLeadVoltage;
         private System.Windows.Forms.NumericUpDown nudNumberInGroup;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.NumericUpDown nudWaveResistance;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label9;
@@ -1207,5 +1248,13 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label structureType;
         private System.Windows.Forms.ComboBox cbStructureType;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.ComboBox cbPmax;
+        private System.Windows.Forms.ComboBox cbPmin;
+        private System.Windows.Forms.ComboBox cbVoltageOfCoverTest;
+        private System.Windows.Forms.ComboBox cbWaveResistance;
+        private System.Windows.Forms.ComboBox cbLeadDiameters;
     }
 }

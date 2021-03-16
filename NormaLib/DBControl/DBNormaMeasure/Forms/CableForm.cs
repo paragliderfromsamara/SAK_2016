@@ -64,9 +64,9 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             //DocumentNumber_input.Text = cable.DocumentNumber;
             BuildLength_input.Value = (decimal)cable.BuildLength;
             linearMass_input.Value = (decimal)cable.LinearMass;
-            Ucover_input.Value = (decimal)cable.UCover;
-            // Pmin_input.Value = (decimal)cable.PMin;
-            // Pmax_input.Value = (decimal)cable.PMax;
+            cbVoltageOfCoverTest.Text = cable.UCover.ToString();
+            cbPmin.Text = cable.PMin.ToString();
+            cbPmax.Text = cable.PMax.ToString();
             CodeOKP_input.Text = cable.CodeOKP;
             CodeKCH_input.Text = cable.CodeKCH;
             Notes_input.Text = cable.Notes;
@@ -84,14 +84,53 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         protected virtual void FillDBData()
         {
             fillCableMarks();
+            fillPleasureTestValues();
+            fillCoverVoltagesValues();
             fillDocuments();
             fillMeasuredParameterTypes();
             fillStructureTypes();
+            fillWaveResistanceValues();
+            fillLeadDiameterValues();
             fillLeadMaterials();
             fillIsolationMaterials();
             fillDRBringingFormuls();
             fillDRFormuls();
             fillLengthBringingTypes();
+        }
+
+        private void fillLeadDiameterValues()
+        {
+            DBEntityTable ld = CableStructure.get_LeadDiameterValues();
+            cableFormDataSet.Tables.Add(ld);
+            cbLeadDiameters.DataSource = ld;
+            cbLeadDiameters.DisplayMember = cbLeadDiameters.ValueMember = "value";
+        }
+
+        private void fillWaveResistanceValues()
+        {
+            DBEntityTable wr = CableStructure.get_WaveResistanceValues();
+            cableFormDataSet.Tables.Add(wr);
+            cbWaveResistance.DataSource = wr;
+            cbWaveResistance.DisplayMember = cbWaveResistance.ValueMember = "value";
+        }
+
+        private void fillCoverVoltagesValues()
+        {
+            DBEntityTable cvTable = Cable.get_CoverTestVoltageValues();
+            cableFormDataSet.Tables.Add(cvTable);
+            cbVoltageOfCoverTest.DataSource = cvTable;
+            cbVoltageOfCoverTest.DisplayMember = cbVoltageOfCoverTest.ValueMember = "value";
+        }
+
+        private void fillPleasureTestValues()
+        {
+            DBEntityTable pmin_table = Cable.get_PminValues();
+            DBEntityTable pmax_table = Cable.get_PmaxValues();
+            cableFormDataSet.Tables.AddRange(new DataTable[] { pmin_table, pmax_table });
+            cbPmin.DataSource = pmin_table;
+            cbPmin.DisplayMember = cbPmin.ValueMember = "value";
+            cbPmax.DataSource = pmax_table;
+            cbPmax.DisplayMember = cbPmax.ValueMember = "value";
         }
 
         private void fillMeasuredParameterTypes()
@@ -403,7 +442,14 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         /// </summary>
         protected virtual void refreshBuildLengthOnStructureMeasureParameters()
         {
-            
+            foreach (CableStructure structure in cable.CableStructures.Rows)
+            {
+                foreach (CableStructureMeasuredParameterData pd in structure.MeasuredParameters.Rows)
+                {
+                    if (pd.LengthBringingTypeId == LengthBringingType.ForBuildLength) pd.LengthBringing = Cable.BuildLength;
+
+                }
+            }
         }
 
 
@@ -632,43 +678,28 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            //if (currentStructure != draftStructure && !delTabFlag) e.Cancel = !SaveCurrentStructure();
-            ///currentStructureId = tabControl1.SelectedIndex;
             isOnInitForm = true;
             ReplacePanelToCurrentPage();
             FillStructurePageForCurrentStructure();
             InitParameterTypesContextMenu();
-            StructureIdLbl.Text = $"StructureId = {currentStructure.CableStructureId}";
             isOnInitForm = false;
-            
-        }
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void tabControl1_Deselecting(object sender, TabControlCancelEventArgs e)
         {
-            Debug.WriteLine($"{currentStructure.CableStructureId}");
             if (!currentStructure.IsNewRecord() && !delTabFlag) e.Cancel = !SaveCurrentStructure();
         }
 
         private bool SaveCurrentStructure()
         {
             bool f;
-            Debug.WriteLine($"До сохранения {currentStructure.RowState.ToString()}");
-
             if (currentStructure.IsNewRecord())
             {
                 cable.CableStructures.Rows.Add(currentStructure);
             }
             f = currentStructure.Save();
-            Debug.WriteLine($"После сохранения {currentStructure.RowState.ToString()} {f}");
             return f;
         }
-
-
 
         private void FillStructurePageForCurrentStructure()
         {
@@ -678,14 +709,14 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             cbIsolationMaterial.SelectedValue = currentStructure.IsolationMaterialId;
             cbDRCalculatingFormula.SelectedValue = currentStructure.DRFormulaId;
             cbDRBringingFormula.SelectedValue = currentStructure.DRBringingFormulaId;
-            tbLeadDiameter.Text = currentStructure.LeadDiameter.ToString();
+            cbLeadDiameters.Text = currentStructure.LeadDiameter.ToString();
             nudRrealElementsAmount.Value = currentStructure.RealAmount;
             nudDisplayedElementAmount.Value = currentStructure.DisplayedAmount;
             nudLeadToLeadVoltage.Value = currentStructure.LeadToLeadTestVoltage;
             nudLeadToShieldVoltage.Value = currentStructure.LeadToShieldTestVoltage;
             cbGroupCapacity.Checked = currentStructure.WorkCapacityGroup;
             nudNumberInGroup.Value = currentStructure.GroupedAmount;
-            nudWaveResistance.Value = (decimal)currentStructure.WaveResistance;
+            cbWaveResistance.Text = currentStructure.WaveResistance.ToString();
 
             fillMeasuredParametersData();
             selIndexWas = cbStructureType.SelectedIndex;
@@ -725,10 +756,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 InitRowByParameterType(dgMeasuredParameters.Rows[i]);
             }
             MeasuredParametersBindingSource.Sort = $"{MeasuredParameterType.ParameterTypeId_ColumnName} ASC";
-            //dgMeasuredParameters.Sort(dgMeasuredParameters.Columns[parameter_type_id_column.Name], System.ComponentModel.ListSortDirection.Ascending);
-            //freqMaxColumn.Visible = frequencyMinColumn.Visible = freqStepColumn.Visible = currentStructure.HasFreqMeasuredParameterData;
-
-            //deleteAllMeasuredParametersDataButton.Enabled = MeasuredParamsDataGridView.Rows.Count > 0;
         }
 
         private void refreshReadOnlyCellColor(DataGridViewRow row)
@@ -828,7 +855,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 if (e.ColumnIndex == lengthBringingColumn.Index && e.RowIndex != -1)
                 {
                     DataGridViewCell c = dgMeasuredParameters.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                    ShowBringingLengthContextMenu(c);
+                    if (MeasuredParameterType.AllowBringingLength((uint)c.OwningRow.Cells[parameter_type_id_column.Index].Value)) ShowBringingLengthContextMenu(c);
                 }
             }
         }
@@ -847,6 +874,13 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             {
                 dgMeasuredParameters.CommitEdit(DataGridViewDataErrorContexts.CurrentCellChange);
             }
+        }
+
+        private void dgMeasuredParameters_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            DataGridViewCell c = dgMeasuredParameters.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            //c.Value = 0;
+            MessageBox.Show("Введённое значение должно иметь числовой формат");
         }
         #endregion
 
@@ -997,25 +1031,11 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             currentStructure.DRBringingFormulaId = (uint)cbDRBringingFormula.SelectedValue;
         }
 
-        private void tbLeadDiameter_KeyPress(object sender, KeyPressEventArgs e)
+        private void numFormatCheckerOn_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !ServiceFunctions.DoubleCharChecker(e.KeyChar);
         }
 
-        private void tbLeadDiameter_TextChanged(object sender, EventArgs e)
-        {
-            float v = currentStructure.LeadDiameter;
-            if (String.IsNullOrWhiteSpace(tbLeadDiameter.Text)) return;
-            if (float.TryParse(tbLeadDiameter.Text, out v))
-            {
-                currentStructure.LeadDiameter = v;
-            }
-            else
-            {
-                tbLeadDiameter.Text = v.ToString();
-                MessageBox.Show("Неверный формат величины диаметра жил", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
 
         private void nudRrealElementsAmount_ValueChanged(object sender, EventArgs e)
         {
@@ -1070,10 +1090,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             currentStructure.WorkCapacityGroup = cbGroupCapacity.Checked;
         }
 
-        private void nudWaveResistance_ValueChanged(object sender, EventArgs e)
-        {
-            currentStructure.WaveResistance = (uint)nudWaveResistance.Value;
-        }
 
         private void nudNumberInGroup_ValueChanged(object sender, EventArgs e)
         {
@@ -1119,7 +1135,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         private void cbStructureType_SelectionChangeCommitted(object sender, EventArgs e)
         {
             Debug.WriteLine($"cbStructureType_SelectionChangeCommitted {cbStructureType.SelectedValue}");
-            // int nextStructureId = (int)cbStructureType.SelectedValue;
             if (!GetAgreementToStructureTypeChanged())
             {
                 cbStructureType.SelectedIndex = selIndexWas;
@@ -1248,8 +1263,47 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         }
 
 
+
         #endregion
 
+        private void cbPmax_TextChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+            float f = 0;
+            float.TryParse(cbPmax.Text, out f);
+            Cable.PMax = f;
+        }
 
+        private void cbPmin_TextChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+            float f = 0;
+            float.TryParse(cbPmin.Text, out f);
+            Cable.PMin = f;
+        }
+
+        private void cbVoltageOfCoverTest_TextChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+            float f = 0;
+            float.TryParse(cbVoltageOfCoverTest.Text, out f);
+            Cable.UCover = f;
+        }
+
+        private void cbWaveResistance_TextChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+            float f = 0;
+            float.TryParse(cbWaveResistance.Text, out f);
+            currentStructure.WaveResistance = f;
+        }
+
+        private void cbLeadDiameters_TextChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+            float f = 0.1f;
+            float.TryParse(cbLeadDiameters.Text, out f);
+            currentStructure.LeadDiameter = f;
+        }
     }
 }
