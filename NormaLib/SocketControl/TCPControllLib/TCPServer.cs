@@ -90,10 +90,13 @@ namespace NormaLib.SocketControl.TCPControlLib
                     ProcessClient(client_object);
                 }
             }
+            catch (SocketException ex) when (ex.ErrorCode == 10004)
+            {
+                return;
+            }
             catch (Exception ex)
             {
                 this.Exception = ex;
-             
             }
             finally
             {

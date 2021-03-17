@@ -113,6 +113,10 @@ namespace NormaLib.SocketControl
                     processClient(clientObject);
                 }
             }
+            catch (SocketException ex) when (ex.ErrorCode == 10004)
+            {
+                return;
+            }
             catch (Exception ex)
             {
                 ProcessOnServerConnectionException(ex);
