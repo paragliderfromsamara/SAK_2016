@@ -58,6 +58,11 @@ namespace NormaLib.DBControl
             return _table;
         }
 
+        async public static void InitDataBaseAsync()
+        {
+
+        }
+
 
         public DBTablesMigration()
         {
@@ -84,7 +89,7 @@ namespace NormaLib.DBControl
             //dropDB();
             checkAndCreateDB();
             CreateTables();
-            //FillSeeds();
+            FillSeeds();
             //MigrateData();
         }
 

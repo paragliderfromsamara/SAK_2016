@@ -1120,7 +1120,7 @@ namespace TeraMicroMeasure
             //cForm.Show();
         }
     }
-
+/*
     enum ClientStatus : int
     {
         connected,
@@ -1157,4 +1157,5 @@ namespace TeraMicroMeasure
             }
         }
     }
+    */
 }

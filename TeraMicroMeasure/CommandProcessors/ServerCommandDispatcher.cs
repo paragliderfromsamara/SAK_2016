@@ -49,7 +49,7 @@ namespace TeraMicroMeasure.CommandProcessors
         } 
     }
 
-    class ServerCommandDispatcher : IDisposable
+    public class ServerCommandDispatcher : IDisposable
     {
         TCPServerClientsControl clientsControl;
         private List<string> WillDisconnectedIPList;

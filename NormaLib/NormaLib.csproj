@@ -235,6 +235,12 @@
       <DependentUpon>DBTableContolForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\NormaUIColors.cs" />
+    <Compile Include="UI\ProcessBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ProcessBox.Designer.cs">
+      <DependentUpon>ProcessBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\UIMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -293,6 +299,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\DBTableContolForm.resx">
       <DependentUpon>DBTableContolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ProcessBox.resx">
+      <DependentUpon>ProcessBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\UIMainForm.resx">
       <DependentUpon>UIMainForm.cs</DependentUpon>

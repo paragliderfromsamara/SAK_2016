@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UIMainForm));
             this.panelMenu = new System.Windows.Forms.Panel();
-            this.btnDataBase = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
+            this.btnDataBase = new System.Windows.Forms.Button();
             this.btnMeasure = new System.Windows.Forms.Button();
             this.panelHeader = new System.Windows.Forms.Panel();
             this.panelTitleBar = new System.Windows.Forms.Panel();
@@ -57,26 +57,6 @@
             this.panelMenu.Size = new System.Drawing.Size(240, 884);
             this.panelMenu.TabIndex = 0;
             // 
-            // btnDataBase
-            // 
-            this.btnDataBase.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnDataBase.FlatAppearance.BorderSize = 0;
-            this.btnDataBase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDataBase.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnDataBase.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnDataBase.Image = ((System.Drawing.Image)(resources.GetObject("btnDataBase.Image")));
-            this.btnDataBase.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDataBase.Location = new System.Drawing.Point(0, 140);
-            this.btnDataBase.Name = "btnDataBase";
-            this.btnDataBase.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnDataBase.Size = new System.Drawing.Size(240, 60);
-            this.btnDataBase.TabIndex = 2;
-            this.btnDataBase.Text = " База Данных";
-            this.btnDataBase.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDataBase.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnDataBase.UseVisualStyleBackColor = true;
-            this.btnDataBase.Click += new System.EventHandler(this.btnDataBase_Click);
-            // 
             // btnSettings
             // 
             this.btnSettings.Dock = System.Windows.Forms.DockStyle.Top;
@@ -96,6 +76,26 @@
             this.btnSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
+            // btnDataBase
+            // 
+            this.btnDataBase.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDataBase.FlatAppearance.BorderSize = 0;
+            this.btnDataBase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDataBase.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnDataBase.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnDataBase.Image = ((System.Drawing.Image)(resources.GetObject("btnDataBase.Image")));
+            this.btnDataBase.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDataBase.Location = new System.Drawing.Point(0, 140);
+            this.btnDataBase.Name = "btnDataBase";
+            this.btnDataBase.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnDataBase.Size = new System.Drawing.Size(240, 60);
+            this.btnDataBase.TabIndex = 2;
+            this.btnDataBase.Text = " База Данных";
+            this.btnDataBase.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDataBase.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnDataBase.UseVisualStyleBackColor = true;
+            this.btnDataBase.Click += new System.EventHandler(this.btnDataBase_Click);
             // 
             // btnMeasure
             // 
@@ -228,7 +228,6 @@
         #endregion
 
         protected System.Windows.Forms.Panel panelMenu;
-        private System.Windows.Forms.Panel panelHeader;
         private System.Windows.Forms.Button btnMeasure;
         private System.Windows.Forms.Panel panelTitleBar;
         private System.Windows.Forms.Label lblTitle;
@@ -238,5 +237,6 @@
         private System.Windows.Forms.Button CloseAppButton;
         private System.Windows.Forms.Button btnDataBase;
         private System.Windows.Forms.Panel childFormPanel;
+        protected System.Windows.Forms.Panel panelHeader;
     }
 }
