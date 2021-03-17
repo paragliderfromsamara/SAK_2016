@@ -11,6 +11,9 @@ namespace NormaLib.UI
   
     public static class NormaUIColors
     {
+        public static System.Drawing.Color RedColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+        public static System.Drawing.Color GreenColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(179)))), ((int)(((byte)(9)))));
+        public static System.Drawing.Color OrangeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(140)))), ((int)(((byte)(0)))));
         public static Color PrimaryColor { set; get; }
         public static Color SecondaryColor { set; get; }
 

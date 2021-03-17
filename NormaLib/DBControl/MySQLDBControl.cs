@@ -103,6 +103,9 @@ namespace NormaLib.DBControl
             }
         }
 
+
+
+
         public bool ConnectToDB(string db_name)
         {
             bool flag = false;
@@ -163,6 +166,20 @@ namespace NormaLib.DBControl
             return RunNoQuery(GetSQLCommand(tableName + "_count"));
         }
 
+        public string[] GetDBUsers()
+        {
+            string query = "SELECT * FROM mysql.user";
+            System.Collections.Generic.List<string> list = new List<string>();
+            MySqlDataReader r;
+            MyConn.Open();
+            r = GetReader(query);
+            while (r.Read()) list.Add($"{r.GetString("HOST")} - {r.GetString("User")} - {r.GetString("Password")}");
+            r.Close();
+            MyConn.Close();
+
+            return list.ToArray();
+        }
+
         public string[] GetDBList()
         {
             string query = "SHOW DATABASES";
@@ -174,8 +191,6 @@ namespace NormaLib.DBControl
             r.Close();
             MyConn.Close();
 
-            
-            
             return list.ToArray();
         }
 

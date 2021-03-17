@@ -18,6 +18,7 @@ using TeraMicroMeasure.CommandProcessors;
 using TeraMicroMeasure.Forms;
 using System.Threading;
 using NormaLib.SocketControl;
+using TeraMicroMeasure.Properties;
 
 namespace TeraMicroMeasure
 {
@@ -43,8 +44,13 @@ namespace TeraMicroMeasure
             AppTypeSelector appSel = new AppTypeSelector();
             if (appSel.ShowDialog() == DialogResult.OK)
             {
+                //MySQLDBControl c = new MySQLDBControl();
+                //string[] users = c.GetDBUsers();
+                //MessageBox.Show(string.Join("\n", users));
                 if (IsServerApp) InitAsServerApp();
                 else InitAsClientApp();
+
+                
             }
             else
             {
@@ -86,7 +92,20 @@ namespace TeraMicroMeasure
         {
             base.InitializeDesign();
             InitializeComponent();
+            ReorederMenuItems();
             FormClosing += MainForm_FormClosing;
+            connectToServerButton.Click += switchConnectToServerButton_Click;
+        }
+
+        private void ReorederMenuItems()
+        {
+            this.panelMenu.Controls.Clear();
+            this.panelMenu.Controls.Add(this.btnSettings);
+            this.panelMenu.Controls.Add(this.btnDataBase);
+            this.panelMenu.Controls.Add(this.btnMeasure);
+            this.panelMenu.Controls.Add(this.panelHeader);
+            this.panelMenu.Controls.Add(this.connectButPanel);
+            connectButPanel.Visible = !IsServerApp;
         }
 
         protected override Form GetSettingsForm()
@@ -198,6 +217,19 @@ namespace TeraMicroMeasure
             }
         }
 
+        private void switchConnectToServerButton_Click(object sender, EventArgs e)
+        {
+            if (clientCommandDispatcher != null)
+            {
+                disconnectFromServer();
+            }
+            else
+            {
+                connectionTimesNow = clientTryConnectionTimes;
+                ConnectToServer();
+            }
+        }
+
         private void tryToConnect()
         {
             if (connectionTimesNow-- > 0)
@@ -230,20 +262,23 @@ namespace TeraMicroMeasure
             switch (s)
             {
                 case ClientStatus.connected:
-                   // switchConnectToServerButton.BackColor = greenColor;
-                   // switchConnectToServerButton.Text = char.ConvertFromUtf32(57723);
+                    connectToServerButton.BackColor = NormaUIColors.GreenColor;
+                    connectToServerButton.Text = "  Подключен";//char.ConvertFromUtf32(57723);
+                    connectToServerButton.Image = Resources.connected_white;
                     titleLabel_1.Text = $"Сервер IP: {SettingsControl.GetServerIP()} Порт: {SettingsControl.GetServerPort()}";
                     titleLabel_2.Text = "";
                     break;
                 case ClientStatus.disconnected:
-                    //switchConnectToServerButton.BackColor = redColor;
-                    //switchConnectToServerButton.Text = char.ConvertFromUtf32(57722);
+                    connectToServerButton.BackColor = NormaUIColors.RedColor;
+                    connectToServerButton.Text = "  Отключен";
+                    connectToServerButton.Image = Resources.disconnect_white;
                     titleLabel_1.Text = "Нет подключения к серверу";
                     titleLabel_2.Text = "";
                     break;
                 case ClientStatus.tryConnect:
-                    //switchConnectToServerButton.BackColor = orangeColor;
-                    //switchConnectToServerButton.Text = char.ConvertFromUtf32(57722);
+                    connectToServerButton.BackColor = NormaUIColors.OrangeColor;
+                    connectToServerButton.Text = "  Подключение...";
+                    connectToServerButton.Image = Resources.disconnect_white;
                     titleLabel_1.Text = $"Подключение...";
                     titleLabel_2.Text = $"Осталось попыток: {connectionTimesNow + 1}";
                     break;
@@ -775,8 +810,6 @@ namespace TeraMicroMeasure
             thread = new Thread(new ThreadStart(ThreadFunc));
             thread.Start();
         }
-
-
 
         void ThreadFunc()
         {
