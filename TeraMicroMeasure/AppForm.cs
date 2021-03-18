@@ -25,6 +25,9 @@ namespace TeraMicroMeasure
  
     public partial class AppForm : UIMainForm
     {
+        #region constants
+        const string DefaultDbPassword = "kFr16YtWE";
+        #endregion
         #region static fields
         public static ServerCommandDispatcher serverCommandDispatcher;
         public static ClientCommandDispatcher clientCommandDispatcher;
@@ -37,20 +40,22 @@ namespace TeraMicroMeasure
         List<string> WillDisconnectDevice = new List<string>();
         #endregion
 
-        bool IsServerApp => Properties.Settings.Default.IsServerApp;
-       
+        static bool IsServerApp => Properties.Settings.Default.IsServerApp;
+        static bool IsFirstRun => Properties.Settings.Default.FirstRun;
         public AppForm()
         {
-            AppTypeSelector appSel = new AppTypeSelector();
-            if (appSel.ShowDialog() == DialogResult.OK)
+            if (IsFirstRun)
             {
-                //MySQLDBControl c = new MySQLDBControl();
-                //string[] users = c.GetDBUsers();
-                //MessageBox.Show(string.Join("\n", users));
+                AppTypeSelector appSel = new AppTypeSelector();
+                if (appSel.ShowDialog() == DialogResult.OK)
+                {
+                    Properties.Settings.Default.FirstRun = false;
+                }
+            }
+            if (!IsFirstRun)
+            {
                 if (IsServerApp) InitAsServerApp();
                 else InitAsClientApp();
-
-                
             }
             else
             {
@@ -137,11 +142,21 @@ namespace TeraMicroMeasure
         private void InitAsClientApp()
         {
             //throw new NotImplementedException();
+            CheckClientDBSettings();
             connectionTimesNow = clientTryConnectionTimes;
             SetClientTitle();
             setClientButtonStatus(ClientStatus.disconnected);
             ConnectToServer();
             //InitMeasureForm();
+        }
+
+        private void CheckClientDBSettings()
+        {
+            string client_id = $"NM_Client{SettingsControl.GetClientId()}";
+            string password = DefaultDbPassword;
+            if (DBSettingsControl.ServerHost != SettingsControl.GetServerIP()) DBSettingsControl.ServerHost = SettingsControl.GetServerIP();
+            if (DBSettingsControl.UserName != client_id) DBSettingsControl.UserName = client_id;
+            if (DBSettingsControl.Password != password) DBSettingsControl.Password = password;
         }
 
         private void SetClientTitle()
@@ -320,6 +335,7 @@ namespace TeraMicroMeasure
         private void InitAsServerApp()
         {
             clientTitle.Text = "Сервер";
+            refreshClientCounterStatusText(0);
             initServerControl();
             InitDataBaseOnServer();
             SettingsControl.SetClientId(0);
@@ -349,7 +365,6 @@ namespace TeraMicroMeasure
                 if (pc != null) pc.Dispose();
                 if (dbc != null) dbc.Dispose();
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
             }
         }
 
@@ -468,7 +483,16 @@ namespace TeraMicroMeasure
                 RefreshTestLinesMenuItems(a.OnFocusClientState);
                 RefreshMeasureStateOnMeasureForm(a.OnFocusClientState.ClientID, a.OnFocusClientState.MeasureState);
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
+                CheckClientUseOnDataBaseAsync(a.OnFocusClientState.ClientID);
             }
+        }
+
+        private void CheckClientUseOnDataBaseAsync(int client_id)
+        {
+            DBNormaMeasureTablesMigration cbt = new DBNormaMeasureTablesMigration();
+            MySQLDBControl c = new MySQLDBControl(cbt.DBName);
+            c.CreateIfNotExists($"NM_Client{client_id}", cbt.DBName, DefaultDbPassword).GetAwaiter();
+            c.Dispose();
         }
 
         private void RefreshTestLinesMenuItems(ClientXmlState onFocusClientState)
@@ -547,7 +571,9 @@ namespace TeraMicroMeasure
             {
                 ClientIDChangedEventArgs a = e as ClientIDChangedEventArgs;
                 MeasureForm f = getMeasureFormByClientId(a.IdWas);
+                CheckClientDBSettings();
                 if (f != null) f.ClientID = a.IdNew;
+                CheckClientUseOnDataBaseAsync(a.IdNew);
             }
         }
 

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Threading;
 using MySql.Data.MySqlClient;
+using System.Threading.Tasks;
 
 namespace NormaLib.DBControl
 {
@@ -166,18 +167,39 @@ namespace NormaLib.DBControl
             return RunNoQuery(GetSQLCommand(tableName + "_count"));
         }
 
-        public string[] GetDBUsers()
+        public List<string> GetDBUsers()
         {
             string query = "SELECT * FROM mysql.user";
             System.Collections.Generic.List<string> list = new List<string>();
             MySqlDataReader r;
             MyConn.Open();
             r = GetReader(query);
-            while (r.Read()) list.Add($"{r.GetString("HOST")} - {r.GetString("User")} - {r.GetString("Password")}");
+            while (r.Read()) list.Add(r.GetString("User"));
             r.Close();
             MyConn.Close();
 
-            return list.ToArray();
+            return list;
+        }
+
+        public async Task CreateIfNotExists(string user_name, string db_name, string password, string host = "%")
+        {
+            await Task.Run(()=> {
+                List<string> users = GetDBUsers();
+                if (!users.Contains(user_name))
+                {
+                    string user_db_name = $"'{user_name}'@'{host}'";
+                    string createUserQuery = $"CREATE USER {user_db_name} IDENTIFIED BY '{password}'";
+                    string createUserGrantsQuery = $"GRANT ALL PRIVILEGES ON {db_name}.* TO {user_db_name}";
+                    string commitPrivileges = "FLUSH PRIVILEGES";
+                    long v;
+                    MyConn.Open();
+                    v = RunNoQuery(createUserQuery);
+                    if (v == 0) v = RunNoQuery(createUserGrantsQuery);
+                    if (v == 0) v = RunNoQuery(commitPrivileges);
+                    MyConn.Close();
+                }
+                                });
+
         }
 
         public string[] GetDBList()

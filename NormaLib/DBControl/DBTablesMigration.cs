@@ -14,7 +14,7 @@ namespace NormaLib.DBControl
     {
         protected DBTable[] _tablesList;
         protected System.Type[] tableTypes;
-
+        public string DBName => dbName;
 
         protected string dbName;
         protected string _dbUserName="root";

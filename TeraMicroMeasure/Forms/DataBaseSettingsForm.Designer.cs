@@ -37,6 +37,7 @@
             this.subTitleLbl3 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
+            this.lblSettingsInfo = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // titleLbl1
@@ -53,7 +54,7 @@
             // 
             this.subtitleLbl1.AutoSize = true;
             this.subtitleLbl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.subtitleLbl1.Location = new System.Drawing.Point(22, 71);
+            this.subtitleLbl1.Location = new System.Drawing.Point(22, 96);
             this.subtitleLbl1.Name = "subtitleLbl1";
             this.subtitleLbl1.Size = new System.Drawing.Size(42, 18);
             this.subtitleLbl1.TabIndex = 1;
@@ -62,7 +63,7 @@
             // tbHostName
             // 
             this.tbHostName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tbHostName.Location = new System.Drawing.Point(25, 92);
+            this.tbHostName.Location = new System.Drawing.Point(25, 117);
             this.tbHostName.Name = "tbHostName";
             this.tbHostName.Size = new System.Drawing.Size(164, 24);
             this.tbHostName.TabIndex = 2;
@@ -71,7 +72,7 @@
             // tbUserName
             // 
             this.tbUserName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tbUserName.Location = new System.Drawing.Point(206, 92);
+            this.tbUserName.Location = new System.Drawing.Point(206, 117);
             this.tbUserName.Name = "tbUserName";
             this.tbUserName.Size = new System.Drawing.Size(164, 24);
             this.tbUserName.TabIndex = 3;
@@ -81,7 +82,7 @@
             // 
             this.subTitleLbl2.AutoSize = true;
             this.subTitleLbl2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.subTitleLbl2.Location = new System.Drawing.Point(203, 71);
+            this.subTitleLbl2.Location = new System.Drawing.Point(203, 96);
             this.subTitleLbl2.Name = "subTitleLbl2";
             this.subTitleLbl2.Size = new System.Drawing.Size(110, 18);
             this.subTitleLbl2.TabIndex = 4;
@@ -90,7 +91,7 @@
             // tbUserPassword
             // 
             this.tbUserPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tbUserPassword.Location = new System.Drawing.Point(388, 92);
+            this.tbUserPassword.Location = new System.Drawing.Point(388, 117);
             this.tbUserPassword.Name = "tbUserPassword";
             this.tbUserPassword.Size = new System.Drawing.Size(164, 24);
             this.tbUserPassword.TabIndex = 5;
@@ -100,7 +101,7 @@
             // 
             this.subTitleLbl3.AutoSize = true;
             this.subTitleLbl3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.subTitleLbl3.Location = new System.Drawing.Point(385, 71);
+            this.subTitleLbl3.Location = new System.Drawing.Point(385, 96);
             this.subTitleLbl3.Name = "subTitleLbl3";
             this.subTitleLbl3.Size = new System.Drawing.Size(61, 18);
             this.subTitleLbl3.TabIndex = 6;
@@ -115,7 +116,7 @@
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnSave.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnSave.Location = new System.Drawing.Point(25, 149);
+            this.btnSave.Location = new System.Drawing.Point(25, 174);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(164, 42);
             this.btnSave.TabIndex = 7;
@@ -133,7 +134,7 @@
             this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnReset.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnReset.Location = new System.Drawing.Point(206, 149);
+            this.btnReset.Location = new System.Drawing.Point(206, 174);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(164, 42);
             this.btnReset.TabIndex = 8;
@@ -141,11 +142,22 @@
             this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // lblSettingsInfo
+            // 
+            this.lblSettingsInfo.AutoSize = true;
+            this.lblSettingsInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lblSettingsInfo.Location = new System.Drawing.Point(22, 60);
+            this.lblSettingsInfo.Name = "lblSettingsInfo";
+            this.lblSettingsInfo.Size = new System.Drawing.Size(569, 18);
+            this.lblSettingsInfo.TabIndex = 9;
+            this.lblSettingsInfo.Text = "В режиме \"Клиент\" приложение получает данные подключения к БД от сервера";
+            // 
             // DataBaseSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(583, 514);
+            this.ClientSize = new System.Drawing.Size(597, 304);
+            this.Controls.Add(this.lblSettingsInfo);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.subTitleLbl3);
@@ -174,5 +186,6 @@
         private System.Windows.Forms.Label subTitleLbl3;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.Label lblSettingsInfo;
     }
 }
