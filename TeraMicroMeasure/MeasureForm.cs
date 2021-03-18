@@ -38,7 +38,6 @@ namespace TeraMicroMeasure
             }set
             {
                 clientID = value;
-                SetTitle();
             }
         }
         private DeviceType captured_device_type = DeviceType.Unknown;
@@ -100,7 +99,6 @@ namespace TeraMicroMeasure
             IsOnline = isCurrentPCClient = clientID == SettingsControl.GetClientId();
             //////////////////////////////////////////////////////////////
             ResetMeasureField();
-            SetTitle();
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
             SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
@@ -208,20 +206,6 @@ namespace TeraMicroMeasure
             averagingCounter.SelectedIndex = 0;
         }
 
-        private void SetTitle()
-        {
-            string t;
-            if (clientID == 0) t = "Сервер";
-            else if (clientID > 0) t = $"Испытательная линия {clientID}";
-            else t = "Испытательная линия без номера";
-            if (isCurrentPCClient) t += " (Этот компьютер)";
-            else
-            {
-                t += (IsOnline) ? " (В сети)" : " (Нет связи)";
-            }
-            this.Text = t;
-        }
-
         public void RefreshMeasureState(MeasureXMLState measure_state)
         {
             MeasureState = measure_state;
@@ -234,7 +218,6 @@ namespace TeraMicroMeasure
             if (is_online != IsOnline)
             {
                 IsOnline = is_online;
-                SetTitle();
             }
         }
 

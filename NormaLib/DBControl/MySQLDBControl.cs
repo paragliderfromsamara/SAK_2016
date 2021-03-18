@@ -169,16 +169,26 @@ namespace NormaLib.DBControl
 
         public List<string> GetDBUsers()
         {
-            string query = "SELECT * FROM mysql.user";
-            System.Collections.Generic.List<string> list = new List<string>();
-            MySqlDataReader r;
-            MyConn.Open();
-            r = GetReader(query);
-            while (r.Read()) list.Add(r.GetString("User"));
-            r.Close();
-            MyConn.Close();
+            int timer = 5;
+            retry:
+            try
+            {
+                string query = "SELECT * FROM mysql.user";
+                System.Collections.Generic.List<string> list = new List<string>();
+                MySqlDataReader r;
+                MyConn.Open();
+                r = GetReader(query);
+                while (r.Read()) list.Add(r.GetString("User"));
+                r.Close();
+                MyConn.Close();
 
-            return list;
+                return list;
+            }catch(Exception ex)
+            {
+                if (timer-- > 0) goto retry;
+                else throw ex;
+            }
+
         }
 
         public async Task CreateIfNotExists(string user_name, string db_name, string password, string host = "%")
@@ -271,6 +281,7 @@ namespace NormaLib.DBControl
         //------------------------------------------------------------------------------------------------------------------------
         public MySqlDataReader GetReader(string comm)
         {
+            retry:
             try
             {
                 MC.CommandText = comm;
@@ -280,6 +291,14 @@ namespace NormaLib.DBControl
             {
                 //MessageBox.Show(ex.Message + " №" + ex.ErrorCode.ToString() + " SQL команда: " + comm, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new DBException($"{ex.Message} № {ex.ErrorCode}\n\nSQL команда:\n\n{comm}");
+            }catch(NullReferenceException ex)
+            {
+                if (MC == null)
+                {
+                    MC = new MySqlCommand();
+                    goto retry;
+                }
+                else throw ex;
             }
         }
         //------------------------------------------------------------------------------------------------------------------------

@@ -32,13 +32,16 @@ namespace TeraMicroMeasure
         public static ServerCommandDispatcher serverCommandDispatcher;
         public static ClientCommandDispatcher clientCommandDispatcher;
         public static DevicesDispatcher DeviceDispatcher;
-        public static Dictionary<int, MeasureForm> measureFormsList = new Dictionary<int, MeasureForm>();
+        //public static Dictionary<int, MeasureForm> measureFormsList = new Dictionary<int, MeasureForm>();
         public static Dictionary<string, DeviceXMLState> xmlDevices = new Dictionary<string, DeviceXMLState>();
         #endregion
 
         #region private fields 
         List<string> WillDisconnectDevice = new List<string>();
         #endregion
+
+        Type CurrentFormType => currentForm == null ? null : currentForm.GetType();
+        MeasureForm OpenedMeasureForm => (CurrentFormType == typeof(MeasureForm)) ? (MeasureForm)currentForm : null;  
 
         static bool IsServerApp => Properties.Settings.Default.IsServerApp;
         static bool IsFirstRun => Properties.Settings.Default.FirstRun;
@@ -54,8 +57,13 @@ namespace TeraMicroMeasure
             }
             if (!IsFirstRun)
             {
-                if (IsServerApp) InitAsServerApp();
-                else InitAsClientApp();
+                Load += (s, a) =>
+                {
+                    if (IsServerApp) InitAsServerApp();
+                    else InitAsClientApp();
+                    InitDeviceFinder();
+                };
+                
             }
             else
             {
@@ -86,10 +94,11 @@ namespace TeraMicroMeasure
 
         private void SetMeasureFormsOffline()
         {
-            foreach (var f in measureFormsList.Values)
-            {
-                f.SetConnectionStatus(false);
-            }
+            if (OpenedMeasureForm != null) OpenedMeasureForm.SetConnectionStatus(false);
+            //foreach (var f in measureFormsList.Values)
+           // {
+             //   f.SetConnectionStatus(false);
+            //}
         }
 
         #region Инициализация дизайна
@@ -123,12 +132,40 @@ namespace TeraMicroMeasure
             return new DataBaseTablesControlForm();
         }
 
-        private MeasureForm getMeasureFormByClientId(int client_id)
+        protected override Form GetMeasureForm()
         {
-            MeasureForm f = null;
-            if (measureFormsList.ContainsKey(client_id)) f = measureFormsList[client_id];
+            MeasureForm f = new MeasureForm(SettingsControl.GetClientId());
+            f.OnMeasureStateChanged += RefreshMeasureStateHandler;
+            f.Load += (s, a) => { f.SetXmlDeviceList(xmlDevices); };
             return f;
         }
+
+        /// <summary>
+        /// Ищем открытую форму измерений
+        /// </summary>
+        /// <returns></returns>
+        private MeasureForm FindOpened_MeasureForm()
+        {
+            if (currentForm.GetType() == typeof(MeasureForm))
+                return (MeasureForm)currentForm;
+            else
+                return null;
+        }
+
+        private void RefreshMeasureStateHandler(object sender, EventArgs e)
+        {
+            if (IsServerApp)
+                RefreshMeasureStateOnServerSide(sender, e);
+            else
+                RefreshMeasureStateOnClientSide(sender, e);
+        }
+
+        //private MeasureForm getMeasureFormByClientId(int client_id)
+        //{
+        //    MeasureForm f = null;
+        //    if (measureFormsList.ContainsKey(client_id)) f = measureFormsList[client_id];
+        //    return f;
+        //}
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -300,6 +337,12 @@ namespace TeraMicroMeasure
             }
         }
 
+        private void RefreshMeasureStateOnClientSide(object sender, EventArgs e)
+        {
+            MeasureXMLState s = sender as MeasureXMLState;
+            if (clientCommandDispatcher != null) clientCommandDispatcher.RefreshMeasureState(s);
+        }
+
         private void OnServerStateReceived_Handler(object sender, EventArgs e)
         {
             ServerXmlState sState = sender as ServerXmlState;
@@ -430,7 +473,11 @@ namespace TeraMicroMeasure
             {
                 serverCommandDispatcher.ReplaceDeviceOnServerState(xml_device);
             }
-            if (measureFormsList.ContainsKey(xml_device.ClientId)) measureFormsList[xml_device.ClientId].RefreshCapturedXmlDevice(xml_device);
+
+            if (xml_device.ClientId == SettingsControl.GetClientId() && OpenedMeasureForm != null)
+            {
+                OpenedMeasureForm.RefreshCapturedXmlDevice(xml_device);
+            }
         }
 
         private void OnDeviceReleased_Handler(object sender, EventArgs e)
@@ -467,7 +514,7 @@ namespace TeraMicroMeasure
 
         private void SetOfflineStatusOnMeasureForm(ClientXmlState s)
         {
-            MeasureForm f = getMeasureFormByClientId(s.ClientID);
+            MeasureForm f = OpenedMeasureForm;
             if (f != null) f.SetConnectionStatus(false);
         }
 
@@ -481,7 +528,7 @@ namespace TeraMicroMeasure
             {
                 ClientListChangedEventArgs a = e as ClientListChangedEventArgs;
                 RefreshTestLinesMenuItems(a.OnFocusClientState);
-                RefreshMeasureStateOnMeasureForm(a.OnFocusClientState.ClientID, a.OnFocusClientState.MeasureState);
+                if (a.OnFocusClientState.ClientID == SettingsControl.GetClientId())RefreshMeasureStateOnMeasureForm(a.OnFocusClientState.MeasureState);
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
                 CheckClientUseOnDataBaseAsync(a.OnFocusClientState.ClientID);
             }
@@ -551,14 +598,13 @@ namespace TeraMicroMeasure
             else
             {
                 MeasureSettingsChangedEventArgs a = e as MeasureSettingsChangedEventArgs;
-                RefreshMeasureStateOnMeasureForm(a.ClientId, a.MeasureState_New);
+                if (a.ClientId == SettingsControl.GetClientId()) RefreshMeasureStateOnMeasureForm(a.MeasureState_New);
             }
         }
 
-        private void RefreshMeasureStateOnMeasureForm(int client_id, MeasureXMLState new_state)
+        private void RefreshMeasureStateOnMeasureForm(MeasureXMLState new_state)
         {
-            MeasureForm f = getMeasureFormByClientId(client_id);
-            if (f != null) f.RefreshMeasureState(new_state);
+            if (OpenedMeasureForm != null) OpenedMeasureForm.RefreshMeasureState(new_state);
         }
 
         private void OnClientIDChanged_Handler(object sender, EventArgs e)
@@ -570,9 +616,8 @@ namespace TeraMicroMeasure
             else
             {
                 ClientIDChangedEventArgs a = e as ClientIDChangedEventArgs;
-                MeasureForm f = getMeasureFormByClientId(a.IdWas);
                 CheckClientDBSettings();
-                if (f != null) f.ClientID = a.IdNew;
+                if (OpenedMeasureForm != null) OpenedMeasureForm.ClientID = a.IdNew;
                 CheckClientUseOnDataBaseAsync(a.IdNew);
             }
         }
@@ -670,13 +715,121 @@ namespace TeraMicroMeasure
         #endregion
 
         #region device_control
+        private void InitDeviceFinder()
+        {
+            DeviceDispatcher = new DevicesDispatcher(new DeviceCommandProtocol(), OnDeviceFound_EventHandler);
+        }
+
+        private void OnDeviceFound_EventHandler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnDeviceFound_EventHandler), new object[] { sender, e });
+            }
+            else
+            {
+                DeviceBase d = sender as DeviceBase;
+                DeviceXMLState dxl = new DeviceXMLState(d.GetXMLState().InnerXml);
+                switch (d.TypeId)
+                {
+                    case DeviceType.Microohmmeter:
+                    case DeviceType.Teraohmmeter:
+                        xmlDevices.Add($"{dxl.TypeId}-{dxl.Serial}", dxl);//AddSimpleDeviceToSettingsFile(d);
+                        OnDeviceConnectedToServer_Handler(dxl);
+                        break;
+                }
+                if (IsServerApp)
+                {
+                    AddDeviceToServerCommandDispatcher(d);
+                }
+                //MessageBox.Show($"Подключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
+                //AddOrUpdateDeviceOnToolStrip(d);
+
+                //d.OnDisconnected += OnDeviceDisconnected_EventHandler;
+                d.OnXMLStateChanged += DeviceXMLStateChanged_Handler;
+                d.OnWorkStatusChanged += WorkStatusChanged_Handler;
+                d.OnGetMeasureResult += OnGetMeasureResult_Handler;
+                d.OnMeasureCycleFlagChanged += OnMeasureCycleFlagChanged_Handler;
+            }
+
+        }
+
+        private void WorkStatusChanged_Handler(object sender, EventArgs e)
+        {
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(WorkStatusChanged_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                DeviceBase d = sender as DeviceBase;
+                DeviceWorkStatusEventArgs a = e as DeviceWorkStatusEventArgs;
+               // AddOrUpdateDeviceOnToolStrip(d);
+                if (d.WorkStatus == DeviceWorkStatus.DISCONNECTED)
+                {
+                    OnDeviceDisconnected_EventHandler(sender, e);
+                }
+                else
+                {
+                    if (IsServerApp)
+                    {
+                        ReplaceDeviceXMLStateOnServerCommandDispatcher(d.GetXMLState());
+                    }
+                }
+
+
+            }
+        }
+
+        private void OnDeviceDisconnected_EventHandler(object sender, EventArgs e)
+        {
+            DeviceBase d = sender as DeviceBase;
+            //MessageBox.Show($"Отключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
+            if (IsServerApp)
+            {
+                RemoveDeviceFromServerCommandDispatcher(d);
+                
+            }
+        }
+
+        private void RemoveDeviceFromServerCommandDispatcher(DeviceBase d)
+        {
+            if (serverCommandDispatcher != null)
+            {
+                serverCommandDispatcher.RemoveDeviceFromServerState(d.TypeId, d.Serial);
+            }
+        }
+
+        private void DeviceXMLStateChanged_Handler(object sender, EventArgs e)
+        {
+            DeviceBase d = sender as DeviceBase;
+            if (IsServerApp)
+            {
+                ReplaceDeviceXMLStateOnServerCommandDispatcher(d.GetXMLState());
+            }
+        }
+
+        private void AddDeviceToServerCommandDispatcher(DeviceBase d)
+        {
+            if (serverCommandDispatcher != null)
+            {
+                serverCommandDispatcher.AddDeviceToServerState(d.GetXMLState());
+            }
+        }
+
         private void OnMeasureStatusChanged_Handler(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
         private void StopDeviceFinder()
         {
             if (DeviceDispatcher != null) DeviceDispatcher.Dispose();
+        }
+
+        private void RefreshMeasureStateOnServerSide(object arg1, EventArgs arg2)
+        {
+            
         }
 
         private void CheckDeviceListChanges(Dictionary<string, DeviceXMLState> devices)
@@ -764,13 +917,21 @@ namespace TeraMicroMeasure
         private void OnDeviceChangedOnServer_Handler(DeviceXMLState xml_device)
         {
             //MessageBox.Show($"Изменен {xml_device.ClientId}");
-            foreach (var f in measureFormsList.Values)
+            MeasureForm f = OpenedMeasureForm;
+            if (f != null)
             {
                 if (xml_device.Serial == f.CapturedDeviceSerial && (int)f.CapturedDeviceType == xml_device.TypeId)
                 {
                     f.RefreshCapturedXmlDevice(xml_device);
                 }
             }
+            //foreach (var f in measureFormsList.Values)
+            //{
+            //    if (xml_device.Serial == f.CapturedDeviceSerial && (int)f.CapturedDeviceType == xml_device.TypeId)
+            //    {
+            //        f.RefreshCapturedXmlDevice(xml_device);
+            //    }
+            //}
         }
 
         private void OnDeviceConnectedToServer_Handler(DeviceXMLState xml_device)
@@ -799,7 +960,19 @@ namespace TeraMicroMeasure
         private void OnDeviceDisconnectedFromServer_Handler(DeviceXMLState xml_device)
         {
             //MessageBox.Show($"Отключен {xml_device.TypeNameFull}");
-            foreach (var f in measureFormsList.Values)
+            DisconnectDeviceFromMeasureForm(xml_device);
+
+        }
+        private void OnXmlDevicesListChanged_Handler()
+        {
+            RefreshDeviceListOnMeasureForm();
+
+        }
+
+        private void DisconnectDeviceFromMeasureForm(DeviceXMLState xml_device)
+        {
+            MeasureForm f = OpenedMeasureForm;
+            if (f != null)
             {
                 if (f.CapturedDeviceSerial == xml_device.Serial && (int)f.CapturedDeviceType == xml_device.TypeId)
                 {
@@ -807,11 +980,42 @@ namespace TeraMicroMeasure
                 }
             }
         }
-        private void OnXmlDevicesListChanged_Handler()
+        private void RefreshDeviceListOnMeasureForm()
         {
-            foreach (var f in measureFormsList.Values)
+            if (OpenedMeasureForm != null) OpenedMeasureForm.SetXmlDeviceList(xmlDevices);
+        }
+
+        private void OnMeasureCycleFlagChanged_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
             {
-                f.SetXmlDeviceList(xmlDevices);
+                BeginInvoke(new EventHandler(OnMeasureCycleFlagChanged_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                DeviceBase d = sender as DeviceBase;
+                if (IsServerApp)
+                {
+                    ReplaceDeviceXMLStateOnServerCommandDispatcher(d.GetXMLState());
+                }
+            }
+        }
+
+        private void OnGetMeasureResult_Handler(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(OnGetMeasureResult_Handler), new object[] { sender, e });
+            }
+            else
+            {
+                DeviceBase d = sender as DeviceBase;
+                MeasureResultEventArgs a = e as MeasureResultEventArgs;
+
+                if (IsServerApp)
+                {
+                    ReplaceDeviceXMLStateOnServerCommandDispatcher(d.GetXMLState());
+                }
             }
         }
         #endregion

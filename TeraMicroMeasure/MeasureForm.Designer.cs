@@ -257,6 +257,7 @@
             // measurePanel
             // 
             this.measurePanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.measurePanel.Controls.Add(this.richTextBox1);
             this.measurePanel.Controls.Add(this.selectDevicePanel);
             this.measurePanel.Controls.Add(this.panel1);
             this.measurePanel.Controls.Add(this.panel2);
@@ -267,9 +268,10 @@
             this.measurePanel.Controls.Add(this.measuredParametersGroupBox);
             this.measurePanel.Controls.Add(this.cableLengthNumericUpDown);
             this.measurePanel.Controls.Add(this.label2);
-            this.measurePanel.Location = new System.Drawing.Point(-2, -1);
+            this.measurePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.measurePanel.Location = new System.Drawing.Point(0, 0);
             this.measurePanel.Name = "measurePanel";
-            this.measurePanel.Size = new System.Drawing.Size(917, 412);
+            this.measurePanel.Size = new System.Drawing.Size(1108, 861);
             this.measurePanel.TabIndex = 6;
             // 
             // selectDevicePanel
@@ -443,9 +445,9 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(-2, 417);
+            this.richTextBox1.Location = new System.Drawing.Point(17, 551);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(917, 289);
+            this.richTextBox1.Size = new System.Drawing.Size(1079, 289);
             this.richTextBox1.TabIndex = 7;
             this.richTextBox1.Text = "";
             // 
@@ -453,16 +455,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(914, 709);
-            this.Controls.Add(this.richTextBox1);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(1108, 861);
             this.Controls.Add(this.measurePanel);
             this.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.MaximizeBox = false;
             this.Name = "MeasureForm";
-            this.Text = "MeasureForm";
+            this.Text = "Измерение";
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).EndInit();
             this.measuredParametersGroupBox.ResumeLayout(false);
             this.measuredParametersGroupBox.PerformLayout();

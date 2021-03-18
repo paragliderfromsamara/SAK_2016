@@ -9,10 +9,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TeraMicroMeasure")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("LLC SPE NORMA")]
 [assembly: AssemblyProduct("TeraMicroMeasure")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("LLC SPE NORMA")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
