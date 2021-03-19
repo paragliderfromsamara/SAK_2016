@@ -90,8 +90,17 @@ namespace TeraMicroMeasure.CommandProcessors
         private EventHandler OnDeviceTryCapture;
         private EventHandler OnDeviceReleased;
 
-
-        private static object locker = new object();
+        #region lockers
+        private static object locker1 = new object();
+        private static object locker2 = new object();
+        private static object locker3 = new object();
+        private static object locker4 = new object();
+        private static object locker5 = new object();
+        private static object locker6 = new object();
+        private static object locker7 = new object();
+        private static object locker8 = new object();
+        private static object locker9 = new object();
+        #endregion
 
         public ServerCommandDispatcher(TCPServerClientsControl _clients_control, ServerXmlState server_state, EventHandler on_client_id_changed, EventHandler on_client_measure_settings_changed, EventHandler on_measure_start_by_client, EventHandler on_measure_stop_by_client, EventHandler on_client_connected, EventHandler on_client_disconnected, EventHandler on_device_try_capture, EventHandler on_device_released)
         {
@@ -115,7 +124,7 @@ namespace TeraMicroMeasure.CommandProcessors
 
         internal void RemoveDeviceFromServerState(DeviceType typeId, string serial)
         {
-            lock (locker)
+            lock (locker1)
             {
                 currentServerState.RemoveDevice((int)typeId, serial);
                 RefreshCurrentServerStateOnClientControl();
@@ -125,7 +134,7 @@ namespace TeraMicroMeasure.CommandProcessors
         internal void AddDeviceToServerState(DeviceXMLState deviceXMLState)
         {
             DeviceXMLState ds = new DeviceXMLState(deviceXMLState.InnerXml);
-            lock(locker)
+            lock(locker2)
             {
                 currentServerState.AddOrReplaceDevice(ds);
                 RefreshCurrentServerStateOnClientControl();
@@ -136,10 +145,18 @@ namespace TeraMicroMeasure.CommandProcessors
         internal void ReplaceDeviceOnServerState(DeviceXMLState xml_device)
         {
             DeviceXMLState ds = new DeviceXMLState(xml_device.InnerXml);
-            lock (locker)
+            lock (locker3)
             {
                 currentServerState.AddOrReplaceDevice(ds);
                 RefreshCurrentServerStateOnClientControl();
+            }
+        }
+
+        public Dictionary<string, DeviceXMLState> GetServerDevices()
+        {
+            lock(locker9)
+            {
+                return currentServerState.Devices;
             }
         }
         
@@ -151,7 +168,7 @@ namespace TeraMicroMeasure.CommandProcessors
 
         private void RefreshCurrentServerStateOnClientControl()
         {
-            lock (locker)
+            lock (locker4)
             {
                 clientsControl.Answer = currentServerState.InnerXml;
             }
@@ -165,7 +182,7 @@ namespace TeraMicroMeasure.CommandProcessors
 
         private void OnClientMessageReceived_Handler(object sender, EventArgs e)
         {
-            lock (locker)
+            lock (locker5)
             {
 
                 NormaTCPClientEventArgs a = e as NormaTCPClientEventArgs;
@@ -230,10 +247,26 @@ namespace TeraMicroMeasure.CommandProcessors
             }
             if (!last_cs.MeasureState.MeasureStartFlag && cs.MeasureState.MeasureStartFlag)
             {
+                Debug.WriteLine("Measure On \n" + cs.MeasureState.MeasureStartFlag.ToString());
                 OnMeasureStartByClient?.Invoke(cs, new EventArgs());
             }else if (last_cs.MeasureState.MeasureStartFlag && !cs.MeasureState.MeasureStartFlag)
             {
+                Debug.WriteLine("Measure Off \n" + cs.MeasureState.MeasureStartFlag.ToString());
                 OnMeasureStopByClient?.Invoke(cs, new EventArgs());
+            }
+        }
+
+        public void RefreshServerMeasureXMLState(MeasureXMLState new_state)
+        {
+            lock(locker8)
+            {
+                if (currentServerState.ServerClientState.MeasureState.StateId != new_state.StateId)
+                {
+                    ClientXmlState cs = new ClientXmlState(currentServerState.ServerClientState.InnerXml);
+                    cs.MeasureState = new MeasureXMLState(new_state.InnerXml);
+                    processClientAsAlreadyConnected(cs, currentServerState.ServerClientState);                    
+                    currentServerState.ServerClientState = cs;
+                } 
             }
         }
 
@@ -257,7 +290,7 @@ namespace TeraMicroMeasure.CommandProcessors
 
         private void OnClientDisconnected_Handler(object client, EventArgs e)
         {
-            lock (locker)
+            lock (locker6)
             {
                 NormaTCPClient cl = client as NormaTCPClient;
                 string ip = cl.RemoteIP as string;
@@ -271,7 +304,7 @@ namespace TeraMicroMeasure.CommandProcessors
 
         private void ClientDisconnectionTimer_Handler(object sender, EventArgs e)
         {
-            lock (locker)
+            lock (locker7)
             {
                 ClientDisconnectionTimer t = sender as ClientDisconnectionTimer;
                 if (currentServerState.Clients.ContainsKey(t.ClientIp) && WillDisconnectedIPList.Contains(t.ClientIp))

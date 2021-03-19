@@ -44,6 +44,7 @@
             this.beforeMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
             this.temperatureComboBox = new System.Windows.Forms.Label();
             this.measurePanel = new System.Windows.Forms.Panel();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.selectDevicePanel = new System.Windows.Forms.Panel();
             this.deviceControlButton = new System.Windows.Forms.Button();
             this.startMeasureButton = new System.Windows.Forms.Button();
@@ -60,7 +61,6 @@
             this.v500_RadioButton = new System.Windows.Forms.RadioButton();
             this.v100_RadioButton = new System.Windows.Forms.RadioButton();
             this.v10_RadioButton = new System.Windows.Forms.RadioButton();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
             this.measuredParametersGroupBox.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -274,6 +274,14 @@
             this.measurePanel.Size = new System.Drawing.Size(1108, 861);
             this.measurePanel.TabIndex = 6;
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(17, 551);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(1079, 289);
+            this.richTextBox1.TabIndex = 7;
+            this.richTextBox1.Text = "";
+            // 
             // selectDevicePanel
             // 
             this.selectDevicePanel.Controls.Add(this.deviceControlButton);
@@ -442,14 +450,6 @@
             this.v10_RadioButton.TabStop = true;
             this.v10_RadioButton.Text = "10 В";
             this.v10_RadioButton.UseVisualStyleBackColor = true;
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(17, 551);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(1079, 289);
-            this.richTextBox1.TabIndex = 7;
-            this.richTextBox1.Text = "";
             // 
             // MeasureForm
             // 

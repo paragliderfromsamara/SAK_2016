@@ -57,7 +57,6 @@ namespace NormaLib.Devices
                     d.ReleaseDeviceFromClient();
                     return d.GetXMLState();
                 }
-                else return null;
             }
             return null;
         }

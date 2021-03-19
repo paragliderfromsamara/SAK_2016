@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaLib.Utils;
 using NormaLib.Devices.XmlObjects;
+
+
 namespace TeraMicroMeasure.XmlObjects
 {
     public class ServerXmlStateEventArgs : EventArgs
@@ -39,6 +41,27 @@ namespace TeraMicroMeasure.XmlObjects
 
         }
 
+        private ClientXmlState _server_client_state;
+        public ClientXmlState ServerClientState
+        {
+            get
+            {
+                if (_server_client_state == null)
+                {
+                    ServerClientState = new ClientXmlState();
+                    ServerClientState.ClientID = 0;
+                }
+                return _server_client_state;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _server_client_state = value;
+                    setChangedFlag(true);
+                }
+            }
+        }
 
         string ip_address;
         /// <summary>
@@ -192,6 +215,25 @@ namespace TeraMicroMeasure.XmlObjects
             fillRequestPeriodFromXML();
             fillClientsFromXML();
             fillDevicesFromXML();
+            fillMeasureStateFromXML();
+        }
+
+        private void fillMeasureStateFromXML()
+        {
+            ClientXmlState cs = new ClientXmlState();
+
+            try
+            {
+                cs = new ClientXmlState(getOuterOfXMLObject(cs.RootElementTagName));
+                if (cs.IsValid) ServerClientState = cs;
+            }
+            catch (System.Xml.XmlException)
+            {
+                ServerClientState = new ClientXmlState();
+                ServerClientState.ClientID = 0;
+            }
+            //s.InnerXml = getOuterOfXMLObject(s.RootElementTagName);
+
         }
 
         private void fillDevicesFromXML()
@@ -237,6 +279,7 @@ namespace TeraMicroMeasure.XmlObjects
             setXmlProp(RequestPeriod_TagName, request_period.ToString());
             addClientsToXML();
             addDevicesToXML();
+            AddXMLObject(ServerClientState);
         }
 
         private void addDevicesToXML()

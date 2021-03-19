@@ -18,6 +18,7 @@ using TeraMicroMeasure.CommandProcessors;
 using TeraMicroMeasure.Forms;
 using System.Threading;
 using NormaLib.SocketControl;
+using System.Diagnostics;
 using TeraMicroMeasure.Properties;
 
 namespace TeraMicroMeasure
@@ -63,7 +64,6 @@ namespace TeraMicroMeasure
                     else InitAsClientApp();
                     InitDeviceFinder();
                 };
-                
             }
             else
             {
@@ -472,11 +472,7 @@ namespace TeraMicroMeasure
             if (serverCommandDispatcher != null)
             {
                 serverCommandDispatcher.ReplaceDeviceOnServerState(xml_device);
-            }
-
-            if (xml_device.ClientId == SettingsControl.GetClientId() && OpenedMeasureForm != null)
-            {
-                OpenedMeasureForm.RefreshCapturedXmlDevice(xml_device);
+                CheckDeviceListChanges(serverCommandDispatcher.GetServerDevices());
             }
         }
 
@@ -486,6 +482,7 @@ namespace TeraMicroMeasure
             if (DeviceDispatcher != null)
             {
                 DeviceXMLState ds = DeviceDispatcher.ReleaseDeviceAndGetDeviceXmlState(cs.ClientID);
+
                 if (ds != null)
                 {
                     ReplaceDeviceXMLStateOnServerCommandDispatcher(ds);
@@ -528,17 +525,17 @@ namespace TeraMicroMeasure
             {
                 ClientListChangedEventArgs a = e as ClientListChangedEventArgs;
                 RefreshTestLinesMenuItems(a.OnFocusClientState);
-                if (a.OnFocusClientState.ClientID == SettingsControl.GetClientId())RefreshMeasureStateOnMeasureForm(a.OnFocusClientState.MeasureState);
+                //if (a.OnFocusClientState.ClientID == SettingsControl.GetClientId())RefreshMeasureStateOnMeasureForm(a.OnFocusClientState.MeasureState);
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
                 CheckClientUseOnDataBaseAsync(a.OnFocusClientState.ClientID);
             }
         }
 
-        private void CheckClientUseOnDataBaseAsync(int client_id)
+        private async void CheckClientUseOnDataBaseAsync(int client_id)
         {
             DBNormaMeasureTablesMigration cbt = new DBNormaMeasureTablesMigration();
             MySQLDBControl c = new MySQLDBControl(cbt.DBName);
-            c.CreateIfNotExists($"NM_Client{client_id}", cbt.DBName, DefaultDbPassword).GetAwaiter();
+            await c.CreateIfNotExists($"NM_Client{client_id}", cbt.DBName, DefaultDbPassword);
             c.Dispose();
         }
 
@@ -589,8 +586,10 @@ namespace TeraMicroMeasure
             }
         }
 
+
         private void OnMeasureSettingsChanged_Handler(object sender, EventArgs e)
         {
+            /*
             if (InvokeRequired)
             {
                 BeginInvoke(new EventHandler(OnMeasureSettingsChanged_Handler), new object[] { sender, e });
@@ -598,8 +597,9 @@ namespace TeraMicroMeasure
             else
             {
                 MeasureSettingsChangedEventArgs a = e as MeasureSettingsChangedEventArgs;
-                if (a.ClientId == SettingsControl.GetClientId()) RefreshMeasureStateOnMeasureForm(a.MeasureState_New);
+                if (a.ClientId == SettingsControl.GetClientId() && a.ClientId != SettingsControl.GetClientId()) RefreshMeasureStateOnMeasureForm(a.MeasureState_New);
             }
+            */
         }
 
         private void RefreshMeasureStateOnMeasureForm(MeasureXMLState new_state)
@@ -734,14 +734,16 @@ namespace TeraMicroMeasure
                 {
                     case DeviceType.Microohmmeter:
                     case DeviceType.Teraohmmeter:
-                        xmlDevices.Add($"{dxl.TypeId}-{dxl.Serial}", dxl);//AddSimpleDeviceToSettingsFile(d);
-                        OnDeviceConnectedToServer_Handler(dxl);
+                        //xmlDevices.Add($"{dxl.TypeId}-{dxl.Serial}", dxl);//AddSimpleDeviceToSettingsFile(d);
+                        OnDeviceConnected_Handler(dxl);
                         break;
                 }
                 if (IsServerApp)
                 {
                     AddDeviceToServerCommandDispatcher(d);
+                   
                 }
+                
                 //MessageBox.Show($"Подключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
                 //AddOrUpdateDeviceOnToolStrip(d);
 
@@ -777,8 +779,6 @@ namespace TeraMicroMeasure
                         ReplaceDeviceXMLStateOnServerCommandDispatcher(d.GetXMLState());
                     }
                 }
-
-
             }
         }
 
@@ -789,7 +789,6 @@ namespace TeraMicroMeasure
             if (IsServerApp)
             {
                 RemoveDeviceFromServerCommandDispatcher(d);
-                
             }
         }
 
@@ -798,6 +797,7 @@ namespace TeraMicroMeasure
             if (serverCommandDispatcher != null)
             {
                 serverCommandDispatcher.RemoveDeviceFromServerState(d.TypeId, d.Serial);
+                CheckDeviceListChanges(serverCommandDispatcher.GetServerDevices());
             }
         }
 
@@ -815,6 +815,7 @@ namespace TeraMicroMeasure
             if (serverCommandDispatcher != null)
             {
                 serverCommandDispatcher.AddDeviceToServerState(d.GetXMLState());
+                CheckDeviceListChanges(serverCommandDispatcher.GetServerDevices());
             }
         }
 
@@ -829,7 +830,11 @@ namespace TeraMicroMeasure
 
         private void RefreshMeasureStateOnServerSide(object arg1, EventArgs arg2)
         {
-            
+            if (serverCommandDispatcher != null)
+            {
+                MeasureXMLState s = arg1 as MeasureXMLState;
+                serverCommandDispatcher.RefreshServerMeasureXMLState(s);
+            }
         }
 
         private void CheckDeviceListChanges(Dictionary<string, DeviceXMLState> devices)
@@ -846,7 +851,7 @@ namespace TeraMicroMeasure
                 {
                     DeviceXMLState ds = new DeviceXMLState(devices[key].InnerXml);
                     xmlDevices.Add(key, ds);
-                    OnDeviceConnectedToServer_Handler(ds);
+                    OnDeviceConnected_Handler(ds);
                 }
                 listWasChanged = true;
             }
@@ -902,7 +907,7 @@ namespace TeraMicroMeasure
                     else
                     {
                         xmlDevices.Add(key, devices[key]);
-                        OnDeviceConnectedToServer_Handler(xmlDevices[key]);
+                        OnDeviceConnected_Handler(xmlDevices[key]);
                         listWasChanged = true;
                     }
                 }
@@ -934,8 +939,9 @@ namespace TeraMicroMeasure
             //}
         }
 
-        private void OnDeviceConnectedToServer_Handler(DeviceXMLState xml_device)
+        private void OnDeviceConnected_Handler(DeviceXMLState xml_device)
         {
+            if (OpenedMeasureForm != null) OpenedMeasureForm.SetXmlDeviceList(xmlDevices);
             //MessageBox.Show($"Подключен {xml_device.TypeNameFull}");
         }
 
@@ -961,7 +967,6 @@ namespace TeraMicroMeasure
         {
             //MessageBox.Show($"Отключен {xml_device.TypeNameFull}");
             DisconnectDeviceFromMeasureForm(xml_device);
-
         }
         private void OnXmlDevicesListChanged_Handler()
         {

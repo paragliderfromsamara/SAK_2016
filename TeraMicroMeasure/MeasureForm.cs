@@ -112,8 +112,6 @@ namespace TeraMicroMeasure
         public MeasureForm(ClientXmlState client_state) : this(client_state.ClientID)
         {
             MeasureState = client_state.MeasureState;
-            
-
         }
 
         private void SetCapturedDeviceTypeId()
@@ -486,8 +484,10 @@ namespace TeraMicroMeasure
             int i = 0;
             foreach (var d in remoteDevices.Values)
             {
-                if (i == availableDevices.SelectedIndex)
+                if (d.TypeId != (int)CapturedDeviceType) continue;
+                if (i++ == availableDevices.SelectedIndex)
                 {
+                    richTextBox1.Text = $"FormClientId = {clientID}\nDeviceClientId = {d.ClientId}\nDeviceName = {d.TypeNameFull}";
                     if (d.ClientId == -1 || d.ClientId == clientID)
                     {
                         serial = d.Serial;
@@ -498,7 +498,7 @@ namespace TeraMicroMeasure
 
                     break;
                 }
-                i++;
+                //i++;
             }
             if (!String.IsNullOrWhiteSpace(serial))
             {
@@ -789,7 +789,6 @@ namespace TeraMicroMeasure
                     MeasureStateOnFormChanged();
                     break;
             }
-            
         }
 
     }
