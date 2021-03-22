@@ -84,16 +84,12 @@
             this.cableComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cableComboBox.FormattingEnabled = true;
             this.cableComboBox.Items.AddRange(new object[] {
-            "Кабель 1",
-            "Кабель 2",
-            "Кабель 3",
-            "Кабель 4"});
+            "Список пуст"});
             this.cableComboBox.Location = new System.Drawing.Point(17, 62);
             this.cableComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.cableComboBox.Name = "cableComboBox";
             this.cableComboBox.Size = new System.Drawing.Size(367, 31);
             this.cableComboBox.TabIndex = 0;
-            this.cableComboBox.SelectedValueChanged += new System.EventHandler(this.cableComboBox_SelectedValueChanged);
             // 
             // label1
             // 

@@ -23,7 +23,6 @@ namespace TeraMicroMeasure
         bool IsOnline = false;
         int clientID;
         bool MeasureIsStartedOnDevice;
-        int tryMeasureStartCounter;
 
         private DBEntityTable Cables;
         private Cable currentCable;
@@ -116,7 +115,7 @@ namespace TeraMicroMeasure
 
         private void InitMeasureDraft()
         {
-            testFile = new CableTestIni(currentCable);
+           if (currentCable != null) testFile = new CableTestIni(currentCable);
         }
 
         private void LoadCables()
@@ -124,9 +123,20 @@ namespace TeraMicroMeasure
             try
             {
                 Cables = Cable.get_all_as_table();
-                cableComboBox.DataSource = Cables;
-                cableComboBox.DisplayMember = Cable.FullCableName_ColumnName;
-                cableComboBox.ValueMember = Cable.CableId_ColumnName;
+                if (Cables.Rows.Count > 0)
+                {
+                    cableComboBox.SelectedValueChanged += MeasuredCableComboBox_SelectedValueChanged;
+                    cableComboBox.DataSource = Cables;
+                    cableComboBox.DisplayMember = Cable.FullCableName_ColumnName;
+                    cableComboBox.ValueMember = Cable.CableId_ColumnName;
+                }else
+                {
+                    cableComboBox.Text = "Список кабелей пуст";
+                    cableComboBox.SelectedIndex = 0;
+                    cableComboBox.Enabled = false;
+                    cableStructureCB.Enabled = false;
+                }
+
             }catch
             {
                 MessageBox.Show("Не удалось загрузить список кабелей");
@@ -296,11 +306,15 @@ namespace TeraMicroMeasure
 
         private void SetCableIDFromXmlState()
         {
-            if (measureState.MeasuredCableID < 0 || measureState.MeasuredCableID > cableComboBox.Items.Count)
+            if (Cables.Rows.Count > 0)
             {
-                measureState.MeasuredCableID = 0;
+                if (measureState.MeasuredCableID < 0 || measureState.MeasuredCableID > cableComboBox.Items.Count)
+                {
+                    measureState.MeasuredCableID = 0;
+                }
+                cableComboBox.SelectedIndex = measureState.MeasuredCableID;
             }
-            cableComboBox.SelectedIndex = measureState.MeasuredCableID;
+
         }
 
         private void SetVoltageFromXmlState()
@@ -550,7 +564,6 @@ namespace TeraMicroMeasure
                     startMeasureButton.Text = "Запускается...";
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
-                    tryMeasureStartCounter = 3;
                     break;
                 case MeasureStatus.STARTED:
                     startMeasureButton.Text = "Остановить измерение";
