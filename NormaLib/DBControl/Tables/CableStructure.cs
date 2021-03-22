@@ -521,6 +521,23 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        /// <summary>
+        /// Достает MeasuredParameterTypeId используемые текущей структурой
+        /// </summary>
+        public uint[] MeasuredParameterTypes_ids
+        {
+            get
+            {
+                List<uint> idsList = new List<uint>();
+                foreach (CableStructureMeasuredParameterData csmpd in MeasuredParameters.Rows)
+                {
+                    idsList.Add(csmpd.ParameterTypeId);
+                }
+                
+                return idsList.ToArray();
+            }
+        }
+
         public bool HasFreqParameters
         {
             get

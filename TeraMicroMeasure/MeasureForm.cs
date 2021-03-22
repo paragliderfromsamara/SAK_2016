@@ -11,6 +11,7 @@ using TeraMicroMeasure.XmlObjects;
 using NormaLib.Devices;
 using NormaLib.Devices.XmlObjects;
 using NormaLib.DBControl.Tables;
+using NormaLib.DBControl;
 
 namespace TeraMicroMeasure
 {
@@ -23,6 +24,11 @@ namespace TeraMicroMeasure
         int clientID;
         bool MeasureIsStartedOnDevice;
         int tryMeasureStartCounter;
+
+        private DBEntityTable Cables;
+        private Cable currentCable;
+        private CableStructure currentStructure;
+
         private DeviceCaptureStatus device_capture_status;
         public DeviceCaptureStatus DeviceCaptureStatus => device_capture_status;
 
@@ -69,7 +75,7 @@ namespace TeraMicroMeasure
 
         bool isCurrentPCClient;
         private MeasureXMLState measureState;
-        private ServerXmlState serverState;
+        private CableTestIni testFile;
         public bool HasState => measureState != null;
         private Dictionary<string, DeviceXMLState> remoteDevices = new Dictionary<string, DeviceXMLState>();
 
@@ -99,10 +105,32 @@ namespace TeraMicroMeasure
             IsOnline = isCurrentPCClient = clientID == SettingsControl.GetClientId();
             //////////////////////////////////////////////////////////////
             ResetMeasureField();
+            LoadCables();
+            InitMeasureDraft();
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
             SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
             SetCapturedDeviceTypeId();
+
+        }
+
+        private void InitMeasureDraft()
+        {
+            testFile = new CableTestIni(currentCable);
+        }
+
+        private void LoadCables()
+        {
+            try
+            {
+                Cables = Cable.get_all_as_table();
+                cableComboBox.DataSource = Cables;
+                cableComboBox.DisplayMember = Cable.FullCableName_ColumnName;
+                cableComboBox.ValueMember = Cable.CableId_ColumnName;
+            }catch
+            {
+                MessageBox.Show("Не удалось загрузить список кабелей");
+            }
         }
 
         /// <summary>
@@ -791,6 +819,49 @@ namespace TeraMicroMeasure
             }
         }
 
+
+        private void cableComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}")[0]);
+                cableStructureCB.Items.Clear();
+                foreach (CableStructure cs in currentCable.CableStructures.Rows)
+                {
+                    cableStructureCB.Items.Add(cs.StructureTitle);
+                }
+                cableStructureCB.SelectedIndex = 0;
+                cableStructureCB.Enabled = currentCable.CableStructures.Rows.Count > 1;
+            }
+            catch (EvaluateException ex)
+            {
+                //
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}", "Ошибка загрузки структур", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+           // string s = $"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}";
+            //foreach (DataColumn c in Cables.Columns) s += $"{c.ColumnName}\n";
+           // MessageBox.Show(s);
+                        //currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}")[0]);
+
+                /*
+                currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}")[0]);
+                cableStructureCB.Items.Clear();
+                foreach(CableStructure cs in currentCable.CableStructures.Rows)
+                {
+                    cableStructureCB.Items.Add(cs.StructureTitle);
+                }
+                //MessageBox.Show("Ха!");
+            */
+        }
+
+        private void cableStructureCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentStructure = currentCable.CableStructures.Rows[cableStructureCB.SelectedIndex] as CableStructure;
+
+        }
     }
 
 

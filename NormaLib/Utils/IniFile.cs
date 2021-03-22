@@ -48,6 +48,13 @@ namespace NormaLib.Utils
             return v;
         }
 
+        public float ReadFloat(string Key, string Section = null, float def_value = 0.0f)
+        {
+            string sv = Read(Key, Section);
+            float.TryParse(sv, out def_value);
+            return def_value;
+        }
+
         public void DeleteKey(string Key, string Section = null)
         {
             Write(Key, null, Section ?? EXE);

@@ -210,6 +210,24 @@ namespace NormaLib.DBControl.Tables
 
         public string RefText => $"parameter_{ParameterTypeId}";
 
+        public static int MeasurePointNumberPerStructureElement(uint parameter_type_id, int leads_number)
+        {
+            switch (parameter_type_id)
+            {
+                case Rleads:
+                case Risol1:
+                case Risol2:
+                case Co:
+                    return leads_number;
+                case Cp:
+                case Ea:
+                case dR:
+                case al:
+                    return (leads_number / 2);
+                default:
+                    return 1;
+            }
+        }
 
 
         #region Колонки таблицы
