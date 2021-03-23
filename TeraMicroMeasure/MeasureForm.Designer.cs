@@ -65,6 +65,17 @@
             this.measuredParametersGroupBox = new System.Windows.Forms.GroupBox();
             this.RizolRadioButton = new System.Windows.Forms.RadioButton();
             this.RleadRadioButton = new System.Windows.Forms.RadioButton();
+            this.ElementNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubElement_1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubElement_2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubElement_3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubElement_4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IsMeasuredFlag = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonPrevPoint = new System.Windows.Forms.Button();
+            this.buttonNextPoint = new System.Windows.Forms.Button();
+            this.labelPointNumber = new System.Windows.Forms.Label();
+            this.buttonNextElement = new System.Windows.Forms.Button();
+            this.buttonPrevElement = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).BeginInit();
@@ -103,7 +114,7 @@
             // 
             // cableLengthNumericUpDown
             // 
-            this.cableLengthNumericUpDown.Location = new System.Drawing.Point(99, 263);
+            this.cableLengthNumericUpDown.Location = new System.Drawing.Point(247, 250);
             this.cableLengthNumericUpDown.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -126,7 +137,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(94, 237);
+            this.label2.Location = new System.Drawing.Point(242, 224);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(90, 23);
             this.label2.TabIndex = 3;
@@ -215,6 +226,11 @@
             // measurePanel
             // 
             this.measurePanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.measurePanel.Controls.Add(this.buttonPrevElement);
+            this.measurePanel.Controls.Add(this.buttonNextElement);
+            this.measurePanel.Controls.Add(this.labelPointNumber);
+            this.measurePanel.Controls.Add(this.buttonNextPoint);
+            this.measurePanel.Controls.Add(this.buttonPrevPoint);
             this.measurePanel.Controls.Add(this.label3);
             this.measurePanel.Controls.Add(this.cableStructureCB);
             this.measurePanel.Controls.Add(this.neasureResultPanel);
@@ -238,7 +254,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 334);
+            this.label3.Location = new System.Drawing.Point(8, 223);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(98, 23);
             this.label3.TabIndex = 17;
@@ -248,7 +264,7 @@
             // 
             this.cableStructureCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cableStructureCB.FormattingEnabled = true;
-            this.cableStructureCB.Location = new System.Drawing.Point(17, 360);
+            this.cableStructureCB.Location = new System.Drawing.Point(12, 249);
             this.cableStructureCB.Name = "cableStructureCB";
             this.cableStructureCB.Size = new System.Drawing.Size(218, 31);
             this.cableStructureCB.TabIndex = 16;
@@ -267,10 +283,18 @@
             this.measureResultDataGrid.AllowUserToAddRows = false;
             this.measureResultDataGrid.AllowUserToDeleteRows = false;
             this.measureResultDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.measureResultDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ElementNumber,
+            this.SubElement_1,
+            this.SubElement_2,
+            this.SubElement_3,
+            this.SubElement_4,
+            this.IsMeasuredFlag});
             this.measureResultDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.measureResultDataGrid.Location = new System.Drawing.Point(0, 0);
             this.measureResultDataGrid.Name = "measureResultDataGrid";
             this.measureResultDataGrid.ReadOnly = true;
+            this.measureResultDataGrid.RowHeadersVisible = false;
             this.measureResultDataGrid.Size = new System.Drawing.Size(626, 434);
             this.measureResultDataGrid.TabIndex = 0;
             // 
@@ -496,6 +520,98 @@
             this.RleadRadioButton.UseVisualStyleBackColor = true;
             this.RleadRadioButton.CheckedChanged += new System.EventHandler(this.MeasureTypeRadioButton_CheckedChanged_Common);
             // 
+            // ElementNumber
+            // 
+            this.ElementNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ElementNumber.DataPropertyName = "element_number";
+            this.ElementNumber.HeaderText = "№ Элемента";
+            this.ElementNumber.Name = "ElementNumber";
+            this.ElementNumber.ReadOnly = true;
+            // 
+            // SubElement_1
+            // 
+            this.SubElement_1.DataPropertyName = "measure_1";
+            this.SubElement_1.HeaderText = "Измерение 1";
+            this.SubElement_1.Name = "SubElement_1";
+            this.SubElement_1.ReadOnly = true;
+            // 
+            // SubElement_2
+            // 
+            this.SubElement_2.DataPropertyName = "measure_2";
+            this.SubElement_2.HeaderText = "Измерение 2";
+            this.SubElement_2.Name = "SubElement_2";
+            this.SubElement_2.ReadOnly = true;
+            // 
+            // SubElement_3
+            // 
+            this.SubElement_3.DataPropertyName = "measure_3";
+            this.SubElement_3.HeaderText = "Измерение 3";
+            this.SubElement_3.Name = "SubElement_3";
+            this.SubElement_3.ReadOnly = true;
+            // 
+            // SubElement_4
+            // 
+            this.SubElement_4.DataPropertyName = "measure_4";
+            this.SubElement_4.HeaderText = "Измерение 4";
+            this.SubElement_4.Name = "SubElement_4";
+            this.SubElement_4.ReadOnly = true;
+            // 
+            // IsMeasuredFlag
+            // 
+            this.IsMeasuredFlag.HeaderText = "Column1";
+            this.IsMeasuredFlag.Name = "IsMeasuredFlag";
+            this.IsMeasuredFlag.ReadOnly = true;
+            this.IsMeasuredFlag.Visible = false;
+            // 
+            // buttonPrevPoint
+            // 
+            this.buttonPrevPoint.Location = new System.Drawing.Point(72, 351);
+            this.buttonPrevPoint.Name = "buttonPrevPoint";
+            this.buttonPrevPoint.Size = new System.Drawing.Size(45, 49);
+            this.buttonPrevPoint.TabIndex = 18;
+            this.buttonPrevPoint.Text = "<";
+            this.buttonPrevPoint.UseVisualStyleBackColor = true;
+            this.buttonPrevPoint.Click += new System.EventHandler(this.buttonPrevPoint_Click);
+            // 
+            // buttonNextPoint
+            // 
+            this.buttonNextPoint.Location = new System.Drawing.Point(228, 351);
+            this.buttonNextPoint.Name = "buttonNextPoint";
+            this.buttonNextPoint.Size = new System.Drawing.Size(45, 49);
+            this.buttonNextPoint.TabIndex = 19;
+            this.buttonNextPoint.Text = ">";
+            this.buttonNextPoint.UseVisualStyleBackColor = true;
+            this.buttonNextPoint.Click += new System.EventHandler(this.buttonNextPoint_Click);
+            // 
+            // labelPointNumber
+            // 
+            this.labelPointNumber.AutoSize = true;
+            this.labelPointNumber.Location = new System.Drawing.Point(165, 364);
+            this.labelPointNumber.Name = "labelPointNumber";
+            this.labelPointNumber.Size = new System.Drawing.Size(20, 23);
+            this.labelPointNumber.TabIndex = 20;
+            this.labelPointNumber.Text = "0";
+            // 
+            // buttonNextElement
+            // 
+            this.buttonNextElement.Location = new System.Drawing.Point(279, 351);
+            this.buttonNextElement.Name = "buttonNextElement";
+            this.buttonNextElement.Size = new System.Drawing.Size(49, 49);
+            this.buttonNextElement.TabIndex = 21;
+            this.buttonNextElement.Text = ">>";
+            this.buttonNextElement.UseVisualStyleBackColor = true;
+            this.buttonNextElement.Click += new System.EventHandler(this.buttonNextElement_Click);
+            // 
+            // buttonPrevElement
+            // 
+            this.buttonPrevElement.Location = new System.Drawing.Point(17, 351);
+            this.buttonPrevElement.Name = "buttonPrevElement";
+            this.buttonPrevElement.Size = new System.Drawing.Size(49, 49);
+            this.buttonPrevElement.TabIndex = 22;
+            this.buttonPrevElement.Text = "<<";
+            this.buttonPrevElement.UseVisualStyleBackColor = true;
+            this.buttonPrevElement.Click += new System.EventHandler(this.buttonPrevElement_Click);
+            // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
@@ -569,5 +685,16 @@
         private System.Windows.Forms.ComboBox cableStructureCB;
         private System.Windows.Forms.Panel neasureResultPanel;
         private System.Windows.Forms.DataGridView measureResultDataGrid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ElementNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SubElement_1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SubElement_2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SubElement_3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SubElement_4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IsMeasuredFlag;
+        private System.Windows.Forms.Label labelPointNumber;
+        private System.Windows.Forms.Button buttonNextPoint;
+        private System.Windows.Forms.Button buttonPrevPoint;
+        private System.Windows.Forms.Button buttonPrevElement;
+        private System.Windows.Forms.Button buttonNextElement;
     }
 }

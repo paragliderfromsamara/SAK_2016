@@ -34,6 +34,7 @@ namespace TeraMicroMeasure
         private MeasureStatus measureStatus = MeasureStatus.STOPPED;
         private DeviceXMLState current_device_state;
 
+      
 
         public int ClientID
         {
@@ -104,28 +105,62 @@ namespace TeraMicroMeasure
             IsOnline = isCurrentPCClient = clientID == SettingsControl.GetClientId();
             //////////////////////////////////////////////////////////////
             ResetMeasureField();
-            LoadCables();
-            InitMeasureDraft();
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
             SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
             SetCapturedDeviceTypeId();
-
+            LoadCables();
+            InitMeasureDraft();
         }
 
         private void InitMeasureDraft()
         {
-           if (currentCable != null) testFile = new CableTestIni(currentCable);
+            if (Cables.Rows.Count == 0) return;
+            testFile = new CableTestIni();
+            if (testFile.CableID == 0)
+                SetCurrentCable(Cables.Rows[0] as Cable);
+            else
+            {
+                DataRow[] dRows = Cables.Select($"{Cable.CableId_ColumnName} = {testFile.CableID}");
+                if (dRows.Length > 0)
+                {
+                    if (QuestionTestNotSaved() == DialogResult.Yes)
+                    {
+                        ResetMeasureDraft();
+                        SetCurrentCable(Cables.Rows[0] as Cable);
+                    }else
+                    {
+                        SetCurrentCable(dRows[0] as Cable);
+                    }
+                }
+            }
+        }
+
+        private void ResetMeasureDraft()
+        {
+            if (testFile != null) testFile.ResetFile();
+            testFile = new CableTestIni();
+        }
+
+        private DialogResult QuestionTestNotSaved()
+        {
+            return MessageBox.Show("Предыдущее испытание не сохранено.\nНажмите \"Да\" чтобы его продолжить, \"Нет\" - начать новое испытание, не сохраняя данных предыдущено испытания", "Предыдущее испытание не сохранено!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        }
+
+        private void SetCurrentCable(Cable cable)
+        {
+            cableComboBox.SelectedValue = cable.CableId;
         }
 
         private void LoadCables()
         {
-            try
-            {
+           try
+           {
                 Cables = Cable.get_all_as_table();
                 if (Cables.Rows.Count > 0)
                 {
                     cableComboBox.SelectedValueChanged += MeasuredCableComboBox_SelectedValueChanged;
+
                     cableComboBox.DataSource = Cables;
                     cableComboBox.DisplayMember = Cable.FullCableName_ColumnName;
                     cableComboBox.ValueMember = Cable.CableId_ColumnName;
@@ -262,7 +297,7 @@ namespace TeraMicroMeasure
             //if (!HasClientState) return;
             SetMeasureTypeFromXMLState();
             SetVoltageFromXmlState();
-            SetCableIDFromXmlState();
+            //SetCableIDFromXmlState();
             SetCableLengthFromXmlState();
             SetBeforeMeasureDelayFromXMLState();
             SetAfterMeasureDelayFromXMLState();
@@ -408,7 +443,6 @@ namespace TeraMicroMeasure
             v500_RadioButton.CheckedChanged += MeasuredVoltageRadioButton_CheckedChanged;
             v1000_RadioButton.CheckedChanged += MeasuredVoltageRadioButton_CheckedChanged;
 
-            cableComboBox.SelectedValueChanged += MeasuredCableComboBox_SelectedValueChanged;
             cableLengthNumericUpDown.ValueChanged += CableLengthNumericUpDown_ValueChanged;
 
             beforeMeasureDelayUpDown.ValueChanged += BeforeMeasureDelayUpDown_ValueChanged;
@@ -445,9 +479,42 @@ namespace TeraMicroMeasure
         private void MeasuredCableComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             ComboBox cb = sender as ComboBox;
-            measureState.MeasuredCableID = cb.SelectedIndex;
-            cableLengthNumericUpDown.ValueChanged += CableLengthNumericUpDown_ValueChanged;
-            MeasureStateOnFormChanged();
+            try
+            {
+                currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cb.SelectedValue}")[0]);
+                cableStructureCB.Items.Clear();
+                foreach (CableStructure cs in currentCable.CableStructures.Rows)
+                {
+                    cableStructureCB.Items.Add(cs.StructureTitle);
+                }
+                cableLengthNumericUpDown.ValueChanged += CableLengthNumericUpDown_ValueChanged;
+                cableStructureCB.SelectedIndex = 0;
+                cableStructureCB.Enabled = currentCable.CableStructures.Rows.Count > 1;
+                measureState.MeasuredCableID = (int)currentCable.CableId;
+                MeasureStateOnFormChanged();
+            }
+            catch (EvaluateException ex)
+            {
+                //
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}", "Ошибка загрузки структур", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            // string s = $"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}";
+            //foreach (DataColumn c in Cables.Columns) s += $"{c.ColumnName}\n";
+            // MessageBox.Show(s);
+            //currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}")[0]);
+
+            /*
+            currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}")[0]);
+            cableStructureCB.Items.Clear();
+            foreach(CableStructure cs in currentCable.CableStructures.Rows)
+            {
+                cableStructureCB.Items.Add(cs.StructureTitle);
+            }
+            //MessageBox.Show("Ха!");
+        */
         }
 
         private void RemoveHandlersFromInputs()
@@ -833,46 +900,86 @@ namespace TeraMicroMeasure
         }
 
 
-        private void cableComboBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}")[0]);
-                cableStructureCB.Items.Clear();
-                foreach (CableStructure cs in currentCable.CableStructures.Rows)
-                {
-                    cableStructureCB.Items.Add(cs.StructureTitle);
-                }
-                cableStructureCB.SelectedIndex = 0;
-                cableStructureCB.Enabled = currentCable.CableStructures.Rows.Count > 1;
-            }
-            catch (EvaluateException ex)
-            {
-                //
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{ex.Message}", "Ошибка загрузки структур", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-           // string s = $"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}";
-            //foreach (DataColumn c in Cables.Columns) s += $"{c.ColumnName}\n";
-           // MessageBox.Show(s);
-                        //currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}")[0]);
-
-                /*
-                currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}")[0]);
-                cableStructureCB.Items.Clear();
-                foreach(CableStructure cs in currentCable.CableStructures.Rows)
-                {
-                    cableStructureCB.Items.Add(cs.StructureTitle);
-                }
-                //MessageBox.Show("Ха!");
-            */
-        }
 
         private void cableStructureCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentStructure = currentCable.CableStructures.Rows[cableStructureCB.SelectedIndex] as CableStructure;
+            RefreshMeasureControl();
+        }
+
+        int currentPoint = 0;
+        int pointAmount = 0;
+        int subElementAmount = 0;
+        int elementAmount = 0;
+        private void RefreshMeasureControl()
+        {
+            int subElsCounter = MeasuredParameterType.MeasurePointNumberPerStructureElement(measureState.MeasureTypeId, currentStructure.StructureType.StructureLeadsAmount);
+            int[] valueColumns = new int[] { SubElement_1.Index, SubElement_2.Index, SubElement_3.Index, SubElement_4.Index };
+            measureResultDataGrid.Rows.Clear();
+            SubElement_1.Visible = true;
+            SubElement_2.Visible = subElsCounter > 1;
+            SubElement_3.Visible = subElsCounter > 2;
+            SubElement_4.Visible = subElsCounter > 3;
+
+            SubElement_1.HeaderText = subElsCounter > 1 ? "Жила 1" : "Результат";
+            SubElement_2.HeaderText = "Жила 2";
+            SubElement_3.HeaderText = "Жила 3";
+            SubElement_4.HeaderText = "Жила 4";
+
+            subElementAmount = subElsCounter;
+            pointAmount = subElsCounter * (int)currentStructure.RealAmount;
+            currentPoint = 0;
+            elementAmount = (int)currentStructure.RealAmount;
+            for (int i = 0; i < currentStructure.RealAmount; i++)
+            {
+                DataGridViewRow r = new DataGridViewRow();
+                r.CreateCells(measureResultDataGrid);
+                r.Cells[ElementNumber.Index].Value = $"{currentStructure.StructureType.StructureTypeName} {i+1}";
+                for(int j = 0; j < subElsCounter; j++)
+                {
+                    int pointIdx = i * subElsCounter + j;
+                    r.Cells[valueColumns[j]].Value = pointIdx;
+                }
+                measureResultDataGrid.Rows.Add(r);
+            }
+        }
+
+
+        private void buttonNextPoint_Click(object sender, EventArgs e)
+        {
+            labelPointNumber.Text = $"{++currentPoint}";
+        }
+
+        private void buttonPrevPoint_Click(object sender, EventArgs e)
+        {
+            labelPointNumber.Text = $"{--currentPoint}";
+        }
+
+        private void buttonNextElement_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonPrevElement_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RefreshControlButtons()
+        {
+            buttonPrevElement.Enabled = currentPoint > subElementAmount;
+            buttonPrevPoint.Enabled = currentPoint > 0;
+            buttonNextPoint.Enabled = currentPoint < pointAmount;
+            buttonNextElement.Enabled = currentPoint / subElementAmount != pointAmount || ;
+        }
+
+        private void SetPoint(int point_number)
+        {
+
+        }
+
+        private void SetPoint(int element_number, int sub_element_number)
+        {
 
         }
     }

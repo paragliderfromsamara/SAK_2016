@@ -6,17 +6,20 @@ using System.Threading.Tasks;
 using NormaLib.Utils;
 using NormaLib.DBControl.Tables;
 using NormaLib.DBControl;
+using System.IO;
 using System.Diagnostics;
 
 namespace TeraMicroMeasure
 {
     public class CableTestIni
     {
+        const string draft_name = @"cable_test_draft.ini";
         IniFile file;
+
 
         public CableTestIni()
         {
-            file = new IniFile("cable_test_draft.ini");
+            file = new IniFile(draft_name);
             ClientId = SettingsControl.GetClientId();
         }
 
@@ -136,6 +139,12 @@ namespace TeraMicroMeasure
                 while (StructureExists(i++));
                 return i;
             }
+        }
+
+        internal void ResetFile()
+        {
+            if (File.Exists(draft_name)) File.Delete(draft_name);
+            file = new IniFile(draft_name);
         }
 
         private bool StructureExists(int index)
