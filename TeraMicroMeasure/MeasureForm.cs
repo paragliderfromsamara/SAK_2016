@@ -102,7 +102,7 @@ namespace TeraMicroMeasure
         public MeasureForm(int client_id)
         {
             int curCLientId = SettingsControl.GetClientId();
-            InitializeComponent();
+            InitDesign();
             clientID = client_id;
             IsOnline = isCurrentPCClient = clientID == SettingsControl.GetClientId();
             //////////////////////////////////////////////////////////////
@@ -115,7 +115,12 @@ namespace TeraMicroMeasure
             InitMeasureDraft();
         }
 
-
+        private void InitDesign()
+        {
+            InitializeComponent();
+            measureResultDataGrid.ColumnHeadersDefaultCellStyle = BuildParameterNameCellStyle();
+            ElementNumber.DefaultCellStyle = BuildParameterNameCellStyle();
+        }
 
         private void InitMeasureDraft()
         {
@@ -1027,7 +1032,6 @@ namespace TeraMicroMeasure
                     break;
                 case Keys.Left:
                     buttonPrevPoint.PerformClick();
-                    MessageBox.Show("Нахуй!");
                     break;
             }
             switch (e.KeyData & Keys.KeyCode)
@@ -1043,7 +1047,37 @@ namespace TeraMicroMeasure
 
         }
 
+        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameCellStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
+            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            parameterNameCellStyle.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            parameterNameCellStyle.ForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.NullValue = "-";
+            parameterNameCellStyle.Padding = new System.Windows.Forms.Padding(3);
+            parameterNameCellStyle.SelectionBackColor = parameterNameCellStyle.BackColor;
+            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            return parameterNameCellStyle;
+        }
 
+        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameHeaderStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
+            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(201)))), ((int)(((byte)(0)))));
+            style.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            style.ForeColor = System.Drawing.Color.Gainsboro;
+            style.NullValue = "-";
+            style.Padding = new System.Windows.Forms.Padding(3);
+
+            style.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            style.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+            return style;
+        }
     }
 
 
