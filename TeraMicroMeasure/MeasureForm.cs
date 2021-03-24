@@ -12,6 +12,8 @@ using NormaLib.Devices;
 using NormaLib.Devices.XmlObjects;
 using NormaLib.DBControl.Tables;
 using NormaLib.DBControl;
+using NormaLib.Measure;
+using System.Diagnostics;
 
 namespace TeraMicroMeasure
 {
@@ -907,80 +909,94 @@ namespace TeraMicroMeasure
             RefreshMeasureControl();
         }
 
-        int currentPoint = 0;
-        int pointAmount = 0;
-        int subElementAmount = 0;
-        int elementAmount = 0;
+        MeasurePointMap measurePointMap;
         private void RefreshMeasureControl()
         {
-            int subElsCounter = MeasuredParameterType.MeasurePointNumberPerStructureElement(measureState.MeasureTypeId, currentStructure.StructureType.StructureLeadsAmount);
+            InitPointMapForCurrentStructureAndCurrentMeasureType();
+            //int subElsCounter = MeasuredParameterType.MeasurePointNumberPerStructureElement(measureState.MeasureTypeId, currentStructure.StructureType.StructureLeadsAmount);
             int[] valueColumns = new int[] { SubElement_1.Index, SubElement_2.Index, SubElement_3.Index, SubElement_4.Index };
             measureResultDataGrid.Rows.Clear();
             SubElement_1.Visible = true;
-            SubElement_2.Visible = subElsCounter > 1;
-            SubElement_3.Visible = subElsCounter > 2;
-            SubElement_4.Visible = subElsCounter > 3;
+            SubElement_2.Visible = measurePointMap.MeasurePointsPerElement > 1;
+            SubElement_3.Visible = measurePointMap.MeasurePointsPerElement > 2;
+            SubElement_4.Visible = measurePointMap.MeasurePointsPerElement > 3;
 
-            SubElement_1.HeaderText = subElsCounter > 1 ? "Жила 1" : "Результат";
+            SubElement_1.HeaderText = measurePointMap.MeasurePointsPerElement > 1 ? "Жила 1" : "Результат";
             SubElement_2.HeaderText = "Жила 2";
             SubElement_3.HeaderText = "Жила 3";
             SubElement_4.HeaderText = "Жила 4";
 
-            subElementAmount = subElsCounter;
-            pointAmount = subElsCounter * (int)currentStructure.RealAmount;
-            currentPoint = 0;
-            elementAmount = (int)currentStructure.RealAmount;
+
+
             for (int i = 0; i < currentStructure.RealAmount; i++)
             {
                 DataGridViewRow r = new DataGridViewRow();
                 r.CreateCells(measureResultDataGrid);
                 r.Cells[ElementNumber.Index].Value = $"{currentStructure.StructureType.StructureTypeName} {i+1}";
-                for(int j = 0; j < subElsCounter; j++)
+                for(int j = 0; j < measurePointMap.MeasurePointsPerElement; j++)
                 {
-                    int pointIdx = i * subElsCounter + j;
+                    int pointIdx = i * measurePointMap.MeasurePointsPerElement + j;
                     r.Cells[valueColumns[j]].Value = pointIdx;
                 }
                 measureResultDataGrid.Rows.Add(r);
             }
+            SelectCurrentMeasurePointOnResultGrid();
         }
 
+        private void SelectCurrentMeasurePointOnResultGrid()
+        {
+            measureResultDataGrid.ClearSelection();
+            measureResultDataGrid.Rows[measurePointMap.CurrentElementIndex].Cells[ElementNumber.Index + measurePointMap.CurrentMeasurePointNumber].Selected = true;
+        }
+
+        private void OnMeasurePointChanged_Handler(object sender, EventArgs e)
+        {
+            labelPointNumber.Text = measurePointMap.CurrentPoint.ToString();
+            SelectCurrentMeasurePointOnResultGrid();
+            RefreshControlButtons();
+        }
 
         private void buttonNextPoint_Click(object sender, EventArgs e)
         {
-            labelPointNumber.Text = $"{++currentPoint}";
+            measurePointMap.SetNextPoint();
         }
 
         private void buttonPrevPoint_Click(object sender, EventArgs e)
         {
-            labelPointNumber.Text = $"{--currentPoint}";
+            measurePointMap.SetPrevPoint();
         }
 
         private void buttonNextElement_Click(object sender, EventArgs e)
         {
-
+            measurePointMap.SetNextElement();
         }
 
         private void buttonPrevElement_Click(object sender, EventArgs e)
         {
-
+            measurePointMap.SetPrevElement();
         }
 
         private void RefreshControlButtons()
         {
-            buttonPrevElement.Enabled = currentPoint > subElementAmount;
-            buttonPrevPoint.Enabled = currentPoint > 0;
-            buttonNextPoint.Enabled = currentPoint < pointAmount;
-            buttonNextElement.Enabled = currentPoint / subElementAmount != pointAmount || ;
+            buttonPrevElement.Enabled = measurePointMap.PrevElementEnabled;
+            buttonPrevPoint.Enabled = measurePointMap.PrevPointEnabled;
+            buttonNextPoint.Enabled = measurePointMap.NextPointEnabled;
+            buttonNextElement.Enabled = measurePointMap.NextElementEnabled;
         }
 
-        private void SetPoint(int point_number)
+        private void InitPointMapForCurrentStructureAndCurrentMeasureType()
         {
-
+            measurePointMap = new MeasurePointMap(currentStructure, measureState.MeasureTypeId);
+            measurePointMap.OnMeasurePointChanged += OnMeasurePointChanged_Handler;
+            RefreshControlButtons();
         }
 
-        private void SetPoint(int element_number, int sub_element_number)
+        private void measureResultDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            if (e.ColumnIndex > ElementNumber.Index && e.ColumnIndex <= SubElement_4.Index)
+            {
+                measurePointMap.SetMeasurePoint(e.RowIndex, e.ColumnIndex - ElementNumber.Index - 1);
+            }
         }
     }
 

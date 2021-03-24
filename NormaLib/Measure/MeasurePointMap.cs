@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NormaLib.DBControl.Tables;
 
 namespace NormaLib.Measure
 {
@@ -16,16 +17,31 @@ namespace NormaLib.Measure
         private int measurePointsAmount;
 
         public int CurrentElementMeasurePointIndex => currentPoint % measurePointsPerElement;
-        public int CurrentElementIndex => (CurrentElementMeasurePointIndex > 0) ? ((currentPoint / measurePointsPerElement) + 1) : (currentPoint / measurePointsPerElement);
+        public int CurrentElementIndex => currentPoint / measurePointsPerElement;
+
+        public int CurrentElementNumber => CurrentElementIndex + 1;
+        public int CurrentMeasurePointNumber => CurrentElementMeasurePointIndex + 1;
 
         public int CurrentPoint => currentPoint;
+
+        public int MeasurePointsPerElement => measurePointsPerElement;
 
         public EventHandler OnMeasurePointChanged;
 
         public bool NextPointEnabled => currentPoint+1 < measurePointsAmount;
         public bool NextElementEnabled => CurrentElementIndex + 1 < elementsAmount;
-        public bool PrevElementEnabled => CurrentElementIndex - 1 >= 0;
-        public bool PrevPointEnabled => currentPoint - 1 >= 0; 
+        public bool PrevElementEnabled => CurrentElementIndex > 0;
+        public bool PrevPointEnabled => currentPoint > 0; 
+
+
+
+        public MeasurePointMap(CableStructure structure, uint parameter_type_id, int start_point = 0)
+        {
+            currentPoint = start_point;
+            measurePointsPerElement = MeasuredParameterType.MeasurePointNumberPerStructureElement(parameter_type_id, structure.StructureType.StructureLeadsAmount);
+            elementsAmount = (int)structure.RealAmount;
+            measurePointsAmount = measurePointsPerElement * elementsAmount;
+        }
 
         public MeasurePointMap(int elements_amount, int meas_points_per_elements, int start_point = 0)
         {
@@ -67,6 +83,15 @@ namespace NormaLib.Measure
             a.PrevElementMeasurePointIndex = CurrentElementMeasurePointIndex;
             currentPoint = next_point;
             OnMeasurePointChanged?.Invoke(this, a);
+        }
+
+        public void SetMeasurePoint(int element_index, int element_point_index)
+        {
+            int next_point = element_index * measurePointsPerElement + element_point_index;
+            if (next_point < measurePointsAmount)
+                SetMeasurePoint(next_point);
+            else
+                throw new MeasurePointException("Новая точка находится за пределами диапазона");
         }
     }
 
