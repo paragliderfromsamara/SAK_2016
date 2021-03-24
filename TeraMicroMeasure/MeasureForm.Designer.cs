@@ -28,21 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cableComboBox = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cableLengthNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.depolTimeLbl = new System.Windows.Forms.Label();
-            this.afterMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
-            this.averagingCounter = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.polarDelayLbl = new System.Windows.Forms.Label();
-            this.beforeMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
-            this.measurePanel = new System.Windows.Forms.Panel();
             this.buttonPrevElement = new System.Windows.Forms.Button();
             this.buttonNextElement = new System.Windows.Forms.Button();
-            this.labelPointNumber = new System.Windows.Forms.Label();
             this.buttonNextPoint = new System.Windows.Forms.Button();
             this.buttonPrevPoint = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -62,240 +49,98 @@
             this.availableDevices = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.temperatureComboBox = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.temperatureComboBox = new System.Windows.Forms.Label();
             this.temperature = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.resultField = new System.Windows.Forms.Label();
             this.deviceInfo = new System.Windows.Forms.Label();
+            this.labelPointNumber = new System.Windows.Forms.Label();
             this.voltagesGroupBox = new System.Windows.Forms.GroupBox();
             this.v1000_RadioButton = new System.Windows.Forms.RadioButton();
             this.v500_RadioButton = new System.Windows.Forms.RadioButton();
             this.v100_RadioButton = new System.Windows.Forms.RadioButton();
             this.v10_RadioButton = new System.Windows.Forms.RadioButton();
+            this.cableComboBox = new System.Windows.Forms.ComboBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.depolTimeLbl = new System.Windows.Forms.Label();
+            this.afterMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
+            this.averagingCounter = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.polarDelayLbl = new System.Windows.Forms.Label();
+            this.beforeMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.measuredParametersGroupBox = new System.Windows.Forms.GroupBox();
             this.RizolRadioButton = new System.Windows.Forms.RadioButton();
             this.RleadRadioButton = new System.Windows.Forms.RadioButton();
-            ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).BeginInit();
-            this.measurePanel.SuspendLayout();
-            this.neasureResultPanel.SuspendLayout();
+            this.cableLengthNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.panelMeasurePointControl = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.voltagesGroupBox.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).BeginInit();
             this.measuredParametersGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
+            this.panelMeasurePointControl.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // cableComboBox
-            // 
-            this.cableComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cableComboBox.FormattingEnabled = true;
-            this.cableComboBox.Items.AddRange(new object[] {
-            "Список пуст"});
-            this.cableComboBox.Location = new System.Drawing.Point(17, 62);
-            this.cableComboBox.Margin = new System.Windows.Forms.Padding(4);
-            this.cableComboBox.Name = "cableComboBox";
-            this.cableComboBox.Size = new System.Drawing.Size(367, 31);
-            this.cableComboBox.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 34);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(72, 23);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Кабель";
-            // 
-            // cableLengthNumericUpDown
-            // 
-            this.cableLengthNumericUpDown.Location = new System.Drawing.Point(247, 250);
-            this.cableLengthNumericUpDown.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.cableLengthNumericUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.cableLengthNumericUpDown.Name = "cableLengthNumericUpDown";
-            this.cableLengthNumericUpDown.Size = new System.Drawing.Size(136, 30);
-            this.cableLengthNumericUpDown.TabIndex = 2;
-            this.cableLengthNumericUpDown.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(242, 224);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(90, 23);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Длина, м";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.depolTimeLbl);
-            this.groupBox2.Controls.Add(this.afterMeasureDelayUpDown);
-            this.groupBox2.Controls.Add(this.averagingCounter);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.polarDelayLbl);
-            this.groupBox2.Controls.Add(this.beforeMeasureDelayUpDown);
-            this.groupBox2.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox2.Location = new System.Drawing.Point(405, 263);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(512, 116);
-            this.groupBox2.TabIndex = 5;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Настройки измерителя";
-            // 
-            // depolTimeLbl
-            // 
-            this.depolTimeLbl.AutoSize = true;
-            this.depolTimeLbl.Location = new System.Drawing.Point(381, 36);
-            this.depolTimeLbl.Name = "depolTimeLbl";
-            this.depolTimeLbl.Size = new System.Drawing.Size(66, 18);
-            this.depolTimeLbl.TabIndex = 8;
-            this.depolTimeLbl.Text = "Пауза, c";
-            // 
-            // afterMeasureDelayUpDown
-            // 
-            this.afterMeasureDelayUpDown.Location = new System.Drawing.Point(384, 62);
-            this.afterMeasureDelayUpDown.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-            this.afterMeasureDelayUpDown.Name = "afterMeasureDelayUpDown";
-            this.afterMeasureDelayUpDown.Size = new System.Drawing.Size(115, 26);
-            this.afterMeasureDelayUpDown.TabIndex = 7;
-            // 
-            // averagingCounter
-            // 
-            this.averagingCounter.FormattingEnabled = true;
-            this.averagingCounter.Location = new System.Drawing.Point(202, 60);
-            this.averagingCounter.Name = "averagingCounter";
-            this.averagingCounter.Size = new System.Drawing.Size(115, 26);
-            this.averagingCounter.TabIndex = 6;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(199, 34);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(123, 18);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Усреднение, изм";
-            // 
-            // polarDelayLbl
-            // 
-            this.polarDelayLbl.AutoSize = true;
-            this.polarDelayLbl.Location = new System.Drawing.Point(19, 35);
-            this.polarDelayLbl.Name = "polarDelayLbl";
-            this.polarDelayLbl.Size = new System.Drawing.Size(105, 18);
-            this.polarDelayLbl.TabIndex = 1;
-            this.polarDelayLbl.Text = "Выдержка, мс";
-            // 
-            // beforeMeasureDelayUpDown
-            // 
-            this.beforeMeasureDelayUpDown.Location = new System.Drawing.Point(22, 61);
-            this.beforeMeasureDelayUpDown.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.beforeMeasureDelayUpDown.Name = "beforeMeasureDelayUpDown";
-            this.beforeMeasureDelayUpDown.Size = new System.Drawing.Size(115, 26);
-            this.beforeMeasureDelayUpDown.TabIndex = 0;
-            this.beforeMeasureDelayUpDown.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            // 
-            // measurePanel
-            // 
-            this.measurePanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.measurePanel.Controls.Add(this.buttonPrevElement);
-            this.measurePanel.Controls.Add(this.buttonNextElement);
-            this.measurePanel.Controls.Add(this.labelPointNumber);
-            this.measurePanel.Controls.Add(this.buttonNextPoint);
-            this.measurePanel.Controls.Add(this.buttonPrevPoint);
-            this.measurePanel.Controls.Add(this.label3);
-            this.measurePanel.Controls.Add(this.cableStructureCB);
-            this.measurePanel.Controls.Add(this.neasureResultPanel);
-            this.measurePanel.Controls.Add(this.richTextBox1);
-            this.measurePanel.Controls.Add(this.selectDevicePanel);
-            this.measurePanel.Controls.Add(this.panel1);
-            this.measurePanel.Controls.Add(this.panel2);
-            this.measurePanel.Controls.Add(this.voltagesGroupBox);
-            this.measurePanel.Controls.Add(this.cableComboBox);
-            this.measurePanel.Controls.Add(this.groupBox2);
-            this.measurePanel.Controls.Add(this.label1);
-            this.measurePanel.Controls.Add(this.measuredParametersGroupBox);
-            this.measurePanel.Controls.Add(this.cableLengthNumericUpDown);
-            this.measurePanel.Controls.Add(this.label2);
-            this.measurePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.measurePanel.Location = new System.Drawing.Point(0, 0);
-            this.measurePanel.Name = "measurePanel";
-            this.measurePanel.Size = new System.Drawing.Size(1108, 861);
-            this.measurePanel.TabIndex = 6;
             // 
             // buttonPrevElement
             // 
-            this.buttonPrevElement.Location = new System.Drawing.Point(17, 351);
+            this.buttonPrevElement.Dock = System.Windows.Forms.DockStyle.Left;
+            this.buttonPrevElement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPrevElement.Location = new System.Drawing.Point(40, 0);
+            this.buttonPrevElement.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonPrevElement.Name = "buttonPrevElement";
-            this.buttonPrevElement.Size = new System.Drawing.Size(49, 49);
-            this.buttonPrevElement.TabIndex = 22;
+            this.buttonPrevElement.Size = new System.Drawing.Size(44, 51);
+            this.buttonPrevElement.TabIndex = 40;
             this.buttonPrevElement.Text = "<<";
             this.buttonPrevElement.UseVisualStyleBackColor = true;
             this.buttonPrevElement.Click += new System.EventHandler(this.buttonPrevElement_Click);
             // 
             // buttonNextElement
             // 
-            this.buttonNextElement.Location = new System.Drawing.Point(279, 351);
+            this.buttonNextElement.Dock = System.Windows.Forms.DockStyle.Left;
+            this.buttonNextElement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonNextElement.Location = new System.Drawing.Point(302, 0);
+            this.buttonNextElement.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonNextElement.Name = "buttonNextElement";
-            this.buttonNextElement.Size = new System.Drawing.Size(49, 49);
-            this.buttonNextElement.TabIndex = 21;
+            this.buttonNextElement.Size = new System.Drawing.Size(44, 51);
+            this.buttonNextElement.TabIndex = 39;
             this.buttonNextElement.Text = ">>";
             this.buttonNextElement.UseVisualStyleBackColor = true;
             this.buttonNextElement.Click += new System.EventHandler(this.buttonNextElement_Click);
             // 
-            // labelPointNumber
-            // 
-            this.labelPointNumber.AutoSize = true;
-            this.labelPointNumber.Location = new System.Drawing.Point(165, 364);
-            this.labelPointNumber.Name = "labelPointNumber";
-            this.labelPointNumber.Size = new System.Drawing.Size(20, 23);
-            this.labelPointNumber.TabIndex = 20;
-            this.labelPointNumber.Text = "0";
-            // 
             // buttonNextPoint
             // 
-            this.buttonNextPoint.Location = new System.Drawing.Point(228, 351);
+            this.buttonNextPoint.Dock = System.Windows.Forms.DockStyle.Left;
+            this.buttonNextPoint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonNextPoint.Location = new System.Drawing.Point(262, 0);
+            this.buttonNextPoint.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonNextPoint.Name = "buttonNextPoint";
-            this.buttonNextPoint.Size = new System.Drawing.Size(45, 49);
-            this.buttonNextPoint.TabIndex = 19;
+            this.buttonNextPoint.Size = new System.Drawing.Size(40, 51);
+            this.buttonNextPoint.TabIndex = 38;
             this.buttonNextPoint.Text = ">";
             this.buttonNextPoint.UseVisualStyleBackColor = true;
             this.buttonNextPoint.Click += new System.EventHandler(this.buttonNextPoint_Click);
             // 
             // buttonPrevPoint
             // 
-            this.buttonPrevPoint.Location = new System.Drawing.Point(72, 351);
+            this.buttonPrevPoint.Dock = System.Windows.Forms.DockStyle.Left;
+            this.buttonPrevPoint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPrevPoint.Location = new System.Drawing.Point(0, 0);
+            this.buttonPrevPoint.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonPrevPoint.Name = "buttonPrevPoint";
-            this.buttonPrevPoint.Size = new System.Drawing.Size(45, 49);
-            this.buttonPrevPoint.TabIndex = 18;
+            this.buttonPrevPoint.Size = new System.Drawing.Size(40, 51);
+            this.buttonPrevPoint.TabIndex = 37;
             this.buttonPrevPoint.Text = "<";
             this.buttonPrevPoint.UseVisualStyleBackColor = true;
             this.buttonPrevPoint.Click += new System.EventHandler(this.buttonPrevPoint_Click);
@@ -303,34 +148,37 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 223);
+            this.label3.Location = new System.Drawing.Point(345, 13);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(98, 23);
-            this.label3.TabIndex = 17;
+            this.label3.Size = new System.Drawing.Size(85, 19);
+            this.label3.TabIndex = 36;
             this.label3.Text = "Структура";
             // 
             // cableStructureCB
             // 
             this.cableStructureCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cableStructureCB.FormattingEnabled = true;
-            this.cableStructureCB.Location = new System.Drawing.Point(12, 249);
+            this.cableStructureCB.Location = new System.Drawing.Point(348, 35);
+            this.cableStructureCB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cableStructureCB.Name = "cableStructureCB";
-            this.cableStructureCB.Size = new System.Drawing.Size(218, 31);
-            this.cableStructureCB.TabIndex = 16;
-            this.cableStructureCB.SelectedIndexChanged += new System.EventHandler(this.cableStructureCB_SelectedIndexChanged);
+            this.cableStructureCB.Size = new System.Drawing.Size(197, 27);
+            this.cableStructureCB.TabIndex = 35;
+            this.cableStructureCB.SelectedValueChanged += new System.EventHandler(this.cableStructureCB_SelectedIndexChanged);
             // 
             // neasureResultPanel
             // 
-            this.neasureResultPanel.Controls.Add(this.measureResultDataGrid);
-            this.neasureResultPanel.Location = new System.Drawing.Point(17, 406);
+            this.neasureResultPanel.Location = new System.Drawing.Point(11, 380);
+            this.neasureResultPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.neasureResultPanel.Name = "neasureResultPanel";
-            this.neasureResultPanel.Size = new System.Drawing.Size(626, 434);
-            this.neasureResultPanel.TabIndex = 15;
+            this.neasureResultPanel.Size = new System.Drawing.Size(774, 211);
+            this.neasureResultPanel.TabIndex = 34;
             // 
             // measureResultDataGrid
             // 
             this.measureResultDataGrid.AllowUserToAddRows = false;
             this.measureResultDataGrid.AllowUserToDeleteRows = false;
+            this.measureResultDataGrid.AllowUserToResizeColumns = false;
+            this.measureResultDataGrid.AllowUserToResizeRows = false;
             this.measureResultDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.measureResultDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ElementNumber,
@@ -339,14 +187,16 @@
             this.SubElement_3,
             this.SubElement_4,
             this.IsMeasuredFlag});
-            this.measureResultDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.measureResultDataGrid.Location = new System.Drawing.Point(0, 0);
+            this.measureResultDataGrid.Location = new System.Drawing.Point(18, 439);
+            this.measureResultDataGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.measureResultDataGrid.Name = "measureResultDataGrid";
             this.measureResultDataGrid.ReadOnly = true;
             this.measureResultDataGrid.RowHeadersVisible = false;
-            this.measureResultDataGrid.Size = new System.Drawing.Size(626, 434);
+            this.measureResultDataGrid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.measureResultDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.measureResultDataGrid.Size = new System.Drawing.Size(774, 211);
             this.measureResultDataGrid.TabIndex = 0;
-            this.measureResultDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.measureResultDataGrid_CellClick);
+            this.measureResultDataGrid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             // 
             // ElementNumber
             // 
@@ -393,104 +243,113 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(667, 690);
+            this.richTextBox1.Location = new System.Drawing.Point(31, 773);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(429, 150);
-            this.richTextBox1.TabIndex = 7;
+            this.richTextBox1.Size = new System.Drawing.Size(386, 125);
+            this.richTextBox1.TabIndex = 30;
             this.richTextBox1.Text = "";
             // 
             // selectDevicePanel
             // 
-            this.selectDevicePanel.Controls.Add(this.deviceControlButton);
-            this.selectDevicePanel.Controls.Add(this.startMeasureButton);
             this.selectDevicePanel.Controls.Add(this.availableDevices);
-            this.selectDevicePanel.Location = new System.Drawing.Point(391, 205);
+            this.selectDevicePanel.Controls.Add(this.deviceControlButton);
+            this.selectDevicePanel.Location = new System.Drawing.Point(159, 284);
+            this.selectDevicePanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.selectDevicePanel.Name = "selectDevicePanel";
-            this.selectDevicePanel.Size = new System.Drawing.Size(530, 58);
-            this.selectDevicePanel.TabIndex = 14;
+            this.selectDevicePanel.Size = new System.Drawing.Size(547, 48);
+            this.selectDevicePanel.TabIndex = 33;
             // 
             // deviceControlButton
             // 
-            this.deviceControlButton.Location = new System.Drawing.Point(324, 6);
+            this.deviceControlButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.deviceControlButton.Location = new System.Drawing.Point(369, 0);
+            this.deviceControlButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.deviceControlButton.Name = "deviceControlButton";
-            this.deviceControlButton.Size = new System.Drawing.Size(198, 49);
+            this.deviceControlButton.Size = new System.Drawing.Size(178, 48);
             this.deviceControlButton.TabIndex = 13;
             this.deviceControlButton.Text = "Подключить";
             this.deviceControlButton.UseVisualStyleBackColor = true;
-            this.deviceControlButton.Click += new System.EventHandler(this.connectToDevice_Click);
             // 
             // startMeasureButton
             // 
             this.startMeasureButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(124)))), ((int)(((byte)(224)))));
             this.startMeasureButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.startMeasureButton.Dock = System.Windows.Forms.DockStyle.Left;
             this.startMeasureButton.FlatAppearance.BorderSize = 0;
             this.startMeasureButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.startMeasureButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.startMeasureButton.Location = new System.Drawing.Point(120, 7);
+            this.startMeasureButton.Location = new System.Drawing.Point(84, 0);
+            this.startMeasureButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.startMeasureButton.Name = "startMeasureButton";
-            this.startMeasureButton.Size = new System.Drawing.Size(198, 48);
+            this.startMeasureButton.Size = new System.Drawing.Size(178, 51);
             this.startMeasureButton.TabIndex = 11;
             this.startMeasureButton.Text = "Пуск измерения";
             this.startMeasureButton.UseVisualStyleBackColor = false;
-            this.startMeasureButton.Click += new System.EventHandler(this.startMeasureButton_Click);
             // 
             // availableDevices
             // 
+            this.availableDevices.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.availableDevices.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.availableDevices.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.availableDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.availableDevices.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.availableDevices.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.availableDevices.FormattingEnabled = true;
-            this.availableDevices.Location = new System.Drawing.Point(10, 19);
+            this.availableDevices.ItemHeight = 40;
+            this.availableDevices.Location = new System.Drawing.Point(0, 0);
+            this.availableDevices.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.availableDevices.Name = "availableDevices";
-            this.availableDevices.Size = new System.Drawing.Size(293, 27);
+            this.availableDevices.Size = new System.Drawing.Size(369, 46);
             this.availableDevices.TabIndex = 12;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.comboBox3);
-            this.panel1.Controls.Add(this.temperatureComboBox);
             this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.temperature);
-            this.panel1.Location = new System.Drawing.Point(728, 385);
+            this.panel1.Location = new System.Drawing.Point(382, 717);
+            this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(368, 62);
-            this.panel1.TabIndex = 7;
+            this.panel1.Size = new System.Drawing.Size(206, 51);
+            this.panel1.TabIndex = 31;
             // 
             // comboBox3
             // 
             this.comboBox3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(0, 29);
+            this.comboBox3.Location = new System.Drawing.Point(0, 24);
+            this.comboBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(218, 27);
+            this.comboBox3.Size = new System.Drawing.Size(197, 27);
             this.comboBox3.TabIndex = 8;
-            // 
-            // temperatureComboBox
-            // 
-            this.temperatureComboBox.AutoSize = true;
-            this.temperatureComboBox.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.temperatureComboBox.Location = new System.Drawing.Point(227, 3);
-            this.temperatureComboBox.Name = "temperatureComboBox";
-            this.temperatureComboBox.Size = new System.Drawing.Size(104, 19);
-            this.temperatureComboBox.TabIndex = 3;
-            this.temperatureComboBox.Text = "Температура";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(-4, 3);
+            this.label4.Location = new System.Drawing.Point(-4, 2);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(80, 19);
             this.label4.TabIndex = 9;
             this.label4.Text = "Материал";
             // 
+            // temperatureComboBox
+            // 
+            this.temperatureComboBox.AutoSize = true;
+            this.temperatureComboBox.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.temperatureComboBox.Location = new System.Drawing.Point(658, 15);
+            this.temperatureComboBox.Name = "temperatureComboBox";
+            this.temperatureComboBox.Size = new System.Drawing.Size(104, 19);
+            this.temperatureComboBox.TabIndex = 3;
+            this.temperatureComboBox.Text = "Температура";
+            // 
             // temperature
             // 
             this.temperature.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.temperature.FormattingEnabled = true;
-            this.temperature.Location = new System.Drawing.Point(230, 29);
+            this.temperature.Location = new System.Drawing.Point(661, 36);
+            this.temperature.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.temperature.Name = "temperature";
-            this.temperature.Size = new System.Drawing.Size(137, 27);
+            this.temperature.Size = new System.Drawing.Size(124, 27);
             this.temperature.TabIndex = 7;
             // 
             // panel2
@@ -498,17 +357,20 @@
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(237)))), ((int)(((byte)(250)))));
             this.panel2.Controls.Add(this.resultField);
             this.panel2.Controls.Add(this.deviceInfo);
-            this.panel2.Location = new System.Drawing.Point(405, 0);
+            this.panel2.Controls.Add(this.labelPointNumber);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(512, 199);
-            this.panel2.TabIndex = 10;
+            this.panel2.Size = new System.Drawing.Size(846, 149);
+            this.panel2.TabIndex = 32;
             // 
             // resultField
             // 
             this.resultField.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.resultField.Location = new System.Drawing.Point(17, 77);
+            this.resultField.Location = new System.Drawing.Point(25, 59);
             this.resultField.Name = "resultField";
-            this.resultField.Size = new System.Drawing.Size(482, 103);
+            this.resultField.Size = new System.Drawing.Size(589, 48);
             this.resultField.TabIndex = 1;
             this.resultField.Text = "106.56 ТОм⋅м";
             this.resultField.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -516,11 +378,20 @@
             // deviceInfo
             // 
             this.deviceInfo.AutoSize = true;
-            this.deviceInfo.Location = new System.Drawing.Point(18, 10);
+            this.deviceInfo.Location = new System.Drawing.Point(16, 8);
             this.deviceInfo.Name = "deviceInfo";
-            this.deviceInfo.Size = new System.Drawing.Size(273, 23);
+            this.deviceInfo.Size = new System.Drawing.Size(236, 19);
             this.deviceInfo.TabIndex = 0;
             this.deviceInfo.Text = "Тераомметр ТОмМ-01 2021-01";
+            // 
+            // labelPointNumber
+            // 
+            this.labelPointNumber.AutoSize = true;
+            this.labelPointNumber.Location = new System.Drawing.Point(14, 120);
+            this.labelPointNumber.Name = "labelPointNumber";
+            this.labelPointNumber.Size = new System.Drawing.Size(18, 19);
+            this.labelPointNumber.TabIndex = 20;
+            this.labelPointNumber.Text = "0";
             // 
             // voltagesGroupBox
             // 
@@ -529,17 +400,20 @@
             this.voltagesGroupBox.Controls.Add(this.v100_RadioButton);
             this.voltagesGroupBox.Controls.Add(this.v10_RadioButton);
             this.voltagesGroupBox.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.voltagesGroupBox.Location = new System.Drawing.Point(729, 467);
+            this.voltagesGroupBox.Location = new System.Drawing.Point(33, 697);
+            this.voltagesGroupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.voltagesGroupBox.Name = "voltagesGroupBox";
-            this.voltagesGroupBox.Size = new System.Drawing.Size(367, 86);
-            this.voltagesGroupBox.TabIndex = 6;
+            this.voltagesGroupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.voltagesGroupBox.Size = new System.Drawing.Size(330, 71);
+            this.voltagesGroupBox.TabIndex = 29;
             this.voltagesGroupBox.TabStop = false;
             this.voltagesGroupBox.Text = "Измерительное напряжение";
             // 
             // v1000_RadioButton
             // 
             this.v1000_RadioButton.AutoSize = true;
-            this.v1000_RadioButton.Location = new System.Drawing.Point(273, 38);
+            this.v1000_RadioButton.Location = new System.Drawing.Point(246, 31);
+            this.v1000_RadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.v1000_RadioButton.Name = "v1000_RadioButton";
             this.v1000_RadioButton.Size = new System.Drawing.Size(72, 22);
             this.v1000_RadioButton.TabIndex = 3;
@@ -549,7 +423,8 @@
             // v500_RadioButton
             // 
             this.v500_RadioButton.AutoSize = true;
-            this.v500_RadioButton.Location = new System.Drawing.Point(186, 38);
+            this.v500_RadioButton.Location = new System.Drawing.Point(167, 31);
+            this.v500_RadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.v500_RadioButton.Name = "v500_RadioButton";
             this.v500_RadioButton.Size = new System.Drawing.Size(64, 22);
             this.v500_RadioButton.TabIndex = 2;
@@ -559,7 +434,8 @@
             // v100_RadioButton
             // 
             this.v100_RadioButton.AutoSize = true;
-            this.v100_RadioButton.Location = new System.Drawing.Point(100, 38);
+            this.v100_RadioButton.Location = new System.Drawing.Point(90, 31);
+            this.v100_RadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.v100_RadioButton.Name = "v100_RadioButton";
             this.v100_RadioButton.Size = new System.Drawing.Size(64, 22);
             this.v100_RadioButton.TabIndex = 1;
@@ -570,7 +446,8 @@
             // 
             this.v10_RadioButton.AutoSize = true;
             this.v10_RadioButton.Checked = true;
-            this.v10_RadioButton.Location = new System.Drawing.Point(23, 38);
+            this.v10_RadioButton.Location = new System.Drawing.Point(21, 31);
+            this.v10_RadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.v10_RadioButton.Name = "v10_RadioButton";
             this.v10_RadioButton.Size = new System.Drawing.Size(56, 22);
             this.v10_RadioButton.TabIndex = 0;
@@ -578,14 +455,123 @@
             this.v10_RadioButton.Text = "10 В";
             this.v10_RadioButton.UseVisualStyleBackColor = true;
             // 
+            // cableComboBox
+            // 
+            this.cableComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cableComboBox.FormattingEnabled = true;
+            this.cableComboBox.Items.AddRange(new object[] {
+            "Список пуст"});
+            this.cableComboBox.Location = new System.Drawing.Point(12, 35);
+            this.cableComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.cableComboBox.Name = "cableComboBox";
+            this.cableComboBox.Size = new System.Drawing.Size(331, 27);
+            this.cableComboBox.TabIndex = 23;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.depolTimeLbl);
+            this.groupBox2.Controls.Add(this.afterMeasureDelayUpDown);
+            this.groupBox2.Controls.Add(this.averagingCounter);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.polarDelayLbl);
+            this.groupBox2.Controls.Add(this.beforeMeasureDelayUpDown);
+            this.groupBox2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.groupBox2.Location = new System.Drawing.Point(324, 72);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox2.Size = new System.Drawing.Size(461, 96);
+            this.groupBox2.TabIndex = 28;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Настройки измерителя";
+            // 
+            // depolTimeLbl
+            // 
+            this.depolTimeLbl.AutoSize = true;
+            this.depolTimeLbl.Location = new System.Drawing.Point(343, 30);
+            this.depolTimeLbl.Name = "depolTimeLbl";
+            this.depolTimeLbl.Size = new System.Drawing.Size(68, 19);
+            this.depolTimeLbl.TabIndex = 8;
+            this.depolTimeLbl.Text = "Пауза, c";
+            // 
+            // afterMeasureDelayUpDown
+            // 
+            this.afterMeasureDelayUpDown.Location = new System.Drawing.Point(346, 51);
+            this.afterMeasureDelayUpDown.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.afterMeasureDelayUpDown.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.afterMeasureDelayUpDown.Name = "afterMeasureDelayUpDown";
+            this.afterMeasureDelayUpDown.Size = new System.Drawing.Size(103, 27);
+            this.afterMeasureDelayUpDown.TabIndex = 7;
+            // 
+            // averagingCounter
+            // 
+            this.averagingCounter.FormattingEnabled = true;
+            this.averagingCounter.Location = new System.Drawing.Point(182, 50);
+            this.averagingCounter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.averagingCounter.Name = "averagingCounter";
+            this.averagingCounter.Size = new System.Drawing.Size(104, 27);
+            this.averagingCounter.TabIndex = 6;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(179, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(130, 19);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Усреднение, изм";
+            // 
+            // polarDelayLbl
+            // 
+            this.polarDelayLbl.AutoSize = true;
+            this.polarDelayLbl.Location = new System.Drawing.Point(17, 29);
+            this.polarDelayLbl.Name = "polarDelayLbl";
+            this.polarDelayLbl.Size = new System.Drawing.Size(110, 19);
+            this.polarDelayLbl.TabIndex = 1;
+            this.polarDelayLbl.Text = "Выдержка, мс";
+            // 
+            // beforeMeasureDelayUpDown
+            // 
+            this.beforeMeasureDelayUpDown.Location = new System.Drawing.Point(20, 50);
+            this.beforeMeasureDelayUpDown.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.beforeMeasureDelayUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.beforeMeasureDelayUpDown.Name = "beforeMeasureDelayUpDown";
+            this.beforeMeasureDelayUpDown.Size = new System.Drawing.Size(103, 27);
+            this.beforeMeasureDelayUpDown.TabIndex = 0;
+            this.beforeMeasureDelayUpDown.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 12);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(61, 19);
+            this.label1.TabIndex = 24;
+            this.label1.Text = "Кабель";
+            // 
             // measuredParametersGroupBox
             // 
             this.measuredParametersGroupBox.Controls.Add(this.RizolRadioButton);
             this.measuredParametersGroupBox.Controls.Add(this.RleadRadioButton);
-            this.measuredParametersGroupBox.Location = new System.Drawing.Point(17, 117);
+            this.measuredParametersGroupBox.Location = new System.Drawing.Point(11, 72);
+            this.measuredParametersGroupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.measuredParametersGroupBox.Name = "measuredParametersGroupBox";
-            this.measuredParametersGroupBox.Size = new System.Drawing.Size(367, 82);
-            this.measuredParametersGroupBox.TabIndex = 4;
+            this.measuredParametersGroupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.measuredParametersGroupBox.Size = new System.Drawing.Size(261, 96);
+            this.measuredParametersGroupBox.TabIndex = 27;
             this.measuredParametersGroupBox.TabStop = false;
             this.measuredParametersGroupBox.Text = "Измеряемый параметр";
             this.measuredParametersGroupBox.UseCompatibleTextRendering = true;
@@ -593,9 +579,10 @@
             // RizolRadioButton
             // 
             this.RizolRadioButton.AutoSize = true;
-            this.RizolRadioButton.Location = new System.Drawing.Point(230, 36);
+            this.RizolRadioButton.Location = new System.Drawing.Point(175, 49);
+            this.RizolRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RizolRadioButton.Name = "RizolRadioButton";
-            this.RizolRadioButton.Size = new System.Drawing.Size(81, 27);
+            this.RizolRadioButton.Size = new System.Drawing.Size(71, 23);
             this.RizolRadioButton.TabIndex = 1;
             this.RizolRadioButton.Text = "Rизол";
             this.RizolRadioButton.UseVisualStyleBackColor = true;
@@ -604,35 +591,109 @@
             // 
             this.RleadRadioButton.AutoSize = true;
             this.RleadRadioButton.Checked = true;
-            this.RleadRadioButton.Location = new System.Drawing.Point(36, 36);
+            this.RleadRadioButton.Location = new System.Drawing.Point(32, 49);
+            this.RleadRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RleadRadioButton.Name = "RleadRadioButton";
-            this.RleadRadioButton.Size = new System.Drawing.Size(76, 27);
+            this.RleadRadioButton.Size = new System.Drawing.Size(67, 23);
             this.RleadRadioButton.TabIndex = 0;
             this.RleadRadioButton.TabStop = true;
             this.RleadRadioButton.Text = "Rжил";
             this.RleadRadioButton.UseVisualStyleBackColor = true;
-            this.RleadRadioButton.CheckedChanged += new System.EventHandler(this.MeasureTypeRadioButton_CheckedChanged_Common);
+            // 
+            // cableLengthNumericUpDown
+            // 
+            this.cableLengthNumericUpDown.Location = new System.Drawing.Point(550, 35);
+            this.cableLengthNumericUpDown.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cableLengthNumericUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.cableLengthNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.cableLengthNumericUpDown.Name = "cableLengthNumericUpDown";
+            this.cableLengthNumericUpDown.Size = new System.Drawing.Size(105, 27);
+            this.cableLengthNumericUpDown.TabIndex = 25;
+            this.cableLengthNumericUpDown.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(545, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(75, 19);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "Длина, м";
+            // 
+            // panelMeasurePointControl
+            // 
+            this.panelMeasurePointControl.Controls.Add(this.buttonNextElement);
+            this.panelMeasurePointControl.Controls.Add(this.buttonNextPoint);
+            this.panelMeasurePointControl.Controls.Add(this.startMeasureButton);
+            this.panelMeasurePointControl.Controls.Add(this.buttonPrevElement);
+            this.panelMeasurePointControl.Controls.Add(this.buttonPrevPoint);
+            this.panelMeasurePointControl.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelMeasurePointControl.Location = new System.Drawing.Point(0, 0);
+            this.panelMeasurePointControl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelMeasurePointControl.Name = "panelMeasurePointControl";
+            this.panelMeasurePointControl.Size = new System.Drawing.Size(351, 51);
+            this.panelMeasurePointControl.TabIndex = 41;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.measureResultDataGrid);
+            this.panel3.Controls.Add(this.panel4);
+            this.panel3.Controls.Add(this.panel2);
+            this.panel3.Location = new System.Drawing.Point(895, 207);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(846, 652);
+            this.panel3.TabIndex = 42;
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.Cyan;
+            this.panel4.Controls.Add(this.panelMeasurePointControl);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 149);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(846, 51);
+            this.panel4.TabIndex = 43;
             // 
             // MeasureForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1108, 861);
-            this.Controls.Add(this.measurePanel);
-            this.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ClientSize = new System.Drawing.Size(1786, 899);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.temperatureComboBox);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.cableStructureCB);
+            this.Controls.Add(this.temperature);
+            this.Controls.Add(this.neasureResultPanel);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.selectDevicePanel);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.voltagesGroupBox);
+            this.Controls.Add(this.cableComboBox);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.measuredParametersGroupBox);
+            this.Controls.Add(this.cableLengthNumericUpDown);
+            this.Controls.Add(this.label2);
+            this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MeasureForm";
             this.Text = "Измерение";
-            ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).EndInit();
-            this.measurePanel.ResumeLayout(false);
-            this.measurePanel.PerformLayout();
-            this.neasureResultPanel.ResumeLayout(false);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).EndInit();
             this.selectDevicePanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -641,47 +702,27 @@
             this.panel2.PerformLayout();
             this.voltagesGroupBox.ResumeLayout(false);
             this.voltagesGroupBox.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).EndInit();
             this.measuredParametersGroupBox.ResumeLayout(false);
             this.measuredParametersGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).EndInit();
+            this.panelMeasurePointControl.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ComboBox cableComboBox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown cableLengthNumericUpDown;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ComboBox averagingCounter;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label polarDelayLbl;
-        private System.Windows.Forms.NumericUpDown beforeMeasureDelayUpDown;
-        private System.Windows.Forms.Panel measurePanel;
-        private System.Windows.Forms.Label depolTimeLbl;
-        private System.Windows.Forms.NumericUpDown afterMeasureDelayUpDown;
-        private System.Windows.Forms.Button startMeasureButton;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.ComboBox availableDevices;
-        private System.Windows.Forms.Panel selectDevicePanel;
-        private System.Windows.Forms.Button deviceControlButton;
-        private System.Windows.Forms.Label resultField;
-        private System.Windows.Forms.Label deviceInfo;
-        private System.Windows.Forms.GroupBox measuredParametersGroupBox;
-        private System.Windows.Forms.RadioButton RizolRadioButton;
-        private System.Windows.Forms.RadioButton RleadRadioButton;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.Label temperatureComboBox;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox temperature;
-        private System.Windows.Forms.GroupBox voltagesGroupBox;
-        private System.Windows.Forms.RadioButton v1000_RadioButton;
-        private System.Windows.Forms.RadioButton v500_RadioButton;
-        private System.Windows.Forms.RadioButton v100_RadioButton;
-        private System.Windows.Forms.RadioButton v10_RadioButton;
+        private System.Windows.Forms.Button buttonPrevElement;
+        private System.Windows.Forms.Button buttonNextElement;
+        private System.Windows.Forms.Button buttonNextPoint;
+        private System.Windows.Forms.Button buttonPrevPoint;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cableStructureCB;
         private System.Windows.Forms.Panel neasureResultPanel;
@@ -692,10 +733,41 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SubElement_3;
         private System.Windows.Forms.DataGridViewTextBoxColumn SubElement_4;
         private System.Windows.Forms.DataGridViewTextBoxColumn IsMeasuredFlag;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Panel selectDevicePanel;
+        private System.Windows.Forms.Button deviceControlButton;
+        private System.Windows.Forms.Button startMeasureButton;
+        private System.Windows.Forms.ComboBox availableDevices;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Label temperatureComboBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox temperature;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label resultField;
+        private System.Windows.Forms.Label deviceInfo;
         private System.Windows.Forms.Label labelPointNumber;
-        private System.Windows.Forms.Button buttonNextPoint;
-        private System.Windows.Forms.Button buttonPrevPoint;
-        private System.Windows.Forms.Button buttonPrevElement;
-        private System.Windows.Forms.Button buttonNextElement;
+        private System.Windows.Forms.GroupBox voltagesGroupBox;
+        private System.Windows.Forms.RadioButton v1000_RadioButton;
+        private System.Windows.Forms.RadioButton v500_RadioButton;
+        private System.Windows.Forms.RadioButton v100_RadioButton;
+        private System.Windows.Forms.RadioButton v10_RadioButton;
+        private System.Windows.Forms.ComboBox cableComboBox;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label depolTimeLbl;
+        private System.Windows.Forms.NumericUpDown afterMeasureDelayUpDown;
+        private System.Windows.Forms.ComboBox averagingCounter;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label polarDelayLbl;
+        private System.Windows.Forms.NumericUpDown beforeMeasureDelayUpDown;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox measuredParametersGroupBox;
+        private System.Windows.Forms.RadioButton RizolRadioButton;
+        private System.Windows.Forms.RadioButton RleadRadioButton;
+        private System.Windows.Forms.NumericUpDown cableLengthNumericUpDown;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel panelMeasurePointControl;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
     }
 }

@@ -31,9 +31,23 @@ namespace NormaLib.Measure
         public bool NextPointEnabled => currentPoint+1 < measurePointsAmount;
         public bool NextElementEnabled => CurrentElementIndex + 1 < elementsAmount;
         public bool PrevElementEnabled => CurrentElementIndex > 0;
-        public bool PrevPointEnabled => currentPoint > 0; 
+        public bool PrevPointEnabled => currentPoint > 0;
 
+        private string elementTitleMask = string.Empty;
+        private string elementMeasureTitleMask = string.Empty;
 
+        public string CurrentElementTitle => elementTitleByElNumber(CurrentElementNumber);
+        public string CurrentMeasureTitle => measureTitleByMeasureNumber(CurrentMeasurePointNumber);
+
+        private string measureTitleByMeasureNumber(int currentMeasurePointNumber)
+        {
+            if (measurePointsPerElement == 1)
+                return "";
+            else
+                return $"{elementMeasureTitleMask} {currentMeasurePointNumber}";
+        }
+
+        private string elementTitleByElNumber(int el_number) => $"{elementTitleMask} {el_number}";
 
         public MeasurePointMap(CableStructure structure, uint parameter_type_id, int start_point = 0)
         {
@@ -41,14 +55,10 @@ namespace NormaLib.Measure
             measurePointsPerElement = MeasuredParameterType.MeasurePointNumberPerStructureElement(parameter_type_id, structure.StructureType.StructureLeadsAmount);
             elementsAmount = (int)structure.RealAmount;
             measurePointsAmount = measurePointsPerElement * elementsAmount;
-        }
 
-        public MeasurePointMap(int elements_amount, int meas_points_per_elements, int start_point = 0)
-        {
-            currentPoint = start_point;
-            elementsAmount = elements_amount;
-            measurePointsPerElement = meas_points_per_elements;
-            measurePointsAmount = meas_points_per_elements * elements_amount;
+            elementTitleMask = $"{structure.StructureType.StructureTypeName}";
+            elementMeasureTitleMask = (structure.StructureTypeId == CableStructureType.Quattro && measurePointsPerElement == 2) ? "Пара" : "Жила";
+            
         }
 
         public void SetNextElement()

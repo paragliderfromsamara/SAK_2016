@@ -115,6 +115,8 @@ namespace TeraMicroMeasure
             InitMeasureDraft();
         }
 
+
+
         private void InitMeasureDraft()
         {
             if (Cables.Rows.Count == 0) return;
@@ -204,7 +206,7 @@ namespace TeraMicroMeasure
         {
             voltagesGroupBox.Visible = false;
             InitAverageCountComboBox();
-            selectDevicePanel.Visible = measurePanel.Enabled = isCurrentPCClient;
+            //selectDevicePanel.Visible = measurePanel.Enabled = isCurrentPCClient;
         }
 
         public void SetXmlDeviceList(Dictionary<string, DeviceXMLState> xml_device_list)
@@ -910,6 +912,7 @@ namespace TeraMicroMeasure
         }
 
         MeasurePointMap measurePointMap;
+        bool pointChangedByClick = false;
         private void RefreshMeasureControl()
         {
             InitPointMapForCurrentStructureAndCurrentMeasureType();
@@ -926,8 +929,6 @@ namespace TeraMicroMeasure
             SubElement_3.HeaderText = "Жила 3";
             SubElement_4.HeaderText = "Жила 4";
 
-
-
             for (int i = 0; i < currentStructure.RealAmount; i++)
             {
                 DataGridViewRow r = new DataGridViewRow();
@@ -940,18 +941,29 @@ namespace TeraMicroMeasure
                 }
                 measureResultDataGrid.Rows.Add(r);
             }
-            SelectCurrentMeasurePointOnResultGrid();
+
+            //measureResultDataGrid.ClearSelection();
         }
 
         private void SelectCurrentMeasurePointOnResultGrid()
         {
             measureResultDataGrid.ClearSelection();
             measureResultDataGrid.Rows[measurePointMap.CurrentElementIndex].Cells[ElementNumber.Index + measurePointMap.CurrentMeasurePointNumber].Selected = true;
+            if (!pointChangedByClick)
+            {
+                ScrollResultTableToSelectedElement();
+            }
+            else pointChangedByClick = false;
+        }
+
+        private void ScrollResultTableToSelectedElement()
+        {
+            measureResultDataGrid.FirstDisplayedScrollingRowIndex = (measurePointMap.CurrentElementIndex / measureResultDataGrid.DisplayedRowCount(false)) * measureResultDataGrid.DisplayedRowCount(false);
         }
 
         private void OnMeasurePointChanged_Handler(object sender, EventArgs e)
         {
-            labelPointNumber.Text = measurePointMap.CurrentPoint.ToString();
+            labelPointNumber.Text = $"{measurePointMap.CurrentElementTitle} {measurePointMap.CurrentMeasureTitle}";
             SelectCurrentMeasurePointOnResultGrid();
             RefreshControlButtons();
         }
@@ -995,9 +1007,43 @@ namespace TeraMicroMeasure
         {
             if (e.ColumnIndex > ElementNumber.Index && e.ColumnIndex <= SubElement_4.Index)
             {
+                pointChangedByClick = true;
                 measurePointMap.SetMeasurePoint(e.RowIndex, e.ColumnIndex - ElementNumber.Index - 1);
             }
         }
+
+        void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyData & Keys.KeyCode)
+            {
+                case Keys.Up:
+                    buttonNextElement.PerformClick();
+                    break;
+                case Keys.Right:
+                    buttonNextPoint.PerformClick();
+                    break;
+                case Keys.Down:
+                    buttonPrevElement.PerformClick();
+                    break;
+                case Keys.Left:
+                    buttonPrevPoint.PerformClick();
+                    MessageBox.Show("Нахуй!");
+                    break;
+            }
+            switch (e.KeyData & Keys.KeyCode)
+            {
+                case Keys.Up:
+                case Keys.Right:
+                case Keys.Down:
+                case Keys.Left:
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                    break;
+            }
+
+        }
+
+
     }
 
 
