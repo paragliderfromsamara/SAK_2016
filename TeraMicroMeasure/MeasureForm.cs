@@ -118,8 +118,10 @@ namespace TeraMicroMeasure
         private void InitDesign()
         {
             InitializeComponent();
-            measureResultDataGrid.ColumnHeadersDefaultCellStyle = BuildParameterNameCellStyle();
-            ElementNumber.DefaultCellStyle = BuildParameterNameCellStyle();
+            measureResultDataGrid.ColumnHeadersDefaultCellStyle = BuildElementsHeaderStyle();
+            ElementNumber.DefaultCellStyle = BuildElementCellStyle();
+            SubElement_4.DefaultCellStyle = SubElement_3.DefaultCellStyle = SubElement_2.DefaultCellStyle = SubElement_1.DefaultCellStyle = BuildResultStyle();
+
         }
 
         private void InitMeasureDraft()
@@ -508,7 +510,7 @@ namespace TeraMicroMeasure
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex.Message}", "Ошибка загрузки структур", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{ex.Message}", "Ошибка при загрузке структур", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             // string s = $"{Cable.CableId_ColumnName} = {cableComboBox.SelectedValue}";
             //foreach (DataColumn c in Cables.Columns) s += $"{c.ColumnName}\n";
@@ -663,26 +665,26 @@ namespace TeraMicroMeasure
                 case DeviceCaptureStatus.DISCONNECTED:
                     availableDevices.Visible = true;
                     availableDevices.Enabled = true;
-                    startMeasureButton.Visible = false;
+                    panelMeasurePointControl.Visible = false; //startMeasureButton.Visible = false;
                     deviceControlButton.Text = "Подключить";
                     deviceControlButton.Visible = true;
                     deviceControlButton.Enabled = true;
-                    measuredParametersGroupBox.Enabled = true;
+                    measuredParameterSelect.Enabled = true;
                     break;
                 case DeviceCaptureStatus.CONNECTED:
                     availableDevices.Visible = false;
-                    startMeasureButton.Visible = true;
+                    panelMeasurePointControl.Visible = true; //startMeasureButton.Visible = true;
                     deviceControlButton.Text = "Отключить";
                     deviceControlButton.Visible = true;
-                    measuredParametersGroupBox.Enabled = false;
+                    measuredParameterSelect.Enabled = false;
                     break;
                 case DeviceCaptureStatus.WAITING_FOR_CONNECTION:
                     availableDevices.Visible = true;
                     availableDevices.Enabled = false;
-                    startMeasureButton.Visible = false;
+                    panelMeasurePointControl.Visible = false; //startMeasureButton.Visible = false;
                     deviceControlButton.Text = "Прервать";
                     deviceControlButton.Visible = true;
-                    measuredParametersGroupBox.Enabled = false;
+                    measuredParameterSelect.Enabled = false;
                     break;
             }
             device_capture_status = status;
@@ -1047,33 +1049,49 @@ namespace TeraMicroMeasure
 
         }
 
-        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameCellStyle()
+        private System.Windows.Forms.DataGridViewCellStyle BuildElementCellStyle()
         {
             System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
-            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(245)))), ((int)(((byte)(255)))));
             parameterNameCellStyle.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            parameterNameCellStyle.ForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
             parameterNameCellStyle.NullValue = "-";
             parameterNameCellStyle.Padding = new System.Windows.Forms.Padding(3);
             parameterNameCellStyle.SelectionBackColor = parameterNameCellStyle.BackColor;
-            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
             parameterNameCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             return parameterNameCellStyle;
         }
 
-        private System.Windows.Forms.DataGridViewCellStyle BuildParameterNameHeaderStyle()
+        private System.Windows.Forms.DataGridViewCellStyle BuildElementsHeaderStyle()
         {
             System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
             style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(201)))), ((int)(((byte)(0)))));
-            style.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            style.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             style.ForeColor = System.Drawing.Color.Gainsboro;
             style.NullValue = "-";
             style.Padding = new System.Windows.Forms.Padding(3);
 
-            style.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            style.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            style.SelectionBackColor = style.BackColor;
+            style.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+            return style;
+        }
+        private System.Windows.Forms.DataGridViewCellStyle BuildResultStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
+            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            style.BackColor = System.Drawing.Color.White;
+            style.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            style.ForeColor = System.Drawing.Color.DarkBlue;
+            style.NullValue = "-";
+            style.Padding = new System.Windows.Forms.Padding(3);
+
+            style.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            style.SelectionForeColor = System.Drawing.Color.Gainsboro;
             style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
 
             return style;
