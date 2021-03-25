@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using NormaLib.DBControl;
+using System.ComponentModel;
 
 namespace AppTest
 {
@@ -18,13 +21,33 @@ namespace AppTest
             //ExperimentFunc();
             //DBTest.Start();
             //DeviceTest.Start();
-            WordProtocolTest.Start();
+            //WordProtocolTest.Start();
+            GetTkcIzol();
 
             Console.ReadLine();
             
 
         }
 
+        private static void GetTkcIzol()
+        {
+            MySQLDBControl dbc = new MySQLDBControl("bd_cable");
+            dbc.MyConn.Open();
+            MySql.Data.MySqlClient.MySqlDataReader r = dbc.GetReader("SELECT * FROM tkc_izol");
+            List<string> values = new List<string>();
+            ///FileStream fs = new FileStream(@"ass_hole.txt", FileMode.Create);
+            while (r.Read())
+            {
+                string s = "new string[] {%},";
+                string vals = $"\"{r[0]}\", \"{r[1]}\", \"{r[2]}\"";
+                s = s.Replace("%", vals);
+                values.Add(s);
+                Console.WriteLine(s);
+            }
+
+            File.WriteAllText(@"ass_hole.txt", string.Join("\n", values));//fs.WriteAsync()(values.ToArray(), 0, values.Count);
+            dbc.MyConn.Close();
+        }
 
         public static void PrintTitle(string title)
         {

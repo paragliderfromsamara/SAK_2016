@@ -144,6 +144,7 @@
     <Compile Include="DBControl\Tables\dRFormula.cs" />
     <Compile Include="DBControl\Tables\FrequencyRange.cs" />
     <Compile Include="DBControl\Tables\IsolationMaterial.cs" />
+    <Compile Include="DBControl\Tables\IsolMaterialCoeffs.cs" />
     <Compile Include="DBControl\Tables\LeadMaterial.cs" />
     <Compile Include="DBControl\Tables\LeadTestStatus.cs" />
     <Compile Include="DBControl\Tables\LengthBringingType.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Devices\XmlObjects\MicroohmmeterXMLState.cs" />
     <Compile Include="Devices\XmlObjects\TeraohmmetrXMLState.cs" />
     <Compile Include="Measure\MeasurePointMap.cs" />
+    <Compile Include="Measure\MeasureResultConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

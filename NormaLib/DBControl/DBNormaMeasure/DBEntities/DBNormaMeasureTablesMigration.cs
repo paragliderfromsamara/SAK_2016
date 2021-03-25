@@ -41,6 +41,7 @@ namespace NormaLib.DBControl.DBNormaMeasure
                typeof(CableStructure),
                typeof(LeadMaterial),
                typeof(IsolationMaterial),
+               typeof(IsolMaterialCoeffs),
                typeof(MeasuredParameterType),
                typeof(dRBringingFormula),
                typeof(dRFormula),
@@ -88,6 +89,7 @@ namespace NormaLib.DBControl.DBNormaMeasure
             else if (type == typeof(LeadTestStatus)) make_LeadTestStatussTablesSeeds(ref t);
             else if (type == typeof(FrequencyRange)) make_FrequencyRangesTablesSeeds(ref t);
             else if (type == typeof(CableTestStatus)) make_CableTestStatusesTablesSeeds(ref t);
+            else if (type == typeof(IsolMaterialCoeffs)) make_IsolationMaterialCoeffsTableSeeds(ref t);
             return t;
         }
 
@@ -358,72 +360,116 @@ namespace NormaLib.DBControl.DBNormaMeasure
             }
         }
 
-        /*
-
-        #region объявление структур таблиц базы данных
-        /// <summary>
-        /// Заполняем миграцию таблицы кабелей
-        /// </summary>
-        /// <returns></returns>
-        private static DBTable buildCablesTableMigration()
+        private void make_IsolationMaterialCoeffsTableSeeds(ref DBEntityTable t)
         {
-            DBTable table = new DBTable();
-            table.tableName = "cables";
-            table.entityName = "cable";
-            table.oldTableName = "cables";
-            table.oldDbName = "bd_cable";
-            table.primaryKey = "id";
-            table.dbName = dbName;
-            table.columns = new DBTableColumn[]
-            {
-                new DBTableColumn { Name = "id", Type = "INT UNSIGNED AUTO_INCREMENT NOT NULL", OldName = "CabNum" },
-                new DBTableColumn { Name = "name", Type = "TINYTEXT", OldName = "CabName", DefaultValue = "''" },
-                new DBTableColumn { Name = "struct_name", Type = "TINYTEXT", OldName = "CabNameStruct", DefaultValue = "''" },
-                new DBTableColumn { Name = "build_length", Type = "float", OldName = "StrLengt", DefaultValue = "0" },
-                new DBTableColumn { Name = "document_id", Type = "INT UNSIGNED NOT NULL", OldName = "DocInd", JoinedTable = DocumentsTable, DefaultValue = "0" },
-                new DBTableColumn { Name = "notes", Type = "TINYTEXT", OldName = "TextPrim", DefaultValue = "''" },
-                new DBTableColumn { Name = "linear_mass", Type = "float", OldName = "PogMass" },
-                new DBTableColumn { Name = "code_okp", Type = "CHAR(12)", OldName = "KodOKP" },
-                new DBTableColumn { Name = "code_kch", Type = "CHAR(2)", OldName = "KodOKP_KCH" },
-                new DBTableColumn { Name = "u_cover", Type = "float", OldName = "U_Obol", DefaultValue = "NULL" },
-                new DBTableColumn { Name = "p_min", Type = "float", OldName = "P_min", DefaultValue = "NULL" },
-                new DBTableColumn { Name = "p_max", Type ="float", OldName = "P_max", DefaultValue = "NULL" },
-                new DBTableColumn { Name = "is_draft", Type = "TINYINT(1)", DefaultValue = "0"},
-                new DBTableColumn { Name = "is_deleted", Type = "TINYINT(1)", DefaultValue = "0"}
+            string[][] data =
+{
+                new string[] {"1", "5", "0.1"},
+new string[] {"1", "6", "0.12"},
+new string[] {"1", "7", "0.15"},
+new string[] {"1", "8", "0.17"},
+new string[] {"1", "9", "0.19"},
+new string[] {"1", "10", "0.22"},
+new string[] {"1", "11", "0.26"},
+new string[] {"1", "12", "0.3"},
+new string[] {"1", "13", "0.35"},
+new string[] {"1", "14", "0.42"},
+new string[] {"1", "15", "0.48"},
+new string[] {"1", "16", "0.56"},
+new string[] {"1", "17", "0.64"},
+new string[] {"1", "18", "0.75"},
+new string[] {"1", "19", "0.87"},
+new string[] {"1", "20", "1"},
+new string[] {"1", "21", "1.17"},
+new string[] {"1", "22", "1.35"},
+new string[] {"1", "23", "1.57"},
+new string[] {"1", "24", "1.82"},
+new string[] {"1", "25", "2.1"},
+new string[] {"1", "26", "2.42"},
+new string[] {"1", "27", "2.83"},
+new string[] {"1", "28", "3.3"},
+new string[] {"1", "29", "3.82"},
+new string[] {"1", "30", "4.45"},
+new string[] {"1", "31", "5.2"},
+new string[] {"1", "32", "6"},
+new string[] {"1", "33", "6.82"},
+new string[] {"1", "34", "7.75"},
+new string[] {"1", "35", "8.8"},
+new string[] {"2", "5", "0.5"},
+new string[] {"2", "6", "0.53"},
+new string[] {"2", "7", "0.55"},
+new string[] {"2", "8", "0.58"},
+new string[] {"2", "9", "0.61"},
+new string[] {"2", "10", "0.64"},
+new string[] {"2", "11", "0.68"},
+new string[] {"2", "12", "0.7"},
+new string[] {"2", "13", "0.73"},
+new string[] {"2", "14", "0.76"},
+new string[] {"2", "15", "0.8"},
+new string[] {"2", "16", "0.84"},
+new string[] {"2", "17", "0.88"},
+new string[] {"2", "18", "0.91"},
+new string[] {"2", "19", "0.96"},
+new string[] {"2", "20", "1"},
+new string[] {"2", "21", "1.05"},
+new string[] {"2", "22", "1.13"},
+new string[] {"2", "23", "1.2"},
+new string[] {"2", "24", "1.27"},
+new string[] {"2", "25", "1.35"},
+new string[] {"2", "26", "1.43"},
+new string[] {"2", "27", "1.52"},
+new string[] {"2", "28", "1.61"},
+new string[] {"2", "29", "1.71"},
+new string[] {"2", "30", "1.82"},
+new string[] {"2", "31", "1.93"},
+new string[] {"2", "32", "2.05"},
+new string[] {"2", "33", "2.18"},
+new string[] {"2", "34", "2.31"},
+new string[] {"2", "35", "2.46"},
+new string[] {"3", "5", "0.58"},
+new string[] {"3", "6", "0.6"},
+new string[] {"3", "7", "0.64"},
+new string[] {"3", "8", "0.67"},
+new string[] {"3", "9", "0.69"},
+new string[] {"3", "10", "0.72"},
+new string[] {"3", "11", "0.74"},
+new string[] {"3", "12", "0.76"},
+new string[] {"3", "13", "0.79"},
+new string[] {"3", "14", "0.82"},
+new string[] {"3", "15", "0.85"},
+new string[] {"3", "16", "0.87"},
+new string[] {"3", "17", "0.9"},
+new string[] {"3", "18", "0.93"},
+new string[] {"3", "19", "0.97"},
+new string[] {"3", "20", "1"},
+new string[] {"3", "21", "1.03"},
+new string[] {"3", "22", "1.07"},
+new string[] {"3", "23", "1.1"},
+new string[] {"3", "24", "1.14"},
+new string[] {"3", "25", "1.18"},
+new string[] {"3", "26", "1.22"},
+new string[] {"3", "27", "1.27"},
+new string[] {"3", "28", "1.32"},
+new string[] {"3", "29", "1.38"},
+new string[] {"3", "30", "1.44"},
+new string[] {"3", "31", "1.52"},
+new string[] {"3", "32", "1.59"},
+new string[] {"3", "33", "1.67"},
+new string[] {"3", "34", "1.77"},
+new string[] {"3", "35", "1.87"}
+
             };
-            table.SelectAllQuery = $"{table.SelectQuery} WHERE {table.tableName}.is_draft = 0 AND {table.tableName}.is_deleted = 0";
-            return table;
+
+            foreach (string[] rData in data)
+            {
+                IsolMaterialCoeffs d = (IsolMaterialCoeffs)t.NewRow();
+                d.MaterialId = Convert.ToUInt16(rData[0]);
+                d.Temperature = Convert.ToInt16(rData[1]); 
+                d.Coefficient = Convert.ToSingle(rData[2]);
+
+                t.Rows.Add(d);
+            }
         }
 
-        /// <summary>
-        /// Заполняем миграцию таблицы нормативных документов
-        /// </summary>
-        /// <returns></returns>
-        private static DBTable buildDocumentsTableMigration()
-        {
-            DBTable table = new DBTable();
-
-            table.tableName = "documents";
-            table.entityName = "document";
-            table.oldTableName = "norm_docum";
-            table.oldDbName = "bd_cable";
-            table.primaryKey = "id";
-            table.dbName = dbName;
-            table.columns = new DBTableColumn[]
-            {
-                new DBTableColumn {Name = "id", Type = "INT UNSIGNED AUTO_INCREMENT NOT NULL", OldName = "DocInd"},
-                new DBTableColumn {Name = "short_name", Type = "TINYTEXT", OldName = "DocNum"},
-                new DBTableColumn {Name = "full_name", Type = "VARCHAR(1000)", OldName = "DocName"}
-            };
-            table.seeds = new string[][] {
-                new string[] { "1", "'ГОСТ Р 51311-99'", "'КАБЕЛИ ТЕЛЕФОННЫЕ С ПОЛИЭТИЛЕНОВОЙ ИЗОЛЯЦИЕЙ В ПЛАСТМАССОВОЙ ОБОЛОЧКЕ Технические условия'" },
-                new string[] { "2", "'ГОСТ Р 51312-99'", "'КАБЕЛИ ДЛЯ СИГНАЛИЗАЦИИ И БЛОКИРОВКИ С ПОЛИЭТИЛЕНОВОЙ ИЗОЛЯЦИЕЙ В ПЛАСТМАССОВОЙ ОБОЛОЧКЕ Технические условия'" },
-                new string[] { "3", "'ГОСТ 15125-92'", "'КАБЕЛИ СВЯЗИ СИММЕТРИЧНЫЕ ВЫСОКОЧАСТОТНЫЕ С КОРДЕЛЬНО-ПОЛИСТИРОЛЬНОЙ ИЗОЛЯЦИЕЙ Технические условия'" }
-            };
-
-            return table;
-        }
-        #endregion
-        */
     }
 }

@@ -27,6 +27,9 @@ namespace TeraMicroMeasure
         bool MeasureIsStartedOnDevice;
 
         private DBEntityTable Cables;
+        private DBEntityTable MeasuredParameterTypes;
+        private DBEntityTable IsolMaterialCoeffsTable;
+        private DBEntityTable LeadMaterials;
         private Cable currentCable;
         private CableStructure currentStructure;
 
@@ -35,8 +38,8 @@ namespace TeraMicroMeasure
 
         private MeasureStatus measureStatus = MeasureStatus.STOPPED;
         private DeviceXMLState current_device_state;
-
-      
+        private CableStructureMeasuredParameterData[] CurrentMeasuredParameterDataCollection;
+        private float MaterialCoeff = 1.0f;
 
         public int ClientID
         {
@@ -107,12 +110,25 @@ namespace TeraMicroMeasure
             IsOnline = isCurrentPCClient = clientID == SettingsControl.GetClientId();
             //////////////////////////////////////////////////////////////
             ResetMeasureField();
+            LoadMeasuredParameterTypes();
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
             SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
             SetCapturedDeviceTypeId();
+            LoadMaterials();
             LoadCables();
             InitMeasureDraft();
+        }
+
+        private void LoadMaterials()
+        {
+            LeadMaterials = LeadMaterial.get_all_as_table();
+            IsolMaterialCoeffsTable = IsolMaterialCoeffs.get_all_as_table();
+        }
+
+        private void LoadMeasuredParameterTypes()
+        {
+            MeasuredParameterTypes = MeasuredParameterType.get_all_as_table_for_cable_structure_form();
         }
 
         private void InitDesign()
@@ -181,6 +197,9 @@ namespace TeraMicroMeasure
                     cableComboBox.SelectedIndex = 0;
                     cableComboBox.Enabled = false;
                     cableStructureCB.Enabled = false;
+                    labelPointNumber.Text = "";
+                    measureResultDataGrid.Visible = false;
+                    neasureResultPanel.Dock = DockStyle.Fill;
                 }
 
             }catch
@@ -213,6 +232,9 @@ namespace TeraMicroMeasure
         {
             voltagesGroupBox.Visible = false;
             InitAverageCountComboBox();
+            measuredParameterCB.DisplayMember = $"{MeasuredParameterType.ParameterName_ColumnName}";
+            measuredParameterCB.ValueMember = $"{MeasuredParameterType.ParameterTypeId_ColumnName}";
+            DisableParamtersCB();
             //selectDevicePanel.Visible = measurePanel.Enabled = isCurrentPCClient;
         }
 
@@ -272,9 +294,20 @@ namespace TeraMicroMeasure
 
         private DeviceType GetDeviceTypeByRadioBox()
         {
-            if (RleadRadioButton.Checked) return DeviceType.Microohmmeter;
-            else if (RizolRadioButton.Checked) return DeviceType.Teraohmmeter;
-            else return DeviceType.Unknown;
+            if (measuredParameterCB.SelectedValue == null) return DeviceType.Unknown;
+            switch((uint)measuredParameterCB.SelectedValue)
+            {
+                case MeasuredParameterType.Risol1:
+                case MeasuredParameterType.Risol2:
+                    return DeviceType.Teraohmmeter;
+                case MeasuredParameterType.Rleads:
+                    return DeviceType.Microohmmeter;
+                default:
+                    return DeviceType.Unknown;
+            }
+            //if (RleadRadioButton.Checked) return DeviceType.Microohmmeter;
+            //else if (RizolRadioButton.Checked) return DeviceType.Teraohmmeter;
+            //else return DeviceType.Unknown;
         }
 
         private void InitAverageCountComboBox()
@@ -306,7 +339,7 @@ namespace TeraMicroMeasure
         private void fillInputsFromClientState()
         {
             //if (!HasClientState) return;
-            SetMeasureTypeFromXMLState();
+            //SetMeasureTypeFromXMLState();
             SetVoltageFromXmlState();
             //SetCableIDFromXmlState();
             SetCableLengthFromXmlState();
@@ -385,7 +418,7 @@ namespace TeraMicroMeasure
                     break;
             }
         }
-
+        /*
         private void SetMeasureTypeFromXMLState()
         {
             switch(measureState.MeasureTypeId)
@@ -393,11 +426,11 @@ namespace TeraMicroMeasure
                 case MeasuredParameterType.Rleads:
                     RleadRadioButton.Checked = true;
                     break;
-                case MeasuredParameterType.Risol2:
+                case MeasuredParameterType.Risol1:
                     RizolRadioButton.Checked = true;
                     break;
             }
-        }
+        }*/
 
         private void MeasuredVoltageRadioButton_CheckedChanged(object sender, EventArgs e)
         {
@@ -416,12 +449,13 @@ namespace TeraMicroMeasure
             MeasureStateOnFormChanged();
         }
 
-        private void MeasureTypeRadioButton_CheckedChanged_Common(object sender, EventArgs e)
-        {
-            voltagesGroupBox.Visible = RizolRadioButton.Checked;
-            polarDelayLbl.Text = RizolRadioButton.Checked ? "Выдержка, мин" : "Выдержка, мс";
-            depolTimeLbl.Text = RizolRadioButton.Checked ? "Разряд, с" : "Пауза, c";
-        }
+        //private void MeasureTypeRadioButton_CheckedChanged_Common(object sender, EventArgs e)
+        //{
+        //    voltagesGroupBox.Visible = RizolRadioButton.Checked;
+        //    polarDelayLbl.Text = RizolRadioButton.Checked ? "Выдержка, мин" : "Выдержка, мс";
+       //     depolTimeLbl.Text = RizolRadioButton.Checked ? "Разряд, с" : "Пауза, c";
+       // }
+        /*
         private void MeasureTypeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             RadioButton rb = sender as RadioButton;
@@ -430,25 +464,26 @@ namespace TeraMicroMeasure
                 uint mId = 0;
                 if (rb == RizolRadioButton)
                 {
-                    mId = MeasuredParameterType.Risol2;
+                    mId = MeasuredParameterType.Risol1;
                 }
                 else if (rb == RleadRadioButton)
                 {
                     mId = MeasuredParameterType.Rleads;
                 }
+                measuredParameterCB.Visible = mId == MeasuredParameterType.Risol1;
                 CapturedDeviceType = GetDeviceTypeByRadioBox();
                 measureState.MeasureTypeId = mId;
             }
             RefreshMeasureControl();
             MeasureStateOnFormChanged();
         }
-
+        */
 
         private void AddHandlersToInputs()
         {
             //if (!HasClientState) return;
-            RleadRadioButton.CheckedChanged += MeasureTypeRadioButton_CheckedChanged;
-            RizolRadioButton.CheckedChanged += MeasureTypeRadioButton_CheckedChanged;
+           // RleadRadioButton.CheckedChanged += MeasureTypeRadioButton_CheckedChanged;
+           // RizolRadioButton.CheckedChanged += MeasureTypeRadioButton_CheckedChanged;
 
             v10_RadioButton.CheckedChanged += MeasuredVoltageRadioButton_CheckedChanged;
             v100_RadioButton.CheckedChanged += MeasuredVoltageRadioButton_CheckedChanged;
@@ -503,6 +538,8 @@ namespace TeraMicroMeasure
                 cableStructureCB.SelectedIndex = 0;
                 cableStructureCB.Enabled = currentCable.CableStructures.Rows.Count > 1;
                 measureState.MeasuredCableID = (int)currentCable.CableId;
+                FillMeasuredParameterTypesCB();
+                RecalculateMaterialCoeff();
                 MeasureStateOnFormChanged();
             }
             catch (EvaluateException ex)
@@ -529,11 +566,38 @@ namespace TeraMicroMeasure
         */
         }
 
+        private void FillMeasuredParameterTypesCB()
+        {
+            //measuredParameterCB.Items.Clear();
+            if (currentStructure != null)
+            {
+                if (currentStructure.MeasuredParameters.Rows.Count > 0)
+                {
+                    DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
+                    measuredParameterCB.DataSource = MeasuredParameterTypes.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", currentStructure.MeasuredParameterTypes_ids)})").CopyToDataTable();
+                    
+                    measuredParameterCB.DropDownStyle = ComboBoxStyle.DropDownList;
+                    measuredParameterCB.Enabled = true;
+                }
+                else
+                {
+                    DisableParamtersCB();
+                }
+            }
+        }
+
+       private void DisableParamtersCB()
+        {
+            measuredParameterCB.Text = "Параметры отсутсвуют";
+            measuredParameterCB.DropDownStyle = ComboBoxStyle.DropDown;
+            measuredParameterCB.Enabled = false;
+        }
+
         private void RemoveHandlersFromInputs()
         {
             //if (!HasClientState) return;
-            RleadRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
-            RizolRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
+           // RleadRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
+           // RizolRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
 
             v10_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
             v100_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
@@ -597,6 +661,7 @@ namespace TeraMicroMeasure
         private void ResetMeasureField()
         {
             deviceInfo.Text = "Измеритель не выбран";
+            resultField.Text = "0.0";
         }
 
         private void CaptureSelectedDevice()
@@ -638,25 +703,41 @@ namespace TeraMicroMeasure
                     startMeasureButton.Enabled = true;
                     deviceControlButton.Enabled = true;
                     MeasureIsStartedOnDevice = false;
+                    EnableMeasurePointControl();
                     break;
                 case MeasureStatus.WILL_START:
                     startMeasureButton.Text = "Запускается...";
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
+                    DisableMeasurePointControl();
                     break;
                 case MeasureStatus.STARTED:
                     startMeasureButton.Text = "Остановить измерение";
                     startMeasureButton.Enabled = true;
                     deviceControlButton.Enabled = false;
                     MeasureIsStartedOnDevice = true;
+                    DisableMeasurePointControl();
                     break;
                 case MeasureStatus.WILL_STOPPED:
                     startMeasureButton.Text = "Останавливается...";
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
+                    DisableMeasurePointControl();
                     break;
             }
             measureStatus = status;
+        }
+
+        private void DisableMeasurePointControl()
+        {
+            buttonNextElement.Enabled = buttonNextPoint.Enabled = buttonPrevElement.Enabled = buttonPrevPoint.Enabled = false;
+            measureResultDataGrid.Enabled = false;
+        }
+
+        private void EnableMeasurePointControl()
+        {
+            measureResultDataGrid.Enabled = true;
+            RefreshMeasurePointControlButtons();
         }
 
         private void SetDeviceCaptureStatus(DeviceCaptureStatus status)
@@ -869,8 +950,9 @@ namespace TeraMicroMeasure
         {
             if (xml_device.MeasureStatusId == (uint)DeviceMeasureStatus.SUCCESS)
             {
-               // return $"{xml_device.ConvertedResult}";
-               return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";
+                //return $"{xml_device.RawResult}";
+                MeasureResultConverter c = new MeasureResultConverter(xml_device.RawResult, CurrentMeasuredParameterDataCollection[0], (Single)cableLengthNumericUpDown.Value, MaterialCoeff);
+                return c.ConvertedValueLabel;//return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";
             }else if (xml_device.MeasureStatusId == 0)
             {
                 return "";
@@ -975,7 +1057,7 @@ namespace TeraMicroMeasure
         {
             RefreshMeasurePointLabel();
             SelectCurrentMeasurePointOnResultGrid();
-            RefreshControlButtons();
+            RefreshMeasurePointControlButtons();
         }
 
         private void RefreshMeasurePointLabel()
@@ -1003,7 +1085,7 @@ namespace TeraMicroMeasure
             measurePointMap.SetPrevElement();
         }
 
-        private void RefreshControlButtons()
+        private void RefreshMeasurePointControlButtons()
         {
             buttonPrevElement.Enabled = measurePointMap.PrevElementEnabled;
             buttonPrevPoint.Enabled = measurePointMap.PrevPointEnabled;
@@ -1015,12 +1097,13 @@ namespace TeraMicroMeasure
         {
             measurePointMap = new MeasurePointMap(currentStructure, measureState.MeasureTypeId);
             measurePointMap.OnMeasurePointChanged += OnMeasurePointChanged_Handler;
-            RefreshControlButtons();
+            RefreshMeasurePointControlButtons();
         }
 
         private void measureResultDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex > ElementNumber.Index && e.ColumnIndex <= SubElement_4.Index)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (e.ColumnIndex > ElementNumber.Index && e.ColumnIndex <= SubElement_4.Index && measureStatus == MeasureStatus.STOPPED)
             {
                 pointChangedByClick = true;
                 measurePointMap.SetMeasurePoint(e.RowIndex, e.ColumnIndex - ElementNumber.Index - 1);
@@ -1103,6 +1186,58 @@ namespace TeraMicroMeasure
             style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
 
             return style;
+        }
+
+        private void measuredParameterCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox rb = sender as ComboBox;
+            CapturedDeviceType = GetDeviceTypeByRadioBox();
+            measureState.MeasureTypeId = (uint)rb.SelectedValue;
+            RefreshMeasureControl();
+            SetCurrentMeasureParameterData();
+            MeasureStateOnFormChanged();
+        }
+
+        private void SetCurrentMeasureParameterData()
+        {
+            if (currentStructure == null) return;
+            if (currentStructure.HasMeasuredParameters)
+            {
+                CurrentMeasuredParameterDataCollection = (CableStructureMeasuredParameterData[])currentStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {measureState.MeasureTypeId}");
+            }
+        }
+
+        private void temperature_ValueChanged(object sender, EventArgs e)
+        {
+            RecalculateMaterialCoeff();
+        }
+
+        private void RecalculateMaterialCoeff()
+        {
+            float mat_coeff = 1.0f;
+            DataRow[] dataRows;
+            if (currentStructure != null && measuredParameterCB.SelectedValue != null)
+            {
+                switch((uint)measuredParameterCB.SelectedValue)
+                {
+                    case MeasuredParameterType.Risol1:
+                    case MeasuredParameterType.Risol2:
+                    case MeasuredParameterType.Risol3:
+                    case MeasuredParameterType.Risol4:
+                        dataRows = IsolMaterialCoeffsTable.Select($"{IsolMaterialCoeffs.MaterialId_ColumnName} = {currentStructure.IsolationMaterialId} AND {IsolMaterialCoeffs.Temperature_ColumnName} = {temperatureValue.Value}");
+                        if (dataRows.Length > 0)
+                            mat_coeff = ((IsolMaterialCoeffs)dataRows[0]).Coefficient;
+
+                        break;
+                    case MeasuredParameterType.Rleads:
+                        dataRows = LeadMaterials.Select($"{LeadMaterial.MaterialId_ColumnName} = {currentStructure.LeadMaterialTypeId}");
+                        if (dataRows.Length > 0)
+                            mat_coeff = 1.0f + ((LeadMaterial)dataRows[0]).MaterialTKC*((float)temperatureValue.Value - 20.0f);// (1 + tempCoeff * (temperature - 20.0)
+                        break;
+                }
+            }
+            MaterialCoeff = mat_coeff;
+            temperatureComboBox.Text = MaterialCoeff.ToString();
         }
     }
 
