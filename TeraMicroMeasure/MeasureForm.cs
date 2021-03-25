@@ -439,6 +439,7 @@ namespace TeraMicroMeasure
                 CapturedDeviceType = GetDeviceTypeByRadioBox();
                 measureState.MeasureTypeId = mId;
             }
+            RefreshMeasureControl();
             MeasureStateOnFormChanged();
         }
 
@@ -925,6 +926,7 @@ namespace TeraMicroMeasure
             InitPointMapForCurrentStructureAndCurrentMeasureType();
             //int subElsCounter = MeasuredParameterType.MeasurePointNumberPerStructureElement(measureState.MeasureTypeId, currentStructure.StructureType.StructureLeadsAmount);
             int[] valueColumns = new int[] { SubElement_1.Index, SubElement_2.Index, SubElement_3.Index, SubElement_4.Index };
+            List<DataGridViewRow> rowsForAdd = new List<DataGridViewRow>();
             measureResultDataGrid.Rows.Clear();
             SubElement_1.Visible = true;
             SubElement_2.Visible = measurePointMap.MeasurePointsPerElement > 1;
@@ -946,10 +948,11 @@ namespace TeraMicroMeasure
                     int pointIdx = i * measurePointMap.MeasurePointsPerElement + j;
                     r.Cells[valueColumns[j]].Value = pointIdx;
                 }
-                measureResultDataGrid.Rows.Add(r);
+                rowsForAdd.Add(r); 
             }
-
-            //measureResultDataGrid.ClearSelection();
+            measureResultDataGrid.Rows.AddRange(rowsForAdd.ToArray());
+            RefreshMeasurePointLabel();
+            SelectCurrentMeasurePointOnResultGrid();
         }
 
         private void SelectCurrentMeasurePointOnResultGrid()
@@ -965,14 +968,19 @@ namespace TeraMicroMeasure
 
         private void ScrollResultTableToSelectedElement()
         {
-            measureResultDataGrid.FirstDisplayedScrollingRowIndex = (measurePointMap.CurrentElementIndex / measureResultDataGrid.DisplayedRowCount(false)) * measureResultDataGrid.DisplayedRowCount(false);
+            if (measureResultDataGrid.DisplayedRowCount(false) > 0) measureResultDataGrid.FirstDisplayedScrollingRowIndex = (measurePointMap.CurrentElementIndex / measureResultDataGrid.DisplayedRowCount(false)) * measureResultDataGrid.DisplayedRowCount(false);
         }
 
         private void OnMeasurePointChanged_Handler(object sender, EventArgs e)
         {
-            labelPointNumber.Text = $"{measurePointMap.CurrentElementTitle} {measurePointMap.CurrentMeasureTitle}";
+            RefreshMeasurePointLabel();
             SelectCurrentMeasurePointOnResultGrid();
             RefreshControlButtons();
+        }
+
+        private void RefreshMeasurePointLabel()
+        {
+            labelPointNumber.Text = (measurePointMap == null) ? String.Empty : $"{measurePointMap.CurrentElementTitle} {measurePointMap.CurrentMeasureTitle}";
         }
 
         private void buttonNextPoint_Click(object sender, EventArgs e)
