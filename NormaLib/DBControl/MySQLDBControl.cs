@@ -240,7 +240,31 @@ namespace NormaLib.DBControl
             return list.ToArray();
         }
 
+        public void MakeDump(string path, string file_name)
+        {
+            string fullPath = $"{path}/{file_name}";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            if (!File.Exists(fullPath))
+            {
+                File.Create(fullPath).Close();
+            }
+            using (MySqlCommand cmd = new MySqlCommand())
+            {
+                using (MySqlBackup bc = new MySqlBackup(cmd))
+                {
+                    cmd.Connection = MyConn;
+                    cmd.Connection.Open();
+                    bc.ExportToFile(fullPath);
+                    cmd.Connection.Close();
+                }
 
+            }
+                
+
+        }
 
         public bool IsDBExists(string db_name)
         {

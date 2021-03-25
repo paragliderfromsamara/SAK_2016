@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.IO;
 using NormaLib.DBControl;
 using System.ComponentModel;
+using MySql.Data.MySqlClient;
 
 namespace AppTest
 {
@@ -23,12 +24,19 @@ namespace AppTest
             //DeviceTest.Start();
             //WordProtocolTest.Start();
             //GetTkcIzol();
-            GetTablesList();
+            //GetTablesList();
+
+            CreateDump();
             Console.ReadLine();
             
 
         }
 
+        private static void CreateDump()
+        {
+            MySQLDBControl dbc = new MySQLDBControl("db_norma_measure");
+            dbc.MakeDump(@"dumps", "db_norma_measure.sql");
+        }
         private static void GetTablesList()
         {
             MySQLDBControl dbc = new MySQLDBControl("db_norma_measure");
