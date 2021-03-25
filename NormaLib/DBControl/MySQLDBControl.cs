@@ -226,6 +226,22 @@ namespace NormaLib.DBControl
             return list.ToArray();
         }
 
+        public string[] GetTablesList()
+        {
+            string q = "SHOW TABLES";
+            System.Collections.Generic.List<string> list = new List<string>();
+            MySqlDataReader r;
+            MyConn.Open();
+            r = GetReader(q);
+            while (r.Read()) list.Add(r[0].ToString());
+            r.Close();
+            MyConn.Close();
+
+            return list.ToArray();
+        }
+
+
+
         public bool IsDBExists(string db_name)
         {
             string[] dbList = GetDBList();

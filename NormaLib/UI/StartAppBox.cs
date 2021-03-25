@@ -10,25 +10,25 @@ using System.Windows.Forms;
 
 namespace NormaLib.UI
 {
-    public partial class ProcessBox : Form
+    public partial class StartAppBox : Form
     {
-        int counter = 3;
-        public ProcessBox(string process_name)
+        int counter = 4;
+        public StartAppBox(string process_name)
         {
             InitializeComponent();
             processNameLbl.Text = process_name;
-            processTimer.Interval = 500;
+            processTimer.Interval = 900;
             processTimer.Tick += (s, a) => {
                 string str = string.Empty;
-                for(int i = 0; i<counter%3; i++)
+                for(int i = 0; i<counter % 4; i++)
                 {
-                    str += "• ";
+                    str += "•";
                 }
-                
-                processIndicator.Text = str.Trim();
+                counter++;
+                statusText.Text = str.Trim();
             };
             Load += (s, a) => { processTimer.Start(); };
-            Closing += (s, a) => { processTimer.Stop(); };
+            Closing += (s, a) => { processTimer.Stop(); processTimer.Dispose(); };
 
         }
 

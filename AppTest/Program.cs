@@ -22,11 +22,20 @@ namespace AppTest
             //DBTest.Start();
             //DeviceTest.Start();
             //WordProtocolTest.Start();
-            GetTkcIzol();
-
+            //GetTkcIzol();
+            GetTablesList();
             Console.ReadLine();
             
 
+        }
+
+        private static void GetTablesList()
+        {
+            MySQLDBControl dbc = new MySQLDBControl("db_norma_measure");
+            string s = string.Join("\n", dbc.GetTablesList());
+            Console.WriteLine(s);
+           // File.WriteAllText(@"ass_hole.txt", string.Join("\n", values));//fs.WriteAsync()(values.ToArray(), 0, values.Count);
+            dbc.MyConn.Close();
         }
 
         private static void GetTkcIzol()

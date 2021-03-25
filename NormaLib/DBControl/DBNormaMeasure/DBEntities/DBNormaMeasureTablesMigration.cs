@@ -10,22 +10,6 @@ namespace NormaLib.DBControl.DBNormaMeasure
 {
     public class DBNormaMeasureTablesMigration : DBTablesMigration
     {
-       // public static DBTable DocumentsTable
-       // {
-       //     get
-       //     {
-       //         return buildDocumentsTableMigration();
-       //     }
-       // }
-
-        //public static DBTable CablesTable
-        //{
-        //    get
-        //    {
-        //        return buildCablesTableMigration();
-        //    }
-        //}
-
         static DBNormaMeasureTablesMigration()
         {
             //dbName = "db_norma_sac";

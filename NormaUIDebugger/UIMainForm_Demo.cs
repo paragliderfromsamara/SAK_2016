@@ -14,7 +14,8 @@ namespace NormaUIDebugger
     {
         public UIMainForm_Demo() : base()
         {
-           
+            StartAppBox pb = new StartAppBox("Тестовый");
+            pb.Show();
         }
         protected override void InitializeDesign()
         {

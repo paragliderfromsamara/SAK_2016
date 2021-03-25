@@ -387,26 +387,13 @@ namespace TeraMicroMeasure
 
         private void InitDataBaseOnServer()
         {
-            ProcessBox pc = null;
-            MySQLDBControl dbc = null;
             try
             {
-                dbc = new MySQLDBControl();
-
-                if (!dbc.IsDBExists("db_norma_measure"))
-                {
-                    pc = new ProcessBox("Создание Базы данных");
-                    pc.Show();
-                    DBNormaMeasureTablesMigration dbnm = new DBNormaMeasureTablesMigration();
-                    dbnm.InitDataBase();
-                    pc.Close();
-
-                }
+                   DBNormaMeasureTablesMigration dbnm = new DBNormaMeasureTablesMigration();
+                   dbnm.InitDataBase();
             }
             catch(Exception ex)
             {
-                if (pc != null) pc.Dispose();
-                if (dbc != null) dbc.Dispose();
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

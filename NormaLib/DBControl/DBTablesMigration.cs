@@ -7,6 +7,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace NormaLib.DBControl
 {
@@ -23,7 +24,8 @@ namespace NormaLib.DBControl
         protected string _query;
         protected MySqlConnection _dbConnection;
         private MySQLDBControl _dbControl;
-
+        private string[] TablesOnServer;
+        private string[] AddedTables;
 
 
         public static DBTable OutputTable(System.Type t)
@@ -58,9 +60,9 @@ namespace NormaLib.DBControl
             return _table;
         }
 
-        async public static void InitDataBaseAsync()
+        async public Task InitDataBaseAsync()
         {
-
+            await Task.Run(()=> { InitDataBase(); });
         }
 
 
@@ -88,9 +90,18 @@ namespace NormaLib.DBControl
         {
             //dropDB();
             checkAndCreateDB();
+            GetTablesOnServer();
             CreateTables();
             FillSeeds();
             //MigrateData();
+        }
+
+
+        private void GetTablesOnServer()
+        {
+            _dbControl.ConnectToDB(dbName);
+            TablesOnServer = _dbControl.GetTablesList();
+            
         }
 
         public void MigrateData()
@@ -116,10 +127,13 @@ namespace NormaLib.DBControl
         }
         public void CreateTables()
         {
+            List<string> tablesForSeeds = new List<string>();
             foreach(DBTable table in TablesList)
             {
-                checkAndAddTable(table);
+                if (checkAndAddTable(table))
+                    tablesForSeeds.Add(table.tableName);
             }
+            AddedTables = tablesForSeeds.ToArray();
         }
 
         public void FillSeeds()
@@ -173,7 +187,7 @@ namespace NormaLib.DBControl
         private void fillTableSeeds(Type type)
         {
             DBEntityTable seedsTable = getSeeds(type);
-            if (seedsTable.Rows.Count > 0) seedsTable.CreateRowsToDB(false);
+            if (seedsTable.Rows.Count > 0 && AddedTables.Contains(seedsTable.TableName)) seedsTable.CreateRowsToDB(false);
         }
 
         protected virtual DBEntityTable getSeeds(Type type) { return new DBEntityTable(type); }
@@ -201,12 +215,14 @@ namespace NormaLib.DBControl
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="columns"></param>
-        private void checkAndAddTable(DBTable table)
+        private bool checkAndAddTable(DBTable table)
         {
+            if (TablesOnServer.Contains(table.tableName)) return false;
             dbName = table.dbName;
-            checkAndCreateDB();
+            //checkAndCreateDB();
             _query = table.AddTableQuery;
             sendQueryToCurrentDB();
+            return true;
         }
 
         private void procMySqlException(MySqlException ex)
