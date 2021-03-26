@@ -39,6 +39,7 @@ namespace TeraMicroMeasure
                 SetDisplayedElementAmount((int)s.DisplayedAmount,i);
                 SetRealElementAmount((int)s.RealAmount, i);
                 SetLeadAmount((int)s.StructureType.StructureLeadsAmount, i);
+                /*
                 Debug.WriteLine($"Количество элементов {s.MeasuredParameterTypes_ids.Length}");
                 foreach(uint pt in s.MeasuredParameterTypes_ids)
                 {
@@ -48,6 +49,7 @@ namespace TeraMicroMeasure
                         SetMeasurePointValue((int)s.CableStructureId, (int)pt, j);
                     }
                 }
+                */
             }
         }
 
@@ -90,6 +92,19 @@ namespace TeraMicroMeasure
             set
             {
                 file.Write(TestedCableLength_AttrName, value.ToString(), TestAttrs_SectionName);
+            }
+        }
+
+        const string MeasureStartFlag_AttrName = "IsMeasureStart";
+        public bool IsMeasureStart
+        {
+            get
+            {
+                return file.Read(MeasureStartFlag_AttrName, TestAttrs_SectionName) == "1";
+            }
+            set
+            {
+                file.Write(MeasureStartFlag_AttrName, (value) ? "1" : "0", TestAttrs_SectionName);
             }
         }
 
@@ -197,16 +212,27 @@ namespace TeraMicroMeasure
         public float GetMeasurePointValue(int structure_id, int parameter_type_id, int point)
         {
             string section = GetTestResultSectionName(structure_id);
-            string temperatureAttrName = GetTestTemperatureAttrName(parameter_type_id, point);
             string valueAttrName = GetTestValueAttrName(parameter_type_id, point);
-            if (file.KeyExists(temperatureAttrName, section) && file.KeyExists(valueAttrName, section))
+            if (file.KeyExists(valueAttrName, section))
             {
                 return file.ReadFloat(valueAttrName, section);
             }
             else
                 return float.NaN;
-              
         }
+
+        public float GetMeasurePointTemperature(int structure_id, int parameter_type_id, int point)
+        {
+            string section = GetTestResultSectionName(structure_id);
+            string temperatureAttrName = GetTestTemperatureAttrName(parameter_type_id, point);
+            if (file.KeyExists(temperatureAttrName, section))
+            {
+                return file.ReadFloat(temperatureAttrName, section);
+            }
+            else
+                return 20f;
+        }
+
 
         public void SetMeasurePointValue(int structure_id, int parameter_type_id, int point, float value = 0, float temperature = -1)
         {

@@ -79,6 +79,8 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.measuredParameterSelect = new System.Windows.Forms.Panel();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
+            this.measureTimerLabel = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -192,7 +194,7 @@
             this.measureResultDataGrid.ShowCellToolTips = false;
             this.measureResultDataGrid.ShowEditingIcon = false;
             this.measureResultDataGrid.ShowRowErrors = false;
-            this.measureResultDataGrid.Size = new System.Drawing.Size(1175, 674);
+            this.measureResultDataGrid.Size = new System.Drawing.Size(1175, 647);
             this.measureResultDataGrid.TabIndex = 0;
             this.measureResultDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.measureResultDataGrid_CellClick);
             this.measureResultDataGrid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
@@ -288,6 +290,7 @@
             // 
             this.deviceControlButton.BackColor = System.Drawing.Color.RoyalBlue;
             this.deviceControlButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.deviceControlButton.FlatAppearance.BorderSize = 0;
             this.deviceControlButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.deviceControlButton.Location = new System.Drawing.Point(297, 0);
             this.deviceControlButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -348,6 +351,8 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(104)))), ((int)(((byte)(169)))));
+            this.panel2.Controls.Add(this.label6);
+            this.panel2.Controls.Add(this.measureTimerLabel);
             this.panel2.Controls.Add(this.resultField);
             this.panel2.Controls.Add(this.deviceInfo);
             this.panel2.Controls.Add(this.labelPointNumber);
@@ -356,15 +361,15 @@
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1650, 149);
+            this.panel2.Size = new System.Drawing.Size(1650, 176);
             this.panel2.TabIndex = 32;
             // 
             // resultField
             // 
             this.resultField.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.resultField.Location = new System.Drawing.Point(12, 63);
+            this.resultField.Location = new System.Drawing.Point(12, 54);
             this.resultField.Name = "resultField";
-            this.resultField.Size = new System.Drawing.Size(382, 48);
+            this.resultField.Size = new System.Drawing.Size(794, 48);
             this.resultField.TabIndex = 1;
             this.resultField.Text = "106.56 ТОм⋅м";
             this.resultField.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -381,7 +386,7 @@
             // labelPointNumber
             // 
             this.labelPointNumber.AutoSize = true;
-            this.labelPointNumber.Location = new System.Drawing.Point(14, 120);
+            this.labelPointNumber.Location = new System.Drawing.Point(12, 137);
             this.labelPointNumber.Name = "labelPointNumber";
             this.labelPointNumber.Size = new System.Drawing.Size(18, 19);
             this.labelPointNumber.TabIndex = 20;
@@ -482,9 +487,9 @@
             this.panel6.Controls.Add(this.measureResultDataGrid);
             this.panel6.Controls.Add(this.neasureResultPanel);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(0, 200);
+            this.panel6.Location = new System.Drawing.Point(0, 227);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(1650, 674);
+            this.panel6.Size = new System.Drawing.Size(1650, 647);
             this.panel6.TabIndex = 45;
             // 
             // neasureResultPanel
@@ -504,7 +509,7 @@
             this.neasureResultPanel.Location = new System.Drawing.Point(1175, 0);
             this.neasureResultPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.neasureResultPanel.Name = "neasureResultPanel";
-            this.neasureResultPanel.Size = new System.Drawing.Size(475, 674);
+            this.neasureResultPanel.Size = new System.Drawing.Size(475, 647);
             this.neasureResultPanel.TabIndex = 35;
             // 
             // temperatureValue
@@ -719,7 +724,7 @@
             this.panel4.Controls.Add(this.selectDevicePanel);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.ForeColor = System.Drawing.Color.Gainsboro;
-            this.panel4.Location = new System.Drawing.Point(0, 149);
+            this.panel4.Location = new System.Drawing.Point(0, 176);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(1650, 51);
             this.panel4.TabIndex = 43;
@@ -743,6 +748,25 @@
             this.measuredParameterCB.Size = new System.Drawing.Size(227, 27);
             this.measuredParameterCB.TabIndex = 2;
             this.measuredParameterCB.SelectedIndexChanged += new System.EventHandler(this.measuredParameterCB_SelectedIndexChanged);
+            // 
+            // measureTimerLabel
+            // 
+            this.measureTimerLabel.AutoSize = true;
+            this.measureTimerLabel.Location = new System.Drawing.Point(201, 137);
+            this.measureTimerLabel.Name = "measureTimerLabel";
+            this.measureTimerLabel.Size = new System.Drawing.Size(51, 19);
+            this.measureTimerLabel.TabIndex = 21;
+            this.measureTimerLabel.Text = "00:00";
+            // 
+            // label6
+            // 
+            this.label6.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label6.Location = new System.Drawing.Point(12, 98);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(232, 32);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "норма: 10 МОм";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // MeasureForm
             // 
@@ -838,5 +862,7 @@
         private System.Windows.Forms.Panel measuredParameterSelect;
         private System.Windows.Forms.ComboBox measuredParameterCB;
         private System.Windows.Forms.NumericUpDown temperatureValue;
+        private System.Windows.Forms.Label measureTimerLabel;
+        private System.Windows.Forms.Label label6;
     }
 }

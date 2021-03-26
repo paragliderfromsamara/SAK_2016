@@ -16,10 +16,11 @@ namespace NormaLib.Measure
         float cable_length;
         float bringing_length;
         public double ConvertedValue;
+        public double ConvertedValueRounded => Math.Round(ConvertedValue, 3, MidpointRounding.AwayFromZero);
         string measure_bringing_length_label = String.Empty;
         string main_result_measure = String.Empty;
-        public string ConvertedValueLabel => $"{Math.Round(ConvertedValue, 3, MidpointRounding.AwayFromZero)} {main_result_measure}{measure_bringing_length_label}";
-
+        public string ConvertedValueLabel => $"{ConvertedValueRounded} {main_result_measure}{measure_bringing_length_label}";
+        public double RawValue => raw_value;
 
         public MeasureResultConverter(double _raw_value, uint _parameter_type_id, float _cable_length = 1000f, float _bringing_length = 1000f, float _material_coeff = 1.0f)
         {

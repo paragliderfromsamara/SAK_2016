@@ -13,6 +13,7 @@ using NormaLib.Devices.XmlObjects;
 using NormaLib.DBControl.Tables;
 using NormaLib.DBControl;
 using NormaLib.Measure;
+using NormaLib.UI;
 using System.Diagnostics;
 
 namespace TeraMicroMeasure
@@ -40,6 +41,7 @@ namespace TeraMicroMeasure
         private DeviceXMLState current_device_state;
         private CableStructureMeasuredParameterData[] CurrentMeasuredParameterDataCollection;
         private float MaterialCoeff = 1.0f;
+        private MaterialCoeffCalculator materialCoeffCalculator;
 
         public int ClientID
         {
@@ -106,6 +108,7 @@ namespace TeraMicroMeasure
         {
             int curCLientId = SettingsControl.GetClientId();
             InitDesign();
+            testFile = new CableTestIni();
             clientID = client_id;
             IsOnline = isCurrentPCClient = clientID == SettingsControl.GetClientId();
             //////////////////////////////////////////////////////////////
@@ -124,6 +127,7 @@ namespace TeraMicroMeasure
         {
             LeadMaterials = LeadMaterial.get_all_as_table();
             IsolMaterialCoeffsTable = IsolMaterialCoeffs.get_all_as_table();
+            materialCoeffCalculator = new MaterialCoeffCalculator(IsolMaterialCoeffsTable, LeadMaterials);
         }
 
         private void LoadMeasuredParameterTypes()
@@ -134,17 +138,16 @@ namespace TeraMicroMeasure
         private void InitDesign()
         {
             InitializeComponent();
-            measureResultDataGrid.ColumnHeadersDefaultCellStyle = BuildElementsHeaderStyle();
-            ElementNumber.DefaultCellStyle = BuildElementCellStyle();
-            SubElement_4.DefaultCellStyle = SubElement_3.DefaultCellStyle = SubElement_2.DefaultCellStyle = SubElement_1.DefaultCellStyle = BuildResultStyle();
-
+            measureResultDataGrid.ColumnHeadersDefaultCellStyle = NormaUIDataGridStyles.BuildElementsHeaderStyle();
+            ElementNumber.DefaultCellStyle = NormaUIDataGridStyles.BuildElementCellStyle();
+            SubElement_4.DefaultCellStyle = SubElement_3.DefaultCellStyle = SubElement_2.DefaultCellStyle = SubElement_1.DefaultCellStyle = NormaUIDataGridStyles.BuildResultStyle();
+            startMeasureButton.BackColor = NormaUIColors.GreenColor;
         }
 
         private void InitMeasureDraft()
         {
             if (Cables.Rows.Count == 0) return;
-            testFile = new CableTestIni();
-            if (testFile.CableID == 0)
+            if (testFile.CableID == 0 || !testFile.IsMeasureStart)
                 SetCurrentCable(Cables.Rows[0] as Cable);
             else
             {
@@ -540,6 +543,7 @@ namespace TeraMicroMeasure
                 measureState.MeasuredCableID = (int)currentCable.CableId;
                 FillMeasuredParameterTypesCB();
                 RecalculateMaterialCoeff();
+                testFile.CableID = (int)currentCable.CableId;
                 MeasureStateOnFormChanged();
             }
             catch (EvaluateException ex)
@@ -662,6 +666,7 @@ namespace TeraMicroMeasure
         {
             deviceInfo.Text = "Измеритель не выбран";
             resultField.Text = "0.0";
+            measureTimerLabel.Text = "";
         }
 
         private void CaptureSelectedDevice()
@@ -700,33 +705,86 @@ namespace TeraMicroMeasure
             {
                 case MeasureStatus.STOPPED:
                     startMeasureButton.Text = "Пуск измерения";
+                    startMeasureButton.BackColor = NormaUIColors.GreenColor;
                     startMeasureButton.Enabled = true;
                     deviceControlButton.Enabled = true;
                     MeasureIsStartedOnDevice = false;
                     EnableMeasurePointControl();
+                    StopMeasureTimer();
                     break;
                 case MeasureStatus.WILL_START:
                     startMeasureButton.Text = "Запускается...";
+                    startMeasureButton.BackColor = NormaUIColors.OrangeColor;
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
                     DisableMeasurePointControl();
+                    StopMeasureTimer();
                     break;
                 case MeasureStatus.STARTED:
                     startMeasureButton.Text = "Остановить измерение";
+                    startMeasureButton.BackColor = NormaUIColors.RedColor;
                     startMeasureButton.Enabled = true;
                     deviceControlButton.Enabled = false;
                     MeasureIsStartedOnDevice = true;
                     DisableMeasurePointControl();
+                    StartMeasureTimer();
                     break;
                 case MeasureStatus.WILL_STOPPED:
                     startMeasureButton.Text = "Останавливается...";
+                    startMeasureButton.BackColor = NormaUIColors.OrangeColor;
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
                     DisableMeasurePointControl();
+                    StopMeasureTimer();
                     break;
             }
             measureStatus = status;
         }
+
+        #region MeasureTimerControl
+
+        private MeasureTimer measureTimer;
+        private void StartMeasureTimer()
+        {
+            if (measureTimer == null) StopMeasureTimer();
+            measureTimer = new MeasureTimer(120, MeasureTimer_Tick, MeasureTimerFinished);
+            measureTimer.Start();
+        }
+
+        private void MeasureTimer_Tick(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(MeasureTimer_Tick), new object[] { sender, e });
+            }else
+            {
+                measureTimerLabel.Text = measureTimer.WatchDisplay;
+            }
+
+        }
+
+        private void MeasureTimerFinished(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(MeasureTimerFinished), new object[] { sender, e });
+            }else
+            {
+                startMeasureButton.PerformClick();
+            }
+
+        }
+
+        private void StopMeasureTimer()
+        {
+            if (measureTimer != null)
+            {
+                measureTimer.Stop();
+                measureTimer.Dispose();
+            }
+        }
+
+        #endregion
 
         private void DisableMeasurePointControl()
         {
@@ -952,6 +1010,7 @@ namespace TeraMicroMeasure
             {
                 //return $"{xml_device.RawResult}";
                 MeasureResultConverter c = new MeasureResultConverter(xml_device.RawResult, CurrentMeasuredParameterDataCollection[0], (Single)cableLengthNumericUpDown.Value, MaterialCoeff);
+                ProcessResult(c);
                 return c.ConvertedValueLabel;//return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";
             }else if (xml_device.MeasureStatusId == 0)
             {
@@ -961,6 +1020,42 @@ namespace TeraMicroMeasure
             {
                 return xml_device.MeasureStatusText;
             }
+        }
+
+        private void ProcessResult(MeasureResultConverter c)
+        {
+            testFile.SetMeasurePointValue((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, measurePointMap.CurrentPoint, (float)c.RawValue, (float)temperatureValue.Value);
+            WriteValueToDataGridViewCell(c.ConvertedValueRounded);
+        }
+
+        private void WriteValueToDataGridViewCell(double value)
+        {
+            WriteValueToDataGridViewCell(value, measurePointMap.CurrentElementIndex, measurePointMap.CurrentElementMeasurePointIndex);
+        }
+        private void WriteValueToDataGridViewCell(double value, int element_index, int measure_per_element_index)
+        {
+            DataGridViewRow row = measureResultDataGrid.Rows[element_index];
+            WriteValueToDataGridViewCell(value, row, measure_per_element_index);
+        }
+
+        private void WriteValueToDataGridViewCell(double value, DataGridViewRow row, int measure_per_element_index)
+        {
+            try
+            {
+                if (!float.IsNaN((float)value))
+                {
+                    row.Cells[measure_per_element_index + SubElement_1.Index].Value = value;
+                }
+                else
+                {
+                   row.Cells[measure_per_element_index + SubElement_1.Index].Value = "-";
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
         }
 
         public void DisconnectDeviceFromServerSide()
@@ -998,7 +1093,7 @@ namespace TeraMicroMeasure
         private void cableStructureCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentStructure = currentCable.CableStructures.Rows[cableStructureCB.SelectedIndex] as CableStructure;
-            RefreshMeasureControl();
+            //RefreshMeasureControl();
         }
 
         MeasurePointMap measurePointMap;
@@ -1027,8 +1122,16 @@ namespace TeraMicroMeasure
                 r.Cells[ElementNumber.Index].Value = $"{currentStructure.StructureType.StructureTypeName} {i+1}";
                 for(int j = 0; j < measurePointMap.MeasurePointsPerElement; j++)
                 {
-                    int pointIdx = i * measurePointMap.MeasurePointsPerElement + j;
-                    r.Cells[valueColumns[j]].Value = pointIdx;
+                    int pointIdx = measurePointMap.GetPointIndex(i, j);
+
+                    double val = testFile.GetMeasurePointValue((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, pointIdx);
+                    if (!double.IsNaN(val))
+                    {
+                        float temp = testFile.GetMeasurePointTemperature((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, pointIdx);
+                        MeasureResultConverter c = new MeasureResultConverter(val, CurrentMeasuredParameterDataCollection[0], (float)cableLengthNumericUpDown.Value, materialCoeffCalculator.CalculateCoeff(measureState.MeasureTypeId, currentStructure, temp));
+                        val = c.ConvertedValueRounded;
+                    }
+                    WriteValueToDataGridViewCell(val, r, j);
                 }
                 rowsForAdd.Add(r); 
             }
@@ -1140,60 +1243,13 @@ namespace TeraMicroMeasure
 
         }
 
-        private System.Windows.Forms.DataGridViewCellStyle BuildElementCellStyle()
-        {
-            System.Windows.Forms.DataGridViewCellStyle parameterNameCellStyle = new DataGridViewCellStyle();
-            parameterNameCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            parameterNameCellStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(245)))), ((int)(((byte)(255)))));
-            parameterNameCellStyle.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            parameterNameCellStyle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
-            parameterNameCellStyle.NullValue = "-";
-            parameterNameCellStyle.Padding = new System.Windows.Forms.Padding(3);
-            parameterNameCellStyle.SelectionBackColor = parameterNameCellStyle.BackColor;
-            parameterNameCellStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
-            parameterNameCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            return parameterNameCellStyle;
-        }
 
-        private System.Windows.Forms.DataGridViewCellStyle BuildElementsHeaderStyle()
-        {
-            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
-            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
-            style.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            style.ForeColor = System.Drawing.Color.Gainsboro;
-            style.NullValue = "-";
-            style.Padding = new System.Windows.Forms.Padding(3);
-
-            style.SelectionBackColor = style.BackColor;
-            style.SelectionForeColor = System.Drawing.Color.Gainsboro;
-            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-
-            return style;
-        }
-        private System.Windows.Forms.DataGridViewCellStyle BuildResultStyle()
-        {
-            System.Windows.Forms.DataGridViewCellStyle style = new DataGridViewCellStyle();
-            style.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            style.BackColor = System.Drawing.Color.White;
-            style.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            style.ForeColor = System.Drawing.Color.DarkBlue;
-            style.NullValue = "-";
-            style.Padding = new System.Windows.Forms.Padding(3);
-
-            style.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
-            style.SelectionForeColor = System.Drawing.Color.Gainsboro;
-            style.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-
-            return style;
-        }
 
         private void measuredParameterCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox rb = sender as ComboBox;
             CapturedDeviceType = GetDeviceTypeByRadioBox();
             measureState.MeasureTypeId = (uint)rb.SelectedValue;
-            RefreshMeasureControl();
             SetCurrentMeasureParameterData();
             MeasureStateOnFormChanged();
         }
@@ -1204,6 +1260,7 @@ namespace TeraMicroMeasure
             if (currentStructure.HasMeasuredParameters)
             {
                 CurrentMeasuredParameterDataCollection = (CableStructureMeasuredParameterData[])currentStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {measureState.MeasureTypeId}");
+                RefreshMeasureControl();
             }
         }
 
@@ -1215,29 +1272,11 @@ namespace TeraMicroMeasure
         private void RecalculateMaterialCoeff()
         {
             float mat_coeff = 1.0f;
-            DataRow[] dataRows;
             if (currentStructure != null && measuredParameterCB.SelectedValue != null)
             {
-                switch((uint)measuredParameterCB.SelectedValue)
-                {
-                    case MeasuredParameterType.Risol1:
-                    case MeasuredParameterType.Risol2:
-                    case MeasuredParameterType.Risol3:
-                    case MeasuredParameterType.Risol4:
-                        dataRows = IsolMaterialCoeffsTable.Select($"{IsolMaterialCoeffs.MaterialId_ColumnName} = {currentStructure.IsolationMaterialId} AND {IsolMaterialCoeffs.Temperature_ColumnName} = {temperatureValue.Value}");
-                        if (dataRows.Length > 0)
-                            mat_coeff = ((IsolMaterialCoeffs)dataRows[0]).Coefficient;
-
-                        break;
-                    case MeasuredParameterType.Rleads:
-                        dataRows = LeadMaterials.Select($"{LeadMaterial.MaterialId_ColumnName} = {currentStructure.LeadMaterialTypeId}");
-                        if (dataRows.Length > 0)
-                            mat_coeff = 1.0f + ((LeadMaterial)dataRows[0]).MaterialTKC*((float)temperatureValue.Value - 20.0f);// (1 + tempCoeff * (temperature - 20.0)
-                        break;
-                }
+                mat_coeff = materialCoeffCalculator.CalculateCoeff((uint)measuredParameterCB.SelectedValue, currentStructure, (float)temperatureValue.Value);
             }
             MaterialCoeff = mat_coeff;
-            temperatureComboBox.Text = MaterialCoeff.ToString();
         }
     }
 

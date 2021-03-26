@@ -97,11 +97,16 @@ namespace NormaLib.Measure
 
         public void SetMeasurePoint(int element_index, int element_point_index)
         {
-            int next_point = element_index * measurePointsPerElement + element_point_index;
+            int next_point = GetPointIndex(element_index, element_point_index);
             if (next_point < measurePointsAmount)
                 SetMeasurePoint(next_point);
             else
                 throw new MeasurePointException("Новая точка находится за пределами диапазона");
+        }
+
+        public int GetPointIndex(int element_index, int element_point_index)
+        {
+            return element_index * measurePointsPerElement + element_point_index;
         }
     }
 
