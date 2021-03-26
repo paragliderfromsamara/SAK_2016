@@ -14,6 +14,7 @@ namespace NormaLib.Measure
         private Timer timer;
         int limit;
         int counter;
+        public int TimeInSeconds => counter;
         public int Minutes => counter / 60;
         public int Seconds => (counter + 60) % 60;
         public string WatchDisplay => $"{convertToStringWatchElements(Minutes)}:{convertToStringWatchElements(Seconds)}";

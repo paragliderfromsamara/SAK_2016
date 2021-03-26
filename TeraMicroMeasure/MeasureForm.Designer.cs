@@ -80,7 +80,7 @@
             this.measuredParameterSelect = new System.Windows.Forms.Panel();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
             this.measureTimerLabel = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.normaLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -351,7 +351,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(104)))), ((int)(((byte)(169)))));
-            this.panel2.Controls.Add(this.label6);
+            this.panel2.Controls.Add(this.normaLabel);
             this.panel2.Controls.Add(this.measureTimerLabel);
             this.panel2.Controls.Add(this.resultField);
             this.panel2.Controls.Add(this.deviceInfo);
@@ -758,15 +758,15 @@
             this.measureTimerLabel.TabIndex = 21;
             this.measureTimerLabel.Text = "00:00";
             // 
-            // label6
+            // normaLabel
             // 
-            this.label6.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(12, 98);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(232, 32);
-            this.label6.TabIndex = 22;
-            this.label6.Text = "норма: 10 МОм";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.normaLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.normaLabel.Location = new System.Drawing.Point(12, 98);
+            this.normaLabel.Name = "normaLabel";
+            this.normaLabel.Size = new System.Drawing.Size(232, 32);
+            this.normaLabel.TabIndex = 22;
+            this.normaLabel.Text = "норма: 10 МОм";
+            this.normaLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // MeasureForm
             // 
@@ -863,6 +863,6 @@
         private System.Windows.Forms.ComboBox measuredParameterCB;
         private System.Windows.Forms.NumericUpDown temperatureValue;
         private System.Windows.Forms.Label measureTimerLabel;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label normaLabel;
     }
 }

@@ -40,8 +40,10 @@ namespace TeraMicroMeasure
         private MeasureStatus measureStatus = MeasureStatus.STOPPED;
         private DeviceXMLState current_device_state;
         private CableStructureMeasuredParameterData[] CurrentMeasuredParameterDataCollection;
+        private CableStructureMeasuredParameterData CurrentParameterData => CurrentMeasuredParameterDataCollection.Length > 0 ? CurrentMeasuredParameterDataCollection[0] : null;
         private float MaterialCoeff = 1.0f;
         private MaterialCoeffCalculator materialCoeffCalculator;
+
 
         public int ClientID
         {
@@ -667,6 +669,7 @@ namespace TeraMicroMeasure
             deviceInfo.Text = "Измеритель не выбран";
             resultField.Text = "0.0";
             measureTimerLabel.Text = "";
+            normaLabel.Text = "";
         }
 
         private void CaptureSelectedDevice()
@@ -747,7 +750,9 @@ namespace TeraMicroMeasure
         private void StartMeasureTimer()
         {
             if (measureTimer == null) StopMeasureTimer();
-            measureTimer = new MeasureTimer(120, MeasureTimer_Tick, MeasureTimerFinished);
+            if (!MeasuredParameterType.IsItIsolationaResistance(measureState.MeasureTypeId)) return;
+            measureTimerLabel.Text = "00:00";
+            measureTimer = new MeasureTimer(currentStructure.RizolTimeLimit == null ? 60 : (int)currentStructure.RizolTimeLimit.MaxValue, MeasureTimer_Tick, MeasureTimerFinished);
             measureTimer.Start();
         }
 
@@ -770,7 +775,7 @@ namespace TeraMicroMeasure
                 BeginInvoke(new EventHandler(MeasureTimerFinished), new object[] { sender, e });
             }else
             {
-                startMeasureButton.PerformClick();
+                if (measureStatus == MeasureStatus.STARTED) startMeasureButton.PerformClick();
             }
 
         }
@@ -1009,9 +1014,9 @@ namespace TeraMicroMeasure
             if (xml_device.MeasureStatusId == (uint)DeviceMeasureStatus.SUCCESS)
             {
                 //return $"{xml_device.RawResult}";
-                MeasureResultConverter c = new MeasureResultConverter(xml_device.RawResult, CurrentMeasuredParameterDataCollection[0], (Single)cableLengthNumericUpDown.Value, MaterialCoeff);
-                ProcessResult(c);
-                return c.ConvertedValueLabel;//return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";
+                MeasureResultConverter c = new MeasureResultConverter(xml_device.RawResult, CurrentParameterData, (Single)cableLengthNumericUpDown.Value, MaterialCoeff);
+
+                return ProcessResult(c);//return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";
             }else if (xml_device.MeasureStatusId == 0)
             {
                 return "";
@@ -1022,10 +1027,36 @@ namespace TeraMicroMeasure
             }
         }
 
-        private void ProcessResult(MeasureResultConverter c)
+        private string ProcessResult(MeasureResultConverter c)
         {
-            testFile.SetMeasurePointValue((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, measurePointMap.CurrentPoint, (float)c.RawValue, (float)temperatureValue.Value);
-            WriteValueToDataGridViewCell(c.ConvertedValueRounded);
+            bool addValueToProtocol = true;
+            double valueToProtocol = c.RawValue;
+            double valueToTable = c.ConvertedValueRounded;
+            string stringVal = c.ConvertedValueLabel;
+            switch (measureState.MeasureTypeId)
+            {
+                case MeasuredParameterType.Risol2:
+                    MeasureResultConverter cr = new MeasureResultConverter(c.RawValue, currentStructure.RizolNormaValue, (Single)cableLengthNumericUpDown.Value, MaterialCoeff);
+                    NormDeterminant d = new NormDeterminant(currentStructure.RizolNormaValue, cr.ConvertedValueRounded);
+                    stringVal = cr.ConvertedValueLabel;
+                    if (addValueToProtocol = d.IsOnNorma)
+                    {
+                        valueToProtocol = valueToTable = measureTimer.TimeInSeconds;
+                        if (measureStatus == MeasureStatus.STARTED)startMeasureButton.PerformClick();
+                    }
+                    break;
+                case MeasuredParameterType.Risol1:
+                    break;
+                case MeasuredParameterType.Rleads:
+                    break;
+            }
+            if (addValueToProtocol)
+            {
+                testFile.SetMeasurePointValue((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, measurePointMap.CurrentPoint, (float)valueToProtocol, (float)temperatureValue.Value);
+                WriteValueToDataGridViewCell(valueToTable);
+            }
+
+            return stringVal;
         }
 
         private void WriteValueToDataGridViewCell(double value)
@@ -1055,7 +1086,6 @@ namespace TeraMicroMeasure
             {
                 Debug.WriteLine(ex.Message);
             }
-
         }
 
         public void DisconnectDeviceFromServerSide()
@@ -1128,7 +1158,7 @@ namespace TeraMicroMeasure
                     if (!double.IsNaN(val))
                     {
                         float temp = testFile.GetMeasurePointTemperature((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, pointIdx);
-                        MeasureResultConverter c = new MeasureResultConverter(val, CurrentMeasuredParameterDataCollection[0], (float)cableLengthNumericUpDown.Value, materialCoeffCalculator.CalculateCoeff(measureState.MeasureTypeId, currentStructure, temp));
+                        MeasureResultConverter c = new MeasureResultConverter(val, CurrentParameterData, (float)cableLengthNumericUpDown.Value, materialCoeffCalculator.CalculateCoeff(measureState.MeasureTypeId, currentStructure, temp));
                         val = c.ConvertedValueRounded;
                     }
                     WriteValueToDataGridViewCell(val, r, j);

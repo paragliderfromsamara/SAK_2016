@@ -205,6 +205,26 @@ namespace NormaLib.DBControl.Tables
             else return null;
         }
 
+        public CableStructureMeasuredParameterData RizolNormaValue
+        {
+            get
+            {
+                CableStructureMeasuredParameterData[] rows = (CableStructureMeasuredParameterData[])MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {MeasuredParameterType.Risol1}");
+                if (rows.Length > 0) return rows[0];
+                else return null;
+            }
+        }
+        public CableStructureMeasuredParameterData RizolTimeLimit
+        {
+            get
+            {
+                CableStructureMeasuredParameterData[] rows = (CableStructureMeasuredParameterData[])MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {MeasuredParameterType.Risol2}");
+                if (rows.Length > 0) return rows[0];
+                else return null;
+            }
+        }
+
+
         #region Колонки таблицы
         [DBColumn(StructureId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "StruktInd", IsPrimaryKey = true, Nullable = true, AutoIncrement = true)]
         public uint CableStructureId

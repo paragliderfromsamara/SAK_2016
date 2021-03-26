@@ -21,16 +21,8 @@ namespace NormaLib.Measure
         string main_result_measure = String.Empty;
         public string ConvertedValueLabel => $"{ConvertedValueRounded} {main_result_measure}{measure_bringing_length_label}";
         public double RawValue => raw_value;
-
-        public MeasureResultConverter(double _raw_value, uint _parameter_type_id, float _cable_length = 1000f, float _bringing_length = 1000f, float _material_coeff = 1.0f)
-        {
-            ConvertedValue = raw_value = _raw_value;
-            parameter_type_id = _parameter_type_id;
-            cable_length = _cable_length;
-            bringing_length = _bringing_length;
-            material_coeff = _material_coeff;
-            calculate();
-        }
+        CableStructureMeasuredParameterData parameterData;
+        public CableStructureMeasuredParameterData ParameterData => parameterData;
 
         public MeasureResultConverter(double _raw_value, CableStructureMeasuredParameterData _parameter_data, float _cable_length = 1000f, float _material_coeff = 1.0f)
         {
@@ -39,6 +31,7 @@ namespace NormaLib.Measure
             cable_length = _cable_length;
             bringing_length = _parameter_data.LengthBringing;
             material_coeff = _material_coeff;
+            parameterData = _parameter_data;
             calculate();
         }
 
@@ -61,13 +54,13 @@ namespace NormaLib.Measure
         private void setMeasureLabel_Rleads()
         {
             measure_bringing_length_label = (bringing_length == 1000) ? "/км" : $"/{bringing_length}м";
-            main_result_measure = "Ом";
+            main_result_measure = parameterData.ResultMeasure;
         }
 
         private void setMeasureLabel_Rizol()
         {
             measure_bringing_length_label = (bringing_length == 1000) ? "⋅км" : $"⋅{bringing_length}м";
-            main_result_measure = "МОм";
+            main_result_measure = parameterData.ResultMeasure;
         }
 
         private void calculate_Rleads()
