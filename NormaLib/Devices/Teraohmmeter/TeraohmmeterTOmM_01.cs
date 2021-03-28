@@ -28,6 +28,7 @@ namespace NormaLib.Devices.Teraohmmeter
 
         protected bool integratorIsStart = false;
         protected uint MeasureCyclesCounter = 0;
+
         public TeraohmmeterTOmM_01(DeviceInfo info) : base(info)
         {
             type_id = DeviceType.Teraohmmeter;
@@ -119,102 +120,7 @@ namespace NormaLib.Devices.Teraohmmeter
                 //break;
             }
         }
-        /*
-        int tryTimes = 50;
-        int idx = 0;
-        int readCounter = 3;
-        uint measureCyclesCounter = 0;
-        uint cyclesCounterWas = 0;
-        bool integratorIsStart = false;
-        DeviceWorkStatus work_status_was;
-        TOhmM_01_v1_CommandProtocol p = null;
-        TeraMeasureResultStruct result;
-        DeviceInfo info;
-       // retry:
-        try
-        {
-            p = new TOhmM_01_v1_CommandProtocol(PortName);
-            SendMeasureParamsToDevice(p);
 
-
-            while (threadIsActive)
-            {
-                if (!IsOnMeasureCycle)
-                {
-                    p.MeasureStartFlag = true;
-
-                    IsOnMeasureCycle = p.MeasureStartFlag;
-                    continue;
-                }
-                work_status_was = WorkStatus;
-                WorkStatus = (DeviceWorkStatus)p.WorkStatus;
-
-                if (WorkStatus == DeviceWorkStatus.MEASURE)
-                {
-                    if (!integratorIsStart)
-                    {
-                        p.StartIntegratorFlag = true;
-                        integratorIsStart = true;
-                    }else
-                    {
-                        //Thread.Sleep(60);
-                        if (!p.StartIntegratorFlag)
-                        {
-
-                            result = p.MeasureResult;
-                            RawResult = (result.ConvertedValue > 0.00001) ? result.ConvertedValue*1000.0 : 0; //Перевод в МОм
-                            ConvertedResult = (result.ConvertedByModeValue > 0.00001) ? result.ConvertedByModeValue * 1000.0 : 0; //Перевод в МОм
-                            MeasureStatusId = result.MeasureStatus;
-                            OnGetMeasureResult?.Invoke(this, new MeasureResultEventArgs(result));
-                            cyclesCounterWas = measureCyclesCounter;
-                            if (MeasureStatusId == (uint)DeviceMeasureResultStatus.SUCCESS)
-                            {
-                                integratorIsStart = false;
-                                Debug.WriteLine($"COUNTER {cyclesCounterWas} -------------------");
-                            }
-                        }
-                        else
-                        {
-                            measureCyclesCounter = p.MeasureCyclesCounter;
-                            if (!p.PCModeFlag || p.MeasureLineNumber != ClientId)
-                            {
-                                threadIsActive = false;
-                                IsOnMeasureCycle = false;
-                                p.MeasureStartFlag = false;
-                                break;
-                            }
-                        }
-                    }
-                }else if (WorkStatus == DeviceWorkStatus.IDLE && work_status_was == DeviceWorkStatus.DEPOLARIZATION)
-                {
-                    //IsOnMeasureCycle = false;
-                    //threadIsActive = false;
-                    //break;
-                }
-
-            }
-
-            p.Dispose();
-            //OnThreadWillFinish?.Invoke();
-        }
-        catch(DeviceCommandProtocolException ex)
-        {
-            Debug.WriteLine("----------------------------M E S S A G E--------------------");
-            Debug.WriteLine(ex.Message);
-            Debug.WriteLine(ex.InnerException.Message);
-            Debug.WriteLine("----------------------------M E S S A G E--E N D--------------");
-            if (p != null) p.Dispose();
-            if (threadIsActive)
-            {
-                //if (tryTimes-- > 0) goto retry;
-                IsConnected = false;
-            }
-            IsOnMeasureCycle = false;
-
-        }
-        
-    }
-    */
 
         public override DeviceXMLState GetXMLState()
         {

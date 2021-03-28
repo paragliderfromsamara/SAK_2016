@@ -494,7 +494,7 @@ namespace NormaLib.Devices
             Thread.Sleep(250);
         }
 
-        protected void PCModeIdleThreadFunction()
+        protected virtual void PCModeIdleThreadFunction()
         {
             DeviceInfo info = CommandProtocol.GetDeviceInfo();
             Debug.WriteLine("------------------------PC_MODE_CONNECTION_CHECK---------------");

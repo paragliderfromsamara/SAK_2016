@@ -14,6 +14,8 @@ namespace NormaLib.Devices
 
     public class DevicesDispatcher : IDisposable
     {
+        public const bool USE_EMULATED_DEVICES = false;
+         
         private static object locker = new object();
         private EventHandler OnDeviceFound;
         private DeviceCommandProtocol commandProtocol;
@@ -92,31 +94,48 @@ namespace NormaLib.Devices
 
         private void findThreadFunction()
         {
-            while (!NeedStop)
+            if (USE_EMULATED_DEVICES)
             {
-                string[] port_list = GetAvailablePortNames();
-                if (port_list.Length > 0)
+                List<DeviceBase> devices = new List<DeviceBase>();
+                Teraohmmeter.TeraohmetrTOmM_01_Emulator tera = new Teraohmmeter.TeraohmetrTOmM_01_Emulator(new DeviceInfo() { ModelVersion = 1, PortName = "VCOM_1", SerialNumber = 1, SerialYear = 2021, WorkStatus = DeviceWorkStatus.IDLE, type = DeviceType.Teraohmmeter });
+                devices.Add(tera);
+                foreach(var d in devices)
                 {
-                    foreach (string port_name in port_list)
+                    d.OnDisconnected += OnDeviceDisconnected_Handler;
+                    deviceList.Add(d.PortName, d);
+                    d.InitConnection();
+                }
+                OnDeviceFound?.Invoke(tera, new EventArgs());
+
+            } else
+            {
+                while (!NeedStop)
+                {
+                    string[] port_list = GetAvailablePortNames();
+                    if (port_list.Length > 0)
                     {
-                        DeviceBase device = commandProtocol.GetDeviceOnCOM(port_name);
-                        Debug.WriteLine($"Сканируем порт {port_name}");
-                        if (device != null)
+                        foreach (string port_name in port_list)
                         {
-                            Debug.WriteLine($"Найдено устройство на {port_name}");
-                            OnDeviceFound?.Invoke(device, new EventArgs());
-                            device.OnDisconnected += OnDeviceDisconnected_Handler;
-                            deviceList.Add(port_name, device);
-                            device.InitConnection();
+                            DeviceBase device = commandProtocol.GetDeviceOnCOM(port_name);
+                            Debug.WriteLine($"Сканируем порт {port_name}");
+                            if (device != null)
+                            {
+                                Debug.WriteLine($"Найдено устройство на {port_name}");
+                                OnDeviceFound?.Invoke(device, new EventArgs());
+                                device.OnDisconnected += OnDeviceDisconnected_Handler;
+                                deviceList.Add(port_name, device);
+                                device.InitConnection();
+                            }
                         }
                     }
-                }
-                for (int i = 0; i < 2000; i++)
-                {
-                    Thread.Sleep(1);
-                    if (NeedStop) break;
+                    for (int i = 0; i < 2000; i++)
+                    {
+                        Thread.Sleep(1);
+                        if (NeedStop) break;
+                    }
                 }
             }
+           
         }
 
         public DeviceBase GetDeviceByTypeAndSerial(int typeId, string serial)

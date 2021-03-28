@@ -57,7 +57,7 @@ namespace NormaLib.Devices
                 if (info.type != DeviceType.Unknown) device = DeviceBase.CreateFromDeviceInfo(info);
                 //Debug.WriteLine($"DeviceType on {port_name}: {info.type} {info.SerialYear}-{info.SerialNumber} v.{info.ModelVersion}");
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                // Debug.WriteLine(ex.Message);
             }
@@ -76,7 +76,7 @@ namespace NormaLib.Devices
             return port;
         }
 
-        public DeviceInfo GetDeviceInfo()
+        public virtual DeviceInfo GetDeviceInfo()
         {
             ushort[] data = ReadHoldings(DeviceTypeAddr, DeviceWorkStatusAddr);
             DeviceInfo info = new DeviceInfo();
