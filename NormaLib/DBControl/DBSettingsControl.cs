@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaLib.Utils;
+using NormaLib.DBControl.Tables;
 
 namespace NormaLib.DBControl
 {
     public static class DBSettingsControl
     {
         const string DBSettingsSectionName = "DBSettings";
+        const string MeasuredParametersSettingsSectionName = "MeasuredParameters";
         public static string ServerHost
         {
             get
@@ -86,5 +88,27 @@ namespace NormaLib.DBControl
                 f.Write("Enabled", (value) ? "1" : "0", DBSettingsSectionName);
             }
         }
+
+
+        public static void SetDefaultMeasuredParameters()
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            int[] idsArray = new int[] { (int)MeasuredParameterType.Rleads, (int)MeasuredParameterType.Risol1, (int)MeasuredParameterType.Risol2, (int)MeasuredParameterType.dR };
+            f.WriteIntArray("AvailableParameters", idsArray, MeasuredParametersSettingsSectionName);
+        }
+
+        public static int[] GetAvailableParamsIds()
+        {
+            IniFile f = IniFile.GetAppSettingsFile();
+            read_again:
+            int[] idsArray = f.ReadIntArray("AvailableParameters", MeasuredParametersSettingsSectionName);
+            if (idsArray.Length == 0)
+            {
+                SetDefaultMeasuredParameters();
+                goto read_again;
+            }
+            return idsArray;
+
+        } 
     }
 }

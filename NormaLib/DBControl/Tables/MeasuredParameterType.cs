@@ -68,7 +68,8 @@ namespace NormaLib.DBControl.Tables
 
         public static DBEntityTable get_all_as_table_for_cable_structure_form()
         {
-            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < {K2}", typeof(MeasuredParameterType));
+            return get_all_as_table_for_cable_structure_form(string.Join(",",DBSettingsControl.GetAvailableParamsIds()));
+            //return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} > 1 AND {ParameterTypeId_ColumnName} < {K2}", typeof(MeasuredParameterType));
         }
 
         public static DBEntityTable get_all_as_table_for_cable_structure_form(string ids)
@@ -82,7 +83,6 @@ namespace NormaLib.DBControl.Tables
             DBEntityTable t = get_all_by_ids(ids);
             foreach (MeasuredParameterType type in t.Rows) types.Add(type);
             return types.ToArray();
-
         }
 
         public static DBEntityTable get_parameter_types_for_cable_structures()

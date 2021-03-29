@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -38,6 +40,30 @@ namespace NormaLib.Utils
         public void Write(string Key, string Value, string Section = null)
         {
             WritePrivateProfileString(Section ?? EXE, Key, Value, Path);
+        }
+
+        public void WriteIntArray(string Key, int[] Value, string Section = null)
+        {
+            Write(Key, $"[{string.Join(",", Value)}]", Section);
+        }
+
+        public int[] ReadIntArray(string Key, string Section = null)
+        {
+            string s = Read(Key, Section);
+            if (string.IsNullOrWhiteSpace(s)) return new int[] { };
+            try
+            {
+                List<int> collection = new List<int>();
+                string[] sArr;
+                s = s.Replace("[", "");
+                s = s.Replace("]", "");
+                sArr = s.Split(',');
+                foreach (var sVal in sArr) collection.Add(Convert.ToInt32(sVal));
+                return collection.ToArray();
+            }catch
+            {
+                return new int[] { };
+            }
         }
 
         public int ReadInt(string Key, string Section = null)

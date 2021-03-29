@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NormaLib.Utils;
 using System.Diagnostics;
 using NormaLib.Devices;
+using NormaLib.DBControl.Tables;
 
 namespace TeraMicroMeasure
 {
@@ -14,6 +15,7 @@ namespace TeraMicroMeasure
         const string SelfTCPInfoSectionName = "LocalTCPSettings";
         const string ServerTCPInfoSectionName = "ServerTCPSettings";
         const string ClientSettingsSectionName = "ClientSettings";
+
 
         public static void SetLocalIpAndPort(string ip, string port)
         {
@@ -184,6 +186,9 @@ namespace TeraMicroMeasure
             f.Write("WorkStatus", ((byte)d.WorkStatus).ToString(), $"Device_{deviceId}");
             f.Write("ModelVersion", d.ModelVersion.ToString(), $"Device_{deviceId}");
         }
+
+
+
 
     }
 }

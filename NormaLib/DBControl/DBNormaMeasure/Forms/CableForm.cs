@@ -604,7 +604,57 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             ToolStripMenuItem i = sender as ToolStripMenuItem;
             if (i.Tag.GetType() == typeof(MeasuredParameterType))
-                AddMeasuredParameterData(i.Tag as MeasuredParameterType);
+            {
+                MeasuredParameterType pt = i.Tag as MeasuredParameterType;
+                if (pt.IsIsolationResistance)
+                {
+                    List<MeasuredParameterType> pTypes = new List<MeasuredParameterType>();
+                    foreach (ToolStripMenuItem item in addMeasurerParameterContextMenu.Items)
+                    {
+                        if (item.Tag.GetType().Name == typeof(MeasuredParameterType).Name && item.Enabled)
+                        {
+                            MeasuredParameterType pType = item.Tag as MeasuredParameterType;
+                           if (pType.IsIsolationResistance && !currentStructure.MeasuredParameterTypes_ids.Contains(pType.ParameterTypeId)) pTypes.Add(pType);
+                        }
+                    }
+                    if (pTypes.Count == 0)
+                    {
+                        MessageBox.Show($"Параметр {pt.Description} уже добавлен в список измеряемых параметров для текущей структуры", "Попытка добавить существующий параметр", MessageBoxButtons.OK, MessageBoxIcon.Warning );
+                    }else
+                    {
+                        AddMeasuredParameterDataRange(pTypes.ToArray());
+                    }
+                } else if (pt.ParameterTypeId == MeasuredParameterType.dR)
+                {
+                    if (!currentStructure.MeasuredParameterTypes_ids.Contains(MeasuredParameterType.Rleads))
+                    {
+                        List<MeasuredParameterType> pTypes = new List<MeasuredParameterType>();
+                        pTypes.Add(pt);
+                        foreach (ToolStripMenuItem item in addMeasurerParameterContextMenu.Items)
+                        {
+                            if (item.Tag.GetType().Name == typeof(MeasuredParameterType).Name && item.Enabled)
+                            {
+                                MeasuredParameterType pType = item.Tag as MeasuredParameterType;
+                                if (pType.ParameterTypeId == MeasuredParameterType.Rleads)
+                                {
+                                    pTypes.Add(pType);
+                                    break;
+                                }
+                            }
+                        }
+                        AddMeasuredParameterDataRange(pTypes.ToArray());
+                    }
+                    else
+                    {
+                        AddMeasuredParameterData(i.Tag as MeasuredParameterType);
+                    }
+                }
+                else
+                {
+                    AddMeasuredParameterData(i.Tag as MeasuredParameterType);
+                }
+
+            }
             else
             {
                 List<MeasuredParameterType> pTypes = new List<MeasuredParameterType>();
@@ -612,11 +662,14 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 {
                     if (item.Tag.GetType().Name == typeof(MeasuredParameterType).Name && item.Enabled)
                     {
-                        pTypes.Add(item.Tag as MeasuredParameterType);
+                        MeasuredParameterType pType = item.Tag as MeasuredParameterType;
+                        if (!currentStructure.MeasuredParameterTypes_ids.Contains(pType.ParameterTypeId))pTypes.Add(item.Tag as MeasuredParameterType);
                     }
                 }
-                AddMeasuredParameterDataRange(pTypes.ToArray());
+                if (pTypes.Count > 0)
+                    AddMeasuredParameterDataRange(pTypes.ToArray());
             }
+
         }
 
         #endregion
@@ -1245,16 +1298,56 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             int start = rowIndex == -1 ? 0 : rowIndex;
             int end = rowIndex == -1 ? currentStructure.MeasuredParameters.Rows.Count - 1 : rowIndex;
-            bool willDelete = rowIndex == -1 ? MessageBox.Show("Вы уверены, что хотите удалить все измеряемые параметры из текущей структуры?") == DialogResult.OK : true;
+            bool willDelete = rowIndex == -1 ? MessageBox.Show("Вы уверены, что хотите удалить все измеряемые параметры из текущей структуры?", "Вопрос", MessageBoxButtons.OK, MessageBoxIcon.Question) == DialogResult.OK : true;
             if (!willDelete) return;
-            for (int i = end; i >= start; i--)
+            List<CableStructureMeasuredParameterData> toDeleteList = new List<CableStructureMeasuredParameterData>(); 
+            if (rowIndex == -1)
             {
-                CableStructureMeasuredParameterData mpd = currentStructure.MeasuredParameters.Rows[i] as CableStructureMeasuredParameterData;
-                willDelete = (!mpd.IsNewRecord()) ? mpd.Destroy() : true;
-                if (willDelete) currentStructure.MeasuredParameters.Rows.Remove(mpd);
-                
+                for (int i = end; i >= start; i--)
+                {
+                    CableStructureMeasuredParameterData mpd = currentStructure.MeasuredParameters.Rows[i] as CableStructureMeasuredParameterData;
+                    toDeleteList.Add(mpd);
+                }
+            }else
+            {
+                CableStructureMeasuredParameterData mpd = currentStructure.MeasuredParameters.Rows[end] as CableStructureMeasuredParameterData;
+                if (MeasuredParameterType.IsItIsolationaResistance(mpd.ParameterTypeId))
+                {
+                    foreach(CableStructureMeasuredParameterData rmpd in currentStructure.MeasuredParameters.Rows)
+                    {
+                        if (MeasuredParameterType.IsItIsolationaResistance(rmpd.ParameterTypeId)) toDeleteList.Add(rmpd);
+                    }
+                }else if (mpd.ParameterTypeId == MeasuredParameterType.Rleads)
+                {
+                    toDeleteList.Add(mpd);
+                    foreach (CableStructureMeasuredParameterData rmpd in currentStructure.MeasuredParameters.Rows)
+                    {
+                        if (rmpd.ParameterTypeId == MeasuredParameterType.dR)
+                        {
+                            toDeleteList.Add(rmpd);
+                        }
+                    }
+                    if (toDeleteList.Count > 1)
+                    {
+                      DialogResult dr = MessageBox.Show("При Rжил удалении из списка измеряемых параметров, также будет удален параметр dR.\n\nВы согласны?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (dr == DialogResult.No) return;
+                    }
+                }
+                else
+                {
+                    toDeleteList.Add(mpd);
+                }
             }
-            RefreshDataGridView();
+            if (toDeleteList.Count > 0)
+            {
+                foreach(var p in toDeleteList)
+                {
+                    willDelete = (!p.IsNewRecord()) ? p.Destroy() : true;
+                    if (willDelete) currentStructure.MeasuredParameters.Rows.Remove(p);
+                }
+                RefreshDataGridView();
+            }
+
         }
 
 
