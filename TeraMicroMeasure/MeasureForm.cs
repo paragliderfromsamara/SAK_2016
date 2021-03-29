@@ -237,8 +237,9 @@ namespace TeraMicroMeasure
         {
             voltagesGroupBox.Visible = false;
             InitAverageCountComboBox();
-            measuredParameterCB.DisplayMember = $"{MeasuredParameterType.ParameterName_ColumnName}";
-            measuredParameterCB.ValueMember = $"{MeasuredParameterType.ParameterTypeId_ColumnName}";
+            rIsolTypeSelectorCB.DisplayMember = measuredParameterCB.DisplayMember = "value";//$"{MeasuredParameterType.ParameterName_ColumnName}";
+            rIsolTypeSelectorCB.ValueMember = measuredParameterCB.ValueMember = "key";//$"{MeasuredParameterType.ParameterTypeId_ColumnName}";
+            DisableRisolSelector();
             DisableParamtersCB();
             //selectDevicePanel.Visible = measurePanel.Enabled = isCurrentPCClient;
         }
@@ -299,8 +300,8 @@ namespace TeraMicroMeasure
 
         private DeviceType GetDeviceTypeByRadioBox()
         {
-            if (measuredParameterCB.SelectedValue == null) return DeviceType.Unknown;
-            switch((uint)measuredParameterCB.SelectedValue)
+            if (measuredParameterCB.SelectedItem == null) return DeviceType.Unknown;
+            switch(((KeyValuePair<uint, string>)measuredParameterCB.SelectedItem).Key)
             {
                 case MeasuredParameterType.Risol1:
                 case MeasuredParameterType.Risol2:
@@ -577,13 +578,32 @@ namespace TeraMicroMeasure
             //measuredParameterCB.Items.Clear();
             if (currentStructure != null)
             {
+                measuredParameterCB.Items.Clear();
                 if (currentStructure.MeasuredParameters.Rows.Count > 0)
                 {
-                    DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
-                    measuredParameterCB.DataSource = MeasuredParameterTypes.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", currentStructure.MeasuredParameterTypes_ids)})").CopyToDataTable();
-                    
+                    MeasuredParameterType[] pTypes = (MeasuredParameterType[])MeasuredParameterTypes.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", currentStructure.MeasuredParameterTypes_ids)})");
+                    bool hasRisol = false;
+                    foreach (MeasuredParameterType pType in pTypes)
+                    {
+                        string item_value;
+                        uint item_key;
+                        if (pType.IsIsolationResistance)
+                        {
+                            if (hasRisol) continue;
+                            item_value = "Rиз";
+                            item_key = pType.ParameterTypeId;
+                            hasRisol = true;
+                            FillRisolSelectorCB();
+                        }else
+                        {
+                            item_value = pType.ParameterName;
+                            item_key = pType.ParameterTypeId;
+                        }
+                        measuredParameterCB.Items.Add(new KeyValuePair<uint, string>(item_key, item_value));
+                    }
                     measuredParameterCB.DropDownStyle = ComboBoxStyle.DropDownList;
                     measuredParameterCB.Enabled = true;
+                    measuredParameterCB.SelectedIndex = 0;
                 }
                 else
                 {
@@ -592,7 +612,17 @@ namespace TeraMicroMeasure
             }
         }
 
-       private void DisableParamtersCB()
+        private void FillRisolSelectorCB()
+        {
+            rIsolTypeSelectorCB.Items.Clear();
+            MeasuredParameterType[] pTypes = (MeasuredParameterType[])MeasuredParameterTypes.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", MeasuredParameterType.RisolParametersIDs)})");
+            foreach(MeasuredParameterType t in pTypes)
+            {
+                rIsolTypeSelectorCB.Items.Add(new KeyValuePair<uint, string>(t.ParameterTypeId, t.ParameterName));
+            }
+            rIsolTypeSelectorCB.SelectedIndex = 0;
+        }
+        private void DisableParamtersCB()
         {
             measuredParameterCB.Text = "Параметры отсутсвуют";
             measuredParameterCB.DropDownStyle = ComboBoxStyle.DropDown;
@@ -605,10 +635,10 @@ namespace TeraMicroMeasure
            // RleadRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
            // RizolRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
 
-            v10_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
-            v100_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
-            v500_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
-            v1000_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
+          //  v10_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
+          //  v100_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
+          //  v500_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
+          //  v1000_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
 
             cableComboBox.SelectedValueChanged -= MeasuredCableComboBox_SelectedValueChanged;
             cableLengthNumericUpDown.ValueChanged -= CableLengthNumericUpDown_ValueChanged;
@@ -713,6 +743,7 @@ namespace TeraMicroMeasure
                     deviceControlButton.Enabled = true;
                     MeasureIsStartedOnDevice = false;
                     EnableMeasurePointControl();
+                    rIsolTypeSelectorCB.Enabled = true;
                     StopMeasureTimer();
                     break;
                 case MeasureStatus.WILL_START:
@@ -720,6 +751,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.BackColor = NormaUIColors.OrangeColor;
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
+                    rIsolTypeSelectorCB.Enabled = false;
                     DisableMeasurePointControl();
                     StopMeasureTimer();
                     break;
@@ -728,6 +760,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.BackColor = NormaUIColors.RedColor;
                     startMeasureButton.Enabled = true;
                     deviceControlButton.Enabled = false;
+                    rIsolTypeSelectorCB.Enabled = false;
                     MeasureIsStartedOnDevice = true;
                     DisableMeasurePointControl();
                     StartMeasureTimer();
@@ -737,6 +770,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.BackColor = NormaUIColors.OrangeColor;
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
+                    rIsolTypeSelectorCB.Enabled = false;
                     DisableMeasurePointControl();
                     StopMeasureTimer();
                     break;
@@ -814,14 +848,14 @@ namespace TeraMicroMeasure
                     deviceControlButton.Text = "Подключить";
                     deviceControlButton.Visible = true;
                     deviceControlButton.Enabled = true;
-                    measuredParameterSelect.Enabled = true;
+                    measuredParameterCB.Enabled = true;
                     break;
                 case DeviceCaptureStatus.CONNECTED:
                     availableDevices.Visible = false;
                     panelMeasurePointControl.Visible = true; //startMeasureButton.Visible = true;
                     deviceControlButton.Text = "Отключить";
                     deviceControlButton.Visible = true;
-                    measuredParameterSelect.Enabled = false;
+                    measuredParameterCB.Enabled = false;
                     break;
                 case DeviceCaptureStatus.WAITING_FOR_CONNECTION:
                     availableDevices.Visible = true;
@@ -829,7 +863,7 @@ namespace TeraMicroMeasure
                     panelMeasurePointControl.Visible = false; //startMeasureButton.Visible = false;
                     deviceControlButton.Text = "Прервать";
                     deviceControlButton.Visible = true;
-                    measuredParameterSelect.Enabled = false;
+                    measuredParameterCB.Enabled = false;
                     break;
             }
             device_capture_status = status;
@@ -1278,10 +1312,29 @@ namespace TeraMicroMeasure
         private void measuredParameterCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox rb = sender as ComboBox;
+            uint parameterTypeId = rb.SelectedIndex == -1 ? 0 : ((KeyValuePair<uint, string>)rb.SelectedItem).Key;
+            uint parameterTypeWas = measureState.MeasureTypeId;
+            //MessageBox.Show(rb.SelectedItem.ToString());
+            if (MeasuredParameterType.IsItIsolationaResistance(parameterTypeId) && !MeasuredParameterType.IsItIsolationaResistance(parameterTypeWas))
+                EnableRisolSelector();
+            else if (!MeasuredParameterType.IsItIsolationaResistance(parameterTypeId) && MeasuredParameterType.IsItIsolationaResistance(parameterTypeWas))
+                DisableRisolSelector();
+
             CapturedDeviceType = GetDeviceTypeByRadioBox();
-            measureState.MeasureTypeId = (uint)rb.SelectedValue;
-            SetCurrentMeasureParameterData();
+            measureState.MeasureTypeId = parameterTypeId;
+            SetCurrentMeasureParameterData();           
             MeasureStateOnFormChanged();
+        }
+
+        private void EnableRisolSelector()
+        {
+            rIsolTypeSelectorCB.Visible = true;
+            rIsolTypeSelectorCB.SelectedIndexChanged += measuredParameterCB_SelectedIndexChanged;
+        }
+        private void DisableRisolSelector()
+        {
+            rIsolTypeSelectorCB.Visible = false;
+            rIsolTypeSelectorCB.SelectedIndexChanged -= measuredParameterCB_SelectedIndexChanged;
         }
 
         private void SetCurrentMeasureParameterData()

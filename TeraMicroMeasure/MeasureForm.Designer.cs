@@ -48,6 +48,8 @@
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.normaLabel = new System.Windows.Forms.Label();
+            this.measureTimerLabel = new System.Windows.Forms.Label();
             this.resultField = new System.Windows.Forms.Label();
             this.deviceInfo = new System.Windows.Forms.Label();
             this.labelPointNumber = new System.Windows.Forms.Label();
@@ -79,8 +81,7 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.measuredParameterSelect = new System.Windows.Forms.Panel();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
-            this.measureTimerLabel = new System.Windows.Forms.Label();
-            this.normaLabel = new System.Windows.Forms.Label();
+            this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -194,7 +195,7 @@
             this.measureResultDataGrid.ShowCellToolTips = false;
             this.measureResultDataGrid.ShowEditingIcon = false;
             this.measureResultDataGrid.ShowRowErrors = false;
-            this.measureResultDataGrid.Size = new System.Drawing.Size(1175, 647);
+            this.measureResultDataGrid.Size = new System.Drawing.Size(440, 647);
             this.measureResultDataGrid.TabIndex = 0;
             this.measureResultDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.measureResultDataGrid_CellClick);
             this.measureResultDataGrid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
@@ -266,7 +267,7 @@
             this.selectDevicePanel.Controls.Add(this.availableDevices);
             this.selectDevicePanel.Controls.Add(this.deviceControlButton);
             this.selectDevicePanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.selectDevicePanel.Location = new System.Drawing.Point(1175, 0);
+            this.selectDevicePanel.Location = new System.Drawing.Point(440, 0);
             this.selectDevicePanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.selectDevicePanel.Name = "selectDevicePanel";
             this.selectDevicePanel.Size = new System.Drawing.Size(475, 51);
@@ -361,8 +362,27 @@
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1650, 176);
+            this.panel2.Size = new System.Drawing.Size(915, 176);
             this.panel2.TabIndex = 32;
+            // 
+            // normaLabel
+            // 
+            this.normaLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.normaLabel.Location = new System.Drawing.Point(12, 98);
+            this.normaLabel.Name = "normaLabel";
+            this.normaLabel.Size = new System.Drawing.Size(232, 32);
+            this.normaLabel.TabIndex = 22;
+            this.normaLabel.Text = "норма: 10 МОм";
+            this.normaLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // measureTimerLabel
+            // 
+            this.measureTimerLabel.AutoSize = true;
+            this.measureTimerLabel.Location = new System.Drawing.Point(201, 137);
+            this.measureTimerLabel.Name = "measureTimerLabel";
+            this.measureTimerLabel.Size = new System.Drawing.Size(51, 19);
+            this.measureTimerLabel.TabIndex = 21;
+            this.measureTimerLabel.Text = "00:00";
             // 
             // resultField
             // 
@@ -478,7 +498,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1650, 985);
+            this.panel3.Size = new System.Drawing.Size(915, 985);
             this.panel3.TabIndex = 42;
             // 
             // panel6
@@ -489,7 +509,7 @@
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 227);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(1650, 647);
+            this.panel6.Size = new System.Drawing.Size(915, 647);
             this.panel6.TabIndex = 45;
             // 
             // neasureResultPanel
@@ -506,7 +526,7 @@
             this.neasureResultPanel.Controls.Add(this.cableComboBox);
             this.neasureResultPanel.Dock = System.Windows.Forms.DockStyle.Right;
             this.neasureResultPanel.ForeColor = System.Drawing.Color.Black;
-            this.neasureResultPanel.Location = new System.Drawing.Point(1175, 0);
+            this.neasureResultPanel.Location = new System.Drawing.Point(440, 0);
             this.neasureResultPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.neasureResultPanel.Name = "neasureResultPanel";
             this.neasureResultPanel.Size = new System.Drawing.Size(475, 647);
@@ -712,7 +732,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel5.Location = new System.Drawing.Point(0, 874);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1650, 111);
+            this.panel5.Size = new System.Drawing.Size(915, 111);
             this.panel5.TabIndex = 44;
             this.panel5.Visible = false;
             // 
@@ -726,18 +746,19 @@
             this.panel4.ForeColor = System.Drawing.Color.Gainsboro;
             this.panel4.Location = new System.Drawing.Point(0, 176);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1650, 51);
+            this.panel4.Size = new System.Drawing.Size(915, 51);
             this.panel4.TabIndex = 43;
             // 
             // measuredParameterSelect
             // 
             this.measuredParameterSelect.BackColor = System.Drawing.Color.Transparent;
+            this.measuredParameterSelect.Controls.Add(this.rIsolTypeSelectorCB);
             this.measuredParameterSelect.Controls.Add(this.measuredParameterCB);
             this.measuredParameterSelect.Dock = System.Windows.Forms.DockStyle.Left;
             this.measuredParameterSelect.ForeColor = System.Drawing.Color.Black;
             this.measuredParameterSelect.Location = new System.Drawing.Point(351, 0);
             this.measuredParameterSelect.Name = "measuredParameterSelect";
-            this.measuredParameterSelect.Size = new System.Drawing.Size(238, 51);
+            this.measuredParameterSelect.Size = new System.Drawing.Size(387, 51);
             this.measuredParameterSelect.TabIndex = 37;
             // 
             // measuredParameterCB
@@ -749,35 +770,26 @@
             this.measuredParameterCB.TabIndex = 2;
             this.measuredParameterCB.SelectedIndexChanged += new System.EventHandler(this.measuredParameterCB_SelectedIndexChanged);
             // 
-            // measureTimerLabel
+            // rIsolTypeSelectorCB
             // 
-            this.measureTimerLabel.AutoSize = true;
-            this.measureTimerLabel.Location = new System.Drawing.Point(201, 137);
-            this.measureTimerLabel.Name = "measureTimerLabel";
-            this.measureTimerLabel.Size = new System.Drawing.Size(51, 19);
-            this.measureTimerLabel.TabIndex = 21;
-            this.measureTimerLabel.Text = "00:00";
-            // 
-            // normaLabel
-            // 
-            this.normaLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.normaLabel.Location = new System.Drawing.Point(12, 98);
-            this.normaLabel.Name = "normaLabel";
-            this.normaLabel.Size = new System.Drawing.Size(232, 32);
-            this.normaLabel.TabIndex = 22;
-            this.normaLabel.Text = "норма: 10 МОм";
-            this.normaLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.rIsolTypeSelectorCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rIsolTypeSelectorCB.FormattingEnabled = true;
+            this.rIsolTypeSelectorCB.Location = new System.Drawing.Point(239, 13);
+            this.rIsolTypeSelectorCB.Name = "rIsolTypeSelectorCB";
+            this.rIsolTypeSelectorCB.Size = new System.Drawing.Size(138, 27);
+            this.rIsolTypeSelectorCB.TabIndex = 3;
             // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1650, 985);
+            this.ClientSize = new System.Drawing.Size(915, 985);
             this.Controls.Add(this.panel3);
             this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.MinimumSize = new System.Drawing.Size(931, 0);
             this.Name = "MeasureForm";
             this.Text = "Измерение";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
@@ -864,5 +876,6 @@
         private System.Windows.Forms.NumericUpDown temperatureValue;
         private System.Windows.Forms.Label measureTimerLabel;
         private System.Windows.Forms.Label normaLabel;
+        private System.Windows.Forms.ComboBox rIsolTypeSelectorCB;
     }
 }

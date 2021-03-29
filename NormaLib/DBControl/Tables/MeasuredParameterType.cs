@@ -156,15 +156,11 @@ namespace NormaLib.DBControl.Tables
 
         public static bool IsItIsolationaResistance(uint parameterTypeId)
         {
-            bool isIt = false;
-            isIt |= parameterTypeId == Risol1;
-            isIt |= parameterTypeId == Risol2;
-            isIt |= parameterTypeId == Risol3;
-            isIt |= parameterTypeId == Risol4;
-            return isIt;
-           
+            return RisolParametersIDs.Contains(parameterTypeId);
         }
 
+        public static uint[] RisolParametersIDs => new uint[] { Risol1, Risol2, Risol3, Risol4 };
+ 
         /// <summary>
         /// Относится ли параметр с указанным id к параметрам Ea, K1, K2, K3, K9-K12
         /// </summary>
