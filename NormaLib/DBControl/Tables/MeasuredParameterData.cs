@@ -40,6 +40,11 @@ namespace NormaLib.DBControl.Tables
             return mpd;
         }
 
+        public static DBEntityTable get_all()
+        {
+            return get_all(typeof(MeasuredParameterData));
+        }
+
         public static MeasuredParameterData build_with_data(CableStructureMeasuredParameterData cab_struct_data)
         {
             MeasuredParameterData data = build();

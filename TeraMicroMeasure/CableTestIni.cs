@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NormaLib.Utils;
 using NormaLib.DBControl.Tables;
 using NormaLib.DBControl;
+using System.Data;
 using System.IO;
 using System.Diagnostics;
 
@@ -25,33 +26,19 @@ namespace TeraMicroMeasure
 
         public CableTestIni(Cable cable) : this()
         {
-            CableID = (int)cable.CableId;
-            buildStructuresInfo(cable.CableStructures);
+            FillCableToFile(cable);
+            //CableID = (int)cable.CableId;
+            //buildStructuresInfo(cable.CableStructures);
             //else throw new CableTestIniException("Есть незавершенное испытание!");
         }
 
-        private void buildStructuresInfo(DBEntityTable structures)
+        internal void ResetFile()
         {
-            int i = 0;
-            foreach(CableStructure s in structures.Rows)
-            {
-                SetStructureId((int)s.CableStructureId, i);
-                SetDisplayedElementAmount((int)s.DisplayedAmount,i);
-                SetRealElementAmount((int)s.RealAmount, i);
-                SetLeadAmount((int)s.StructureType.StructureLeadsAmount, i);
-                /*
-                Debug.WriteLine($"Количество элементов {s.MeasuredParameterTypes_ids.Length}");
-                foreach(uint pt in s.MeasuredParameterTypes_ids)
-                {
-                    int pointNum = MeasuredParameterType.MeasurePointNumberPerStructureElement(pt, s.StructureType.StructureLeadsAmount) * (int)s.RealAmount;
-                    for(int j = 0; j < pointNum; j++)
-                    {
-                        SetMeasurePointValue((int)s.CableStructureId, (int)pt, j);
-                    }
-                }
-                */
-            }
+            if (File.Exists(draft_name)) File.Delete(draft_name);
+            file = new IniFile(draft_name);
         }
+
+
 
         #region TestAttributes
         const string TestAttrs_SectionName = "TestInfo";
@@ -111,93 +98,86 @@ namespace TeraMicroMeasure
         #endregion
 
 
-        #region CableAttributes
-        const string CableAttrs_SectionName = "CableInfo";
-        const string CableID_AttrName = "CableID";
-        public int CableID
+        public void FillCableToFile(Cable cable)
         {
-            get
+            foreach(DataColumn dc in cable.Table.Columns)
             {
-                return file.ReadInt(CableID_AttrName, CableAttrs_SectionName);
+                file.Write(dc.ColumnName, cable[dc].ToString(), "TestedCable");
             }
-            set
+            file.Write(CableTest.CableTestId_ColumnName, "0","TestedCable");
+            FillCableStructures(cable.CableStructures);
+        }
+
+        private void FillCableStructures(DBEntityTable cableStructures)
+        {
+            string structSectName = "TestedStructure_{0}";
+            int idx = 0;
+            foreach(CableStructure cs in cableStructures.Rows)
             {
-                file.Write(CableID_AttrName, value.ToString(), CableAttrs_SectionName);
+                string curStructSectName = string.Format(structSectName, idx);
+                foreach (DataColumn dc in cs.Table.Columns)
+                {
+                    file.Write(dc.ColumnName, cs[dc].ToString(), curStructSectName);
+                }
+                file.WriteUIntArray("measured_params_data_ids", cs.MeasuredParameters_ids, curStructSectName);
+                idx++;
             }
-        }
-
-        #endregion
-
-        #region CableStructures
-        const string StructureAttrs_SectionNameMask = "Structure_{0}";
-
-        private string StructureSectionNameByIndex(int idx)
-        {
-            return String.Format(StructureAttrs_SectionNameMask, idx);
-        }
-
-        const string StructureId_AttrName = "StructureId";
-        public int GetStrucutureId(int index)
-        {
-            return file.ReadInt(StructureId_AttrName, StructureSectionNameByIndex(index));
-        }
-        public void SetStructureId(int value, int index)
-        {
-            file.Write(StructureId_AttrName, value.ToString(), StructureSectionNameByIndex(index));
-        }
-
-        private int StructuresCount
-        {
-            get
+            while(file.KeyExists(CableStructure.StructureId_ColumnName, string.Format(structSectName, idx)))
             {
-                int i = 0;
-                while (StructureExists(i++));
-                return i;
+                file.DeleteSection(string.Format(structSectName, idx));
+                idx++;
             }
         }
 
-        internal void ResetFile()
+        public Cable BuildCableFromFile(DBEntityTable measured_parameters_data)
         {
-            if (File.Exists(draft_name)) File.Delete(draft_name);
-            file = new IniFile(draft_name);
+            DBEntityTable t = new DBEntityTable(typeof(TestedCable));
+            TestedCable cable = t.NewRow() as TestedCable;
+            foreach(DataColumn dc in t.Columns)
+            {
+                cable[dc] = (object)file.Read(dc.ColumnName, "TestedCable");
+            }
+            BuildCableStructuresFromIni(cable, measured_parameters_data);
+            t.Rows.Add(cable);
+            return cable;
         }
 
-        private bool StructureExists(int index)
+        private void BuildCableStructuresFromIni(TestedCable cable, DBEntityTable measured_parameters_data)
         {
-            return file.KeyExists(StructureId_AttrName, StructureSectionNameByIndex(index));
+            //DBEntityTable t = new DBEntityTable(typeof(TestedCableStructure));
+            string structSectName = "TestedStructure_{0}";
+            int idx = 0;
+            while(file.KeyExists(CableStructure.StructureId_ColumnName, string.Format(structSectName, idx)))
+            {
+                TestedCableStructure s = cable.CableStructures.NewRow() as TestedCableStructure;
+                foreach(DataColumn dc in cable.CableStructures.Columns)
+                {
+                    s[dc] = (object)file.Read(dc.ColumnName, string.Format(structSectName, idx));
+
+                }
+                uint[] prmsIds = file.ReadUIntArray("measured_params_data_ids", string.Format(structSectName, idx));
+                if (prmsIds.Length > 0)
+                {
+                    MeasuredParameterData[] data = (MeasuredParameterData[])measured_parameters_data.Select($"{MeasuredParameterData.DataId_ColumnName} IN ({string.Join(",", prmsIds)})");
+                    if (data.Length > 0)
+                    {
+                        foreach(MeasuredParameterData dt in data)
+                        {
+                            TestedStructureMeasuredParameterData tpd = (TestedStructureMeasuredParameterData)s.MeasuredParameters.NewRow();
+                            foreach(DataColumn dc in dt.Table.Columns)
+                            {
+                                tpd[dc.ColumnName] = dt[dc]; 
+                            }
+                            tpd.CableStructureId = 0;
+                            s.MeasuredParameters.Rows.Add(tpd);
+                        }
+                    }
+                }
+                cable.CableStructures.Rows.Add(s);
+                idx++;
+            }
         }
 
-        const string RealElementAmount_AttrName = "RealElementAmount";
-        public int GetRealElementAmount(int index)
-        {
-            return file.ReadInt(RealElementAmount_AttrName, StructureSectionNameByIndex(index));
-        }
-        public void SetRealElementAmount(int value, int index)
-        {
-            file.Write(RealElementAmount_AttrName, value.ToString(), StructureSectionNameByIndex(index));
-        }
-
-        const string DisplayedElementAmount_AttrName = "DisplayedElementAmount";
-        public int GetDisplayedElementAmount(int index)
-        {
-            return file.ReadInt(DisplayedElementAmount_AttrName, StructureSectionNameByIndex(index));
-        }
-        public void SetDisplayedElementAmount(int value, int index)
-        {
-            file.Write(DisplayedElementAmount_AttrName, value.ToString(), StructureSectionNameByIndex(index));
-        }
-
-        const string LeadAmount_AttrName = "LeadAmount";
-        public int GetLeadAmount(int index)
-        {
-            return file.ReadInt(LeadAmount_AttrName, StructureSectionNameByIndex(index));
-        }
-        public void SetLeadAmount(int value, int index)
-        {
-            file.Write(LeadAmount_AttrName, value.ToString(), StructureSectionNameByIndex(index));
-        }
-
-        #endregion
 
         #region TestResults on structure
 

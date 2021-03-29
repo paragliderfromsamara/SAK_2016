@@ -47,6 +47,8 @@ namespace NormaLib.Utils
             Write(Key, $"[{string.Join(",", Value)}]", Section);
         }
 
+
+
         public int[] ReadIntArray(string Key, string Section = null)
         {
             string s = Read(Key, Section);
@@ -63,6 +65,31 @@ namespace NormaLib.Utils
             }catch
             {
                 return new int[] { };
+            }
+        }
+
+        public void WriteUIntArray(string Key, uint[] Value, string Section = null)
+        {
+            Write(Key, $"[{string.Join(",", Value)}]", Section);
+        }
+
+        public uint[] ReadUIntArray(string Key, string Section = null)
+        {
+            string s = Read(Key, Section);
+            if (string.IsNullOrWhiteSpace(s)) return new uint[] { };
+            try
+            {
+                List<uint> collection = new List<uint>();
+                string[] sArr;
+                s = s.Replace("[", "");
+                s = s.Replace("]", "");
+                sArr = s.Split(',');
+                foreach (var sVal in sArr) collection.Add(Convert.ToUInt32(sVal));
+                return collection.ToArray();
+            }
+            catch
+            {
+                return new uint[] { };
             }
         }
 

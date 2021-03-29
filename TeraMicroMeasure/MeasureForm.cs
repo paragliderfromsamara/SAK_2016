@@ -31,6 +31,7 @@ namespace TeraMicroMeasure
         private DBEntityTable MeasuredParameterTypes;
         private DBEntityTable IsolMaterialCoeffsTable;
         private DBEntityTable LeadMaterials;
+        private DBEntityTable MeasuredParametersDataTable;
         private Cable currentCable;
         private CableStructure currentStructure;
 
@@ -116,6 +117,7 @@ namespace TeraMicroMeasure
             //////////////////////////////////////////////////////////////
             ResetMeasureField();
             LoadMeasuredParameterTypes();
+            LoadMeasuredParametersData();
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
             SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
@@ -123,6 +125,11 @@ namespace TeraMicroMeasure
             LoadMaterials();
             LoadCables();
             InitMeasureDraft();
+        }
+
+        private void LoadMeasuredParametersData()
+        {
+            MeasuredParametersDataTable = MeasuredParameterData.get_all();
         }
 
         private void LoadMaterials()
@@ -149,10 +156,11 @@ namespace TeraMicroMeasure
         private void InitMeasureDraft()
         {
             if (Cables.Rows.Count == 0) return;
-            if (testFile.CableID == 0 || !testFile.IsMeasureStart)
+            if (!testFile.IsMeasureStart)
                 SetCurrentCable(Cables.Rows[0] as Cable);
             else
             {
+                /*
                 DataRow[] dRows = Cables.Select($"{Cable.CableId_ColumnName} = {testFile.CableID}");
                 if (dRows.Length > 0)
                 {
@@ -164,7 +172,7 @@ namespace TeraMicroMeasure
                     {
                         SetCurrentCable(dRows[0] as Cable);
                     }
-                }
+                }*/
             }
         }
 
@@ -192,7 +200,6 @@ namespace TeraMicroMeasure
                 if (Cables.Rows.Count > 0)
                 {
                     cableComboBox.SelectedValueChanged += MeasuredCableComboBox_SelectedValueChanged;
-
                     cableComboBox.DataSource = Cables;
                     cableComboBox.DisplayMember = Cable.FullCableName_ColumnName;
                     cableComboBox.ValueMember = Cable.CableId_ColumnName;
@@ -534,7 +541,8 @@ namespace TeraMicroMeasure
             ComboBox cb = sender as ComboBox;
             try
             {
-                currentCable = (Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cb.SelectedValue}")[0]);
+                testFile.FillCableToFile((Cable)(Cables.Select($"{Cable.CableId_ColumnName} = {cb.SelectedValue}")[0]));
+                currentCable = testFile.BuildCableFromFile(MeasuredParametersDataTable);
                 cableStructureCB.Items.Clear();
                 foreach (CableStructure cs in currentCable.CableStructures.Rows)
                 {
@@ -546,7 +554,7 @@ namespace TeraMicroMeasure
                 measureState.MeasuredCableID = (int)currentCable.CableId;
                 FillMeasuredParameterTypesCB();
                 RecalculateMaterialCoeff();
-                testFile.CableID = (int)currentCable.CableId;
+                //testFile.FillCableToFile(cur);
                 MeasureStateOnFormChanged();
             }
             catch (EvaluateException ex)
