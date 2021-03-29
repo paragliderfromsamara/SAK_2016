@@ -1139,10 +1139,13 @@ namespace TeraMicroMeasure
             switch(measureStatus)
             {
                 case MeasureStatus.STOPPED:
-                    measureState.MeasureStartFlag = true;
-                    SetMeasureStatus(MeasureStatus.WILL_START);
-                    MeasureStateOnFormChanged();
-                    MeasureIsStartedOnDevice = false;
+                    if (GetAgreementForStartMeasure())
+                    {
+                        measureState.MeasureStartFlag = true;
+                        SetMeasureStatus(MeasureStatus.WILL_START);
+                        MeasureStateOnFormChanged();
+                        MeasureIsStartedOnDevice = false;
+                    }
                     break;
                 case MeasureStatus.STARTED:
                     measureState.MeasureStartFlag = false;
@@ -1152,11 +1155,23 @@ namespace TeraMicroMeasure
             }
         }
 
-
+        private bool GetAgreementForStartMeasure()
+        {
+            bool flag = true;
+            if (MeasuredParameterType.IsItIsolationaResistance(measureState.MeasureTypeId))
+            {
+                if (measureState.MeasureVoltage > 10)
+                {
+                    return (MessageBox.Show($"На измерительную цепь будет подано напряжение {measureState.MeasureVoltage} Вольт.\nНажмите \"Да\", если Вы убедились, что операторы с других испытательных линий закончили работу с измерительной цепью. ", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes);
+                }
+            }
+            return flag;
+        }
 
         private void cableStructureCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentStructure = currentCable.CableStructures.Rows[cableStructureCB.SelectedIndex] as CableStructure;
+            measureState.MeasureVoltage = (uint)currentStructure.IsolationResistanceVoltage;
             //RefreshMeasureControl();
         }
 
