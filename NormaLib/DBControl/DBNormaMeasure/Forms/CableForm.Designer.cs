@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cableFormDataSet = new System.Data.DataSet();
             this.CableMark_input = new System.Windows.Forms.ComboBox();
             this.CableStructures_input = new System.Windows.Forms.TextBox();
@@ -118,6 +118,8 @@
             this.MeasuredParameterDataId_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lengthBringingTypeIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BringingLengthMeasureTitleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cbRisolVoltageValue = new System.Windows.Forms.ComboBox();
+            this.label25 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
@@ -393,6 +395,8 @@
             // 
             // structureDataContainer
             // 
+            this.structureDataContainer.Controls.Add(this.label25);
+            this.structureDataContainer.Controls.Add(this.cbRisolVoltageValue);
             this.structureDataContainer.Controls.Add(this.cbLeadDiameters);
             this.structureDataContainer.Controls.Add(this.cbWaveResistance);
             this.structureDataContainer.Controls.Add(this.label22);
@@ -469,16 +473,16 @@
             this.dgMeasuredParameters.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgMeasuredParameters.CausesValidation = false;
             this.dgMeasuredParameters.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle1.NullValue = "-";
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(3);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgMeasuredParameters.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle4.NullValue = "-";
+            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(3);
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgMeasuredParameters.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgMeasuredParameters.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgMeasuredParameters.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.parameter_type_name_column,
@@ -505,14 +509,14 @@
             this.dgMeasuredParameters.Name = "dgMeasuredParameters";
             this.dgMeasuredParameters.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dgMeasuredParameters.RowHeadersVisible = false;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle3.NullValue = "-";
-            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(108)))), ((int)(((byte)(205)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Gainsboro;
-            this.dgMeasuredParameters.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle6.NullValue = "-";
+            dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(108)))), ((int)(((byte)(205)))));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            this.dgMeasuredParameters.RowsDefaultCellStyle = dataGridViewCellStyle6;
             this.dgMeasuredParameters.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgMeasuredParameters.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgMeasuredParameters.Size = new System.Drawing.Size(693, 431);
@@ -954,8 +958,8 @@
             // 
             this.parameter_type_name_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.parameter_type_name_column.DataPropertyName = "parameter_name";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Transparent;
-            this.parameter_type_name_column.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Transparent;
+            this.parameter_type_name_column.DefaultCellStyle = dataGridViewCellStyle5;
             this.parameter_type_name_column.FillWeight = 91.57822F;
             this.parameter_type_name_column.HeaderText = "+";
             this.parameter_type_name_column.MinimumWidth = 40;
@@ -1097,6 +1101,30 @@
             this.BringingLengthMeasureTitleColumn.HeaderText = "Мера длины приведения";
             this.BringingLengthMeasureTitleColumn.Name = "BringingLengthMeasureTitleColumn";
             this.BringingLengthMeasureTitleColumn.Visible = false;
+            // 
+            // cbRisolVoltageValue
+            // 
+            this.cbRisolVoltageValue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRisolVoltageValue.FormattingEnabled = true;
+            this.cbRisolVoltageValue.Items.AddRange(new object[] {
+            "10",
+            "100",
+            "500",
+            "1000"});
+            this.cbRisolVoltageValue.Location = new System.Drawing.Point(797, 37);
+            this.cbRisolVoltageValue.Name = "cbRisolVoltageValue";
+            this.cbRisolVoltageValue.Size = new System.Drawing.Size(163, 26);
+            this.cbRisolVoltageValue.TabIndex = 25;
+            this.cbRisolVoltageValue.SelectedIndexChanged += new System.EventHandler(this.cbRisolVoltageValue_SelectedIndexChanged);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(794, 16);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(158, 18);
+            this.label25.TabIndex = 26;
+            this.label25.Text = "Напряжение Rизол, В";
             // 
             // CableForm
             // 
@@ -1252,5 +1280,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn MeasuredParameterDataId_Column;
         private System.Windows.Forms.DataGridViewTextBoxColumn lengthBringingTypeIdColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn BringingLengthMeasureTitleColumn;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.ComboBox cbRisolVoltageValue;
     }
 }

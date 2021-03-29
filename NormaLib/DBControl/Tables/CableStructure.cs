@@ -352,9 +352,25 @@ namespace NormaLib.DBControl.Tables
         }
 
         /// <summary>
+        /// Измерительное напряжение Rизол для данной структуры
+        /// </summary>
+        [DBColumn(IsolationResistanceVoltage_ColumnName, ColumnDomain.Int, Order = 18, OldDBColumnName = "", Nullable = true, DefaultValue = 100)]
+        public int IsolationResistanceVoltage
+        {
+            get
+            {
+                return tryParseInt(IsolationResistanceVoltage_ColumnName);
+            }
+            set
+            {
+                this[IsolationResistanceVoltage_ColumnName] = value;
+            }
+        }
+
+        /// <summary>
         /// Волновое сопротивление кабеля
         /// </summary>
-        [DBColumn(WaveResistance_ColumnName, ColumnDomain.Float, Order = 18, OldDBColumnName = "Zwave", Nullable = false)]
+        [DBColumn(WaveResistance_ColumnName, ColumnDomain.Float, Order = 19, OldDBColumnName = "Zwave", Nullable = false)]
         public float WaveResistance
         {
             get
@@ -370,7 +386,7 @@ namespace NormaLib.DBControl.Tables
         /// <summary>
         /// Количество элементов в пучке
         /// </summary>
-        [DBColumn(GroupedAmount_ColumnName, ColumnDomain.UInt, Order = 19, OldDBColumnName = "Puchek", Nullable = false, DefaultValue = 0)]
+        [DBColumn(GroupedAmount_ColumnName, ColumnDomain.UInt, Order = 20, OldDBColumnName = "Puchek", Nullable = false, DefaultValue = 0)]
         public uint GroupedAmount
         {
             get
@@ -386,7 +402,7 @@ namespace NormaLib.DBControl.Tables
         /// <summary>
         /// Испытательное напряжение прочности оболочик жила-жила
         /// </summary>
-        [DBColumn(LeadLeadVoltage_ColumnName, ColumnDomain.UInt, Order = 20, OldDBColumnName = "U_gil_gil", Nullable = false, DefaultValue = 0)]
+        [DBColumn(LeadLeadVoltage_ColumnName, ColumnDomain.UInt, Order = 21, OldDBColumnName = "U_gil_gil", Nullable = false, DefaultValue = 0)]
         public uint LeadToLeadTestVoltage
         {
             get
@@ -402,7 +418,7 @@ namespace NormaLib.DBControl.Tables
         /// <summary>
         /// Испытательное напряжение прочности оболочик жила-экран
         /// </summary>
-        [DBColumn(LeadShieldVoltage_ColumnName, ColumnDomain.UInt, Order = 21, OldDBColumnName = "U_gil_ekr", Nullable = false, DefaultValue = 0)]
+        [DBColumn(LeadShieldVoltage_ColumnName, ColumnDomain.UInt, Order = 22, OldDBColumnName = "U_gil_ekr", Nullable = false, DefaultValue = 0)]
         public uint LeadToShieldTestVoltage
         {
             get
@@ -418,7 +434,7 @@ namespace NormaLib.DBControl.Tables
         /// <summary>
         /// Рабочая ёмкость группы
         /// </summary>
-        [DBColumn(WorkCapGroup_ColumnName, ColumnDomain.Boolean, Order = 22, OldDBColumnName = "Cr_grup", Nullable = true, DefaultValue = 0)]
+        [DBColumn(WorkCapGroup_ColumnName, ColumnDomain.Boolean, Order = 23, OldDBColumnName = "Cr_grup", Nullable = true, DefaultValue = 0)]
         public bool WorkCapacityGroup
         {
             get
@@ -431,7 +447,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        [DBColumn(dRBringingFormula.FormulaId_ColumnName, ColumnDomain.UInt, Order = 23, OldDBColumnName = "Delta_R", Nullable = true, DefaultValue = 1)]
+        [DBColumn(dRBringingFormula.FormulaId_ColumnName, ColumnDomain.UInt, Order = 24, OldDBColumnName = "Delta_R", Nullable = true, DefaultValue = 1)]
         public uint DRBringingFormulaId
         {
             get
@@ -444,7 +460,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        [DBColumn(dRFormula.FormulaId_ColumnName, ColumnDomain.UInt, Order = 24, OldDBColumnName = "DRPrivInd", Nullable = true, DefaultValue = 1)]
+        [DBColumn(dRFormula.FormulaId_ColumnName, ColumnDomain.UInt, Order = 25, OldDBColumnName = "DRPrivInd", Nullable = true, DefaultValue = 1)]
         public uint DRFormulaId
         {
             get
@@ -468,6 +484,8 @@ namespace NormaLib.DBControl.Tables
         public const string LeadLeadVoltage_ColumnName = "ll_test_voltage";
         public const string LeadShieldVoltage_ColumnName = "ls_test_voltage";
         public const string WorkCapGroup_ColumnName = "work_capacity_group";
+        public const string IsolationResistanceVoltage_ColumnName = "risol_voltage";
+
 
         #endregion 
         private void refreshDRMeasureData()

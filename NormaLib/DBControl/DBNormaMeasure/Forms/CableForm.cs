@@ -774,7 +774,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             cbGroupCapacity.Checked = currentStructure.WorkCapacityGroup;
             nudNumberInGroup.Value = currentStructure.GroupedAmount;
             cbWaveResistance.Text = currentStructure.WaveResistance.ToString();
-
+            cbRisolVoltageValue.SelectedItem = (new int[] { 10, 100, 500, 1000 }).Contains(currentStructure.IsolationResistanceVoltage) ? currentStructure.IsolationResistanceVoltage.ToString() : "100";
             fillMeasuredParametersData();
             selIndexWas = cbStructureType.SelectedIndex;
         }
@@ -1392,6 +1392,12 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             float f = 0.1f;
             float.TryParse(cbLeadDiameters.Text, out f);
             currentStructure.LeadDiameter = f;
+        }
+
+        private void cbRisolVoltageValue_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (isOnInitForm) return;
+            currentStructure.IsolationResistanceVoltage = Convert.ToUInt16(cbRisolVoltageValue.SelectedItem);
         }
     }
 }
