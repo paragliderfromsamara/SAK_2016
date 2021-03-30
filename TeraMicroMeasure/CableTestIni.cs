@@ -82,16 +82,16 @@ namespace TeraMicroMeasure
             }
         }
 
-        const string MeasureStartFlag_AttrName = "IsMeasureStart";
-        public bool IsMeasureStart
+        const string IsLockFileFlag_AttrName = "IsLockDraft";
+        public bool IsLockDraft
         {
             get
             {
-                return file.Read(MeasureStartFlag_AttrName, TestAttrs_SectionName) == "1";
+                return file.Read(IsLockFileFlag_AttrName, TestAttrs_SectionName) == "1";
             }
             set
             {
-                file.Write(MeasureStartFlag_AttrName, (value) ? "1" : "0", TestAttrs_SectionName);
+                file.Write(IsLockFileFlag_AttrName, (value) ? "1" : "0", TestAttrs_SectionName);
             }
         }
 
@@ -129,7 +129,7 @@ namespace TeraMicroMeasure
             }
         }
 
-        public Cable BuildCableFromFile(DBEntityTable measured_parameters_data)
+        public TestedCable BuildCableFromFile(DBEntityTable measured_parameters_data)
         {
             DBEntityTable t = new DBEntityTable(typeof(TestedCable));
             TestedCable cable = t.NewRow() as TestedCable;
@@ -150,11 +150,12 @@ namespace TeraMicroMeasure
             while(file.KeyExists(CableStructure.StructureId_ColumnName, string.Format(structSectName, idx)))
             {
                 TestedCableStructure s = cable.CableStructures.NewRow() as TestedCableStructure;
+                s.OwnCable = cable;
                 foreach(DataColumn dc in cable.CableStructures.Columns)
                 {
                     s[dc] = (object)file.Read(dc.ColumnName, string.Format(structSectName, idx));
-
                 }
+                s.CableStructureId = (uint)idx + 1;
                 uint[] prmsIds = file.ReadUIntArray("measured_params_data_ids", string.Format(structSectName, idx));
                 if (prmsIds.Length > 0)
                 {
@@ -164,7 +165,11 @@ namespace TeraMicroMeasure
                         foreach(MeasuredParameterData dt in data)
                         {
                             TestedStructureMeasuredParameterData tpd = (TestedStructureMeasuredParameterData)s.MeasuredParameters.NewRow();
-                            foreach(DataColumn dc in dt.Table.Columns)
+                            tpd.ParameterTypeId = dt.ParameterTypeId;
+                            tpd.AssignedStructure = s;
+                            
+                            
+                            foreach (DataColumn dc in dt.Table.Columns)
                             {
                                 tpd[dc.ColumnName] = dt[dc]; 
                             }

@@ -614,6 +614,52 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        public string GetFreqRangeTitle()
+        {
+            string r = String.Empty;
+            if (this.FrequencyMin > 0) r = this.FrequencyMin.ToString();
+            if (this.FrequencyMax > 0 && this.FrequencyMin > 0) r += "-";
+            if (this.FrequencyMax > 0) r += this.FrequencyMax.ToString();
+            if (!String.IsNullOrWhiteSpace(r)) r += "кГц";
+            return r;
+        }
+
+        public string ResultMeasure_WithLength
+        {
+            get
+            {
+                string measure = String.Empty;
+                string brMeasure = LengthBringingTypeId == LengthBringingType.ForAnotherLengthInMeters ? String.Format("/{0}м", this.LengthBringing) : this.MeasureLengthTitle;
+                if (this.ParameterTypeId == MeasuredParameterType.dR)
+                {
+                    measure = (AssignedStructure.DRBringingFormulaId > 2) ? AssignedStructure.DRFormula.ResultMeasure : String.Format(" {0}{1}", AssignedStructure.DRFormula.ResultMeasure, brMeasure);
+                }
+                else
+                {
+                    measure = String.Format(" {0}{1}", this.ResultMeasure, brMeasure);
+                }
+                return measure;
+            }
+        }
+
+        public string GetNormaTitle()
+        {
+            string norma = String.Empty;
+            string rMeasure = ResultMeasure_WithLength;
+            if (HasMinLimit) norma += String.Format(" от {0}{1}", MinValue, rMeasure);
+            if (HasMaxLimit) norma += String.Format(" до {0}{1}", MaxValue, rMeasure);
+            norma += String.Format(" {0}%", Percent);
+            return norma;
+        }
+
+        public string GetTitle()
+        {
+            string fRangeTitle, norma;
+            fRangeTitle = GetFreqRangeTitle();
+            norma = GetNormaTitle();
+            return fRangeTitle + norma;
+        }
+
         private MeasuredParameterData measuredParameterData;
         private CableStructure cableStructure;
         private MeasuredParameterType parameterType;

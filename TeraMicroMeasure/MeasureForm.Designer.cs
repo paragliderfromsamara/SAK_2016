@@ -80,8 +80,12 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.measuredParameterSelect = new System.Windows.Forms.Panel();
-            this.measuredParameterCB = new System.Windows.Forms.ComboBox();
             this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
+            this.measuredParameterCB = new System.Windows.Forms.ComboBox();
+            this.measuredParameterDataTabs = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.panelResultMeasure = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -99,6 +103,9 @@
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
             this.measuredParameterSelect.SuspendLayout();
+            this.measuredParameterDataTabs.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.panelResultMeasure.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonPrevElement
@@ -195,7 +202,7 @@
             this.measureResultDataGrid.ShowCellToolTips = false;
             this.measureResultDataGrid.ShowEditingIcon = false;
             this.measureResultDataGrid.ShowRowErrors = false;
-            this.measureResultDataGrid.Size = new System.Drawing.Size(440, 647);
+            this.measureResultDataGrid.Size = new System.Drawing.Size(426, 610);
             this.measureResultDataGrid.TabIndex = 0;
             this.measureResultDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.measureResultDataGrid_CellClick);
             this.measureResultDataGrid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
@@ -504,7 +511,7 @@
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
-            this.panel6.Controls.Add(this.measureResultDataGrid);
+            this.panel6.Controls.Add(this.measuredParameterDataTabs);
             this.panel6.Controls.Add(this.neasureResultPanel);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 227);
@@ -761,6 +768,15 @@
             this.measuredParameterSelect.Size = new System.Drawing.Size(387, 51);
             this.measuredParameterSelect.TabIndex = 37;
             // 
+            // rIsolTypeSelectorCB
+            // 
+            this.rIsolTypeSelectorCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rIsolTypeSelectorCB.FormattingEnabled = true;
+            this.rIsolTypeSelectorCB.Location = new System.Drawing.Point(239, 13);
+            this.rIsolTypeSelectorCB.Name = "rIsolTypeSelectorCB";
+            this.rIsolTypeSelectorCB.Size = new System.Drawing.Size(138, 27);
+            this.rIsolTypeSelectorCB.TabIndex = 3;
+            // 
             // measuredParameterCB
             // 
             this.measuredParameterCB.FormattingEnabled = true;
@@ -770,14 +786,48 @@
             this.measuredParameterCB.TabIndex = 2;
             this.measuredParameterCB.SelectedIndexChanged += new System.EventHandler(this.measuredParameterCB_SelectedIndexChanged);
             // 
-            // rIsolTypeSelectorCB
+            // measuredParameterDataTabs
             // 
-            this.rIsolTypeSelectorCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.rIsolTypeSelectorCB.FormattingEnabled = true;
-            this.rIsolTypeSelectorCB.Location = new System.Drawing.Point(239, 13);
-            this.rIsolTypeSelectorCB.Name = "rIsolTypeSelectorCB";
-            this.rIsolTypeSelectorCB.Size = new System.Drawing.Size(138, 27);
-            this.rIsolTypeSelectorCB.TabIndex = 3;
+            this.measuredParameterDataTabs.Controls.Add(this.tabPage1);
+            this.measuredParameterDataTabs.Controls.Add(this.tabPage2);
+            this.measuredParameterDataTabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.measuredParameterDataTabs.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.measuredParameterDataTabs.Location = new System.Drawing.Point(0, 0);
+            this.measuredParameterDataTabs.Name = "measuredParameterDataTabs";
+            this.measuredParameterDataTabs.SelectedIndex = 0;
+            this.measuredParameterDataTabs.Size = new System.Drawing.Size(440, 647);
+            this.measuredParameterDataTabs.TabIndex = 38;
+            this.measuredParameterDataTabs.SelectedIndexChanged += new System.EventHandler(this.measuredParameterDataTabs_SelectedIndexChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.panelResultMeasure);
+            this.tabPage1.Location = new System.Drawing.Point(4, 27);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(432, 616);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 28);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(192, 68);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // panelResultMeasure
+            // 
+            this.panelResultMeasure.Controls.Add(this.measureResultDataGrid);
+            this.panelResultMeasure.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelResultMeasure.Location = new System.Drawing.Point(3, 3);
+            this.panelResultMeasure.Name = "panelResultMeasure";
+            this.panelResultMeasure.Size = new System.Drawing.Size(426, 610);
+            this.panelResultMeasure.TabIndex = 38;
             // 
             // MeasureForm
             // 
@@ -789,7 +839,7 @@
             this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.MinimumSize = new System.Drawing.Size(931, 0);
+            this.MinimumSize = new System.Drawing.Size(931, 39);
             this.Name = "MeasureForm";
             this.Text = "Измерение";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
@@ -815,6 +865,9 @@
             this.panel5.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.measuredParameterSelect.ResumeLayout(false);
+            this.measuredParameterDataTabs.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.panelResultMeasure.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -877,5 +930,9 @@
         private System.Windows.Forms.Label measureTimerLabel;
         private System.Windows.Forms.Label normaLabel;
         private System.Windows.Forms.ComboBox rIsolTypeSelectorCB;
+        private System.Windows.Forms.TabControl measuredParameterDataTabs;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Panel panelResultMeasure;
     }
 }
