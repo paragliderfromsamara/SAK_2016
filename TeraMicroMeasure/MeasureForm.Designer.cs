@@ -378,7 +378,7 @@
             this.normaLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.normaLabel.Location = new System.Drawing.Point(12, 98);
             this.normaLabel.Name = "normaLabel";
-            this.normaLabel.Size = new System.Drawing.Size(232, 32);
+            this.normaLabel.Size = new System.Drawing.Size(879, 32);
             this.normaLabel.TabIndex = 22;
             this.normaLabel.Text = "норма: 10 МОм";
             this.normaLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -567,7 +567,9 @@
             // neasureResultPanel
             // 
             this.neasureResultPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
+            this.neasureResultPanel.Controls.Add(this.depolTimeLbl);
             this.neasureResultPanel.Controls.Add(this.temperatureValue);
+            this.neasureResultPanel.Controls.Add(this.afterMeasureDelayUpDown);
             this.neasureResultPanel.Controls.Add(this.label1);
             this.neasureResultPanel.Controls.Add(this.temperatureComboBox);
             this.neasureResultPanel.Controls.Add(this.label2);
@@ -681,8 +683,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.depolTimeLbl);
-            this.groupBox2.Controls.Add(this.afterMeasureDelayUpDown);
             this.groupBox2.Controls.Add(this.averagingCounter);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.polarDelayLbl);
@@ -700,7 +700,7 @@
             // depolTimeLbl
             // 
             this.depolTimeLbl.AutoSize = true;
-            this.depolTimeLbl.Location = new System.Drawing.Point(273, 28);
+            this.depolTimeLbl.Location = new System.Drawing.Point(14, 217);
             this.depolTimeLbl.Name = "depolTimeLbl";
             this.depolTimeLbl.Size = new System.Drawing.Size(68, 19);
             this.depolTimeLbl.TabIndex = 8;
@@ -708,7 +708,7 @@
             // 
             // afterMeasureDelayUpDown
             // 
-            this.afterMeasureDelayUpDown.Location = new System.Drawing.Point(276, 49);
+            this.afterMeasureDelayUpDown.Location = new System.Drawing.Point(17, 238);
             this.afterMeasureDelayUpDown.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.afterMeasureDelayUpDown.Maximum = new decimal(new int[] {
             300,
@@ -716,7 +716,7 @@
             0,
             0});
             this.afterMeasureDelayUpDown.Name = "afterMeasureDelayUpDown";
-            this.afterMeasureDelayUpDown.Size = new System.Drawing.Size(103, 27);
+            this.afterMeasureDelayUpDown.Size = new System.Drawing.Size(106, 27);
             this.afterMeasureDelayUpDown.TabIndex = 7;
             // 
             // averagingCounter

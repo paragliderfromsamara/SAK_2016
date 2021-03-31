@@ -472,73 +472,7 @@ namespace TeraMicroMeasure
             }
 
         }
-        /*
-private void SetVoltageFromXmlState()
-{
-    switch (measureState.MeasureVoltage)
-    {
-        case 10:
-            v10_RadioButton.Checked = true;
-            break;
-        case 100:
-            v100_RadioButton.Checked = true;
-            break;
-        case 500:
-            v500_RadioButton.Checked = true;
-            break;
-        case 1000:
-            v1000_RadioButton.Checked = true;
-            break;
-        default:
-            measureState.MeasureVoltage = 10;
-            v10_RadioButton.Checked = true;
-            break;
-    }
-}
 
-private void SetMeasureTypeFromXMLState()
-{
-    switch(measureState.MeasureTypeId)
-    {
-        case MeasuredParameterType.Rleads:
-            RleadRadioButton.Checked = true;
-            break;
-        case MeasuredParameterType.Risol1:
-            RizolRadioButton.Checked = true;
-            break;
-    }
-}*/
-
-
-        //private void MeasureTypeRadioButton_CheckedChanged_Common(object sender, EventArgs e)
-        //{
-        //    voltagesGroupBox.Visible = RizolRadioButton.Checked;
-        //    polarDelayLbl.Text = RizolRadioButton.Checked ? "Выдержка, мин" : "Выдержка, мс";
-        //     depolTimeLbl.Text = RizolRadioButton.Checked ? "Разряд, с" : "Пауза, c";
-        // }
-        /*
-        private void MeasureTypeRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            RadioButton rb = sender as RadioButton;
-            if (rb.Checked)
-            {
-                uint mId = 0;
-                if (rb == RizolRadioButton)
-                {
-                    mId = MeasuredParameterType.Risol1;
-                }
-                else if (rb == RleadRadioButton)
-                {
-                    mId = MeasuredParameterType.Rleads;
-                }
-                measuredParameterCB.Visible = mId == MeasuredParameterType.Risol1;
-                CapturedDeviceType = GetDeviceTypeByRadioBox();
-                measureState.MeasureTypeId = mId;
-            }
-            RefreshMeasureControl();
-            MeasureStateOnFormChanged();
-        }
-        */
 
         private void AddHandlersToInputs()
         {
@@ -1087,7 +1021,7 @@ private void SetMeasureTypeFromXMLState()
                 MeasureResultConverter c = new MeasureResultConverter(xml_device.RawResult, CurrentParameterData, (Single)cableLengthNumericUpDown.Value, MaterialCoeff);
 
                 return ProcessResult(c);//return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";
-            }else if (xml_device.MeasureStatusId == 0)
+            }else if (xml_device.MeasureStatusId == 0 || xml_device.MeasureStatusId == (uint)DeviceMeasureStatus.IN_WORK)
             {
                 return "";
             }
@@ -1106,16 +1040,20 @@ private void SetMeasureTypeFromXMLState()
             switch (measureState.MeasureTypeId)
             {
                 case MeasuredParameterType.Risol2:
-                    MeasureResultConverter cr = new MeasureResultConverter(c.RawValue, currentStructure.RizolNormaValue, (Single)cableLengthNumericUpDown.Value, MaterialCoeff);
-                    NormDeterminant d = new NormDeterminant(currentStructure.RizolNormaValue, cr.ConvertedValueRounded);
+                    TestedStructureMeasuredParameterData RisolNormaValue = (TestedStructureMeasuredParameterData)currentStructure.RizolNormaValue;
+                    MeasureResultConverter cr = new MeasureResultConverter(c.RawValue, RisolNormaValue, (float)cableLengthNumericUpDown.Value, MaterialCoeff);
+                    NormDeterminant d = new NormDeterminant(RisolNormaValue, cr.ConvertedValueRounded);
                     stringVal = cr.ConvertedValueLabel;
                     if (addValueToProtocol = d.IsOnNorma)
                     {
+                        normaLabel.Text = valueToTable.ToString();
                         valueToProtocol = valueToTable = measureTimer.TimeInSeconds;
-                        if (measureStatus == MeasureStatus.STARTED)startMeasureButton.PerformClick();
+                        if (measureStatus == MeasureStatus.STARTED) startMeasureButton.PerformClick();
                     }
+                    else normaLabel.Text = $"Fuck! IsLessMax={d.IsLessOrEqualMax} IsHighterMin={d.IsLargerOrEqualMin} ";
                     break;
                 case MeasuredParameterType.Risol1:
+                    
                     break;
                 case MeasuredParameterType.Rleads:
                     break;
@@ -1424,6 +1362,7 @@ private void SetMeasureTypeFromXMLState()
             CapturedDeviceType = GetDeviceTypeByRadioBox();
             measureState.MeasureTypeId = parameterTypeId;
             RefreshMeasureParameterDataTabs();
+            normaLabel.Text = parameterTypeId.ToString();
             MeasureStateOnFormChanged();
         }
 

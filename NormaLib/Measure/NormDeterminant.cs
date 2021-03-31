@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaLib.DBControl.Tables;
+using System.Diagnostics;
+
 
 namespace NormaLib.Measure
 {
@@ -28,7 +30,7 @@ namespace NormaLib.Measure
             }
         }
 
-        public bool IsOnNorma => IsLargerOrEqualMin & IsLessOrEqualMax;
+        public bool IsOnNorma => IsLargerOrEqualMin && IsLessOrEqualMax;
         public bool IsLessOrEqualMax => parameterData.HasMaxLimit ? resultValue <= parameterData.MaxValue : true;
         public bool IsLargerOrEqualMin => parameterData.HasMinLimit ? resultValue >= parameterData.MinValue : true;
 
@@ -52,6 +54,7 @@ namespace NormaLib.Measure
 
         public NormDeterminant(CableStructureMeasuredParameterData parameter_data, double result)
         {
+
             parameterData = parameter_data;
             resultValue = result;
         }

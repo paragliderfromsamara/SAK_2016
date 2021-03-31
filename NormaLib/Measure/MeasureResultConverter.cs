@@ -17,9 +17,23 @@ namespace NormaLib.Measure
         float bringing_length;
         public double ConvertedValue;
         public double ConvertedValueRounded => Math.Round(ConvertedValue, 3, MidpointRounding.AwayFromZero);
+        public string ConvertedValueRoundedLabel
+        {
+            get
+            {
+                if (MeasuredParameterType.IsItIsolationaResistance(parameterData.ParameterTypeId))
+                {
+                    return ConvertedValueRounded > 10000 ? ConvertedValueRounded.ToString("E2") : ConvertedValueRounded.ToString();  
+                }
+                else
+                {
+                    return ConvertedValueRounded.ToString();
+                }
+            }
+        }
         string measure_bringing_length_label = String.Empty;
         string main_result_measure = String.Empty;
-        public string ConvertedValueLabel => $"{ConvertedValueRounded} {main_result_measure}{measure_bringing_length_label}";
+        public string ConvertedValueLabel => $"{ConvertedValueRoundedLabel} {main_result_measure}{measure_bringing_length_label}";
         public double RawValue => raw_value;
         CableStructureMeasuredParameterData parameterData;
         public CableStructureMeasuredParameterData ParameterData => parameterData;
@@ -53,13 +67,13 @@ namespace NormaLib.Measure
 
         private void setMeasureLabel_Rleads()
         {
-            measure_bringing_length_label = (bringing_length == 1000) ? "/км" : $"/{bringing_length}м";
+            measure_bringing_length_label = parameterData.LengthBringingName;
             main_result_measure = parameterData.ResultMeasure;
         }
 
         private void setMeasureLabel_Rizol()
         {
-            measure_bringing_length_label = (bringing_length == 1000) ? "⋅км" : $"⋅{bringing_length}м";
+            measure_bringing_length_label = parameterData.LengthBringingName;// (bringing_length == 1000) ? "⋅км" : $"⋅{bringing_length}м";
             main_result_measure = parameterData.ResultMeasure;
         }
 

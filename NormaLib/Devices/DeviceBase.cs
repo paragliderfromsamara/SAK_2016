@@ -187,7 +187,7 @@ namespace NormaLib.Devices
                     case (uint)DeviceMeasureStatus.INTEGRATOR_IS_ON_NEGATIVE:
                         return "Цепь под напряжением";
                     case (uint)DeviceMeasureStatus.IN_WORK:
-                        return "В процессе";
+                        return "В процессе...";
                     case (uint)DeviceMeasureStatus.RANGE_DOWN:
                         return "Требуется диапазон ниже";
                     case (uint)DeviceMeasureStatus.RANGE_UP:
@@ -400,8 +400,14 @@ namespace NormaLib.Devices
         {
             lock (locker)
             {
+                ResetResult();
                 measure_cycle_flag = true;
             }
+        }
+
+        protected virtual void ResetResult()
+        {
+            MeasureStatusId = (uint)DeviceMeasureStatus.IN_WORK;
         }
 
         protected virtual void PCModeMeasureThreadFunction()
