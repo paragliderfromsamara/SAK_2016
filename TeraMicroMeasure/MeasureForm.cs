@@ -1403,6 +1403,16 @@ namespace TeraMicroMeasure
                 e.Cancel = true;
             }
         }
+
+        private void resetTestButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveResultButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 
