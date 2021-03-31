@@ -73,7 +73,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cableLengthNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.cableStructureCB = new System.Windows.Forms.ComboBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.deviceParametersGroupBox = new System.Windows.Forms.GroupBox();
             this.depolTimeLbl = new System.Windows.Forms.Label();
             this.afterMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
             this.averagingCounter = new System.Windows.Forms.ComboBox();
@@ -101,7 +101,7 @@
             this.neasureResultPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.temperatureValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            this.deviceParametersGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).BeginInit();
             this.panel5.SuspendLayout();
@@ -567,16 +567,14 @@
             // neasureResultPanel
             // 
             this.neasureResultPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
-            this.neasureResultPanel.Controls.Add(this.depolTimeLbl);
             this.neasureResultPanel.Controls.Add(this.temperatureValue);
-            this.neasureResultPanel.Controls.Add(this.afterMeasureDelayUpDown);
             this.neasureResultPanel.Controls.Add(this.label1);
             this.neasureResultPanel.Controls.Add(this.temperatureComboBox);
             this.neasureResultPanel.Controls.Add(this.label2);
             this.neasureResultPanel.Controls.Add(this.label3);
             this.neasureResultPanel.Controls.Add(this.cableLengthNumericUpDown);
             this.neasureResultPanel.Controls.Add(this.cableStructureCB);
-            this.neasureResultPanel.Controls.Add(this.groupBox2);
+            this.neasureResultPanel.Controls.Add(this.deviceParametersGroupBox);
             this.neasureResultPanel.Controls.Add(this.cableComboBox);
             this.neasureResultPanel.Dock = System.Windows.Forms.DockStyle.Right;
             this.neasureResultPanel.ForeColor = System.Drawing.Color.Black;
@@ -588,7 +586,7 @@
             // 
             // temperatureValue
             // 
-            this.temperatureValue.Location = new System.Drawing.Point(142, 176);
+            this.temperatureValue.Location = new System.Drawing.Point(142, 175);
             this.temperatureValue.Maximum = new decimal(new int[] {
             35,
             0,
@@ -612,7 +610,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 16);
+            this.label1.Location = new System.Drawing.Point(13, 15);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(61, 19);
@@ -623,7 +621,7 @@
             // 
             this.temperatureComboBox.AutoSize = true;
             this.temperatureComboBox.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.temperatureComboBox.Location = new System.Drawing.Point(138, 155);
+            this.temperatureComboBox.Location = new System.Drawing.Point(138, 154);
             this.temperatureComboBox.Name = "temperatureComboBox";
             this.temperatureComboBox.Size = new System.Drawing.Size(104, 19);
             this.temperatureComboBox.TabIndex = 3;
@@ -632,7 +630,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 154);
+            this.label2.Location = new System.Drawing.Point(13, 153);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 19);
             this.label2.TabIndex = 26;
@@ -641,7 +639,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 82);
+            this.label3.Location = new System.Drawing.Point(14, 81);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(85, 19);
             this.label3.TabIndex = 36;
@@ -649,7 +647,7 @@
             // 
             // cableLengthNumericUpDown
             // 
-            this.cableLengthNumericUpDown.Location = new System.Drawing.Point(18, 176);
+            this.cableLengthNumericUpDown.Location = new System.Drawing.Point(18, 175);
             this.cableLengthNumericUpDown.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cableLengthNumericUpDown.Maximum = new decimal(new int[] {
             10000,
@@ -674,33 +672,35 @@
             // 
             this.cableStructureCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cableStructureCB.FormattingEnabled = true;
-            this.cableStructureCB.Location = new System.Drawing.Point(17, 104);
+            this.cableStructureCB.Location = new System.Drawing.Point(17, 103);
             this.cableStructureCB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cableStructureCB.Name = "cableStructureCB";
-            this.cableStructureCB.Size = new System.Drawing.Size(331, 27);
+            this.cableStructureCB.Size = new System.Drawing.Size(434, 27);
             this.cableStructureCB.TabIndex = 35;
             this.cableStructureCB.SelectedValueChanged += new System.EventHandler(this.cableStructureCB_SelectedIndexChanged);
             // 
-            // groupBox2
+            // deviceParametersGroupBox
             // 
-            this.groupBox2.Controls.Add(this.averagingCounter);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.polarDelayLbl);
-            this.groupBox2.Controls.Add(this.beforeMeasureDelayUpDown);
-            this.groupBox2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox2.Location = new System.Drawing.Point(18, 391);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(395, 96);
-            this.groupBox2.TabIndex = 28;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Настройки измерителя";
+            this.deviceParametersGroupBox.Controls.Add(this.depolTimeLbl);
+            this.deviceParametersGroupBox.Controls.Add(this.polarDelayLbl);
+            this.deviceParametersGroupBox.Controls.Add(this.averagingCounter);
+            this.deviceParametersGroupBox.Controls.Add(this.beforeMeasureDelayUpDown);
+            this.deviceParametersGroupBox.Controls.Add(this.label5);
+            this.deviceParametersGroupBox.Controls.Add(this.afterMeasureDelayUpDown);
+            this.deviceParametersGroupBox.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.deviceParametersGroupBox.Location = new System.Drawing.Point(18, 229);
+            this.deviceParametersGroupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.deviceParametersGroupBox.Name = "deviceParametersGroupBox";
+            this.deviceParametersGroupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.deviceParametersGroupBox.Size = new System.Drawing.Size(433, 96);
+            this.deviceParametersGroupBox.TabIndex = 28;
+            this.deviceParametersGroupBox.TabStop = false;
+            this.deviceParametersGroupBox.Text = "Настройки измерителя";
             // 
             // depolTimeLbl
             // 
             this.depolTimeLbl.AutoSize = true;
-            this.depolTimeLbl.Location = new System.Drawing.Point(14, 217);
+            this.depolTimeLbl.Location = new System.Drawing.Point(303, 28);
             this.depolTimeLbl.Name = "depolTimeLbl";
             this.depolTimeLbl.Size = new System.Drawing.Size(68, 19);
             this.depolTimeLbl.TabIndex = 8;
@@ -708,7 +708,7 @@
             // 
             // afterMeasureDelayUpDown
             // 
-            this.afterMeasureDelayUpDown.Location = new System.Drawing.Point(17, 238);
+            this.afterMeasureDelayUpDown.Location = new System.Drawing.Point(306, 49);
             this.afterMeasureDelayUpDown.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.afterMeasureDelayUpDown.Maximum = new decimal(new int[] {
             300,
@@ -722,16 +722,16 @@
             // averagingCounter
             // 
             this.averagingCounter.FormattingEnabled = true;
-            this.averagingCounter.Location = new System.Drawing.Point(143, 49);
+            this.averagingCounter.Location = new System.Drawing.Point(153, 49);
             this.averagingCounter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.averagingCounter.Name = "averagingCounter";
-            this.averagingCounter.Size = new System.Drawing.Size(104, 27);
+            this.averagingCounter.Size = new System.Drawing.Size(127, 27);
             this.averagingCounter.TabIndex = 6;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(140, 27);
+            this.label5.Location = new System.Drawing.Point(150, 27);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(130, 19);
             this.label5.TabIndex = 5;
@@ -740,7 +740,7 @@
             // polarDelayLbl
             // 
             this.polarDelayLbl.AutoSize = true;
-            this.polarDelayLbl.Location = new System.Drawing.Point(21, 28);
+            this.polarDelayLbl.Location = new System.Drawing.Point(16, 28);
             this.polarDelayLbl.Name = "polarDelayLbl";
             this.polarDelayLbl.Size = new System.Drawing.Size(110, 19);
             this.polarDelayLbl.TabIndex = 1;
@@ -748,7 +748,7 @@
             // 
             // beforeMeasureDelayUpDown
             // 
-            this.beforeMeasureDelayUpDown.Location = new System.Drawing.Point(24, 49);
+            this.beforeMeasureDelayUpDown.Location = new System.Drawing.Point(19, 49);
             this.beforeMeasureDelayUpDown.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.beforeMeasureDelayUpDown.Maximum = new decimal(new int[] {
             10000,
@@ -770,10 +770,10 @@
             this.cableComboBox.FormattingEnabled = true;
             this.cableComboBox.Items.AddRange(new object[] {
             "Список пуст"});
-            this.cableComboBox.Location = new System.Drawing.Point(17, 39);
+            this.cableComboBox.Location = new System.Drawing.Point(17, 38);
             this.cableComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cableComboBox.Name = "cableComboBox";
-            this.cableComboBox.Size = new System.Drawing.Size(331, 27);
+            this.cableComboBox.Size = new System.Drawing.Size(434, 27);
             this.cableComboBox.TabIndex = 23;
             // 
             // panel5
@@ -854,6 +854,7 @@
             this.MinimumSize = new System.Drawing.Size(931, 39);
             this.Name = "MeasureForm";
             this.Text = "Измерение";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MeasureForm_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).EndInit();
             this.selectDevicePanel.ResumeLayout(false);
@@ -874,8 +875,8 @@
             this.neasureResultPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.temperatureValue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.deviceParametersGroupBox.ResumeLayout(false);
+            this.deviceParametersGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).EndInit();
             this.panel5.ResumeLayout(false);
@@ -923,7 +924,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown cableLengthNumericUpDown;
         private System.Windows.Forms.ComboBox cableStructureCB;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox deviceParametersGroupBox;
         private System.Windows.Forms.Label depolTimeLbl;
         private System.Windows.Forms.NumericUpDown afterMeasureDelayUpDown;
         private System.Windows.Forms.ComboBox averagingCounter;

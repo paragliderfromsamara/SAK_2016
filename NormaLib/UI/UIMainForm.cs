@@ -151,7 +151,13 @@ namespace NormaLib.UI
 
         private void CloseAppButton_Click(object sender, EventArgs e)
         {
-            Close();
+            if (currentForm == null)Close();
+            else
+            {
+                currentForm.FormClosed -= CurrentForm_FormClosed;
+                currentForm.FormClosed += (s, a) => { Close(); };
+                currentForm.Close();
+            }
         }
 
         private void MaximizeAppButton_Click(object sender, EventArgs e)
@@ -238,6 +244,14 @@ namespace NormaLib.UI
         private void CurrentForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (nextForm != null) SetNextForm();
+        }
+
+        private void UIMainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (currentForm != null)
+            {
+              
+            }
         }
     }
 

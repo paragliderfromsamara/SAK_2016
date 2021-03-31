@@ -31,15 +31,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UIMainForm));
             this.panelMenu = new System.Windows.Forms.Panel();
             this.panelHeader = new System.Windows.Forms.Panel();
+            this.btnMeasure = new System.Windows.Forms.Button();
+            this.btnDataBase = new System.Windows.Forms.Button();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.panelTitleBar = new System.Windows.Forms.Panel();
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.childFormPanel = new System.Windows.Forms.Panel();
             this.MinimizeAppButton = new System.Windows.Forms.Button();
             this.MaximizeAppButton = new System.Windows.Forms.Button();
             this.CloseAppButton = new System.Windows.Forms.Button();
-            this.btnSettings = new System.Windows.Forms.Button();
-            this.btnDataBase = new System.Windows.Forms.Button();
-            this.btnMeasure = new System.Windows.Forms.Button();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.childFormPanel = new System.Windows.Forms.Panel();
             this.panelMenu.SuspendLayout();
             this.panelTitleBar.SuspendLayout();
             this.SuspendLayout();
@@ -51,10 +51,6 @@
             this.panelMenu.Controls.Add(this.btnMeasure);
             this.panelMenu.Controls.Add(this.btnDataBase);
             this.panelMenu.Controls.Add(this.btnSettings);
-
-
-
-
             this.panelMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelMenu.Location = new System.Drawing.Point(0, 0);
             this.panelMenu.Name = "panelMenu";
@@ -65,10 +61,70 @@
             // 
             this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(3)))), ((int)(((byte)(130)))), ((int)(((byte)(233)))));
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelHeader.Location = new System.Drawing.Point(0, 0);
+            this.panelHeader.Location = new System.Drawing.Point(0, 180);
             this.panelHeader.Name = "panelHeader";
             this.panelHeader.Size = new System.Drawing.Size(240, 80);
             this.panelHeader.TabIndex = 0;
+            // 
+            // btnMeasure
+            // 
+            this.btnMeasure.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMeasure.FlatAppearance.BorderSize = 0;
+            this.btnMeasure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMeasure.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnMeasure.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnMeasure.Image = ((System.Drawing.Image)(resources.GetObject("btnMeasure.Image")));
+            this.btnMeasure.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMeasure.Location = new System.Drawing.Point(0, 120);
+            this.btnMeasure.Name = "btnMeasure";
+            this.btnMeasure.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnMeasure.Size = new System.Drawing.Size(240, 60);
+            this.btnMeasure.TabIndex = 1;
+            this.btnMeasure.Text = " Измерения";
+            this.btnMeasure.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMeasure.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnMeasure.UseVisualStyleBackColor = true;
+            this.btnMeasure.Click += new System.EventHandler(this.btnMeasure_Click);
+            // 
+            // btnDataBase
+            // 
+            this.btnDataBase.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDataBase.FlatAppearance.BorderSize = 0;
+            this.btnDataBase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDataBase.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnDataBase.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnDataBase.Image = ((System.Drawing.Image)(resources.GetObject("btnDataBase.Image")));
+            this.btnDataBase.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDataBase.Location = new System.Drawing.Point(0, 60);
+            this.btnDataBase.Name = "btnDataBase";
+            this.btnDataBase.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnDataBase.Size = new System.Drawing.Size(240, 60);
+            this.btnDataBase.TabIndex = 2;
+            this.btnDataBase.Text = " База Данных";
+            this.btnDataBase.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDataBase.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnDataBase.UseVisualStyleBackColor = true;
+            this.btnDataBase.Click += new System.EventHandler(this.btnDataBase_Click);
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnSettings.FlatAppearance.BorderSize = 0;
+            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnSettings.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
+            this.btnSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSettings.Location = new System.Drawing.Point(0, 0);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnSettings.Size = new System.Drawing.Size(240, 60);
+            this.btnSettings.TabIndex = 3;
+            this.btnSettings.Text = " Настройки";
+            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
             // panelTitleBar
             // 
@@ -83,28 +139,6 @@
             this.panelTitleBar.Size = new System.Drawing.Size(984, 80);
             this.panelTitleBar.TabIndex = 1;
             this.panelTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseDown);
-            // 
-            // lblTitle
-            // 
-            this.lblTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblTitle.ForeColor = System.Drawing.Color.White;
-            this.lblTitle.Location = new System.Drawing.Point(325, 26);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(339, 30);
-            this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "ГЛАВНОЕ МЕНЮ";
-            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // childFormPanel
-            // 
-            this.childFormPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.childFormPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.childFormPanel.Location = new System.Drawing.Point(240, 80);
-            this.childFormPanel.Name = "childFormPanel";
-            this.childFormPanel.Size = new System.Drawing.Size(984, 804);
-            this.childFormPanel.TabIndex = 2;
             // 
             // MinimizeAppButton
             // 
@@ -149,65 +183,27 @@
             this.CloseAppButton.UseVisualStyleBackColor = false;
             this.CloseAppButton.Click += new System.EventHandler(this.CloseAppButton_Click);
             // 
-            // btnSettings
+            // lblTitle
             // 
-            this.btnSettings.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnSettings.FlatAppearance.BorderSize = 0;
-            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnSettings.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
-            this.btnSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSettings.Location = new System.Drawing.Point(0, 200);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnSettings.Size = new System.Drawing.Size(240, 60);
-            this.btnSettings.TabIndex = 3;
-            this.btnSettings.Text = " Настройки";
-            this.btnSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnSettings.UseVisualStyleBackColor = true;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            this.lblTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(325, 26);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(339, 30);
+            this.lblTitle.TabIndex = 0;
+            this.lblTitle.Text = "ГЛАВНОЕ МЕНЮ";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnDataBase
+            // childFormPanel
             // 
-            this.btnDataBase.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnDataBase.FlatAppearance.BorderSize = 0;
-            this.btnDataBase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDataBase.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnDataBase.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnDataBase.Image = ((System.Drawing.Image)(resources.GetObject("btnDataBase.Image")));
-            this.btnDataBase.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDataBase.Location = new System.Drawing.Point(0, 140);
-            this.btnDataBase.Name = "btnDataBase";
-            this.btnDataBase.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnDataBase.Size = new System.Drawing.Size(240, 60);
-            this.btnDataBase.TabIndex = 2;
-            this.btnDataBase.Text = " База Данных";
-            this.btnDataBase.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDataBase.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnDataBase.UseVisualStyleBackColor = true;
-            this.btnDataBase.Click += new System.EventHandler(this.btnDataBase_Click);
-            // 
-            // btnMeasure
-            // 
-            this.btnMeasure.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnMeasure.FlatAppearance.BorderSize = 0;
-            this.btnMeasure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMeasure.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnMeasure.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnMeasure.Image = ((System.Drawing.Image)(resources.GetObject("btnMeasure.Image")));
-            this.btnMeasure.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMeasure.Location = new System.Drawing.Point(0, 80);
-            this.btnMeasure.Name = "btnMeasure";
-            this.btnMeasure.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnMeasure.Size = new System.Drawing.Size(240, 60);
-            this.btnMeasure.TabIndex = 1;
-            this.btnMeasure.Text = " Измерения";
-            this.btnMeasure.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMeasure.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnMeasure.UseVisualStyleBackColor = true;
-            this.btnMeasure.Click += new System.EventHandler(this.btnMeasure_Click);
+            this.childFormPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.childFormPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.childFormPanel.Location = new System.Drawing.Point(240, 80);
+            this.childFormPanel.Name = "childFormPanel";
+            this.childFormPanel.Size = new System.Drawing.Size(984, 804);
+            this.childFormPanel.TabIndex = 2;
             // 
             // UIMainForm
             // 
@@ -223,6 +219,7 @@
             this.Name = "UIMainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "UIMainForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UIMainForm_FormClosing);
             this.panelMenu.ResumeLayout(false);
             this.panelTitleBar.ResumeLayout(false);
             this.ResumeLayout(false);

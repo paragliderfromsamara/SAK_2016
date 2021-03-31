@@ -295,7 +295,7 @@ namespace TeraMicroMeasure
 
         private void SetCapturedDeviceTypeId()
         {
-            captured_device_type = GetDeviceTypeByRadioBox();
+            captured_device_type = GetDeviceTypeBySelectedParameterType();
             //this.Text = captured_device_type.ToString();
             // RleadRadioButton.Checked = true;
             // MeasureTypeRadioButton_CheckedChanged(RleadRadioButton, new EventArgs());
@@ -306,7 +306,6 @@ namespace TeraMicroMeasure
 
         private void InitPanels()
         {
-            voltagesGroupBox.Visible = false;
             InitAverageCountComboBox();
             rIsolTypeSelectorCB.DisplayMember = measuredParameterCB.DisplayMember = "value";//$"{MeasuredParameterType.ParameterName_ColumnName}";
             rIsolTypeSelectorCB.ValueMember = measuredParameterCB.ValueMember = "key";//$"{MeasuredParameterType.ParameterTypeId_ColumnName}";
@@ -331,7 +330,7 @@ namespace TeraMicroMeasure
         {
             int idx = 0;
             int i = -1;
-            if (CapturedDeviceType == DeviceType.Unknown) captured_device_type = GetDeviceTypeByRadioBox();
+            if (CapturedDeviceType == DeviceType.Unknown) captured_device_type = GetDeviceTypeBySelectedParameterType();
             availableDevices.Items.Clear();
             foreach(var d in remoteDevices.Values)
             {
@@ -369,7 +368,7 @@ namespace TeraMicroMeasure
             }
         }
 
-        private DeviceType GetDeviceTypeByRadioBox()
+        private DeviceType GetDeviceTypeBySelectedParameterType()
         {
             if (measuredParameterCB.SelectedItem == null) return DeviceType.Unknown;
             switch(((KeyValuePair<uint, string>)measuredParameterCB.SelectedItem).Key)
@@ -415,10 +414,6 @@ namespace TeraMicroMeasure
 
         private void fillInputsFromClientState()
         {
-            //if (!HasClientState) return;
-            //SetMeasureTypeFromXMLState();
-            //SetVoltageFromXmlState();
-            //SetCableIDFromXmlState();
             SetCableLengthFromXmlState();
             SetBeforeMeasureDelayFromXMLState();
             SetAfterMeasureDelayFromXMLState();
@@ -476,11 +471,6 @@ namespace TeraMicroMeasure
 
         private void AddHandlersToInputs()
         {
-            //if (!HasClientState) return;
-           // RleadRadioButton.CheckedChanged += MeasureTypeRadioButton_CheckedChanged;
-           // RizolRadioButton.CheckedChanged += MeasureTypeRadioButton_CheckedChanged;
-
-
             cableLengthNumericUpDown.ValueChanged += CableLengthNumericUpDown_ValueChanged;
 
             beforeMeasureDelayUpDown.ValueChanged += BeforeMeasureDelayUpDown_ValueChanged;
@@ -601,15 +591,6 @@ namespace TeraMicroMeasure
 
         private void RemoveHandlersFromInputs()
         {
-            //if (!HasClientState) return;
-           // RleadRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
-           // RizolRadioButton.CheckedChanged -= MeasureTypeRadioButton_CheckedChanged;
-
-          //  v10_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
-          //  v100_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
-          //  v500_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
-          //  v1000_RadioButton.CheckedChanged -= MeasuredVoltageRadioButton_CheckedChanged;
-
             cableComboBox.SelectedValueChanged -= MeasuredCableComboBox_SelectedValueChanged;
             cableLengthNumericUpDown.ValueChanged -= CableLengthNumericUpDown_ValueChanged;
 
@@ -714,6 +695,7 @@ namespace TeraMicroMeasure
                     MeasureIsStartedOnDevice = false;
                     EnableMeasurePointControl();
                     rIsolTypeSelectorCB.Enabled = true;
+                    deviceParametersGroupBox.Enabled = true;
                     StopMeasureTimer();
                     break;
                 case MeasureStatus.WILL_START:
@@ -722,6 +704,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
                     rIsolTypeSelectorCB.Enabled = false;
+                    deviceParametersGroupBox.Enabled = false;
                     DisableMeasurePointControl();
                     StopMeasureTimer();
                     break;
@@ -731,6 +714,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Enabled = true;
                     deviceControlButton.Enabled = false;
                     rIsolTypeSelectorCB.Enabled = false;
+                    deviceParametersGroupBox.Enabled = false;
                     MeasureIsStartedOnDevice = true;
                     DisableMeasurePointControl();
                     StartMeasureTimer();
@@ -741,6 +725,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
                     rIsolTypeSelectorCB.Enabled = false;
+                    deviceParametersGroupBox.Enabled = false;
                     DisableMeasurePointControl();
                     StopMeasureTimer();
                     break;
@@ -1360,7 +1345,7 @@ namespace TeraMicroMeasure
             else if (!MeasuredParameterType.IsItIsolationResistance(parameterTypeId) && MeasuredParameterType.IsItIsolationResistance(parameterTypeWas))
                 DisableRisolSelector();
 
-            CapturedDeviceType = GetDeviceTypeByRadioBox();
+            CapturedDeviceType = GetDeviceTypeBySelectedParameterType();
             measureState.MeasureTypeId = parameterTypeId;
             RefreshMeasureParameterDataTabs();
             MeasureStateOnFormChanged();
@@ -1407,6 +1392,15 @@ namespace TeraMicroMeasure
                 measuredParameterDataTabs.TabPages[measuredParameterDataTabs.SelectedIndex].Controls.Add(panelResultMeasure);
                 norma = CurrentParameterData.GetFullTitle();
                 normaLabel.Text = string.IsNullOrWhiteSpace(norma) ? "" : $"Норма: {norma}";
+            }
+        }
+
+        private void MeasureForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (measureStatus != MeasureStatus.STOPPED)
+            {
+                MessageBox.Show("Невозможно перейти в другое меню или закрыть приложение при запущенном измерении!", "Измерение не завершено!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                e.Cancel = true;
             }
         }
     }
