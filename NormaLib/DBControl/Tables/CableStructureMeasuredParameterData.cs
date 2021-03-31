@@ -642,23 +642,87 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        public string GetNormaTitle()
+        public string GetNormaTitleWithoutPercent()
         {
             string norma = String.Empty;
             string rMeasure = ResultMeasure_WithLength;
-            if (HasMinLimit) norma += String.Format(" от {0}{1}", MinValue, rMeasure);
-            if (HasMaxLimit) norma += String.Format(" до {0}{1}", MaxValue, rMeasure);
-            norma += String.Format(" {0}%", Percent);
-            return norma;
+            if (HasMinLimit) norma += String.Format(" от {0}", MinValue);
+            if (HasMaxLimit) norma += String.Format(" до {0}", MaxValue);
+            norma += $" ({rMeasure.Trim()})";
+            return norma.Trim();
         }
 
-        public string GetTitle()
+        public string GetNormaTitleWithPercent()
         {
-            string fRangeTitle, norma;
-            fRangeTitle = GetFreqRangeTitle();
-            norma = GetNormaTitle();
-            return fRangeTitle + norma;
+            string norma = GetNormaTitleWithoutPercent();
+            norma += String.Format(" {0}%", Percent);
+            return norma.Trim();
         }
+
+        public CableStructureMeasuredParameterData GetRisolNormaValue()
+        {
+            try
+            {
+                CableStructureMeasuredParameterData[] rows = (CableStructureMeasuredParameterData[])AssignedStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {(ParameterTypeId == MeasuredParameterType.Risol4 ? MeasuredParameterType.Risol3 : MeasuredParameterType.Risol1)}");
+                if (rows.Length > 0) return rows[0];
+                else return null;
+            }catch(Exception)
+            {
+                return null;
+            }
+        }
+
+        public CableStructureMeasuredParameterData GetRisolTimeLimit()
+        {
+            try
+            {
+                CableStructureMeasuredParameterData[] rows = (CableStructureMeasuredParameterData[])AssignedStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {(ParameterTypeId == MeasuredParameterType.Risol3 ? MeasuredParameterType.Risol4 : MeasuredParameterType.Risol2)} ");
+                if (rows.Length > 0) return rows[0];
+                else return null;
+            }catch(Exception)
+                {
+                return null;
+            }
+        }
+
+
+        public string GetRisolFullTitle()
+        {
+            CableStructureMeasuredParameterData pData = null;
+            bool isValueData = IsItRisolValueParameterData;
+            bool isTimeData = IsItRisolTimeParameterData;
+            if (!isTimeData && !isValueData) return string.Empty;
+            pData = (isTimeData) ? GetRisolNormaValue() : GetRisolTimeLimit();
+            if (pData == null) return string.Empty;
+            if (isTimeData)
+            {
+                return $"за {MaxValue}{ResultMeasure} до {pData.MinValue}{pData.ResultMeasure_WithLength}, {Percent}%";
+            }else
+            {
+                return $"от {MinValue} до {MaxValue}({ResultMeasure_WithLength}), за {pData.MaxValue}{pData.ResultMeasure}, {Percent}%";
+            }
+            
+        }
+
+        public string GetFullTitle()
+        {
+            if (MeasuredParameterType.IsItIsolationResistance(ParameterTypeId))
+            {
+                return GetRisolFullTitle();
+            }
+            else
+            {
+                string fRangeTitle, norma;
+                fRangeTitle = GetFreqRangeTitle();
+                norma = GetNormaTitleWithPercent();
+                return fRangeTitle + norma;
+            }
+        }
+
+        public bool IsItRisolTimeParameterData => MeasuredParameterType.IsItIsolationResistanceTime(ParameterTypeId);
+        public bool IsItRisolValueParameterData => MeasuredParameterType.IsItIsolationResistanceValue(ParameterTypeId);
+
+
 
         private MeasuredParameterData measuredParameterData;
         private CableStructure cableStructure;

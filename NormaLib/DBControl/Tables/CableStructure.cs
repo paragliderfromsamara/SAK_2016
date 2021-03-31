@@ -205,22 +205,16 @@ namespace NormaLib.DBControl.Tables
             else return null;
         }
 
-        public CableStructureMeasuredParameterData RizolNormaValue
+        public int GetRisolTimeLimit(CableStructureMeasuredParameterData cur_data)
         {
-            get
+            if (!MeasuredParameterType.IsItIsolationResistance(cur_data.ParameterTypeId)) return 60;
+            if (cur_data.IsItRisolTimeParameterData) return (int)cur_data.MaxValue;
+            else
             {
-                CableStructureMeasuredParameterData[] rows = (CableStructureMeasuredParameterData[])MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {MeasuredParameterType.Risol1}");
-                if (rows.Length > 0) return rows[0];
-                else return null;
-            }
-        }
-        public CableStructureMeasuredParameterData RizolTimeLimit
-        {
-            get
-            {
-                CableStructureMeasuredParameterData[] rows = (CableStructureMeasuredParameterData[])MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {MeasuredParameterType.Risol2}");
-                if (rows.Length > 0) return rows[0];
-                else return null;
+                CableStructureMeasuredParameterData pData = null;
+                pData = cur_data.GetRisolTimeLimit();
+                if (pData == null) return 60;
+                else return (int)pData.MaxValue;
             }
         }
 

@@ -194,7 +194,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             
             foreach(MeasuredParameterType pType in CurrentTest.AllowedMeasuredParameterTypes)
             {
-                if (MeasuredParameterType.IsItIsolationaResistance(pType.ParameterTypeId))
+                if (MeasuredParameterType.IsItIsolationResistance(pType.ParameterTypeId))
                 {
                     MeasuredParameterType type = (MeasuredParameterType)t.NewRow();
                     type.FillColsFromEntity(pType);
@@ -227,7 +227,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 CheckBox cb = getParameterTypeCheckBox(mpt);
                 if (cb == null) continue;
                 if (mpt.ParameterTypeId == MeasuredParameterType.Calling) cb.Enabled = true;
-                else if(MeasuredParameterType.IsItIsolationaResistance(mpt.ParameterTypeId))
+                else if(MeasuredParameterType.IsItIsolationResistance(mpt.ParameterTypeId))
                 {
                     cb.Enabled = CurrentTest.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol1) || CurrentTest.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol2) || CurrentTest.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol3) || CurrentTest.MeasuredParameterTypes_IDs.Contains(MeasuredParameterType.Risol4);
                 }else

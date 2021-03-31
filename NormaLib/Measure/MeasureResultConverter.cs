@@ -21,7 +21,7 @@ namespace NormaLib.Measure
         {
             get
             {
-                if (MeasuredParameterType.IsItIsolationaResistance(parameterData.ParameterTypeId))
+                if (MeasuredParameterType.IsItIsolationResistance(parameterData.ParameterTypeId))
                 {
                     return ConvertedValueRounded > 10000 ? ConvertedValueRounded.ToString("E2") : ConvertedValueRounded.ToString();  
                 }

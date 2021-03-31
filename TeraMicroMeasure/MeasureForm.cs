@@ -81,7 +81,7 @@ namespace TeraMicroMeasure
         private MeasureStatus measureStatus = MeasureStatus.STOPPED;
         private DeviceXMLState current_device_state;
         private TestedStructureMeasuredParameterData[] CurrentMeasuredParameterDataCollection;
-        private TestedStructureMeasuredParameterData CurrentParameterData => CurrentMeasuredParameterDataCollection.Length > 0 ? CurrentMeasuredParameterDataCollection[0] : null;
+        private TestedStructureMeasuredParameterData CurrentParameterData => measuredParameterDataTabs.TabPages.Count > 0 ? CurrentMeasuredParameterDataCollection[measuredParameterDataTabs.SelectedIndex] : null;
         private float MaterialCoeff = 1.0f;
         private MaterialCoeffCalculator materialCoeffCalculator;
 
@@ -754,9 +754,11 @@ namespace TeraMicroMeasure
         private void StartMeasureTimer()
         {
             if (measureTimer == null) StopMeasureTimer();
-            if (!MeasuredParameterType.IsItIsolationaResistance(measureState.MeasureTypeId)) return;
+            if (!MeasuredParameterType.IsItIsolationResistance(measureState.MeasureTypeId)) return;
+            int time = currentStructure.GetRisolTimeLimit(CurrentParameterData);
             measureTimerLabel.Text = "00:00";
-            measureTimer = new MeasureTimer(currentStructure.RizolTimeLimit == null ? 60 : (int)currentStructure.RizolTimeLimit.MaxValue, MeasureTimer_Tick, MeasureTimerFinished);
+
+            measureTimer = new MeasureTimer(time, MeasureTimer_Tick, MeasureTimerFinished);
             measureTimer.Start();
         }
 
@@ -1040,7 +1042,7 @@ namespace TeraMicroMeasure
             switch (measureState.MeasureTypeId)
             {
                 case MeasuredParameterType.Risol2:
-                    TestedStructureMeasuredParameterData RisolNormaValue = (TestedStructureMeasuredParameterData)currentStructure.RizolNormaValue;
+                    TestedStructureMeasuredParameterData RisolNormaValue = (TestedStructureMeasuredParameterData)CurrentParameterData.GetRisolNormaValue();
                     MeasureResultConverter cr = new MeasureResultConverter(c.RawValue, RisolNormaValue, (float)cableLengthNumericUpDown.Value, MaterialCoeff);
                     NormDeterminant d = new NormDeterminant(RisolNormaValue, cr.ConvertedValueRounded);
                     stringVal = cr.ConvertedValueLabel;
@@ -1050,7 +1052,6 @@ namespace TeraMicroMeasure
                         valueToProtocol = valueToTable = measureTimer.TimeInSeconds;
                         if (measureStatus == MeasureStatus.STARTED) startMeasureButton.PerformClick();
                     }
-                    else normaLabel.Text = $"Fuck! IsLessMax={d.IsLessOrEqualMax} IsHighterMin={d.IsLargerOrEqualMin} ";
                     break;
                 case MeasuredParameterType.Risol1:
                     
@@ -1132,7 +1133,7 @@ namespace TeraMicroMeasure
         private bool GetAgreementForStartMeasure()
         {
             bool flag = true;
-            if (MeasuredParameterType.IsItIsolationaResistance(measureState.MeasureTypeId))
+            if (MeasuredParameterType.IsItIsolationResistance(measureState.MeasureTypeId))
             {
                 if (measureState.MeasureVoltage > 10)
                 {
@@ -1209,7 +1210,7 @@ namespace TeraMicroMeasure
             startMeasureButton.Enabled = false;
             DisableMeasurePointControl();
             measuredParameterDataTabs.TabPages.Clear();
-
+            normaLabel.Text = string.Empty;
             measuredParameterDataTabs.Visible = false;
             lblNoMeasureData.Text = currentStructure == null ? "Не выбрана структура для измерения" : $"Для структуры {currentStructure.StructureTitle} отсутсвуют нормы\nдля выбранного параметра";
             lblNoMeasureData.Visible = true;
@@ -1234,7 +1235,7 @@ namespace TeraMicroMeasure
                 CurrentMeasuredParameterDataCollection = (TestedStructureMeasuredParameterData[])currentStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {measureState.MeasureTypeId}");
                 foreach(TestedStructureMeasuredParameterData td in CurrentMeasuredParameterDataCollection)
                 {
-                    TabPage tp = new TabPage(td.GetTitle());
+                    TabPage tp = new TabPage(td.GetFullTitle());
                     measuredParameterDataTabs.TabPages.Add(tp);
                 }
                 ReplaceResultGridToPage();
@@ -1354,15 +1355,14 @@ namespace TeraMicroMeasure
             uint parameterTypeId = rb.SelectedIndex == -1 ? 0 : ((KeyValuePair<uint, string>)rb.SelectedItem).Key;
             uint parameterTypeWas = measureState.MeasureTypeId;
             //MessageBox.Show(rb.SelectedItem.ToString());
-            if (MeasuredParameterType.IsItIsolationaResistance(parameterTypeId) && !MeasuredParameterType.IsItIsolationaResistance(parameterTypeWas))
+            if (MeasuredParameterType.IsItIsolationResistance(parameterTypeId) && !MeasuredParameterType.IsItIsolationResistance(parameterTypeWas))
                 EnableRisolSelector();
-            else if (!MeasuredParameterType.IsItIsolationaResistance(parameterTypeId) && MeasuredParameterType.IsItIsolationaResistance(parameterTypeWas))
+            else if (!MeasuredParameterType.IsItIsolationResistance(parameterTypeId) && MeasuredParameterType.IsItIsolationResistance(parameterTypeWas))
                 DisableRisolSelector();
 
             CapturedDeviceType = GetDeviceTypeByRadioBox();
             measureState.MeasureTypeId = parameterTypeId;
             RefreshMeasureParameterDataTabs();
-            normaLabel.Text = parameterTypeId.ToString();
             MeasureStateOnFormChanged();
         }
 
@@ -1403,10 +1403,11 @@ namespace TeraMicroMeasure
         {
             if (measuredParameterDataTabs.SelectedIndex >= 0)
             {
+                string norma;
                 measuredParameterDataTabs.TabPages[measuredParameterDataTabs.SelectedIndex].Controls.Add(panelResultMeasure);
+                norma = CurrentParameterData.GetFullTitle();
+                normaLabel.Text = string.IsNullOrWhiteSpace(norma) ? "" : $"Норма: {norma}";
             }
-
-
         }
     }
 

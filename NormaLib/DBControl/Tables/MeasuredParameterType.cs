@@ -152,11 +152,21 @@ namespace NormaLib.DBControl.Tables
         /// </summary>
         public bool IsFreqParameter => IsItFreqParameter(ParameterTypeId);
 
-        public bool IsIsolationResistance => IsItIsolationaResistance(ParameterTypeId);
+        public bool IsIsolationResistance => IsItIsolationResistance(ParameterTypeId);
 
-        public static bool IsItIsolationaResistance(uint parameterTypeId)
+        public static bool IsItIsolationResistance(uint parameterTypeId)
         {
             return RisolParametersIDs.Contains(parameterTypeId);
+        }
+
+        public static bool IsItIsolationResistanceTime(uint parameter_type_id)
+        {
+            return parameter_type_id == Risol2 || parameter_type_id == Risol4;
+        }
+
+        public static bool IsItIsolationResistanceValue(uint parameter_type_id)
+        {
+            return parameter_type_id == Risol1 || parameter_type_id == Risol3;
         }
 
         public static uint[] RisolParametersIDs => new uint[] { Risol1, Risol2, Risol3, Risol4 };

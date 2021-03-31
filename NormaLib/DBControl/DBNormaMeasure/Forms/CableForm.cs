@@ -1311,11 +1311,11 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             }else
             {
                 CableStructureMeasuredParameterData mpd = currentStructure.MeasuredParameters.Rows[end] as CableStructureMeasuredParameterData;
-                if (MeasuredParameterType.IsItIsolationaResistance(mpd.ParameterTypeId))
+                if (MeasuredParameterType.IsItIsolationResistance(mpd.ParameterTypeId))
                 {
                     foreach(CableStructureMeasuredParameterData rmpd in currentStructure.MeasuredParameters.Rows)
                     {
-                        if (MeasuredParameterType.IsItIsolationaResistance(rmpd.ParameterTypeId)) toDeleteList.Add(rmpd);
+                        if (MeasuredParameterType.IsItIsolationResistance(rmpd.ParameterTypeId)) toDeleteList.Add(rmpd);
                     }
                 }else if (mpd.ParameterTypeId == MeasuredParameterType.Rleads)
                 {
