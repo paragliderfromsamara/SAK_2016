@@ -15,7 +15,10 @@ namespace TeraMicroMeasure
     public class CableTestIni
     {
         const string draft_name = @"cable_test_draft.ini";
+        public EventHandler OnDraftLocked;
+
         IniFile file;
+
 
 
         public CableTestIni()
@@ -83,6 +86,7 @@ namespace TeraMicroMeasure
         }
 
         const string IsLockFileFlag_AttrName = "IsLockDraft";
+        private bool isLocked = false;
         public bool IsLockDraft
         {
             get
@@ -91,7 +95,10 @@ namespace TeraMicroMeasure
             }
             set
             {
+                if (isLocked && value) return;
+                isLocked = value;
                 file.Write(IsLockFileFlag_AttrName, (value) ? "1" : "0", TestAttrs_SectionName);
+                OnDraftLocked?.Invoke(this, new EventArgs());
             }
         }
 
@@ -218,12 +225,12 @@ namespace TeraMicroMeasure
                 return 20f;
         }
 
-
         public void SetMeasurePointValue(int structure_id, int parameter_type_id, int point, float value = 0, float temperature = -1)
         {
             string section = GetTestResultSectionName(structure_id);
             string temperatureAttrName = GetTestTemperatureAttrName(parameter_type_id, point);
             string valueAttrName = GetTestValueAttrName(parameter_type_id, point);
+            if (!isLocked) IsLockDraft = true;
             file.Write(valueAttrName, value.ToString(), section);
             if (temperature >= 5) file.Write(temperatureAttrName, temperature.ToString(), section);
         }

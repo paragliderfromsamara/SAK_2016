@@ -66,8 +66,8 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panelResultMeasure = new System.Windows.Forms.Panel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.neasureResultPanel = new System.Windows.Forms.Panel();
-            this.panel7 = new System.Windows.Forms.Panel();
+            this.testParamsControlPanel = new System.Windows.Forms.Panel();
+            this.testDraftControlPanel = new System.Windows.Forms.Panel();
             this.resetTestButton = new System.Windows.Forms.Button();
             this.saveResultButton = new System.Windows.Forms.Button();
             this.temperatureValue = new System.Windows.Forms.NumericUpDown();
@@ -101,8 +101,8 @@
             this.measuredParameterDataTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panelResultMeasure.SuspendLayout();
-            this.neasureResultPanel.SuspendLayout();
-            this.panel7.SuspendLayout();
+            this.testParamsControlPanel.SuspendLayout();
+            this.testDraftControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.temperatureValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
             this.deviceParametersGroupBox.SuspendLayout();
@@ -518,7 +518,7 @@
             this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
             this.panel6.Controls.Add(this.lblNoMeasureData);
             this.panel6.Controls.Add(this.measuredParameterDataTabs);
-            this.panel6.Controls.Add(this.neasureResultPanel);
+            this.panel6.Controls.Add(this.testParamsControlPanel);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 227);
             this.panel6.Name = "panel6";
@@ -578,35 +578,35 @@
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // neasureResultPanel
+            // testParamsControlPanel
             // 
-            this.neasureResultPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
-            this.neasureResultPanel.Controls.Add(this.panel7);
-            this.neasureResultPanel.Controls.Add(this.temperatureValue);
-            this.neasureResultPanel.Controls.Add(this.label1);
-            this.neasureResultPanel.Controls.Add(this.temperatureComboBox);
-            this.neasureResultPanel.Controls.Add(this.label2);
-            this.neasureResultPanel.Controls.Add(this.label3);
-            this.neasureResultPanel.Controls.Add(this.cableLengthNumericUpDown);
-            this.neasureResultPanel.Controls.Add(this.cableStructureCB);
-            this.neasureResultPanel.Controls.Add(this.deviceParametersGroupBox);
-            this.neasureResultPanel.Controls.Add(this.cableComboBox);
-            this.neasureResultPanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.neasureResultPanel.ForeColor = System.Drawing.Color.Black;
-            this.neasureResultPanel.Location = new System.Drawing.Point(440, 0);
-            this.neasureResultPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.neasureResultPanel.Name = "neasureResultPanel";
-            this.neasureResultPanel.Size = new System.Drawing.Size(475, 647);
-            this.neasureResultPanel.TabIndex = 35;
+            this.testParamsControlPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
+            this.testParamsControlPanel.Controls.Add(this.testDraftControlPanel);
+            this.testParamsControlPanel.Controls.Add(this.temperatureValue);
+            this.testParamsControlPanel.Controls.Add(this.label1);
+            this.testParamsControlPanel.Controls.Add(this.temperatureComboBox);
+            this.testParamsControlPanel.Controls.Add(this.label2);
+            this.testParamsControlPanel.Controls.Add(this.label3);
+            this.testParamsControlPanel.Controls.Add(this.cableLengthNumericUpDown);
+            this.testParamsControlPanel.Controls.Add(this.cableStructureCB);
+            this.testParamsControlPanel.Controls.Add(this.deviceParametersGroupBox);
+            this.testParamsControlPanel.Controls.Add(this.cableComboBox);
+            this.testParamsControlPanel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.testParamsControlPanel.ForeColor = System.Drawing.Color.Black;
+            this.testParamsControlPanel.Location = new System.Drawing.Point(440, 0);
+            this.testParamsControlPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.testParamsControlPanel.Name = "testParamsControlPanel";
+            this.testParamsControlPanel.Size = new System.Drawing.Size(475, 647);
+            this.testParamsControlPanel.TabIndex = 35;
             // 
-            // panel7
+            // testDraftControlPanel
             // 
-            this.panel7.Controls.Add(this.resetTestButton);
-            this.panel7.Controls.Add(this.saveResultButton);
-            this.panel7.Location = new System.Drawing.Point(18, 387);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(432, 47);
-            this.panel7.TabIndex = 38;
+            this.testDraftControlPanel.Controls.Add(this.resetTestButton);
+            this.testDraftControlPanel.Controls.Add(this.saveResultButton);
+            this.testDraftControlPanel.Location = new System.Drawing.Point(18, 387);
+            this.testDraftControlPanel.Name = "testDraftControlPanel";
+            this.testDraftControlPanel.Size = new System.Drawing.Size(432, 47);
+            this.testDraftControlPanel.TabIndex = 38;
             // 
             // resetTestButton
             // 
@@ -915,9 +915,9 @@
             this.measuredParameterDataTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panelResultMeasure.ResumeLayout(false);
-            this.neasureResultPanel.ResumeLayout(false);
-            this.neasureResultPanel.PerformLayout();
-            this.panel7.ResumeLayout(false);
+            this.testParamsControlPanel.ResumeLayout(false);
+            this.testParamsControlPanel.PerformLayout();
+            this.testDraftControlPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.temperatureValue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).EndInit();
             this.deviceParametersGroupBox.ResumeLayout(false);
@@ -962,7 +962,7 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Panel neasureResultPanel;
+        private System.Windows.Forms.Panel testParamsControlPanel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label temperatureComboBox;
         private System.Windows.Forms.Label label2;
@@ -994,7 +994,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Panel panelResultMeasure;
         private System.Windows.Forms.Label lblNoMeasureData;
-        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel testDraftControlPanel;
         private System.Windows.Forms.Button resetTestButton;
         private System.Windows.Forms.Button saveResultButton;
     }

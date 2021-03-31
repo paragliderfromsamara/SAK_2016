@@ -694,12 +694,13 @@ namespace NormaLib.DBControl.Tables
             if (!isTimeData && !isValueData) return string.Empty;
             pData = (isTimeData) ? GetRisolNormaValue() : GetRisolTimeLimit();
             if (pData == null) return string.Empty;
+            string voltageText = AssignedStructure.IsolationResistanceVoltage > 0 ? $" напряжение {AssignedStructure.IsolationResistanceVoltage} В, " : "";
             if (isTimeData)
             {
-                return $"за {MaxValue}{ResultMeasure} до {pData.MinValue}{pData.ResultMeasure_WithLength}, {Percent}%";
+                return $"за {MaxValue}{ResultMeasure} до {pData.MinValue}{pData.ResultMeasure_WithLength},{voltageText} {Percent}%";
             }else
             {
-                return $"от {MinValue} до {MaxValue}({ResultMeasure_WithLength}), за {pData.MaxValue}{pData.ResultMeasure}, {Percent}%";
+                return $"от {MinValue} до {MaxValue}{ResultMeasure_WithLength.Trim()},{voltageText} за {pData.MaxValue}{pData.ResultMeasure}, {Percent}%";
             }
             
         }

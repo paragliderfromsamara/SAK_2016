@@ -196,9 +196,10 @@ namespace TeraMicroMeasure
         private void InitMeasureDraft()
         {
             if (Cables.Rows.Count == 0) return;
-
+            testFile.OnDraftLocked += (s, a)=> { SetDraftIsLock(); };
             if (!testFile.IsLockDraft)
             {
+                cableLengthNumericUpDown.Enabled = cableComboBox.Enabled = true;
                 SetCurrentCableThoghtDraft(Cables.Rows[0] as Cable);
                 SetCurrentCableOnComboBox(Cables.Rows[0] as Cable);
                 cableComboBox.SelectedValueChanged += MeasuredCableComboBox_SelectedValueChanged;
@@ -214,7 +215,7 @@ namespace TeraMicroMeasure
                 }
                 else
                 {
-                    ResetMeasureDraft();
+                    ForceResetMeasureDraft();
                     SetCurrentCableThoghtDraft(Cables.Rows[0] as Cable);
                     SetCurrentCableOnComboBox(Cables.Rows[0] as Cable);
                     cableComboBox.SelectedValueChanged += MeasuredCableComboBox_SelectedValueChanged;
@@ -239,14 +240,33 @@ namespace TeraMicroMeasure
         private void SetDraftIsLock()
         {
             cableComboBox.Enabled = false;
+            cableLengthNumericUpDown.Enabled = false;
+            testDraftControlPanel.Enabled = true;
             cableComboBox.SelectedValueChanged -= MeasuredCableComboBox_SelectedValueChanged;
+        }
+
+        private void ForceResetMeasureDraft()
+        {
+            if (testFile != null)
+            {
+                testFile.ResetFile();
+                testFile = new CableTestIni();
+                InitMeasureDraft();
+            }
         }
 
         private void ResetMeasureDraft()
         {
-            if (testFile != null) testFile.ResetFile();
-            testFile = new CableTestIni();
+            if (testFile != null)
+            {
+                DialogResult r = MessageBox.Show("При сбросе испытания полученные результаты будут безвозвратно утеряны!\n\nСбросить?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (r == DialogResult.Yes)
+                {
+                    ForceResetMeasureDraft();
+                }
+            }
         }
+
 
         private DialogResult QuestionTestNotSaved()
         {
@@ -276,7 +296,7 @@ namespace TeraMicroMeasure
                     cableStructureCB.Enabled = false;
                     labelPointNumber.Text = "";
                     measureResultDataGrid.Visible = false;
-                    neasureResultPanel.Dock = DockStyle.Fill;
+                    testParamsControlPanel.Dock = DockStyle.Fill;
                 }
             }catch
             {
@@ -311,6 +331,7 @@ namespace TeraMicroMeasure
             rIsolTypeSelectorCB.ValueMember = measuredParameterCB.ValueMember = "key";//$"{MeasuredParameterType.ParameterTypeId_ColumnName}";
             DisableRisolSelector();
             DisableParamtersCB();
+            testDraftControlPanel.Enabled = false;
             //selectDevicePanel.Visible = measurePanel.Enabled = isCurrentPCClient;
         }
 
@@ -696,6 +717,8 @@ namespace TeraMicroMeasure
                     EnableMeasurePointControl();
                     rIsolTypeSelectorCB.Enabled = true;
                     deviceParametersGroupBox.Enabled = true;
+                    testParamsControlPanel.Enabled = true;
+                    measuredParameterDataTabs.Enabled = true;
                     StopMeasureTimer();
                     break;
                 case MeasureStatus.WILL_START:
@@ -705,6 +728,8 @@ namespace TeraMicroMeasure
                     deviceControlButton.Enabled = false;
                     rIsolTypeSelectorCB.Enabled = false;
                     deviceParametersGroupBox.Enabled = false;
+                    testParamsControlPanel.Enabled = false;
+                    measuredParameterDataTabs.Enabled = false;
                     DisableMeasurePointControl();
                     StopMeasureTimer();
                     break;
@@ -716,6 +741,8 @@ namespace TeraMicroMeasure
                     rIsolTypeSelectorCB.Enabled = false;
                     deviceParametersGroupBox.Enabled = false;
                     MeasureIsStartedOnDevice = true;
+                    testParamsControlPanel.Enabled = false;
+                    measuredParameterDataTabs.Enabled = false;
                     DisableMeasurePointControl();
                     StartMeasureTimer();
                     break;
@@ -725,7 +752,8 @@ namespace TeraMicroMeasure
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
                     rIsolTypeSelectorCB.Enabled = false;
-                    deviceParametersGroupBox.Enabled = false;
+                    testParamsControlPanel.Enabled = false;
+                    measuredParameterDataTabs.Enabled = false;
                     DisableMeasurePointControl();
                     StopMeasureTimer();
                     break;
@@ -1406,7 +1434,7 @@ namespace TeraMicroMeasure
 
         private void resetTestButton_Click(object sender, EventArgs e)
         {
-
+            ResetMeasureDraft();
         }
 
         private void saveResultButton_Click(object sender, EventArgs e)
