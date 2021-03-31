@@ -70,6 +70,7 @@ namespace TeraMicroMeasure
             {
                 cur_struct = value;
                 measureState.MeasureVoltage = (uint)cur_struct.IsolationResistanceVoltage;
+                RefreshMeasureParameterDataTabs();
                 RefreshMeasureControl();
             }
         }
@@ -1215,12 +1216,12 @@ private void SetMeasureTypeFromXMLState()
         {
             if (currentStructure == null)
             {
-                DisableMeasurePointControl();
+                SetNoMeasuredParameterData_State();
             }
             if (currentStructure.MeasuredParameterTypes_ids.Contains(measureState.MeasureTypeId))
             {
                 InitPointMapForCurrentStructureAndCurrentMeasureType();
-                EnableMeasurePointControl();
+                SetHasMeasuredParameterData_State();
                 //int subElsCounter = MeasuredParameterType.MeasurePointNumberPerStructureElement(measureState.MeasureTypeId, currentStructure.StructureType.StructureLeadsAmount);
                 int[] valueColumns = new int[] { SubElement_1.Index, SubElement_2.Index, SubElement_3.Index, SubElement_4.Index };
                 List<DataGridViewRow> rowsForAdd = new List<DataGridViewRow>();
@@ -1258,9 +1259,31 @@ private void SetMeasureTypeFromXMLState()
                 measureResultDataGrid.Rows.AddRange(rowsForAdd.ToArray());
                 RefreshMeasurePointLabel();
                 SelectCurrentMeasurePointOnResultGrid();
-            }else  DisableMeasurePointControl();
+            }
+            else
+            {
+                SetNoMeasuredParameterData_State();
+            }
+        }
 
+        private void SetNoMeasuredParameterData_State()
+        {
+            startMeasureButton.Enabled = false;
+            DisableMeasurePointControl();
+            measuredParameterDataTabs.TabPages.Clear();
 
+            measuredParameterDataTabs.Visible = false;
+            lblNoMeasureData.Text = currentStructure == null ? "Не выбрана структура для измерения" : $"Для структуры {currentStructure.StructureTitle} отсутсвуют нормы\nдля выбранного параметра";
+            lblNoMeasureData.Visible = true;
+        }
+
+        private void SetHasMeasuredParameterData_State()
+        {
+            startMeasureButton.Enabled = true;
+            EnableMeasurePointControl();
+
+            lblNoMeasureData.Visible = false;
+            measuredParameterDataTabs.Visible = true;
         }
 
         private void RefreshMeasureParameterDataTabs()
@@ -1400,7 +1423,7 @@ private void SetMeasureTypeFromXMLState()
 
             CapturedDeviceType = GetDeviceTypeByRadioBox();
             measureState.MeasureTypeId = parameterTypeId;
-            RefreshMeasureParameterDataTabs();           
+            RefreshMeasureParameterDataTabs();
             MeasureStateOnFormChanged();
         }
 
@@ -1434,13 +1457,17 @@ private void SetMeasureTypeFromXMLState()
 
         private void measuredParameterDataTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (measuredParameterDataTabs.TabCount > 0)
-                ReplaceResultGridToPage();
+            ReplaceResultGridToPage();
         }
 
         private void ReplaceResultGridToPage()
         {
-            measuredParameterDataTabs.TabPages[measuredParameterDataTabs.SelectedIndex].Controls.Add(panelResultMeasure);
+            if (measuredParameterDataTabs.SelectedIndex >= 0)
+            {
+                measuredParameterDataTabs.TabPages[measuredParameterDataTabs.SelectedIndex].Controls.Add(panelResultMeasure);
+            }
+
+
         }
     }
 

@@ -61,6 +61,10 @@
             this.panelMeasurePointControl = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.measuredParameterDataTabs = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.panelResultMeasure = new System.Windows.Forms.Panel();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.neasureResultPanel = new System.Windows.Forms.Panel();
             this.temperatureValue = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -82,10 +86,7 @@
             this.measuredParameterSelect = new System.Windows.Forms.Panel();
             this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
-            this.measuredParameterDataTabs = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.panelResultMeasure = new System.Windows.Forms.Panel();
+            this.lblNoMeasureData = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -94,6 +95,9 @@
             this.panelMeasurePointControl.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.measuredParameterDataTabs.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.panelResultMeasure.SuspendLayout();
             this.neasureResultPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.temperatureValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).BeginInit();
@@ -103,9 +107,6 @@
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
             this.measuredParameterSelect.SuspendLayout();
-            this.measuredParameterDataTabs.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.panelResultMeasure.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonPrevElement
@@ -511,6 +512,7 @@
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
+            this.panel6.Controls.Add(this.lblNoMeasureData);
             this.panel6.Controls.Add(this.measuredParameterDataTabs);
             this.panel6.Controls.Add(this.neasureResultPanel);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -518,6 +520,49 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(915, 647);
             this.panel6.TabIndex = 45;
+            // 
+            // measuredParameterDataTabs
+            // 
+            this.measuredParameterDataTabs.Controls.Add(this.tabPage1);
+            this.measuredParameterDataTabs.Controls.Add(this.tabPage2);
+            this.measuredParameterDataTabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.measuredParameterDataTabs.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.measuredParameterDataTabs.Location = new System.Drawing.Point(0, 0);
+            this.measuredParameterDataTabs.Name = "measuredParameterDataTabs";
+            this.measuredParameterDataTabs.SelectedIndex = 0;
+            this.measuredParameterDataTabs.Size = new System.Drawing.Size(440, 647);
+            this.measuredParameterDataTabs.TabIndex = 38;
+            this.measuredParameterDataTabs.SelectedIndexChanged += new System.EventHandler(this.measuredParameterDataTabs_SelectedIndexChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.panelResultMeasure);
+            this.tabPage1.Location = new System.Drawing.Point(4, 27);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(432, 616);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // panelResultMeasure
+            // 
+            this.panelResultMeasure.Controls.Add(this.measureResultDataGrid);
+            this.panelResultMeasure.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelResultMeasure.Location = new System.Drawing.Point(3, 3);
+            this.panelResultMeasure.Name = "panelResultMeasure";
+            this.panelResultMeasure.Size = new System.Drawing.Size(426, 610);
+            this.panelResultMeasure.TabIndex = 38;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 27);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(432, 616);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // neasureResultPanel
             // 
@@ -786,48 +831,15 @@
             this.measuredParameterCB.TabIndex = 2;
             this.measuredParameterCB.SelectedIndexChanged += new System.EventHandler(this.measuredParameterCB_SelectedIndexChanged);
             // 
-            // measuredParameterDataTabs
+            // lblNoMeasureData
             // 
-            this.measuredParameterDataTabs.Controls.Add(this.tabPage1);
-            this.measuredParameterDataTabs.Controls.Add(this.tabPage2);
-            this.measuredParameterDataTabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.measuredParameterDataTabs.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.measuredParameterDataTabs.Location = new System.Drawing.Point(0, 0);
-            this.measuredParameterDataTabs.Name = "measuredParameterDataTabs";
-            this.measuredParameterDataTabs.SelectedIndex = 0;
-            this.measuredParameterDataTabs.Size = new System.Drawing.Size(440, 647);
-            this.measuredParameterDataTabs.TabIndex = 38;
-            this.measuredParameterDataTabs.SelectedIndexChanged += new System.EventHandler(this.measuredParameterDataTabs_SelectedIndexChanged);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.panelResultMeasure);
-            this.tabPage1.Location = new System.Drawing.Point(4, 27);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(432, 616);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 28);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(192, 68);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // panelResultMeasure
-            // 
-            this.panelResultMeasure.Controls.Add(this.measureResultDataGrid);
-            this.panelResultMeasure.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelResultMeasure.Location = new System.Drawing.Point(3, 3);
-            this.panelResultMeasure.Name = "panelResultMeasure";
-            this.panelResultMeasure.Size = new System.Drawing.Size(426, 610);
-            this.panelResultMeasure.TabIndex = 38;
+            this.lblNoMeasureData.AutoSize = true;
+            this.lblNoMeasureData.Location = new System.Drawing.Point(89, 39);
+            this.lblNoMeasureData.Name = "lblNoMeasureData";
+            this.lblNoMeasureData.Size = new System.Drawing.Size(241, 19);
+            this.lblNoMeasureData.TabIndex = 1;
+            this.lblNoMeasureData.Text = "Для структуры {0} отсутсвуют ";
+            this.lblNoMeasureData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MeasureForm
             // 
@@ -854,6 +866,10 @@
             this.panelMeasurePointControl.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            this.measuredParameterDataTabs.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.panelResultMeasure.ResumeLayout(false);
             this.neasureResultPanel.ResumeLayout(false);
             this.neasureResultPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.temperatureValue)).EndInit();
@@ -865,9 +881,6 @@
             this.panel5.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.measuredParameterSelect.ResumeLayout(false);
-            this.measuredParameterDataTabs.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.panelResultMeasure.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -934,5 +947,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Panel panelResultMeasure;
+        private System.Windows.Forms.Label lblNoMeasureData;
     }
 }
