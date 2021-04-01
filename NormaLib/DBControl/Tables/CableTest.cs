@@ -385,6 +385,19 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        [DBColumn(TestLineNumber_ColumnName, ColumnDomain.Int, Order = 21,  DefaultValue = 0, Nullable = true)]
+        public int TestLineId
+        {
+            get
+            {
+                return tryParseInt(TestLineNumber_ColumnName);
+            }
+            set
+            {
+                this[TestLineNumber_ColumnName] = value;
+            }
+        }
+
         public uint TestedCableId
         {
             get
@@ -392,12 +405,6 @@ namespace NormaLib.DBControl.Tables
                 return HasTestedCable ? TestedCable.CableId : 0;
             }
         }
-
-
-
-
-
-
 
 
 
@@ -411,6 +418,7 @@ namespace NormaLib.DBControl.Tables
         public const string VSVILeadShield_ColumnName = "vsvi_lead_shield";
         public const string NettoWeight_ColumnName = "netto_weight";
         public const string BruttoWeight_ColumnName = "brutto_weight";
+        public const string TestLineNumber_ColumnName = "test_line_number";
 
 
         #endregion

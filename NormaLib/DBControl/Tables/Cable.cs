@@ -660,8 +660,13 @@ namespace NormaLib.DBControl.Tables
             return structure;
         }
 
+        protected override DBEntityTable LoadCableStructures()
+        {
+            return TestedCableStructure.get_by_cable(this);
+        }
 
-        [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 24, ReferenceTo = "cable_tests("+CableTest.CableTestId_ColumnName+ ") ON DELETE CASCADE")]
+        #region Колонки таблицы
+        [DBColumn(CableTest.CableTestId_ColumnName, ColumnDomain.UInt, Order = 24, ReferenceTo = "cable_tests(" + CableTest.CableTestId_ColumnName + ") ON DELETE CASCADE")]
         public uint TestId
         {
             get
@@ -674,11 +679,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        protected override DBEntityTable LoadCableStructures()
-        {
-            return TestedCableStructure.get_by_cable(this);
-        }
-
+        #endregion
 
 
         protected CableTest cable_test;

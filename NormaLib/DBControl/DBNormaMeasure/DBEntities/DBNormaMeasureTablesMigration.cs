@@ -45,7 +45,8 @@ namespace NormaLib.DBControl.DBNormaMeasure
                typeof(TestedCable),
                typeof(TestedCableStructure),
                typeof(TestedStructureMeasuredParameterData),
-               typeof(MeasureDevice)
+               typeof(MeasureDevice),
+               typeof(TestMeasureDevices)
             };
             /*
             _tablesList = new DBTable[] 

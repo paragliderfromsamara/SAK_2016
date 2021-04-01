@@ -144,6 +144,7 @@
     <Compile Include="DBControl\Tables\CableTestResult.cs" />
     <Compile Include="DBControl\Tables\CableTestStatus.cs" />
     <Compile Include="DBControl\Tables\Document.cs" />
+    <Compile Include="DBControl\Tables\TestMeasureDevices.cs" />
     <Compile Include="DBControl\Tables\dRBringingFormula.cs" />
     <Compile Include="DBControl\Tables\dRFormula.cs" />
     <Compile Include="DBControl\Tables\FrequencyRange.cs" />
