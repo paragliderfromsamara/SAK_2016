@@ -1039,7 +1039,10 @@ namespace TeraMicroMeasure
         private void RefreshMeasureField(DeviceXMLState xml_device)
         {
             deviceInfo.Text = $"{xml_device.TypeNameFull} {xml_device.Serial}\n{xml_device.WorkStatusText}";
-            resultField.Text = GetResultFieldText(xml_device);
+            if (xml_device.WorkStatusId == (uint)DeviceWorkStatus.MEASURE)
+            {
+                resultField.Text = GetResultFieldText(xml_device);
+            }
         }
 
         private string GetResultFieldText(DeviceXMLState xml_device)
@@ -1443,6 +1446,12 @@ namespace TeraMicroMeasure
             {
                 MessageBox.Show("Невозможно перейти в другое меню или закрыть приложение при запущенном измерении!", "Измерение не завершено!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 e.Cancel = true;
+            }else
+            {
+                if (DeviceCaptureStatus == DeviceCaptureStatus.CONNECTED)
+                {
+                    DisconnectSelectedDevice();
+                }
             }
         }
 
