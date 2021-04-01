@@ -90,7 +90,6 @@
     <Compile Include="AppTypeSelector.Designer.cs">
       <DependentUpon>AppTypeSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="CableTestIni.cs" />
     <Compile Include="CommandProcessors\ClentSideCommandProcessor.cs" />
     <Compile Include="ApplicationForm.cs">
       <SubType>Form</SubType>

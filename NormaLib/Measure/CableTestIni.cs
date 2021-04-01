@@ -10,7 +10,7 @@ using System.Data;
 using System.IO;
 using System.Diagnostics;
 
-namespace TeraMicroMeasure
+namespace NormaLib.Measure
 {
     public class CableTestIni
     {
@@ -54,7 +54,7 @@ namespace TeraMicroMeasure
 
         
 
-        internal void ResetFile()
+        public void ResetFile()
         {
             int lineId = cableTest.TestLineNumber;
             if (File.Exists(draft_name)) File.Delete(draft_name);
@@ -305,12 +305,14 @@ namespace TeraMicroMeasure
                 return 20f;
         }
 
-        public void SetMeasurePointValue(int structure_id, int parameter_type_id, int point, float value = 0, float temperature = -1)
+        public void SetMeasurePointValue(MeasurePointMap mapState, float value = 0, float temperature = -1)
         {
-            string section = GetTestResultSectionName(structure_id);
-            string temperatureAttrName = GetTestTemperatureAttrName(parameter_type_id, point);
-            string valueAttrName = GetTestValueAttrName(parameter_type_id, point);
+            string section = GetTestResultSectionName((int)mapState.CurrentStructure.CableStructureId);
+            string temperatureAttrName = GetTestTemperatureAttrName((int)mapState.ParameterTypeId, mapState.CurrentPoint);
+            string valueAttrName = GetTestValueAttrName((int)mapState.ParameterTypeId, mapState.CurrentPoint);
             file.Write(valueAttrName, value.ToString(), section);
+            cableTest.BuildTestResult();
+
             if (temperature >= 5) file.Write(temperatureAttrName, temperature.ToString(), section);
         }
 

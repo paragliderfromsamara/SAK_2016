@@ -49,8 +49,16 @@ namespace NormaLib.Measure
 
         private string elementTitleByElNumber(int el_number) => $"{elementTitleMask} {el_number}";
 
+        private CableStructure current_structure;
+        public CableStructure CurrentStructure => current_structure;
+
+        private uint parameterTypeId;
+        public uint ParameterTypeId => parameterTypeId;
+
         public MeasurePointMap(CableStructure structure, uint parameter_type_id, int start_point = 0)
         {
+            parameterTypeId = parameter_type_id;
+            current_structure = structure;
             currentPoint = start_point;
             measurePointsPerElement = MeasuredParameterType.MeasurePointNumberPerStructureElement(parameter_type_id, structure.StructureType.StructureLeadsAmount);
             elementsAmount = (int)structure.RealAmount;
