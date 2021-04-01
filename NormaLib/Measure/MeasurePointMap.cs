@@ -85,6 +85,18 @@ namespace NormaLib.Measure
             else throw new MeasurePointException("Предыдущий элемент находится вне диапазона доступных элементов");
         }
 
+        public bool TryGetNextPoint()
+        {
+            try
+            {
+                SetNextPoint();
+                return true;
+            }catch(MeasurePointException)
+            {
+                return false;
+            }
+        }
+
         private void SetMeasurePoint(int next_point)
         {
             MeasurePointEventArgs a = new MeasurePointEventArgs();

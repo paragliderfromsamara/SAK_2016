@@ -533,6 +533,10 @@ namespace NormaLib.DBControl.Tables
                     measuredParameters_was = measuredParameters.Clone() as DBEntityTable;
                 }
                 return measuredParameters;
+            }set
+            {
+                if (measuredParameters != null) measuredParameters_was = measuredParameters.Clone() as DBEntityTable;
+                measuredParameters = value;
             }
         }
 

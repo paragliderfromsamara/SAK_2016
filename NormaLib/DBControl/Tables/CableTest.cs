@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaLib.Utils;
+using NormaLib.Measure;
 using System.IO;
 
 namespace NormaLib.DBControl.Tables
@@ -17,19 +18,31 @@ namespace NormaLib.DBControl.Tables
         {
         }
 
-        public static CableTest GetLastOrCreateNew()
+        public static CableTest New(DBEntityTable table = null)
         {
-            DBEntityTable t = find_stoped_tests();
+            if (table == null) table = new DBEntityTable(typeof(CableTest));
+            CableTest test = (CableTest)table.NewRow();
+            test.StatusId = CableTestStatus.NotStarted;
+            test.TestId = 0;
+            test.CableLength = 1000;
+            test.Temperature = 20;
+            table.Rows.Add(test);
+            return test;
+        }
+
+
+        public static CableTest GetLastOrCreateNew(int test_line_number = -1)
+        {
+            DBEntityTable t = find_stoped_tests(test_line_number);
             CableTest test;
             if (t.Rows.Count > 0)
             {
                 test= (CableTest)t.Rows[0];
             }else
             {
-                test = get_new_test();
+                test = get_new_test(test_line_number);
             }
             return test;
-
         }
 
         public void AddResult(CableTestResult result)
@@ -42,21 +55,21 @@ namespace NormaLib.DBControl.Tables
             return TestResults.Build(pType, structure, elNumber, measNumber, frRange, genEl, genPair);
         }
 
-        public static CableTest get_new_test()
+        public static CableTest get_new_test(int test_line_number)
         {
-            CableTest test = find_not_started_test();
+            CableTest test = find_not_started_test(test_line_number);
             return test;
         }
 
-        public static CableTest find_not_started_test()
+        public static CableTest find_not_started_test(int test_line_number)
         {
-            string select_cmd = $"{CableTestStatus.StatusId_ColumnName} = {CableTestStatus.NotStarted}";
+            string select_cmd = $"{CableTestStatus.StatusId_ColumnName} = {CableTestStatus.NotStarted} AND {TestLineNumber_ColumnName} = {test_line_number}";
             DBEntityTable t = find_by_criteria(select_cmd, typeof(CableTest));
             if (t.Rows.Count > 0) return (CableTest)t.Rows[0];
-            else return create_not_started_test();
+            else return create_not_started_test(test_line_number);
         }
 
-        private static CableTest create_not_started_test()
+        private static CableTest create_not_started_test(int test_line_number)
         {
             DBEntityTable t = new DBEntityTable(typeof(CableTest));
             CableTest test = (CableTest)t.NewRow();
@@ -64,6 +77,7 @@ namespace NormaLib.DBControl.Tables
             test.TestId = 0;
             test.CableLength = 1000;
             test.Temperature = 20;
+            test.TestLineNumber = test_line_number;
             test.Save();
             t.Rows.Add(test);
             return test;
@@ -114,9 +128,9 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        private static DBEntityTable find_stoped_tests()
+        private static DBEntityTable find_stoped_tests(int test_line_number)
         {
-            string select_cmd = $"{CableTestStatus.StatusId_ColumnName} IN ({CableTestStatus.StopedByOperator}, {CableTestStatus.StopedOutOfNorma}, {CableTestStatus.Started})";
+            string select_cmd = $"{CableTestStatus.StatusId_ColumnName} IN ({CableTestStatus.StopedByOperator}, {CableTestStatus.StopedOutOfNorma}, {CableTestStatus.Started}) AND {TestLineNumber_ColumnName} = {test_line_number}";
             return find_by_criteria(select_cmd, typeof(CableTest));
         }
 
@@ -385,8 +399,8 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        [DBColumn(TestLineNumber_ColumnName, ColumnDomain.Int, Order = 21,  DefaultValue = 0, Nullable = true)]
-        public int TestLineId
+        [DBColumn(TestLineNumber_ColumnName, ColumnDomain.Int, Order = 21,  DefaultValue = -1, Nullable = true)]
+        public int TestLineNumber
         {
             get
             {
@@ -763,12 +777,16 @@ namespace NormaLib.DBControl.Tables
             file.Write(FrequencyRange.FreqRangeId_ColumnName, testResult.FrequencyRangeId.ToString(), LastMeasurePoint_iniSectionName);
         }
 
-        public float Read_TestResult(CableTestResult testResult)
+        public bool Read_TestResult(CableTestResult testResult, ref float result)
         {
-            float r = 0;
-            string str = file.Read(testResult.IniFileKey, testResult.IniFileSection);
-            float.TryParse(str, out r);
-            return r;
+            if (file.KeyExists(testResult.IniFileKey, testResult.IniFileSection))
+            {
+                string str = file.Read(testResult.IniFileKey, testResult.IniFileSection);
+                return float.TryParse(str, out result);
+            }else
+            {
+                return false;
+            }
         }
 
         public void Write_TestResult(CableTestResult testResult)
@@ -793,6 +811,7 @@ namespace NormaLib.DBControl.Tables
         private IniFile file;
 
     }
+
 
     public class CableTestResultCollection
     {
@@ -871,27 +890,27 @@ namespace NormaLib.DBControl.Tables
             {
                 foreach(TestedCableStructure structure in cable_test.TestedCable.CableStructures.Rows)
                 {
-                    if (pType.IsFreqParameter)
+                    MeasurePointMap pointMap = new MeasurePointMap(structure, pType.ParameterTypeId);
+                    do
                     {
-
-                    }else
-                    {
-                        for(uint i = 1; i<=structure.RealAmount; i++)
+                        if (pType.IsFreqParameter)
                         {
-                            for(uint j = 1; j<=structure.StructureType.StructureLeadsAmount; j++)
-                            {
-                                CableTestResult r = (CableTestResult)results_Table.NewRow();
-                                r.ParameterType = pType;
-                                r.TestedCableStructure = structure;
-                                r.ElementNumber = i;
-                                r.MeasureNumber = j;
-                                r.Result = cable_test.TestFile.Read_TestResult(r);
-                                r.TestId = cable_test.TestId;
-                                results_Table.Rows.Add(r);
-                            }
 
                         }
-                    }
+                        else
+                        {
+                            CableTestResult r = (CableTestResult)results_Table.NewRow();
+                            float result = 0;
+                            r.ParameterType = pType;
+                            r.TestedCableStructure = structure;
+                            r.ElementNumber = (uint)pointMap.CurrentElementNumber;
+                            r.MeasureNumber = (uint)pointMap.CurrentMeasurePointNumber;
+                            cable_test.TestFile.Read_TestResult(r, ref result);
+                            r.Result = result;
+                            r.TestId = cable_test.TestId;
+                            results_Table.Rows.Add(r);
+                        }
+                    } while (pointMap.TryGetNextPoint());
                 }
             }
             //System.Windows.Forms.MessageBox.Show("LoadFromIniFile");

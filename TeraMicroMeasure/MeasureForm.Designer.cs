@@ -601,11 +601,13 @@
             // 
             // testDraftControlPanel
             // 
+            this.testDraftControlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.testDraftControlPanel.Controls.Add(this.resetTestButton);
             this.testDraftControlPanel.Controls.Add(this.saveResultButton);
-            this.testDraftControlPanel.Location = new System.Drawing.Point(18, 387);
+            this.testDraftControlPanel.Location = new System.Drawing.Point(18, 579);
             this.testDraftControlPanel.Name = "testDraftControlPanel";
-            this.testDraftControlPanel.Size = new System.Drawing.Size(432, 47);
+            this.testDraftControlPanel.Size = new System.Drawing.Size(433, 47);
             this.testDraftControlPanel.TabIndex = 38;
             // 
             // resetTestButton

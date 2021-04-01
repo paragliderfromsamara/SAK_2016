@@ -17,101 +17,135 @@ namespace TeraMicroMeasure
         const string draft_name = @"cable_test_draft.ini";
         public EventHandler OnDraftLocked;
 
+        CableTest cable_test;
+        private CableTest cableTest
+        {
+            get
+            {
+                if (cable_test == null)
+                {
+                    BuildTestFromFile();
+                }
+                return cable_test;
+            }
+        }
+
+        public Cable SourceCable
+        {
+            get
+            {
+                return cableTest.SourceCable;
+            }set
+            {
+                cableTest.SourceCable = value;
+                FillCableToFile(cableTest.SourceCable);
+            }
+        }
+
         IniFile file;
 
 
 
-        public CableTestIni()
+        public CableTestIni(int _test_line_number = -1)
         {
             file = new IniFile(draft_name);
-            ClientId = SettingsControl.GetClientId();
+            TestLineNumber = _test_line_number;
         }
 
-        public CableTestIni(Cable cable) : this()
-        {
-            FillCableToFile(cable);
-            //CableID = (int)cable.CableId;
-            //buildStructuresInfo(cable.CableStructures);
-            //else throw new CableTestIniException("Есть незавершенное испытание!");
-        }
+        
 
         internal void ResetFile()
         {
+            int lineId = cableTest.TestLineNumber;
             if (File.Exists(draft_name)) File.Delete(draft_name);
+            cable_test = null;
             file = new IniFile(draft_name);
+            cableTest.TestLineNumber = lineId; 
         }
 
 
 
         #region TestAttributes
         const string TestAttrs_SectionName = "TestInfo";
-
-        const string ClientID_AttrName = "ClientID";
-        public int ClientId
+        public int TestLineNumber
         {
             get
             {
-                return file.ReadInt(ClientID_AttrName, TestAttrs_SectionName);
+                return cableTest.TestLineNumber;
             }
             set
             {
-                file.Write(ClientID_AttrName, value.ToString(), TestAttrs_SectionName);
+                cableTest.TestLineNumber = value;
+                file.Write(CableTest.TestLineNumber_ColumnName, value.ToString(), TestAttrs_SectionName);
             }
         }
-
-        const string UserID_AttrName = "UserID";
-        public int UserID
+        public uint OperatorID
         {
             get
             {
-                return file.ReadInt(UserID_AttrName, TestAttrs_SectionName);
+                return cableTest.OperatorId;
             }
             set
             {
-                file.Write(UserID_AttrName, value.ToString(), TestAttrs_SectionName);
+                cableTest.OperatorId = value;
+                file.Write(CableTest.OperatorId_ColumnName, value.ToString(), TestAttrs_SectionName);
             }
         }
 
-        const string TestedCableLength_AttrName = "CableLength";
-        public int TestedCableLength
+        public float TestedCableLength
         {
             get
             {
-                return file.ReadInt(TestedCableLength_AttrName, TestAttrs_SectionName);
+                return cableTest.CableLength;
             }
             set
             {
-                file.Write(TestedCableLength_AttrName, value.ToString(), TestAttrs_SectionName);
+                file.Write(CableTest.CableLength_ColumnName, value.ToString(), TestAttrs_SectionName);
             }
         }
 
-        const string IsLockFileFlag_AttrName = "IsLockDraft";
-        private bool isLocked = false;
         public bool IsLockDraft
         {
             get
             {
-                return file.Read(IsLockFileFlag_AttrName, TestAttrs_SectionName) == "1";
+                return cableTest.StatusId != CableTestStatus.NotStarted;
             }
-            set
+        }
+
+        public uint TestStatus
+        {
+            get
             {
-                if (isLocked && value) return;
-                isLocked = value;
-                file.Write(IsLockFileFlag_AttrName, (value) ? "1" : "0", TestAttrs_SectionName);
-                OnDraftLocked?.Invoke(this, new EventArgs());
+                return cableTest.StatusId;
+            }set
+            {
+                if (cableTest.StatusId != value)
+                {
+                    cableTest.StatusId = value;
+                    file.Write(CableTestStatus.StatusId_ColumnName, value.ToString(), TestAttrs_SectionName);
+                    if (value == CableTestStatus.Started) OnDraftLocked?.Invoke(this, new EventArgs());
+                }
             }
         }
 
         #endregion
 
+        public void FillCableTestToFile()
+        {
+            foreach(DataColumn dc in cableTest.Table.Columns)
+            {
+                file.Write(dc.ColumnName, cableTest[dc].ToString(), TestAttrs_SectionName);
+            }
+            if (cableTest.SourceCable != null) FillCableToFile(cableTest.SourceCable);
+        }
 
         public void FillCableToFile(Cable cable)
         {
             foreach(DataColumn dc in cable.Table.Columns)
             {
-                file.Write(dc.ColumnName, cable[dc].ToString(), "TestedCable");
+                file.Write(dc.ColumnName, cable[dc].ToString(), "SourceCable");
             }
-            file.Write(CableTest.CableTestId_ColumnName, "0","TestedCable");
+            //file.Write(CableTest.CableTestId_ColumnName, "0","SourceCable");
             FillCableStructures(cable.CableStructures);
         }
 
@@ -126,7 +160,8 @@ namespace TeraMicroMeasure
                 {
                     file.Write(dc.ColumnName, cs[dc].ToString(), curStructSectName);
                 }
-                file.WriteUIntArray("measured_params_data_ids", cs.MeasuredParameters_ids, curStructSectName);
+                FillMeasuredParameterData(cs.MeasuredParameters, idx);
+                //file.WriteUIntArray("measured_params_data_ids", cs.MeasuredParameters_ids, curStructSectName);
                 idx++;
             }
             while(file.KeyExists(CableStructure.StructureId_ColumnName, string.Format(structSectName, idx)))
@@ -136,57 +171,102 @@ namespace TeraMicroMeasure
             }
         }
 
-        public TestedCable BuildCableFromFile(DBEntityTable measured_parameters_data)
+        private void FillMeasuredParameterData(DBEntityTable measured_parameters_data, int structure_idx)
         {
-            DBEntityTable t = new DBEntityTable(typeof(TestedCable));
-            TestedCable cable = t.NewRow() as TestedCable;
-            foreach(DataColumn dc in t.Columns)
+            string params_sect_name = "ParameterData_{0}_of_structure_{1}";
+            int param_idx = 0;
+            foreach(CableStructureMeasuredParameterData csmpd in measured_parameters_data.Rows)
             {
-                cable[dc] = (object)file.Read(dc.ColumnName, "TestedCable");
+                string sect_name = string.Format(params_sect_name, param_idx++, structure_idx);
+                foreach (DataColumn dc in measured_parameters_data.Columns)
+                {
+                    file.Write(dc.ColumnName, csmpd[dc].ToString(), sect_name);
+                }
             }
-            BuildCableStructuresFromIni(cable, measured_parameters_data);
-            t.Rows.Add(cable);
-            return cable;
+            while (file.KeyExists(CableStructure.StructureId_ColumnName, string.Format(params_sect_name, param_idx, structure_idx)))
+            {
+                file.DeleteSection(string.Format(params_sect_name, param_idx, structure_idx));
+                param_idx++;
+            }
         }
 
-        private void BuildCableStructuresFromIni(TestedCable cable, DBEntityTable measured_parameters_data)
+        private void BuildTestFromFile()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableTest));
+            cable_test = t.NewRow() as CableTest;
+            try
+            {
+                cable_test = t.NewRow() as CableTest;
+                foreach (DataColumn dc in t.Columns)
+                {
+                    cable_test[dc] = file.Read(dc.ColumnName, TestAttrs_SectionName);
+                }
+                cable_test.SourceCable = BuildCableFromFile();
+            }
+            catch
+            {
+                cable_test = CableTest.New(t);
+                FillCableTestToFile();
+            }
+        }
+
+        public Cable BuildCableFromFile()
+        {
+            try
+            {
+                DBEntityTable t = new DBEntityTable(typeof(Cable));
+                Cable cable = t.NewRow() as Cable;
+                foreach (DataColumn dc in t.Columns)
+                {
+                    cable[dc] = (object)file.Read(dc.ColumnName, "SourceCable");
+                }
+                cable.CableStructures = new DBEntityTable(typeof(CableStructure));
+                BuildCableStructuresFromIni(cable);
+                t.Rows.Add(cable);
+                return cable;
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+
+        }
+
+        private void BuildCableStructuresFromIni(Cable cable)
         {
             //DBEntityTable t = new DBEntityTable(typeof(TestedCableStructure));
             string structSectName = "TestedStructure_{0}";
             int idx = 0;
             while(file.KeyExists(CableStructure.StructureId_ColumnName, string.Format(structSectName, idx)))
             {
-                TestedCableStructure s = cable.CableStructures.NewRow() as TestedCableStructure;
+                CableStructure s = cable.CableStructures.NewRow() as CableStructure;
                 s.OwnCable = cable;
                 foreach(DataColumn dc in cable.CableStructures.Columns)
                 {
                     s[dc] = (object)file.Read(dc.ColumnName, string.Format(structSectName, idx));
                 }
-                s.CableStructureId = (uint)idx + 1;
-                uint[] prmsIds = file.ReadUIntArray("measured_params_data_ids", string.Format(structSectName, idx));
-                if (prmsIds.Length > 0)
-                {
-                    MeasuredParameterData[] data = (MeasuredParameterData[])measured_parameters_data.Select($"{MeasuredParameterData.DataId_ColumnName} IN ({string.Join(",", prmsIds)})");
-                    if (data.Length > 0)
-                    {
-                        foreach(MeasuredParameterData dt in data)
-                        {
-                            TestedStructureMeasuredParameterData tpd = (TestedStructureMeasuredParameterData)s.MeasuredParameters.NewRow();
-                            tpd.ParameterTypeId = dt.ParameterTypeId;
-                            tpd.AssignedStructure = s;
-                            
-                            
-                            foreach (DataColumn dc in dt.Table.Columns)
-                            {
-                                tpd[dc.ColumnName] = dt[dc]; 
-                            }
-                            tpd.CableStructureId = 0;
-                            s.MeasuredParameters.Rows.Add(tpd);
-                        }
-                    }
-                }
+                s.MeasuredParameters = new DBEntityTable(typeof(CableStructureMeasuredParameterData));
+                BuildMeasureParametersData(s, idx);
                 cable.CableStructures.Rows.Add(s);
                 idx++;
+            }
+        }
+
+
+        private void BuildMeasureParametersData(CableStructure structure, int structure_idx)
+        {
+            string params_sect_name = "ParameterData_{0}_of_structure_{1}";
+            int param_idx = 0;
+            string sect_name;
+            while (file.KeyExists(MeasuredParameterType.ParameterTypeId_ColumnName, sect_name = string.Format(params_sect_name, param_idx++, structure_idx)))
+            {
+                CableStructureMeasuredParameterData csmpd = structure.MeasuredParameters.NewRow() as CableStructureMeasuredParameterData;
+                foreach (DataColumn dc in structure.MeasuredParameters.Columns)
+                {
+                    csmpd[dc] = file.Read(dc.ColumnName, sect_name);
+                }
+                csmpd.AssignedStructure = structure;
+                structure.MeasuredParameters.Rows.Add(csmpd);
             }
         }
 
@@ -230,7 +310,6 @@ namespace TeraMicroMeasure
             string section = GetTestResultSectionName(structure_id);
             string temperatureAttrName = GetTestTemperatureAttrName(parameter_type_id, point);
             string valueAttrName = GetTestValueAttrName(parameter_type_id, point);
-            if (!isLocked) IsLockDraft = true;
             file.Write(valueAttrName, value.ToString(), section);
             if (temperature >= 5) file.Write(temperatureAttrName, temperature.ToString(), section);
         }

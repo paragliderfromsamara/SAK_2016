@@ -568,6 +568,11 @@ namespace NormaLib.DBControl.Tables
                 }
                 return cableStructures;
             }
+            set
+            {
+                cableStructures = value;
+            }
+
         }
 
         protected virtual DBEntityTable LoadCableStructures()
