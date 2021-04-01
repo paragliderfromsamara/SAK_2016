@@ -297,6 +297,14 @@ namespace TeraMicroMeasure
                     labelPointNumber.Text = "";
                     measureResultDataGrid.Visible = false;
                     testParamsControlPanel.Dock = DockStyle.Fill;
+                    lblNoMeasureData.Text = "Добавьте кабель, для того, чтобы начать испытания";
+                    lblNoMeasureData.Dock = DockStyle.Fill;
+                    lblNoMeasureData.TextAlign = ContentAlignment.MiddleCenter;
+                    lblNoMeasureData.AutoSize = false;
+                    measureControlPanel.Visible = false;
+                    measureResultPanel.Visible = false;
+                    measuredParameterDataTabs.Visible = false;
+                    testParamsControlPanel.Visible = false;
                 }
             }catch
             {

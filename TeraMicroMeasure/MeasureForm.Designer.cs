@@ -47,7 +47,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.measureResultPanel = new System.Windows.Forms.Panel();
             this.normaLabel = new System.Windows.Forms.Label();
             this.measureTimerLabel = new System.Windows.Forms.Label();
             this.resultField = new System.Windows.Forms.Label();
@@ -86,14 +86,14 @@
             this.afterMeasureDelayUpDown = new System.Windows.Forms.NumericUpDown();
             this.cableComboBox = new System.Windows.Forms.ComboBox();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.measureControlPanel = new System.Windows.Forms.Panel();
             this.measuredParameterSelect = new System.Windows.Forms.Panel();
             this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.measureResultPanel.SuspendLayout();
             this.voltagesGroupBox.SuspendLayout();
             this.panelMeasurePointControl.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -109,7 +109,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).BeginInit();
             this.panel5.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.measureControlPanel.SuspendLayout();
             this.measuredParameterSelect.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -361,21 +361,21 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "Материал";
             // 
-            // panel2
+            // measureResultPanel
             // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(104)))), ((int)(((byte)(169)))));
-            this.panel2.Controls.Add(this.normaLabel);
-            this.panel2.Controls.Add(this.measureTimerLabel);
-            this.panel2.Controls.Add(this.resultField);
-            this.panel2.Controls.Add(this.deviceInfo);
-            this.panel2.Controls.Add(this.labelPointNumber);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.ForeColor = System.Drawing.Color.Gainsboro;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(915, 176);
-            this.panel2.TabIndex = 32;
+            this.measureResultPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(104)))), ((int)(((byte)(169)))));
+            this.measureResultPanel.Controls.Add(this.normaLabel);
+            this.measureResultPanel.Controls.Add(this.measureTimerLabel);
+            this.measureResultPanel.Controls.Add(this.resultField);
+            this.measureResultPanel.Controls.Add(this.deviceInfo);
+            this.measureResultPanel.Controls.Add(this.labelPointNumber);
+            this.measureResultPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.measureResultPanel.ForeColor = System.Drawing.Color.Gainsboro;
+            this.measureResultPanel.Location = new System.Drawing.Point(0, 0);
+            this.measureResultPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.measureResultPanel.Name = "measureResultPanel";
+            this.measureResultPanel.Size = new System.Drawing.Size(915, 176);
+            this.measureResultPanel.TabIndex = 32;
             // 
             // normaLabel
             // 
@@ -505,8 +505,8 @@
             // 
             this.panel3.Controls.Add(this.panel6);
             this.panel3.Controls.Add(this.panel5);
-            this.panel3.Controls.Add(this.panel4);
-            this.panel3.Controls.Add(this.panel2);
+            this.panel3.Controls.Add(this.measureControlPanel);
+            this.panel3.Controls.Add(this.measureResultPanel);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
@@ -842,18 +842,18 @@
             this.panel5.TabIndex = 44;
             this.panel5.Visible = false;
             // 
-            // panel4
+            // measureControlPanel
             // 
-            this.panel4.BackColor = System.Drawing.Color.White;
-            this.panel4.Controls.Add(this.measuredParameterSelect);
-            this.panel4.Controls.Add(this.panelMeasurePointControl);
-            this.panel4.Controls.Add(this.selectDevicePanel);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.ForeColor = System.Drawing.Color.Gainsboro;
-            this.panel4.Location = new System.Drawing.Point(0, 176);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(915, 51);
-            this.panel4.TabIndex = 43;
+            this.measureControlPanel.BackColor = System.Drawing.Color.White;
+            this.measureControlPanel.Controls.Add(this.measuredParameterSelect);
+            this.measureControlPanel.Controls.Add(this.panelMeasurePointControl);
+            this.measureControlPanel.Controls.Add(this.selectDevicePanel);
+            this.measureControlPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.measureControlPanel.ForeColor = System.Drawing.Color.Gainsboro;
+            this.measureControlPanel.Location = new System.Drawing.Point(0, 176);
+            this.measureControlPanel.Name = "measureControlPanel";
+            this.measureControlPanel.Size = new System.Drawing.Size(915, 51);
+            this.measureControlPanel.TabIndex = 43;
             // 
             // measuredParameterSelect
             // 
@@ -904,8 +904,8 @@
             this.selectDevicePanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.measureResultPanel.ResumeLayout(false);
+            this.measureResultPanel.PerformLayout();
             this.voltagesGroupBox.ResumeLayout(false);
             this.voltagesGroupBox.PerformLayout();
             this.panelMeasurePointControl.ResumeLayout(false);
@@ -925,7 +925,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.beforeMeasureDelayUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.afterMeasureDelayUpDown)).EndInit();
             this.panel5.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
+            this.measureControlPanel.ResumeLayout(false);
             this.measuredParameterSelect.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -948,7 +948,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel measureResultPanel;
         private System.Windows.Forms.Label resultField;
         private System.Windows.Forms.Label deviceInfo;
         private System.Windows.Forms.Label labelPointNumber;
@@ -959,7 +959,7 @@
         private System.Windows.Forms.RadioButton v10_RadioButton;
         private System.Windows.Forms.Panel panelMeasurePointControl;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel measureControlPanel;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel testParamsControlPanel;
