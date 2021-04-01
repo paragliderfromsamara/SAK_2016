@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NormaLib.Devices;
 
 namespace NormaLib.DBControl.Tables
 {
@@ -13,6 +14,36 @@ namespace NormaLib.DBControl.Tables
         public MeasureDevice(DataRowBuilder builder) : base(builder)
         {
 
+        }
+
+        public static int TryGetDeviceIdByDevice(DeviceBase device)
+        {
+            try
+            {
+                MeasureDevice device_on_db = null;
+                DBEntityTable t = find_by_criteria($"WHERE {DeviceTypeId_ColumnName} = {(uint)device.TypeId} AND {DeviceSerial_ColumnName} = '{device.Serial}'", typeof(MeasureDevice));
+                if (t.Rows.Count == 0) device_on_db = Create(device, t);
+                else device_on_db = (MeasureDevice)t.Rows[0];
+                return (int)device_on_db.DeviceId;
+            }catch(Exception)
+            {
+                return 0;
+            }
+        }
+
+        public static MeasureDevice Create(DeviceBase device, DBEntityTable table = null)
+        {
+            if (table == null) table = new DBEntityTable(typeof(MeasureDevice));
+            MeasureDevice device_on_db = (MeasureDevice)table.NewRow();
+            device_on_db = (MeasureDevice)table.NewRow();
+            device_on_db.Serial = device.Serial;
+            device_on_db.DeviceTypeId = (uint)device.TypeId;
+            device_on_db.Version = device.ModelVersion;
+            device_on_db.DeviceTypeName = device.TypeNameFull;
+
+            if (device_on_db.Save()) return device_on_db;
+            else return null;
+            
         }
 
 
@@ -70,7 +101,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        [DBColumn(DeviceSerial_ColumnName, ColumnDomain.Tinytext, OldDBColumnName = "", Order = 14, DefaultValue = "", Nullable = true)]
+        [DBColumn(DeviceSerial_ColumnName, ColumnDomain.Tinytext, Size = 20, OldDBColumnName = "", Order = 14, DefaultValue = "", Nullable = true)]
         public string Serial
         {
             get

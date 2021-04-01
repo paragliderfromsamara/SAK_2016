@@ -8,6 +8,7 @@ using System.Threading;
 using System.IO.Ports;
 using System.Diagnostics;
 using NormaLib.Devices.XmlObjects;
+using NormaLib.DBControl.Tables;
 
 namespace NormaLib.Devices
 {
@@ -121,6 +122,7 @@ namespace NormaLib.Devices
                             if (device != null)
                             {
                                 Debug.WriteLine($"Найдено устройство на {port_name}");
+                                SyncDeviceWithDB(device);
                                 OnDeviceFound?.Invoke(device, new EventArgs());
                                 device.OnDisconnected += OnDeviceDisconnected_Handler;
                                 deviceList.Add(port_name, device);
@@ -136,6 +138,12 @@ namespace NormaLib.Devices
                 }
             }
            
+        }
+
+        private void SyncDeviceWithDB(DeviceBase device)
+        {
+            device.DeviceIDOnDB = MeasureDevice.TryGetDeviceIdByDevice(device);
+            Debug.WriteLine($"ID в базе данных {device.DeviceIDOnDB }");
         }
 
         public DeviceBase GetDeviceByTypeAndSerial(int typeId, string serial)
