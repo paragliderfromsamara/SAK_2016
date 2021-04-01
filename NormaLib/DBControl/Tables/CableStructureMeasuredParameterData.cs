@@ -195,6 +195,7 @@ namespace NormaLib.DBControl.Tables
             foreach(CableStructureMeasuredParameterData md in t.Rows)
             {
                 md.AssignedStructure = cable_structure;
+                md.RefreshResultMeasure();
                 md.AcceptChanges();
             }
             return t;
@@ -489,11 +490,10 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        private void RefreshResultMeasure()
+        public void RefreshResultMeasure()
         {
             string delimiter = ParameterType.IsIsolationResistance ? "×" : "/";
             if (!MeasuredParameterType.AllowBringingLength(ParameterTypeId)) return;
-
 
             if (LengthBringingTypeId == LengthBringingType.ForOneKilometer)
             {
@@ -623,7 +623,7 @@ namespace NormaLib.DBControl.Tables
             if (!String.IsNullOrWhiteSpace(r)) r += "кГц";
             return r;
         }
-
+        /*
         public string ResultMeasure_WithLength
         {
             get
@@ -636,16 +636,17 @@ namespace NormaLib.DBControl.Tables
                 }
                 else
                 {
-                    measure = String.Format(" {0}{1}", this.ResultMeasure, brMeasure);
+                    measure = String.Format(" {0}{1}", ResultMeasure, brMeasure);
                 }
+                if (MeasuredParameterType.IsItIsolationResistanceValue(ParameterTypeId) && measure.Contains("/")) measure = measure.Replace("/", "x");
                 return measure;
             }
         }
-
+        */
         public string GetNormaTitleWithoutPercent()
         {
             string norma = String.Empty;
-            string rMeasure = ResultMeasure_WithLength;
+            string rMeasure = ResultMeasure;
             if (HasMinLimit) norma += String.Format(" от {0}", MinValue);
             if (HasMaxLimit) norma += String.Format(" до {0}", MaxValue);
             norma += $" ({rMeasure.Trim()})";
@@ -697,10 +698,10 @@ namespace NormaLib.DBControl.Tables
             string voltageText = AssignedStructure.IsolationResistanceVoltage > 0 ? $" напряжение {AssignedStructure.IsolationResistanceVoltage} В, " : "";
             if (isTimeData)
             {
-                return $"за {MaxValue}{ResultMeasure} до {pData.MinValue}{pData.ResultMeasure_WithLength},{voltageText} {Percent}%";
+                return $"за {MaxValue}{ResultMeasure} до {pData.MinValue}{pData.ResultMeasure},{voltageText} {Percent}%";
             }else
             {
-                return $"от {MinValue} до {MaxValue}{ResultMeasure_WithLength.Trim()},{voltageText} за {pData.MaxValue}{pData.ResultMeasure}, {Percent}%";
+                return $"от {MinValue} до {MaxValue}{ResultMeasure.Trim()},{voltageText} за {pData.MaxValue}{pData.ResultMeasure}, {Percent}%";
             }
             
         }
@@ -773,6 +774,7 @@ namespace NormaLib.DBControl.Tables
             foreach (TestedStructureMeasuredParameterData md in t.Rows)
             {
                 md.AssignedStructure = cable_structure;
+                md.RefreshResultMeasure();
                 md.AcceptChanges();
             }
             return t;
