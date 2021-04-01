@@ -63,16 +63,33 @@ namespace NormaLib.Devices
         //{
         //    get
         //    {
-         //       return thread_is_active;
-         //   }set
-         //   {
-          //      lock(locker)
-         //       {
+        //       return thread_is_active;
+        //   }set
+        //   {
+        //      lock(locker)
+        //       {
         //            thread_is_active = value;
-         //       }
+        //       }
         //    }
-       // }
-        
+        // }
+
+        private int device_id_on_db = -1;
+        public int DeviceIDOnDB
+        {
+            get
+            {
+                return device_id_on_db;
+            }
+            set
+            {
+                if (value != device_id_on_db)
+                {
+                    device_id_on_db = value;
+                    if (xmlState != null) xmlState.DeviceIDOnDB = device_id_on_db;
+                    OnXMLStateChanged?.Invoke(this, new EventArgs());
+                }
+            }
+        }
 
         private bool is_on_pc_mode = false;
         public bool IsOnPCMode

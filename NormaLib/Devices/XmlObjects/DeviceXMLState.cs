@@ -24,7 +24,7 @@ namespace NormaLib.Devices.XmlObjects
         const string MeasureStatusId_TagName = "MeasureStatusId";
         const string MeasureStatusText_TagName = "MeasureStatusText";
         const string IsOnMeasureCycle_TagName = "IsOnMeasureCycle";
-
+        const string DeviceIdOnDataBase_TagName = "DeviceIDOnDB";
 
 
         string serial;
@@ -273,6 +273,24 @@ namespace NormaLib.Devices.XmlObjects
             }
         }
 
+        private int device_id_on_db;
+        public int DeviceIDOnDB
+        {
+            get
+            {
+                return device_id_on_db;
+            }
+            set
+            {
+                bool f = device_id_on_db != value;
+                if (f)
+                {
+                    device_id_on_db = value;
+                    setChangedFlag(f);
+                }
+            }
+        }
+
         public DeviceXMLState(string innerXml) : base(innerXml)
         {
 
@@ -294,7 +312,7 @@ namespace NormaLib.Devices.XmlObjects
             IsOnMeasureCycle = device.IsOnMeasureCycle;
             MeasureStatusId = device.MeasureStatusId;
             MeasureStatusText = device.MeasureStatusText;
-
+            DeviceIDOnDB = device.DeviceIDOnDB;
             id = $"{TypeId}-{Serial}";
         }
 
