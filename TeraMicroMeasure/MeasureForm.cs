@@ -267,7 +267,12 @@ namespace TeraMicroMeasure
             {
                 testDraftControlPanel.Enabled = false;
                 cableLengthNumericUpDown.Enabled = cableComboBox.Enabled = true;
-                currentCable = Cables.Rows[0] as Cable;
+                if (currentCable != null)
+                {
+                    Cable[] rows = (Cable[])Cables.Select($"{Cable.CableId_ColumnName} = {currentCable.CableId}");
+                    if (rows.Length == 0) currentCable = Cables.Rows[0] as Cable;
+                    else currentCable = rows[0];
+                }else currentCable = Cables.Rows[0] as Cable;
                 SetCurrentCableOnComboBox(currentCable);
                 cableComboBox.SelectedValueChanged += MeasuredCableComboBox_SelectedValueChanged;
             }
@@ -318,7 +323,9 @@ namespace TeraMicroMeasure
             {
                 testFile.ResetFile();
                 testFile = new CableTestIni(clientID);
+                LoadCables();
                 InitMeasureDraft();
+
             }
         }
 
@@ -688,7 +695,6 @@ namespace TeraMicroMeasure
 
         private void MeasureStateOnFormChanged()
         {
-           // if (!HasClientState) return;
             OnMeasureStateChanged?.Invoke(measureState, new EventArgs());
             richTextBox1.Text = measureState.InnerXml;
         }
