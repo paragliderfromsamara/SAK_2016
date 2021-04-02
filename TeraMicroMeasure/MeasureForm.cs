@@ -1091,7 +1091,7 @@ namespace TeraMicroMeasure
             }
             if (addValueToProtocol)
             {
-                testFile.SetMeasurePointValue((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, measurePointMap.CurrentPoint, (float)valueToProtocol, (float)temperatureValue.Value);
+                testFile.SetMeasurePointValue(measurePointMap.CurrentPoint, (float)valueToProtocol, (float)temperatureValue.Value);
                 WriteValueToDataGridViewCell(valueToTable);
             }
 
@@ -1299,7 +1299,7 @@ namespace TeraMicroMeasure
 
         private void RefreshMeasurePointLabel()
         {
-            labelPointNumber.Text = (measurePointMap == null) ? String.Empty : $"{measurePointMap.CurrentElementTitle} {measurePointMap.CurrentMeasureTitle}";
+            labelPointNumber.Text = (measurePointMap == null) ? String.Empty : $"{measurePointMap.CurrentPoint.ElementTitle} {measurePointMap.CurrentPoint.MeasureTitle}";
         }
 
         private void buttonNextPoint_Click(object sender, EventArgs e)

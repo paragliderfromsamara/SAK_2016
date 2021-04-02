@@ -305,13 +305,13 @@ namespace NormaLib.Measure
                 return 20f;
         }
 
-        public void SetMeasurePointValue(MeasurePointMap mapState, float value = 0, float temperature = -1)
+        public void SetMeasurePointValue(MeasurePoint point, float value = 0, float temperature = -1)
         {
-            string section = GetTestResultSectionName((int)mapState.CurrentStructure.CableStructureId);
-            string temperatureAttrName = GetTestTemperatureAttrName((int)mapState.ParameterTypeId, mapState.CurrentPoint);
-            string valueAttrName = GetTestValueAttrName((int)mapState.ParameterTypeId, mapState.CurrentPoint);
+            string section = GetTestResultSectionName((int)point.StructureId);
+            string temperatureAttrName = GetTestTemperatureAttrName((int)point.ParameterTypeId, point.PointIndex);
+            string valueAttrName = GetTestValueAttrName((int)point.ParameterTypeId, point.PointIndex);
             file.Write(valueAttrName, value.ToString(), section);
-            cableTest.BuildTestResult();
+            //cableTest.BuildTestResult();
 
             if (temperature >= 5) file.Write(temperatureAttrName, temperature.ToString(), section);
         }

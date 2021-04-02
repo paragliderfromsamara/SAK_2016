@@ -11,33 +11,33 @@ namespace NormaLib.Measure
 
     public class MeasurePointMap
     {
-        private int currentPoint;
+        private MeasurePoint currentPoint; //private int currentPoint;
         private int elementsAmount;
         private int measurePointsPerElement;
         private int measurePointsAmount;
 
-        public int CurrentElementMeasurePointIndex => currentPoint % measurePointsPerElement;
-        public int CurrentElementIndex => currentPoint / measurePointsPerElement;
+        public int CurrentElementMeasurePointIndex => currentPoint.MeasureIndex;
+        public int CurrentElementIndex => currentPoint.ElementIndex;
 
-        public int CurrentElementNumber => CurrentElementIndex + 1;
-        public int CurrentMeasurePointNumber => CurrentElementMeasurePointIndex + 1;
+        public int CurrentElementNumber => currentPoint.ElementNumber;
+        public int CurrentMeasurePointNumber => currentPoint.MeasureNumber;
 
-        public int CurrentPoint => currentPoint;
+        public MeasurePoint CurrentPoint => currentPoint;
 
         public int MeasurePointsPerElement => measurePointsPerElement;
 
         public EventHandler OnMeasurePointChanged;
 
-        public bool NextPointEnabled => currentPoint+1 < measurePointsAmount;
-        public bool NextElementEnabled => CurrentElementIndex + 1 < elementsAmount;
-        public bool PrevElementEnabled => CurrentElementIndex > 0;
-        public bool PrevPointEnabled => currentPoint > 0;
+        public bool NextPointEnabled => currentPoint.PointIndex + 1 < measurePointsAmount;
+        public bool NextElementEnabled => currentPoint.ElementIndex + 1 < elementsAmount;
+        public bool PrevElementEnabled => currentPoint.ElementIndex > 0;
+        public bool PrevPointEnabled => currentPoint.PointIndex > 0;
 
         private string elementTitleMask = string.Empty;
         private string elementMeasureTitleMask = string.Empty;
 
-        public string CurrentElementTitle => elementTitleByElNumber(CurrentElementNumber);
-        public string CurrentMeasureTitle => measureTitleByMeasureNumber(CurrentMeasurePointNumber);
+        //public string CurrentElementTitle => elementTitleByElNumber(CurrentElementNumber);
+        //public string CurrentMeasureTitle => measureTitleByMeasureNumber(CurrentMeasurePointNumber);
 
         private string measureTitleByMeasureNumber(int currentMeasurePointNumber)
         {
@@ -55,18 +55,18 @@ namespace NormaLib.Measure
         private uint parameterTypeId;
         public uint ParameterTypeId => parameterTypeId;
 
-        public MeasurePointMap(CableStructure structure, uint parameter_type_id, int start_point = 0)
+        public MeasurePointMap(CableStructure structure, uint parameter_type_id, int start_point_index = 0)
         {
             parameterTypeId = parameter_type_id;
             current_structure = structure;
-            currentPoint = start_point;
+            
             measurePointsPerElement = MeasuredParameterType.MeasurePointNumberPerStructureElement(parameter_type_id, structure.StructureType.StructureLeadsAmount);
             elementsAmount = (int)structure.RealAmount;
             measurePointsAmount = measurePointsPerElement * elementsAmount;
 
             elementTitleMask = $"{structure.StructureType.StructureTypeName}";
             elementMeasureTitleMask = (structure.StructureTypeId == CableStructureType.Quattro && measurePointsPerElement == 2) ? "Пара" : "Жила";
-            
+            currentPoint = BuildPointByIndex(start_point_index);
         }
 
         public void SetNextElement()
@@ -77,13 +77,13 @@ namespace NormaLib.Measure
 
         public void SetNextPoint()
         {
-            if (NextPointEnabled) SetMeasurePoint(currentPoint+1);
+            if (NextPointEnabled) SetMeasurePoint(currentPoint.PointIndex+1);
             else throw new MeasurePointException("Следующая точка находится вне диапазона доступных");
         }
 
         public void SetPrevPoint()
         {
-            if (PrevPointEnabled) SetMeasurePoint(currentPoint - 1);
+            if (PrevPointEnabled) SetMeasurePoint(currentPoint.PointIndex - 1);
             else throw new MeasurePointException("Предыдущая точка находится вне диапазона доступных");
         }
 
@@ -107,12 +107,24 @@ namespace NormaLib.Measure
 
         private void SetMeasurePoint(int next_point)
         {
-            MeasurePointEventArgs a = new MeasurePointEventArgs();
-            a.PrevPoint = currentPoint;
-            a.PrevElementIndex = CurrentElementIndex;
-            a.PrevElementMeasurePointIndex = CurrentElementMeasurePointIndex;
-            currentPoint = next_point;
-            OnMeasurePointChanged?.Invoke(this, a);
+            MeasurePoint ? prev = null, next = null;
+            prev = currentPoint;
+            if (NextElementEnabled) next = BuildPointByIndex(next_point + 1);
+            currentPoint = BuildPointByIndex(next_point);
+            OnMeasurePointChanged?.Invoke(this, new MeasurePointEventArgs(currentPoint, prev, next));
+        }
+
+        private MeasurePoint BuildPointByIndex(int next_point)
+        {
+            MeasurePoint point = new MeasurePoint();
+            point.PointIndex = next_point;
+            point.ElementIndex = next_point / measurePointsPerElement;
+            point.MeasureIndex = next_point % measurePointsPerElement;
+            point.ElementTitle = elementTitleByElNumber(point.ElementNumber);
+            point.MeasureTitle = measureTitleByMeasureNumber(point.MeasureNumber);
+            point.StructureId = current_structure.CableStructureId;
+            point.ParameterTypeId = parameterTypeId;
+            return point;
         }
 
         public void SetMeasurePoint(int element_index, int element_point_index)
@@ -130,6 +142,20 @@ namespace NormaLib.Measure
         }
     }
 
+    public struct MeasurePoint
+    {
+        public int ElementIndex;
+        public int MeasureIndex;
+        public int ElementNumber => ElementIndex + 1;
+        public int MeasureNumber => MeasureIndex + 1;
+        public string ElementTitle;
+        public string MeasureTitle;
+        public int PointIndex;
+        public uint StructureId;
+        public uint ParameterDataId;
+        public uint ParameterTypeId;
+    }
+
     public class MeasurePointException : Exception
     {
         public MeasurePointException(string message) : base(message)
@@ -140,13 +166,14 @@ namespace NormaLib.Measure
 
     public class MeasurePointEventArgs : EventArgs
     {
-        public int PrevPoint;
-        public int PrevElementIndex;
-        public int PrevElementMeasurePointIndex;
-
-        public MeasurePointEventArgs() : base()
+        public MeasurePoint ? PrevPoint;
+        public MeasurePoint CurrentPoint;
+        public MeasurePoint ? NextPoint;
+        public MeasurePointEventArgs(MeasurePoint current, MeasurePoint ? prev, MeasurePoint ? next) : base()
         {
-
+            CurrentPoint = current;
+            NextPoint = next;
+            PrevPoint = prev;
         }
     }
 }

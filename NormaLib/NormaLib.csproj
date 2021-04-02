@@ -201,6 +201,7 @@
     <Compile Include="Measure\CableTestIni.cs" />
     <Compile Include="Measure\MaterialCoeffCalculator.cs" />
     <Compile Include="Measure\MeasurePointMap.cs" />
+    <Compile Include="Measure\MeasurePointsHandler.cs" />
     <Compile Include="Measure\MeasureResultConverter.cs" />
     <Compile Include="Measure\MeasureTimer.cs" />
     <Compile Include="Measure\NormDeterminant.cs" />
