@@ -109,9 +109,12 @@ namespace TeraMicroMeasure
             }set
             {
                 captured_device_type = value;
+                RefreshDeviceSettingsControls();
                 RefreshDeviceList();
             }   
         }
+
+
 
         private string captured_device_serial = String.Empty;
         public string CapturedDeviceSerial
@@ -392,7 +395,6 @@ namespace TeraMicroMeasure
 
         private void InitPanels()
         {
-            InitAverageCountComboBox();
             rIsolTypeSelectorCB.DisplayMember = measuredParameterCB.DisplayMember = "value";
             rIsolTypeSelectorCB.ValueMember = measuredParameterCB.ValueMember = "key";
             DisableRisolSelector();
@@ -469,15 +471,23 @@ namespace TeraMicroMeasure
             }
         }
 
-        private void InitAverageCountComboBox()
+        private void RefreshDeviceSettingsControls()
         {
-            averagingCounter.Items.Add("Без усреднения");
-            averagingCounter.DropDownStyle = ComboBoxStyle.DropDownList;
-            for(int i=1; i<=100; i++)
+            measureDelayUpDown.Visible = measureDelayLabel.Visible = captured_device_type == DeviceType.Microohmmeter || captured_device_type == DeviceType.Teraohmmeter;
+            if (captured_device_type == DeviceType.Teraohmmeter)
             {
-                averagingCounter.Items.Add(i);
+                measureDelayLabel.Text = "Разряд, с";
+                measureDelayUpDown.Minimum = 10;
+                measureDelayUpDown.Maximum = 250;
+                measureDelayUpDown.Value = 10;
             }
-            averagingCounter.SelectedIndex = 0;
+            else if (captured_device_type == DeviceType.Microohmmeter)
+            {
+                measureDelayLabel.Text = "Выдержка, мс";
+                measureDelayUpDown.Minimum = 200;
+                measureDelayUpDown.Maximum = 1000;
+                measureDelayUpDown.Value = 200;
+            }
         }
 
         public void RefreshMeasureState(MeasureXMLState measure_state)
@@ -498,9 +508,7 @@ namespace TeraMicroMeasure
         private void fillInputsFromClientState()
         {
             SetCableLengthFromXmlState();
-            SetBeforeMeasureDelayFromXMLState();
             SetAfterMeasureDelayFromXMLState();
-            SetAveragingTimesFromXmlState();
             SetCapturedDeviceFromXmlState();
         }
 
@@ -510,23 +518,11 @@ namespace TeraMicroMeasure
             CapturedDeviceType = (DeviceType)measureState.CapturedDeviceTypeId;
         }
 
-        private void SetAveragingTimesFromXmlState()
-        {
-            if (measureState.AveragingTimes < 0 || measureState.AveragingTimes > averagingCounter.Items.Count)
-            {
-                measureState.AveragingTimes = 0;
-            }
-            averagingCounter.SelectedIndex = Convert.ToInt16(measureState.AveragingTimes);
-        }
+
 
         private void SetAfterMeasureDelayFromXMLState()
         {
-            afterMeasureDelayUpDown.Value = measureState.AfterMeasureDelay;
-        }
-
-        private void SetBeforeMeasureDelayFromXMLState()
-        {
-            beforeMeasureDelayUpDown.Value = measureState.BeforeMeasureDelay;
+            measureDelayUpDown.Value = measureState.AfterMeasureDelay;
         }
 
         private void SetCableLengthFromXmlState()
@@ -555,11 +551,7 @@ namespace TeraMicroMeasure
         private void AddHandlersToInputs()
         {
             cableLengthNumericUpDown.ValueChanged += CableLengthNumericUpDown_ValueChanged;
-
-            beforeMeasureDelayUpDown.ValueChanged += BeforeMeasureDelayUpDown_ValueChanged;
-            afterMeasureDelayUpDown.ValueChanged += AfterMeasureDelayUpDown_ValueChanged;
-            averagingCounter.SelectedIndexChanged += AveragingCounter_SelectedIndexChanged;
-
+            measureDelayUpDown.ValueChanged += MeasureDelayUpDown_ValueChanged;
         }
 
         private void AveragingCounter_SelectedIndexChanged(object sender, EventArgs e)
@@ -569,12 +561,21 @@ namespace TeraMicroMeasure
             MeasureStateOnFormChanged();
         }
 
-        private void AfterMeasureDelayUpDown_ValueChanged(object sender, EventArgs e)
+        private void MeasureDelayUpDown_ValueChanged(object sender, EventArgs e)
         {
             NumericUpDown ud = sender as NumericUpDown;
             uint v = 0;
             uint.TryParse(ud.Value.ToString(), out v);
-            measureState.AfterMeasureDelay = v;
+            if (captured_device_type == DeviceType.Teraohmmeter)
+            {
+                measureState.BeforeMeasureDelay = 0;
+                measureState.AfterMeasureDelay = v == 0 ? 10 : v;
+            }
+            else if (captured_device_type == DeviceType.Microohmmeter)
+            {
+                measureState.BeforeMeasureDelay = v == 0 ? 200 : v;
+                measureState.AfterMeasureDelay = 2;
+            }
             MeasureStateOnFormChanged();
         }
 
@@ -673,9 +674,7 @@ namespace TeraMicroMeasure
             cableComboBox.SelectedValueChanged -= MeasuredCableComboBox_SelectedValueChanged;
             cableLengthNumericUpDown.ValueChanged -= CableLengthNumericUpDown_ValueChanged;
 
-            beforeMeasureDelayUpDown.ValueChanged -= BeforeMeasureDelayUpDown_ValueChanged;
-            afterMeasureDelayUpDown.ValueChanged -= AfterMeasureDelayUpDown_ValueChanged;
-            averagingCounter.SelectedIndexChanged -= AveragingCounter_SelectedIndexChanged;
+            measureDelayUpDown.ValueChanged -= MeasureDelayUpDown_ValueChanged;
         }
 
         private void CableLengthNumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -774,7 +773,7 @@ namespace TeraMicroMeasure
                     MeasureIsStartedOnDevice = false;
                     EnableMeasurePointControl();
                     rIsolTypeSelectorCB.Enabled = true;
-                    deviceParametersGroupBox.Enabled = true;
+                    measureDelayUpDown.Enabled = true;
                     testParamsControlPanel.Enabled = true;
                     measuredParameterDataTabs.Enabled = true;
                     StopMeasureTimer();
@@ -785,7 +784,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Enabled = false;
                     deviceControlButton.Enabled = false;
                     rIsolTypeSelectorCB.Enabled = false;
-                    deviceParametersGroupBox.Enabled = false;
+                    measureDelayUpDown.Enabled = false;
                     testParamsControlPanel.Enabled = false;
                     measuredParameterDataTabs.Enabled = false;
                     SetSourceCableToTest();
@@ -798,7 +797,7 @@ namespace TeraMicroMeasure
                     startMeasureButton.Enabled = true;
                     deviceControlButton.Enabled = false;
                     rIsolTypeSelectorCB.Enabled = false;
-                    deviceParametersGroupBox.Enabled = false;
+                    measureDelayUpDown.Enabled = false;
                     MeasureIsStartedOnDevice = true;
                     testParamsControlPanel.Enabled = false;
                     measuredParameterDataTabs.Enabled = false;
