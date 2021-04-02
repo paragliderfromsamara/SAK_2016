@@ -121,9 +121,10 @@ namespace NormaLib.Measure
             {
                 if (cableTest.StatusId != value)
                 {
+                    uint was = cableTest.StatusId;
                     cableTest.StatusId = value;
                     file.Write(CableTestStatus.StatusId_ColumnName, value.ToString(), TestAttrs_SectionName);
-                    if (value == CableTestStatus.Started) OnDraftLocked?.Invoke(this, new EventArgs());
+                    if (was == CableTestStatus.NotStarted) OnDraftLocked?.Invoke(this, new EventArgs());
                 }
             }
         }
@@ -268,6 +269,7 @@ namespace NormaLib.Measure
                 csmpd.AssignedStructure = structure;
                 structure.MeasuredParameters.Rows.Add(csmpd);
             }
+            FillAffectedElementOnStructure(structure);
         }
 
 
@@ -316,7 +318,34 @@ namespace NormaLib.Measure
             if (temperature >= 5) file.Write(temperatureAttrName, temperature.ToString(), section);
         }
 
+        public void SetLeadStatusOfPoint(MeasurePoint point, int lead_status_id)
+        {
+            string section = GetTestResultSectionName((int)point.StructureId);
+            string valueAttrName = GetTestValueAttrName((int)MeasuredParameterType.Calling, point.PointIndex);
+            file.Write(valueAttrName, lead_status_id.ToString(), section);
+        }
 
+        private void FillAffectedElementOnStructure(CableStructure structure)
+        {
+            string section = GetTestResultSectionName((int)structure.CableStructureId);
+            MeasurePointMap point_map = new MeasurePointMap(structure, MeasuredParameterType.Calling);
+            Dictionary<int, int> affected_elements = new Dictionary<int, int>();
+            do
+            {
+                string val_attr_name;
+                if (affected_elements.ContainsKey(point_map.CurrentElementNumber)) continue;
+                val_attr_name = GetTestValueAttrName((int)MeasuredParameterType.Calling, point_map.CurrentPoint.PointIndex);
+                if (file.KeyExists(val_attr_name, section))
+                {
+                    int sts = file.ReadInt(val_attr_name, section);
+                    if (sts != (int)LeadTestStatus.Ok)
+                    {
+                        affected_elements.Add(point_map.CurrentElementNumber, sts);
+                    }
+                }
+            } while (point_map.TryGetNextPoint());
+            structure.AffectedElements = affected_elements;
+        }
 
         #endregion
 

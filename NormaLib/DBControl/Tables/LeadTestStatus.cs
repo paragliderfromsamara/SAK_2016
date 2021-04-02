@@ -14,6 +14,11 @@ namespace NormaLib.DBControl.Tables
         {
         }
 
+        public static DBEntityTable get_all_as_table()
+        {
+            return get_all(typeof(LeadTestStatus));
+        }
+
         /// <summary>
         /// Годна
         /// </summary>

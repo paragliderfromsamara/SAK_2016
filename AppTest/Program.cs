@@ -97,18 +97,8 @@ namespace AppTest
             CableTestIni f = new CableTestIni(1);
             f.SourceCable = Cable.get_all_as_table().Rows[0] as Cable;
             Random r = new Random();
-            foreach(MeasuredParameterType ptype in f.SourceCable.MeasuredParameterTypes.Rows)
-            {
-                foreach(CableStructure cs in f.SourceCable.CableStructures.Rows)
-                {
-                    MeasurePointMap map = new MeasurePointMap(cs, ptype.ParameterTypeId);
-                    do
-                    {
-                        f.SetMeasurePointValue(map, (float)r.Next(100, 125));
-                        Thread.Sleep(1);
-                    } while (map.TryGetNextPoint());
-                }
-            }
+            MeasurePointsHandler handler = new MeasurePointsHandler((point)=> { f.SetMeasurePointValue(point, (float)r.Next(100, 125)); });
+            handler.ProcessCable(f.SourceCable);
         }
 
         

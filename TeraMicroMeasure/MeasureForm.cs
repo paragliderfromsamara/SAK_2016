@@ -27,6 +27,7 @@ namespace TeraMicroMeasure
         int clientID;
         bool MeasureIsStartedOnDevice;
 
+        private DBEntityTable LeadStatuses;
         private DBEntityTable Cables;
         private DBEntityTable MeasuredParameterTypes;
         private DBEntityTable IsolMaterialCoeffsTable;
@@ -71,8 +72,10 @@ namespace TeraMicroMeasure
             {
                 cur_struct = value;
                 measureState.MeasureVoltage = (uint)cur_struct.IsolationResistanceVoltage;
+                
                 RefreshMeasureParameterDataTabs();
                 RefreshMeasureControl();
+                //MessageBox.Show(string.Join(", ", cur_struct.AffectedElements.Keys));
             }
         }
 
@@ -157,6 +160,7 @@ namespace TeraMicroMeasure
             IsOnline = isCurrentPCClient = clientID == SettingsControl.GetClientId();
             //////////////////////////////////////////////////////////////
             ResetMeasureField();
+            LoadLeadStatuses();
             LoadMeasuredParameterTypes();
             LoadMeasuredParametersData();
             InitPanels();
@@ -166,6 +170,63 @@ namespace TeraMicroMeasure
             LoadMaterials();
             LoadCables();
             InitMeasureDraft();
+        }
+
+        private void LoadLeadStatuses()
+        {
+            LeadStatuses = LeadTestStatus.get_all_as_table();
+            leadStatusContextMenu.Items.Clear();
+            ToolStripLabel label = new ToolStripLabel("Статус");
+            label.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            label.ForeColor = NormaUIColors.PrimaryColor;
+            leadStatusContextMenu.Items.Add(label);
+            foreach (LeadTestStatus sts in LeadStatuses.Rows)
+            {
+                ToolStripMenuItem i = new ToolStripMenuItem(sts.StatusTitle);
+                i.Tag = sts;
+                i.Click += (s, q) => 
+                {
+                    ToolStripMenuItem item = s as ToolStripMenuItem;
+                    LeadTestStatus status = item.Tag as LeadTestStatus;
+                    SetLeadStatusForCurrentPointOnTestFile(status);
+                    leadStatusContextMenu.Close();
+                    //item.Checked = true;
+                    //MessageBox.Show(status.StatusTitle);
+                };
+                leadStatusContextMenu.Items.Add(i);
+            }
+        }
+
+        private void SetLeadStatusForCurrentPointOnTestFile(LeadTestStatus status)
+        {
+            if (status.StatusId == GetLeadStatusByElementNumber(measurePointMap.CurrentElementNumber).StatusId) return;
+            MeasurePoint p = measurePointMap.CurrentPoint;
+            if (status.StatusId == LeadTestStatus.Ok)
+            {
+                MeasurePointMap map = new MeasurePointMap(currentStructure, MeasuredParameterType.Calling);
+                map.SetMeasurePoint(p.ElementIndex, 0);
+                do
+                {
+                    testFile.SetLeadStatusOfPoint(map.CurrentPoint, (int)status.StatusId);
+                } while (map.TryGetNextPoint() && map.CurrentElementMeasurePointIndex > 0);
+                if (currentStructure.AffectedElements.ContainsKey(measurePointMap.CurrentElementNumber)) currentStructure.AffectedElements.Remove(measurePointMap.CurrentElementNumber);
+                RefreshMeasureControl();
+                measurePointMap.SetMeasurePoint(p);
+            }
+            else
+            {
+                testFile.SetLeadStatusOfPoint(measurePointMap.CurrentPoint, (int)status.StatusId);
+                for (int i = 0; i < measurePointMap.MeasurePointsPerElement; i++)
+                {
+                    measureResultDataGrid.Rows[measurePointMap.CurrentPoint.ElementIndex].Cells[ElementNumber.Index + 1 + i].Value = status.StatusTitle;
+                }
+                if (currentStructure.AffectedElements.ContainsKey(measurePointMap.CurrentElementNumber)) currentStructure.AffectedElements[measurePointMap.CurrentElementNumber] = (int)status.StatusId;
+                else currentStructure.AffectedElements.Add(measurePointMap.CurrentElementNumber, (int)status.StatusId);
+            }
+            if (testFile.TestStatus == CableTestStatus.NotStarted)
+            {
+                SetSourceCableToTest(CableTestStatus.StopedByOperator);
+            }
         }
 
         private void LoadMeasuredParametersData()
@@ -201,6 +262,7 @@ namespace TeraMicroMeasure
             testFile.OnDraftLocked += (s, a)=> { SetDraftIsLock(); };
             if (!testFile.IsLockDraft)
             {
+                testDraftControlPanel.Enabled = false;
                 cableLengthNumericUpDown.Enabled = cableComboBox.Enabled = true;
                 currentCable = Cables.Rows[0] as Cable;
                 SetCurrentCableOnComboBox(currentCable);
@@ -326,23 +388,16 @@ namespace TeraMicroMeasure
         private void SetCapturedDeviceTypeId()
         {
             captured_device_type = GetDeviceTypeBySelectedParameterType();
-            //this.Text = captured_device_type.ToString();
-            // RleadRadioButton.Checked = true;
-            // MeasureTypeRadioButton_CheckedChanged(RleadRadioButton, new EventArgs());
-            // RefreshDeviceList();
-            // captured_device_type = DeviceType.Microohmmeter;
-
         }
 
         private void InitPanels()
         {
             InitAverageCountComboBox();
-            rIsolTypeSelectorCB.DisplayMember = measuredParameterCB.DisplayMember = "value";//$"{MeasuredParameterType.ParameterName_ColumnName}";
-            rIsolTypeSelectorCB.ValueMember = measuredParameterCB.ValueMember = "key";//$"{MeasuredParameterType.ParameterTypeId_ColumnName}";
+            rIsolTypeSelectorCB.DisplayMember = measuredParameterCB.DisplayMember = "value";
+            rIsolTypeSelectorCB.ValueMember = measuredParameterCB.ValueMember = "key";
             DisableRisolSelector();
             DisableParamtersCB();
             testDraftControlPanel.Enabled = false;
-            //selectDevicePanel.Visible = measurePanel.Enabled = isCurrentPCClient;
         }
 
         public void SetXmlDeviceList(Dictionary<string, DeviceXMLState> xml_device_list)
@@ -412,9 +467,6 @@ namespace TeraMicroMeasure
                 default:
                     return DeviceType.Unknown;
             }
-            //if (RleadRadioButton.Checked) return DeviceType.Microohmmeter;
-            //else if (RizolRadioButton.Checked) return DeviceType.Teraohmmeter;
-            //else return DeviceType.Unknown;
         }
 
         private void InitAverageCountComboBox()
@@ -769,10 +821,10 @@ namespace TeraMicroMeasure
             measureStatus = status;
         }
 
-        private void SetSourceCableToTest()
+        private void SetSourceCableToTest(uint status_id = CableTestStatus.Started)
         {
             if (testFile.SourceCable == null) testFile.SourceCable = currentCable;
-            testFile.TestStatus = CableTestStatus.Started;
+            testFile.TestStatus = status_id;
         }
 
         #region MeasureTimerControl
@@ -1163,6 +1215,13 @@ namespace TeraMicroMeasure
         private bool GetAgreementForStartMeasure()
         {
             bool flag = true;
+            LeadTestStatus currentElementStatus = GetLeadStatusByElementNumber(measurePointMap.CurrentElementNumber);
+            if (currentElementStatus.StatusId != LeadTestStatus.Ok)
+            {
+                MessageBox.Show($"Выбранный элемент кабеля забракован, измерения невозможны.", "Элемент забракован", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+
+            }
             if (MeasuredParameterType.IsItIsolationResistance(measureState.MeasureTypeId))
             {
                 if (measureState.MeasureVoltage > 10)
@@ -1207,21 +1266,31 @@ namespace TeraMicroMeasure
 
                 for (int i = 0; i < currentStructure.RealAmount; i++)
                 {
+                    //measurePointMap.SetMeasurePoint(i, 0);
+             
+                    LeadTestStatus sts = GetLeadStatusByElementNumber(i+1);
                     DataGridViewRow r = new DataGridViewRow();
                     r.CreateCells(measureResultDataGrid);
                     r.Cells[ElementNumber.Index].Value = $"{currentStructure.StructureType.StructureTypeName} {i + 1}";
                     for (int j = 0; j < measurePointMap.MeasurePointsPerElement; j++)
                     {
-                        int pointIdx = measurePointMap.GetPointIndex(i, j);
-
-                        double val = testFile.GetMeasurePointValue((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, pointIdx);
-                        if (!double.IsNaN(val))
+                        if (sts.StatusId != LeadTestStatus.Ok)
                         {
-                            float temp = testFile.GetMeasurePointTemperature((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, pointIdx);
-                            MeasureResultConverter c = new MeasureResultConverter(val, CurrentParameterData, (float)cableLengthNumericUpDown.Value, materialCoeffCalculator.CalculateCoeff(measureState.MeasureTypeId, currentStructure, temp));
-                            val = c.ConvertedValueRounded;
+                            r.Cells[ElementNumber.Index + 1 + j].Value = sts.StatusTitle;
                         }
-                        WriteValueToDataGridViewCell(val, r, j);
+                        else
+                        {
+                            int pointIdx = measurePointMap.GetPointIndex(i, j);
+                            double val = testFile.GetMeasurePointValue((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, pointIdx);
+                            if (!double.IsNaN(val))
+                            {
+                                float temp = testFile.GetMeasurePointTemperature((int)currentStructure.CableStructureId, (int)measureState.MeasureTypeId, pointIdx);
+                                MeasureResultConverter c = new MeasureResultConverter(val, CurrentParameterData, (float)cableLengthNumericUpDown.Value, materialCoeffCalculator.CalculateCoeff(measureState.MeasureTypeId, currentStructure, temp));
+                                val = c.ConvertedValueRounded;
+                            }
+                            WriteValueToDataGridViewCell(val, r, j);
+                        }
+
                     }
                     rowsForAdd.Add(r);
                 }
@@ -1233,6 +1302,17 @@ namespace TeraMicroMeasure
             {
                 SetNoMeasuredParameterData_State();
             }
+        }
+
+        private LeadTestStatus GetLeadStatusByElementNumber(int el_number)
+        {
+            if (currentStructure.AffectedElements.ContainsKey(el_number))
+            {
+                LeadTestStatus[] sts = (LeadTestStatus[])LeadStatuses.Select($"{LeadTestStatus.StatusId_ColumnName} = {currentStructure.AffectedElements[el_number]}");
+                if (sts.Length > 0) return sts[0];
+                else return (LeadTestStatus)LeadStatuses.Rows[0];
+            }
+            else return (LeadTestStatus)LeadStatuses.Rows[0];
         }
 
         private void SetNoMeasuredParameterData_State()
@@ -1339,12 +1419,7 @@ namespace TeraMicroMeasure
 
         private void measureResultDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (e.ColumnIndex > ElementNumber.Index && e.ColumnIndex <= SubElement_4.Index && measureStatus == MeasureStatus.STOPPED)
-            {
-                pointChangedByClick = true;
-                measurePointMap.SetMeasurePoint(e.RowIndex, e.ColumnIndex - ElementNumber.Index - 1);
-            }
+
         }
 
         void dataGridView1_KeyDown(object sender, KeyEventArgs e)
@@ -1463,6 +1538,32 @@ namespace TeraMicroMeasure
         private void saveResultButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void measureResultDataGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (e.ColumnIndex > ElementNumber.Index && e.ColumnIndex <= SubElement_4.Index && measureStatus == MeasureStatus.STOPPED)
+            {
+                pointChangedByClick = true;
+                measurePointMap.SetMeasurePoint(e.RowIndex, e.ColumnIndex - ElementNumber.Index - 1);
+                if (e.Button == MouseButtons.Right)
+                {
+                    Point p = new Point(Cursor.Position.X, Cursor.Position.Y);
+                    LeadTestStatus sts = GetLeadStatusByElementNumber(measurePointMap.CurrentPoint.ElementNumber);
+                    foreach(object item in leadStatusContextMenu.Items)
+                    {
+                        if (typeof(ToolStripMenuItem) != item.GetType()) continue;
+                        ToolStripMenuItem titem = item as ToolStripMenuItem;
+                        if (titem.Tag != null)
+                        {
+                            LeadTestStatus s = titem.Tag as LeadTestStatus;
+                            titem.Checked = s.StatusId == sts.StatusId;
+                        } 
+                    }
+                    leadStatusContextMenu.Show(p);
+                }
+            }
         }
     }
 

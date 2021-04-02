@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonPrevElement = new System.Windows.Forms.Button();
             this.buttonNextElement = new System.Windows.Forms.Button();
             this.buttonNextPoint = new System.Windows.Forms.Button();
@@ -90,6 +91,7 @@
             this.measuredParameterSelect = new System.Windows.Forms.Panel();
             this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
+            this.leadStatusContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -210,6 +212,7 @@
             this.measureResultDataGrid.Size = new System.Drawing.Size(426, 610);
             this.measureResultDataGrid.TabIndex = 0;
             this.measureResultDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.measureResultDataGrid_CellClick);
+            this.measureResultDataGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.measureResultDataGrid_CellMouseClick);
             this.measureResultDataGrid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             // 
             // ElementNumber
@@ -887,6 +890,14 @@
             this.measuredParameterCB.TabIndex = 2;
             this.measuredParameterCB.SelectedIndexChanged += new System.EventHandler(this.measuredParameterCB_SelectedIndexChanged);
             // 
+            // leadStatusContextMenu
+            // 
+            this.leadStatusContextMenu.Name = "leadStatusContextMenu";
+            this.leadStatusContextMenu.ShowCheckMargin = true;
+            this.leadStatusContextMenu.ShowImageMargin = false;
+            this.leadStatusContextMenu.ShowItemToolTips = false;
+            this.leadStatusContextMenu.Size = new System.Drawing.Size(153, 26);
+            // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
@@ -999,5 +1010,6 @@
         private System.Windows.Forms.Panel testDraftControlPanel;
         private System.Windows.Forms.Button resetTestButton;
         private System.Windows.Forms.Button saveResultButton;
+        private System.Windows.Forms.ContextMenuStrip leadStatusContextMenu;
     }
 }

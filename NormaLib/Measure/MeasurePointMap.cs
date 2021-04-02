@@ -127,6 +127,11 @@ namespace NormaLib.Measure
             return point;
         }
 
+        public void SetMeasurePoint(MeasurePoint point)
+        {
+            SetMeasurePoint(point.ElementIndex, point.MeasureIndex);
+        }
+
         public void SetMeasurePoint(int element_index, int element_point_index)
         {
             int next_point = GetPointIndex(element_index, element_point_index);
@@ -140,6 +145,8 @@ namespace NormaLib.Measure
         {
             return element_index * measurePointsPerElement + element_point_index;
         }
+
+        public MeasurePoint GetPointByElementIndex(int element_index, int element_point_index) => BuildPointByIndex(GetPointIndex(element_index, element_point_index));
     }
 
     public struct MeasurePoint

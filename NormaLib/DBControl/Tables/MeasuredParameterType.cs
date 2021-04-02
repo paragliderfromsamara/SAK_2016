@@ -220,6 +220,7 @@ namespace NormaLib.DBControl.Tables
         {
             switch (parameter_type_id)
             {
+                case Calling:
                 case Rleads:
                 case Risol1:
                 case Risol2:

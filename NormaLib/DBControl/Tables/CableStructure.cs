@@ -47,6 +47,19 @@ namespace NormaLib.DBControl.Tables
             return t;
         }
 
+        private Dictionary<int, int> affected_elements = new Dictionary<int, int>();
+        public Dictionary<int, int> AffectedElements
+        {
+            get
+            {
+                return affected_elements;
+            }set
+            {
+                affected_elements = value;
+            }
+        }
+
+
         public void CopyFromStructure(CableStructure structure)
         {
             this.FillColsFromEntity(structure);
