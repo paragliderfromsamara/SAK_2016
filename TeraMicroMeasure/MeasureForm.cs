@@ -179,9 +179,9 @@ namespace TeraMicroMeasure
         {
             LeadStatuses = LeadTestStatus.get_all_as_table();
             leadStatusContextMenu.Items.Clear();
-            ToolStripLabel label = new ToolStripLabel("Статус");
-            label.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            label.ForeColor = NormaUIColors.PrimaryColor;
+            ToolStripLabel label = new ToolStripLabel("Статус жилы");
+            label.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            label.ForeColor = Color.DarkBlue;
             leadStatusContextMenu.Items.Add(label);
             foreach (LeadTestStatus sts in LeadStatuses.Rows)
             {
@@ -193,8 +193,6 @@ namespace TeraMicroMeasure
                     LeadTestStatus status = item.Tag as LeadTestStatus;
                     SetLeadStatusForCurrentPointOnTestFile(status);
                     leadStatusContextMenu.Close();
-                    //item.Checked = true;
-                    //MessageBox.Show(status.StatusTitle);
                 };
                 leadStatusContextMenu.Items.Add(i);
             }
