@@ -101,7 +101,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        [DBColumn(DeviceSerial_ColumnName, ColumnDomain.Tinytext, Size = 20, OldDBColumnName = "", Order = 14, DefaultValue = "", Nullable = true)]
+        [DBColumn(DeviceSerial_ColumnName, ColumnDomain.Tinytext, OldDBColumnName = "", Order = 14, DefaultValue = "", Nullable = true)]
         public string Serial
         {
             get

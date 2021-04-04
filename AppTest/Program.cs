@@ -99,6 +99,7 @@ namespace AppTest
             Random r = new Random();
             MeasurePointsHandler handler = new MeasurePointsHandler((point)=> { f.SetMeasurePointValue(point, (float)r.Next(100, 125)); });
             handler.ProcessCable(f.SourceCable);
+            f.SaveTest();
         }
 
         

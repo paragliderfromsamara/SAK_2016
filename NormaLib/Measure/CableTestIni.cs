@@ -63,7 +63,15 @@ namespace NormaLib.Measure
             cableTest.TestLineNumber = lineId; 
         }
 
-
+        public bool SaveTest()
+        {
+            if (cableTest.Save())
+            {
+                TestedCable cable = TestedCable.create_for_test(cableTest);
+                return true;
+            }
+            else return false;
+        }
 
         #region TestAttributes
         const string TestAttrs_SectionName = "TestInfo";
