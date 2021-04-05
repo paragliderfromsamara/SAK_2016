@@ -14,12 +14,19 @@ namespace NormaLib.DBControl.Tables
         {
         }
 
+        private static DBEntityTable allTypes = null;
+        private static DBEntityTable AllTypes => allTypes == null ? allTypes = get_all(typeof(MeasuredParameterType)) : allTypes;
+
         public static MeasuredParameterType find_by_parameter_type_id(uint parameter_type_id)
         {
+            MeasuredParameterType[] rows = (MeasuredParameterType[])AllTypes.Select($"{ParameterTypeId_ColumnName} = {parameter_type_id}");
+            return rows.Length > 0 ? rows[0] : null;
+            /*
             DBEntityTable t = find_by_primary_key(parameter_type_id, typeof(MeasuredParameterType));
             MeasuredParameterType parameter_type = null;
             if (t.Rows.Count > 0) parameter_type = (MeasuredParameterType)t.Rows[0];
             return parameter_type;
+           */
         }
 
         public const uint Calling = 1;

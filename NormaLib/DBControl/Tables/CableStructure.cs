@@ -742,6 +742,11 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        /// <summary>
+        /// Id исходной структуры, из которой создавалась структура для тестов
+        /// </summary>
+        public uint SourceStructureId = 0;
+
         public override DBEntityTable MeasuredParameters
         {
             get

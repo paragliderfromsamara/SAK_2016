@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NormaLib.DBControl;
+using System.Diagnostics;
 
 namespace NormaLib.DBControl.Tables
 {
@@ -661,6 +662,7 @@ namespace NormaLib.DBControl.Tables
             TestedCableStructure structure = AddCableStructure(copied_structure.StructureTypeId);
             structure.CopyFromStructure(copied_structure);
             structure.OwnCable = this;
+            structure.SourceStructureId = copied_structure.CableStructureId;
             structure.Save();
             return structure;
         }

@@ -68,9 +68,43 @@ namespace NormaLib.Measure
             if (cableTest.Save())
             {
                 TestedCable cable = TestedCable.create_for_test(cableTest);
+                int idx = 0;
+                foreach(TestedCableStructure tcs in cable.CableStructures.Rows)
+                {
+                    CableStructure sourceStrucure = GetSourceStructureById(tcs.SourceStructureId);
+                    List<uint> lst = new List<uint>(sourceStrucure.MeasuredParameterTypes_ids);
+                    lst.Add(MeasuredParameterType.Calling);
+                    foreach(var pTypeId in lst)
+                    {
+                        MeasurePointMap mpm = new MeasurePointMap(sourceStrucure, pTypeId);
+                        do
+                        {
+                            MeasurePoint point = mpm.CurrentPoint;
+                            MeasuredParameterType mpt = MeasuredParameterType.find_by_parameter_type_id(pTypeId);
+                            float value = GetMeasurePointValue((int)point.StructureId, (int)pTypeId, point.PointIndex);
+                            if (!float.IsNaN(value))
+                            {
+                                float temperature = GetMeasurePointTemperature((int)point.StructureId, (int)pTypeId, point.PointIndex);
+                                CableTestResult r = cableTest.BuildTestResult(mpt, tcs, (uint)point.ElementNumber, (uint)point.MeasureNumber);
+                                r.Temperature = temperature;
+                                r.Result = value;
+                                cableTest.TestResults.Add(r);
+                            }
+                        } while (mpm.TryGetNextPoint());
+                        Debug.WriteLine(cableTest.TestResults.Count);
+                    }
+                    cableTest.SetFinished();
+                }
                 return true;
             }
             else return false;
+        }
+
+        private CableStructure GetSourceStructureById(uint structure_id)
+        {
+            CableStructure[] strucs = (CableStructure[])cableTest.SourceCable.CableStructures.Select($"{CableStructure.StructureId_ColumnName} = {structure_id}");
+            if (strucs.Length > 0) return strucs[0];
+            else return null;
         }
 
         #region TestAttributes
@@ -290,6 +324,9 @@ namespace NormaLib.Measure
         string GetTestResultSectionName(int structure_id) => string.Format(TestResults_SectionNameMask, structure_id) ;
         string GetTestValueAttrName(int parameter_type_id, int point) => string.Format(TestResultValue_AttrNameMask, parameter_type_id, point);
         string GetTestTemperatureAttrName(int parameter_type_id, int point) => string.Format(TestResultTemperature_AttrNameMask, parameter_type_id, point);
+
+
+
 
         public float GetMeasurePointValue(int structure_id, int parameter_type_id, int point)
         {

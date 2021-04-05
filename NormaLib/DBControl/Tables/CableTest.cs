@@ -856,9 +856,11 @@ namespace NormaLib.DBControl.Tables
 
         private void CleanList()
         {
+            results_Table.Clear();
             //System.Windows.Forms.MessageBox.Show("CleanList");
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
+
 
         public void Add(CableTestResult result)
         {
@@ -917,8 +919,8 @@ namespace NormaLib.DBControl.Tables
             //cable_test 
         }
 
-        
 
+        public int Count => results_Table.Rows.Count;
         private CableTest cable_test;
         private DBEntityTable results_Table = new DBEntityTable(typeof(CableTestResult));
         private Dictionary<string, List<CableTestResult>> results_Dictionary = new Dictionary<string, List<CableTestResult>>();
