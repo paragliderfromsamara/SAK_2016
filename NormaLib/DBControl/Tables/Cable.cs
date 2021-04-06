@@ -453,7 +453,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        [DBColumn(FullCableName_ColumnName, ColumnDomain.Boolean, Order = 23, IsVirtual = true, Nullable = true)]
+        [DBColumn(FullCableName_ColumnName, ColumnDomain.Varchar, Order = 23, IsVirtual = true, Nullable = true)]
         public string FullName
         {
             get

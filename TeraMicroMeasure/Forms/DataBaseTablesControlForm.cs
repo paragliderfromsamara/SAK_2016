@@ -36,7 +36,7 @@ namespace TeraMicroMeasure.Forms
                 case 2:
                     return new CablesTableControlForm();//new CablesListForm(CABLE_FORM_TYPE.TERA_MICRO);
                 case 3:
-                    return new NormaLib.UI.ChildForms.BlankForm();
+                    return new CableTestListControlForm();
                 default:
                     return new NormaLib.UI.ChildForms.BlankForm();
             }

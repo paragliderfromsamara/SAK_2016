@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data;
 using NormaLib.Utils;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace NormaLib.DBControl.Tables
 {
@@ -136,7 +137,8 @@ namespace NormaLib.DBControl.Tables
             {
                 isCompleted = Update();
             }
-            if (isCompleted && this.RowState != DataRowState.Detached) this.AcceptChanges(); //Меняем обновляем RowState
+            if (isCompleted && this.RowState != DataRowState.Detached)
+                this.AcceptChanges(); //Меняем обновляем RowState
             return isCompleted;
         }
 
@@ -253,9 +255,19 @@ namespace NormaLib.DBControl.Tables
         /// <returns></returns>
         public bool Update()
         {
-            string criteria = primaryKeysAsCriteria();
-            string query = makeUpdateQuery(criteria);
-            return ((DBEntityTable)this.Table).WriteSingleQuery(query);
+            string query = string.Empty;
+            try
+            {
+                string criteria = primaryKeysAsCriteria();
+                query = makeUpdateQuery(criteria);
+                return ((DBEntityTable)this.Table).WriteSingleQuery(query);
+            }catch(Exception ex)
+            {
+                Debug.WriteLine(query);
+                Debug.WriteLine(ex.Message);
+                throw (ex);
+            }
+
         }
 
         /// <summary>
@@ -457,6 +469,17 @@ namespace NormaLib.DBControl.Tables
             float.TryParse(this[column_name].ToString(), out v);
             return v;
         }
+
+        protected DateTime tryParseDateTime(string column_name)
+        {
+            DateTime t = DateTime.MinValue;
+            DateTime.TryParse(this[column_name].ToString(), out t);
+            return t;
+        }
+
+
+
+
 
         public string[] ErrorsAsArray => ErrorsList.ToArray();
 

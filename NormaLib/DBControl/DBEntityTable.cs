@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Reflection;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 
 namespace NormaLib.DBControl
 {
@@ -148,6 +149,17 @@ namespace NormaLib.DBControl
             if (col.DataType == typeof(string))
             {
                 return $"'{row[col.ColumnName].ToString()}'";
+            }else if (col.DataType == typeof(DateTime))
+            {
+                if (string.IsNullOrWhiteSpace(row[col.ColumnName].ToString()))
+                {
+                    return "NULL";
+                }
+                else
+                {
+                    var isoDateFormat = CultureInfo.InvariantCulture.DateTimeFormat;
+                    return $"('{((DateTime)row[col.ColumnName]).ToString(isoDateFormat.SortableDateTimePattern)}')";
+                }
             }
             else
             {
@@ -230,13 +242,15 @@ namespace NormaLib.DBControl
                     if (init_mode == DBEntityTableMode.OwnColumns && dca.IsVirtual) continue;
                     else if (init_mode == DBEntityTableMode.VirtualColumns && !dca.IsVirtual) continue;
                     DataColumn dc = new DataColumn(dca.ColumnName, prop.PropertyType);
-
+                    //dc.DataType = GetTypeOfColumn(dca.DataType);//dca.DataType;
                     dc.AllowDBNull = dca.Nullable;
                     dc.DefaultValue = dca.DefaultValue;
                     columns.Add(dca.Order, dc);
                     if (dca.IsPrimaryKey) primaryKeys.Add(dc);
                 }
             }
+
+            
 
             foreach(DataColumn c in columns.Values)
             {
@@ -245,7 +259,24 @@ namespace NormaLib.DBControl
             if (primaryKeys.Count > 0) this.PrimaryKey = primaryKeys.ToArray();
         }
 
-
+        private Type GetTypeOfColumn(ColumnDomain d)
+        {
+            switch(d)
+            {
+                case ColumnDomain.Int:
+                    return typeof(Int32);
+                case ColumnDomain.Float:
+                    return typeof(float);
+                case ColumnDomain.DateTime:
+                    return typeof(DateTime);
+                case ColumnDomain.Boolean:
+                    return typeof(bool);
+                case ColumnDomain.UInt:
+                    return typeof(uint);
+                default:
+                    return typeof(string);
+            }
+        }
 
         protected override Type GetRowType()
         {

@@ -21,6 +21,7 @@ namespace AppTest
             Thread.CurrentThread.CurrentCulture = new CultureInfo("my");
             Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
             Console.WindowWidth = 100;
+            //Console.WriteLine(DateTime.());
             //ExperimentFunc();
             //DBTest.Start();
             //DeviceTest.Start();
@@ -94,14 +95,25 @@ namespace AppTest
 
         static void TestOfCableTest()
         {
-            CableTestIni f = new CableTestIni(1);
-            f.SourceCable = Cable.get_all_as_table().Rows[0] as Cable;
-            Random r = new Random();
-            MeasurePointsHandler handler = new MeasurePointsHandler((point)=> { f.SetMeasurePointValue(point, (float)r.Next(100, 125)); });
-            handler.ProcessCable(f.SourceCable);
-            f.SaveTest();
+            ClearTests();
+            DBEntityTable cables_table = Cable.get_all_as_table();
+            foreach(Cable cable in cables_table.Rows)
+            {
+                CableTestIni f = new CableTestIni(1);
+                f.SourceCable = cable;
+                Random r = new Random();
+                MeasurePointsHandler handler = new MeasurePointsHandler((point) => { f.SetMeasurePointValue(point, (float)r.Next(100, 125)); });
+                handler.ProcessCable(f.SourceCable);
+                f.SaveTest();
+            }
+
         }
 
-        
+        static void ClearTests()
+        {
+            DBEntityTable t = CableTest.find_all();
+            foreach (CableTest test in t.Rows) test.Destroy();
+
+        }
     }
 }

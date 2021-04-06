@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NormaLib.Utils;
 using NormaLib.Measure;
 using System.IO;
+using System.Diagnostics;
 
 namespace NormaLib.DBControl.Tables
 {
@@ -16,6 +17,21 @@ namespace NormaLib.DBControl.Tables
     {
         public CableTest(DataRowBuilder builder) : base(builder)
         {
+        }
+
+        public static DBEntityTable find_finished()
+        {
+            DBEntityTable TestedCables = new DBEntityTable(typeof(TestedCable));
+            DBEntityTable CableTestTable = new DBEntityTable(typeof(CableTest));
+            DBEntityTable DocumentsTable = new DBEntityTable(typeof(Document));
+            string select_for_test_line = $"CONVERT((IF({TestLineNumber_ColumnName} > 0, CONCAT('Линия №', {TestLineNumber_ColumnName}), 'Сервер')), char) AS {TestLineTitle_ColumnName}";
+            string query = $"SELECT *, CONCAT({TestedCable.CableName_ColumnName}, ' ', {TestedCable.StructName_ColumnName}) AS {TestedCable.FullCableName_ColumnName}, {select_for_test_line} FROM {CableTestTable.TableName} LEFT OUTER JOIN {TestedCables.TableName} USING({CableTestTable.PrimaryKey[0]}) LEFT OUTER JOIN {DocumentsTable.TableName} USING({Document.DocumentId_ColumnName}) WHERE {CableTestStatus.StatusId_ColumnName} = {CableTestStatus.Finished};";
+            return find_by_query(query, typeof(CableTest));
+        }
+
+        public static DBEntityTable find_all()
+        {
+            return get_all(typeof(CableTest));
         }
 
         public static CableTest New(DBEntityTable table = null)
@@ -105,7 +121,11 @@ namespace NormaLib.DBControl.Tables
         /// </summary>
         public void SetFinished()
         {
-            if (testResults.SaveToDB()) SetStatus(CableTestStatus.Finished);
+            if (testResults.SaveToDB())
+            {
+                FinishedAt = DateTime.Now;
+                SetStatus(CableTestStatus.Finished);
+            }
         }
 
 
@@ -412,6 +432,45 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        [DBColumn(TestStartedAt_ColumnName, ColumnDomain.DateTime, Order = 22, Nullable = true)]
+        public DateTime StartedAt
+        {
+            get
+            {
+                return tryParseDateTime(TestStartedAt_ColumnName);
+            }
+            set
+            {
+                this[TestStartedAt_ColumnName] = value;
+            }
+        }
+
+        [DBColumn(TestFinishedAt_ColumnName, ColumnDomain.DateTime, Order = 23, Nullable = true)]
+        public DateTime FinishedAt
+        {
+            get
+            {
+                return tryParseDateTime(TestFinishedAt_ColumnName);
+            }
+            set
+            {
+                this[TestFinishedAt_ColumnName] = value;
+            }
+        }
+
+        [DBColumn(TestLineTitle_ColumnName, ColumnDomain.Varchar, Order = 24, Nullable = true, IsVirtual = true)]
+        public string TestLineTitle
+        {
+            get
+            {
+                return this[TestLineTitle_ColumnName].ToString();
+            }
+            set
+            {
+                this[TestLineTitle_ColumnName] = value;
+            }
+        }
+
         public uint TestedCableId
         {
             get
@@ -433,6 +492,9 @@ namespace NormaLib.DBControl.Tables
         public const string NettoWeight_ColumnName = "netto_weight";
         public const string BruttoWeight_ColumnName = "brutto_weight";
         public const string TestLineNumber_ColumnName = "test_line_number";
+        public const string TestStartedAt_ColumnName = "test_started_at";
+        public const string TestFinishedAt_ColumnName = "test_finished_at";
+        public const string TestLineTitle_ColumnName = "test_line_title";
 
 
         #endregion

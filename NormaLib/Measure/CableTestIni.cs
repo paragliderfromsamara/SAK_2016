@@ -166,10 +166,28 @@ namespace NormaLib.Measure
                     uint was = cableTest.StatusId;
                     cableTest.StatusId = value;
                     file.Write(CableTestStatus.StatusId_ColumnName, value.ToString(), TestAttrs_SectionName);
-                    if (was == CableTestStatus.NotStarted) OnDraftLocked?.Invoke(this, new EventArgs());
+                    if (was == CableTestStatus.NotStarted)
+                    {
+                        StartedAt = DateTime.Now;
+                        OnDraftLocked?.Invoke(this, new EventArgs());
+                    }
                 }
             }
         }
+
+        public DateTime StartedAt
+        {
+            get
+            {
+                return cableTest.StartedAt;
+            }
+            set
+            {
+                cableTest.StartedAt = value;
+                file.Write(CableTest.TestStartedAt_ColumnName, cableTest.StartedAt.ToString(), TestAttrs_SectionName);
+            }
+        }
+
 
         #endregion
 
@@ -244,6 +262,7 @@ namespace NormaLib.Measure
                 {
                     cable_test[dc] = file.Read(dc.ColumnName, TestAttrs_SectionName);
                 }
+                t.Rows.Add(cable_test);
                 cable_test.SourceCable = BuildCableFromFile();
             }
             catch
