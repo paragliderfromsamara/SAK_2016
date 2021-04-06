@@ -33,19 +33,26 @@
             this.titleLabel_1 = new System.Windows.Forms.Label();
             this.connectToServerButton = new System.Windows.Forms.Button();
             this.connectButPanel = new System.Windows.Forms.Panel();
+            this.sessionPanel = new System.Windows.Forms.Panel();
+            this.roleTitleLabel = new System.Windows.Forms.Label();
+            this.userNameLabel = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.panelMenu.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.connectButPanel.SuspendLayout();
+            this.sessionPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelMenu
             // 
+            this.panelMenu.Controls.Add(this.sessionPanel);
             this.panelMenu.Controls.Add(this.connectButPanel);
             this.panelMenu.Controls.SetChildIndex(this.btnSettings, 0);
             this.panelMenu.Controls.SetChildIndex(this.btnDataBase, 0);
             this.panelMenu.Controls.SetChildIndex(this.btnMeasure, 0);
             this.panelMenu.Controls.SetChildIndex(this.panelHeader, 0);
             this.panelMenu.Controls.SetChildIndex(this.connectButPanel, 0);
+            this.panelMenu.Controls.SetChildIndex(this.sessionPanel, 0);
             // 
             // panelHeader
             // 
@@ -128,6 +135,57 @@
             this.connectButPanel.Size = new System.Drawing.Size(240, 60);
             this.connectButPanel.TabIndex = 5;
             // 
+            // sessionPanel
+            // 
+            this.sessionPanel.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.sessionPanel.Controls.Add(this.roleTitleLabel);
+            this.sessionPanel.Controls.Add(this.userNameLabel);
+            this.sessionPanel.Controls.Add(this.button1);
+            this.sessionPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.sessionPanel.Location = new System.Drawing.Point(0, 764);
+            this.sessionPanel.Name = "sessionPanel";
+            this.sessionPanel.Size = new System.Drawing.Size(240, 60);
+            this.sessionPanel.TabIndex = 6;
+            // 
+            // roleTitleLabel
+            // 
+            this.roleTitleLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.roleTitleLabel.ForeColor = System.Drawing.Color.Gainsboro;
+            this.roleTitleLabel.Location = new System.Drawing.Point(76, 27);
+            this.roleTitleLabel.Name = "roleTitleLabel";
+            this.roleTitleLabel.Size = new System.Drawing.Size(164, 21);
+            this.roleTitleLabel.TabIndex = 2;
+            this.roleTitleLabel.Text = "Администратор";
+            this.roleTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // userNameLabel
+            // 
+            this.userNameLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.userNameLabel.ForeColor = System.Drawing.Color.Gainsboro;
+            this.userNameLabel.Location = new System.Drawing.Point(76, 0);
+            this.userNameLabel.Name = "userNameLabel";
+            this.userNameLabel.Size = new System.Drawing.Size(164, 27);
+            this.userNameLabel.TabIndex = 1;
+            this.userNameLabel.Text = "Иванов Иван Иванович";
+            this.userNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.MidnightBlue;
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.ForeColor = System.Drawing.Color.Gainsboro;
+            this.button1.Location = new System.Drawing.Point(0, 0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(76, 60);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Выйти";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.signoutButton_Click);
+            // 
             // AppForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -141,6 +199,7 @@
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.connectButPanel.ResumeLayout(false);
+            this.sessionPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -152,5 +211,9 @@
         private System.Windows.Forms.Label titleLabel_2;
         private System.Windows.Forms.Button connectToServerButton;
         private System.Windows.Forms.Panel connectButPanel;
+        private System.Windows.Forms.Panel sessionPanel;
+        private System.Windows.Forms.Label roleTitleLabel;
+        private System.Windows.Forms.Label userNameLabel;
+        private System.Windows.Forms.Button button1;
     }
 }

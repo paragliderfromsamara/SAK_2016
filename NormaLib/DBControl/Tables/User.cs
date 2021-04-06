@@ -51,6 +51,15 @@ namespace NormaLib.DBControl.Tables
             return user;
         }
 
+        public static User SignInByIDAndPassword(uint user_id, string password)
+        {
+            User user = null;
+            string query = $"{UserId_ColumnName} = '{user_id}' AND password = '{password}' AND is_active = 1 LIMIT 1";
+            DBEntityTable t = find_by_criteria(query, typeof(User)); // new DBEntityTable();
+            if (t.Rows.Count > 0) user = (User)t.Rows[0];
+            return user;
+        }
+
         public override bool Save()
         {
             try

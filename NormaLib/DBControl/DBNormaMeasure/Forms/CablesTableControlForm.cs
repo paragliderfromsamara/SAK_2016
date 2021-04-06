@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NormaLib.UI;
 using NormaLib.DBControl.Tables;
+using NormaLib.SessionControl;
 
 namespace NormaLib.DBControl.DBNormaMeasure.Forms
 {
@@ -135,9 +136,9 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         protected override void ApplyUserRights()
         {
-            AllowAddEntity = true;
-            AllowEditEntity = true;
-            AllowRemoveEntity = true;
+            AllowAddEntity = SessionControl.SessionControl.AllowAdd_Cable;
+            AllowEditEntity = SessionControl.SessionControl.AllowEdit_Cable;
+            AllowRemoveEntity = SessionControl.SessionControl.AllowRemove_Cable;
             createFromCableToolStripItem.Enabled = AllowAddEntity;
             base.ApplyUserRights();
         }

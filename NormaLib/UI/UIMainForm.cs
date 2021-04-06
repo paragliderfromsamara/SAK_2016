@@ -212,9 +212,9 @@ namespace NormaLib.UI
         }
 
 
-        protected virtual void SetActiveForm(Form next_form, object btnSender)
+        protected virtual void SetActiveForm(Form next_form, object btnSender = null)
         {
-            nextButton = (Button)btnSender;
+            nextButton = btnSender == null ? null : (Button)btnSender;
             nextForm = next_form;
             if (currentForm != null)
             {

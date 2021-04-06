@@ -15,12 +15,13 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
     {
         User user;
         DBEntityTable userRolesTable;
-        public UserForm(User form_user, DBEntityTable roles)
+        public UserForm(User form_user, DBEntityTable roles, bool disable_cancel = false)
         {
             InitializeComponent();
             user = form_user;
             userRolesTable = roles;
             fillUserRolesComboBox();
+            ControlBox = cancelButton.Visible = !disable_cancel;
             InitByUser();
         }
 
@@ -71,7 +72,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         private void fillUserRolesComboBox()
         {
-            userRolesTable = UserRole.get_all_as_table();
             userRole.DataSource = userRolesTable;
             userRole.ValueMember = "user_role_id";
             userRole.DisplayMember = "user_role_name";

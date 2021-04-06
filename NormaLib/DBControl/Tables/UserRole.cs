@@ -26,6 +26,17 @@ namespace NormaLib.DBControl.Tables
             return get_all(typeof(UserRole));
         }
 
+        public static DBEntityTable get_by_id_as_table(uint id)
+        {
+            return get_by_ids_as_table(new uint[] { id });
+        }
+
+        public static DBEntityTable get_by_ids_as_table(uint[] ids)
+        {
+            string query = $"WHERE {RoleId_ColumnName} IN ({string.Join(",", ids)})";
+            return find_by_criteria(query, typeof(UserRole));
+        }
+
 
         [DBColumn(RoleId_ColumnName, ColumnDomain.UInt, Order = 10, OldDBColumnName = "DolshNum", Nullable = true, IsPrimaryKey = true, AutoIncrement = true)]
         public uint UserRoleId

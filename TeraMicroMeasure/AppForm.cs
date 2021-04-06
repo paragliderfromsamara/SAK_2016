@@ -20,6 +20,7 @@ using System.Threading;
 using NormaLib.SocketControl;
 using System.Diagnostics;
 using TeraMicroMeasure.Properties;
+using NormaLib.SessionControl;
 
 namespace TeraMicroMeasure
 {
@@ -62,6 +63,7 @@ namespace TeraMicroMeasure
                 {
                     if (IsServerApp) InitAsServerApp();
                     else InitAsClientApp();
+                    InitSessionForm();
                     InitDeviceFinder();
                 };
             }
@@ -119,6 +121,7 @@ namespace TeraMicroMeasure
             this.panelMenu.Controls.Add(this.btnMeasure);
             this.panelMenu.Controls.Add(this.panelHeader);
             this.panelMenu.Controls.Add(this.connectButPanel);
+            this.panelMenu.Controls.Add(this.sessionPanel);
             connectButPanel.Visible = !IsServerApp;
         }
 
@@ -373,6 +376,7 @@ namespace TeraMicroMeasure
             CheckDeviceListChanges(new Dictionary<string, DeviceXMLState>());
         }
         #endregion
+
 
         #region ServerSideApp
         private void InitAsServerApp()
@@ -743,6 +747,25 @@ namespace TeraMicroMeasure
 
         }
 
+        private void InitSessionForm()
+        {
+            SessionControlForm scf = new SessionControlForm();
+            scf.Shown += (o, s) => { panelMenu.Visible = false; };
+            scf.OnUserSignedIn += (o, s) =>
+            {
+                panelMenu.VisibleChanged += (s1, o1) =>
+                {
+                    if (!panelMenu.Visible) return;
+                    SetActiveForm(GetMeasureForm(), btnMeasure);
+                    userNameLabel.Text = SessionControl.CurrentUser.FullNameShort;
+                    roleTitleLabel.Text = SessionControl.CurrentUserRole.UserRoleName;
+                };
+                panelMenu.Visible = SessionControl.SignedIn;
+
+            };
+            SetActiveForm(scf);
+        }
+
         private void WorkStatusChanged_Handler(object sender, EventArgs e)
         {
 
@@ -1011,6 +1034,15 @@ namespace TeraMicroMeasure
             }
         }
         #endregion
+
+        private void signoutButton_Click(object sender, EventArgs e)
+        {
+            currentForm.FormClosed += (s, a) =>
+            {
+                SessionControl.SignOut();
+            };
+            InitSessionForm();
+        }
     }
 
     enum ClientStatus : int

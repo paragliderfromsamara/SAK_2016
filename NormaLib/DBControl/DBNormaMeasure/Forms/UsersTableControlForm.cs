@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NormaLib.UI;
 using NormaLib.DBControl.Tables;
+using NormaLib.SessionControl;
 
 namespace NormaLib.DBControl.DBNormaMeasure.Forms
 {
@@ -134,9 +135,9 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         protected override void ApplyUserRights()
         {
-            AllowAddEntity = true;
-            AllowRemoveEntity = true;
-            AllowEditEntity = true;
+            AllowAddEntity = SessionControl.SessionControl.AllowAdd_User;
+            AllowRemoveEntity = SessionControl.SessionControl.AllowEdit_User;
+            AllowEditEntity = SessionControl.SessionControl.AllowRemove_User;
             base.ApplyUserRights();
         }
 

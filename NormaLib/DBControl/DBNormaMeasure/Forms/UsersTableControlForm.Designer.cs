@@ -45,7 +45,7 @@
             this.Name = "UsersTableControlForm";
             this.Text = "UsersTableControlForm";
             this.Controls.SetChildIndex(this.dataPanel, 0);
-            this.Controls.SetChildIndex(this.btnNewRecordFormInit, 0);
+            //this.Controls.SetChildIndex(this.btnNewRecordFormInit, 0);
             ((System.ComponentModel.ISupportInitialize)(this.entitiesDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
