@@ -54,7 +54,7 @@
     <Compile Include="DeviceTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WordProtocolTest.cs" />
+    <Compile Include="ProtocolTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

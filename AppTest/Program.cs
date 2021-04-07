@@ -25,10 +25,10 @@ namespace AppTest
             //ExperimentFunc();
             //DBTest.Start();
             //DeviceTest.Start();
-            //WordProtocolTest.Start();
+            ProtocolTest.Start();
             //GetTkcIzol();
             //GetTablesList();
-            TestOfCableTest();
+            //TestOfCableTest();
             //CreateDump();
             Console.ReadLine();
         }

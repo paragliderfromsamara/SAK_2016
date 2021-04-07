@@ -589,6 +589,13 @@ namespace NormaLib.DBControl.Tables
     [DBTable("tested_cables", "db_norma_measure", OldDBName = "bd_isp", OldTableName = "cables")]
     public class TestedCable : Cable
     {
+        private CableTest cableTest;
+        public CableTest CableTest => cableTest;
+        public void SetCableTest(CableTest cab_test)
+        {
+            cableTest = cab_test;
+            TestId = cableTest.TestId;
+        }
         public TestedCable(DataRowBuilder builder) : base(builder)
         {
         }
@@ -669,7 +676,9 @@ namespace NormaLib.DBControl.Tables
 
         protected override DBEntityTable LoadCableStructures()
         {
-            return TestedCableStructure.get_by_cable(this);
+            DBEntityTable structs = TestedCableStructure.get_by_cable(this);
+            foreach (TestedCableStructure s in structs.Rows) s.OwnCable = this;
+            return structs;
         }
 
         #region Колонки таблицы

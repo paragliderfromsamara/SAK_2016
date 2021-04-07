@@ -692,6 +692,66 @@ namespace NormaLib.DBControl.Tables
         {
         }
 
+        private DBEntityTable testResults = null;
+
+        public DBEntityTable TestResults
+        {
+            get
+            {
+                if (testResults == null)
+                {
+                    testResults = new DBEntityTable(typeof(CableTestResult));
+                    (OwnCable as TestedCable).CableTest.TestResults.GetForStructure(CableStructureId).CopyToDataTable(testResults, LoadOption.Upsert);
+                }
+                return testResults;
+            }
+        }
+
+        private uint[] testedElements = null;
+        public uint[] TestedElements
+        {
+            get
+            {
+                if (testedElements == null)
+                {
+                    List<uint> elNumbers = new List<uint>();
+                    foreach (CableTestResult r in TestResults.Rows) elNumbers.Add(r.ElementNumber);
+                    IEnumerable<uint> vals = elNumbers.Distinct().OrderBy(x => x);
+                    testedElements = vals.ToArray();
+                }
+                return testedElements;
+            }
+        }
+
+        private uint[] testedParametersIds = null;
+        public uint[] TestedParametersIds
+        {
+            get
+            {
+                if (testedParametersIds == null)
+                {
+                    List<uint> elNumbers = new List<uint>();
+                    foreach (CableTestResult r in TestResults.Rows) elNumbers.Add(r.ParameterTypeId);
+                    IEnumerable<uint> vals = elNumbers.Distinct().OrderBy(x => x);
+                    testedParametersIds = vals.ToArray();
+                }
+                return testedParametersIds;
+            }
+        }
+
+        public DBEntityTable tested_parameter_types = null;
+        public DBEntityTable TestedParameterTypes
+        {
+            get
+            {
+                if (tested_parameter_types == null)
+                {
+                    tested_parameter_types = MeasuredParameterType.get_all_by_ids(TestedParametersIds);
+                }
+                return tested_parameter_types;
+            }
+        }
+
         public new static TestedCableStructure find_by_structure_id(uint structure_id)
         {
             DBEntityTable t = find_by_primary_key(structure_id, typeof(TestedCableStructure));

@@ -203,6 +203,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+
         public TestedCable TestedCable
         {
             get
@@ -210,6 +211,7 @@ namespace NormaLib.DBControl.Tables
                 if (testedCable == null)
                 {
                     testedCable = TestedCable.find_by_test_id(TestId);
+                    if (testedCable != null) testedCable.SetCableTest(this);
                 }
                 return testedCable;
             }
@@ -912,8 +914,9 @@ namespace NormaLib.DBControl.Tables
 
         private void LoadFromDB()
         {
+            results_Table = CableTestResult.FindByTestId(cable_test.TestId);
             //System.Windows.Forms.MessageBox.Show("LoadFromDB");
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void CleanList()
@@ -981,6 +984,10 @@ namespace NormaLib.DBControl.Tables
             //cable_test 
         }
 
+        public CableTestResult[] GetForStructure(uint structure_id)
+        {
+           return (CableTestResult[])results_Table.Select($"{CableStructure.StructureId_ColumnName} = {structure_id}");
+        }
 
         public int Count => results_Table.Rows.Count;
         private CableTest cable_test;

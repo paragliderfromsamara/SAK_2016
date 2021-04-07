@@ -14,6 +14,11 @@ namespace NormaLib.DBControl.Tables
         {
         }
 
+        public static DBEntityTable FindByTestId(uint cable_test_id)
+        {
+            return find_by_criteria($"{CableTest.CableTestId_ColumnName} = {cable_test_id}", typeof(CableTestResult));
+        }
+
         public static void delete_all_from_cable_test(uint cable_test_id)
         {
             delete_by_criteria($"{CableTest.CableTestId_ColumnName} = {cable_test_id}", typeof(CableTestResult));

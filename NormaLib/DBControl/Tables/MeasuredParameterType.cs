@@ -299,6 +299,14 @@ namespace NormaLib.DBControl.Tables
         }
 
 
+        public bool IsPrimaryParameter
+        {
+            get
+            {
+                return ((ParameterTypeId == Rleads) || (ParameterTypeId == dR) || ParameterTypeId == Risol1 || ParameterTypeId == Risol2 || (ParameterTypeId == Cp) || (ParameterTypeId == Co) || IsEK());
+            }
+        }
+
         public const string ParameterTypeId_ColumnName = "parameter_type_id";
         public const string ParameterName_ColumnName = "parameter_name";
         public const string ParameterMeasure_ColumnName = "parameter_measure";
