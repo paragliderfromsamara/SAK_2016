@@ -22,8 +22,8 @@ namespace NormaLib.ProtocolBuilders
                     case NormaExportType.MSWORD:
                         MSWordCableTestProtocol protocol = new MSWordCableTestProtocol(cable_test, path);
                         protocol.EditorName = "Roman Kozvonin";
-                        protocol.FirstPageHeaderText = "Жопа в руках";
-                        protocol.AnotherPageHeaderText = "Хрен в штанах";
+                        protocol.FirstPageHeaderText = "ООО \"НПП \"Норма\"";
+                        protocol.AnotherPageHeaderText = cable_test.TestedCable.FullName;
                         protocol.CreateDocument();
                         break;
                 }

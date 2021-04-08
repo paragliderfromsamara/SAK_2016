@@ -16,7 +16,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
     internal class MSWordProtocol
     {
         protected int MaxColsPerPage => DocumentWidth / ResultCellWidth;
-        protected const int MaxRowsPerPage = 50;
+        protected const int MaxRowsPerPage = 60;
         protected const int ResultCellWidth = 600;
         protected const int DocumentWidth = 10000;
         // Creates a WordprocessingDocument.
@@ -25,7 +25,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
         public string FirstPageHeaderText = string.Empty;
         public string AnotherPageHeaderText = string.Empty;
         public string ProtocolTitle = "Паспорт качества";
-       
+
         protected string filePath;
         public void CreateDocument()
         {
@@ -2635,6 +2635,13 @@ namespace NormaLib.ProtocolBuilders.MSWord
                 });
                 cells[i].AppendChild<TableCellProperties>(props);
             }
+        }
+
+        protected Paragraph BreakePage()
+        {
+            return new Paragraph(
+                            new Run(
+                                    new Break() { Type = BreakValues.Page }));
         }
     }
     internal enum MSWordStringTypes

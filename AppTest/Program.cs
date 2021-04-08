@@ -99,7 +99,7 @@ namespace AppTest
             DBEntityTable cables_table = Cable.get_all_as_table();
             foreach(Cable cable in cables_table.Rows)
             {
-                CableTestIni f = new CableTestIni(1);
+                CableTestIni f = new CableTestIni(3);
                 f.SourceCable = cable;
                 Random r = new Random();
                 MeasurePointsHandler handler = new MeasurePointsHandler((point) => { f.SetMeasurePointValue(point, (float)r.Next(100, 125)); });

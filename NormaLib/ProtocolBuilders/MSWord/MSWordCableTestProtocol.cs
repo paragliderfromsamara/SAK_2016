@@ -58,12 +58,12 @@ namespace NormaLib.ProtocolBuilders.MSWord
         private IEnumerable<OpenXmlElement> BuildPrimaryParametersTable(TestedCableStructure structure)
         {
             List<OpenXmlElement> tablesForAdd = new List<OpenXmlElement>();
-            uint[]tst = structure.TestedElements;
+            uint[] tst = structure.TestedElements;
             Debug.WriteLine($"{(structure.OwnCable as TestedCable).CableTest.TestResults.Count}");
             int maxCols = MaxColsPerPage;
             int colsCount = 1; //Первая колонка номер элемента
             bool progrBarIsInited = false;
-            
+
             List<MeasuredParameterType> typesForTable = new List<MeasuredParameterType>();
 
             for (int i = 0; i < structure.TestedParameterTypes.Rows.Count; i++)
@@ -79,7 +79,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
                     //statusPanel.SetBarPosition("Таблица перв. параметров", 10);
                     //    progrBarIsInited = true;
                     //}
-                    MeasurePointMap map = new MeasurePointMap(structure, mpt.ParameterTypeId); 
+                    MeasurePointMap map = new MeasurePointMap(structure, mpt.ParameterTypeId);
                     if ((colsCount + map.MeasurePointsPerElement) > maxCols)
                     {
                         needToBuildTable = true;
@@ -110,10 +110,10 @@ namespace NormaLib.ProtocolBuilders.MSWord
                 Table table = InitPrimaryParametersTable(tp);
                 table.Append(BuildPrimaryParametersTableHeader(tp, measuredParameterTypes, structure));
                 table.Append(BuildMeasureResultRowsOfPrimaryParams(tp, measuredParameterTypes, structure));
-                
+
                 ///Fill Table Before
                 elements.Add(table);
-
+                if (!tp.IsLastTablePage) elements.Add(BreakePage());
                 /*
                 Debug.WriteLine($"-----------------------------------------------");
                 Debug.WriteLine($"PageIndex = {tp.TablePageIndex}");
@@ -139,10 +139,10 @@ namespace NormaLib.ProtocolBuilders.MSWord
             {
                 TableRow row = new TableRow() { RsidTableRowMarkRevision = "00586296", RsidTableRowAddition = "00C644DE", RsidTableRowProperties = "001409DE" };
                 row.Append(BuildTableRowPropertiesForHeaderRows());
-                for(int subTableIdx = 0; subTableIdx < tp.SubTablesCount; subTableIdx++)
+                for (int subTableIdx = 0; subTableIdx < tp.SubTablesCount; subTableIdx++)
                 {
                     bool isLastTableFill = rowIdx >= elementsPerTableColumn;
-                    if (isLastTableFill && tp.SubTablesCount-1 != subTableIdx)
+                    if (isLastTableFill && tp.SubTablesCount - 1 != subTableIdx)
                     {
                         TableCell cell = BuildCell();
                         TableCellBorders style = BuildBordersStyle(0, 0, 0, 0);
@@ -163,10 +163,10 @@ namespace NormaLib.ProtocolBuilders.MSWord
                     else
                     {
                         int elIndex = rowIdx + subTableIdx * elementsPerTableColumn;
-                        bool isMaxValueRow = elIndex == elementsNumber;
-                        bool isAverageValueRow = elIndex == elementsNumber + 1;
-                        bool isMinValueRow = elIndex == elementsNumber + 2;
-                        bool drawBottomBorder = (rowIdx == elementsPerTableColumn - 1 && subTableIdx < tp.SubTablesCount - 1) || (rowIdx == lastTableElementsNum - 1 && subTableIdx == tp.SubTablesCount -1);
+                        bool isMaxValueRow = elIndex == elementsNumber + 1;
+                        bool isAverageValueRow = elIndex == elementsNumber + 2;
+                        bool isMinValueRow = elIndex == elementsNumber + 3;
+                        bool drawBottomBorder = (rowIdx == elementsPerTableColumn - 1 && subTableIdx < tp.SubTablesCount - 1) || (rowIdx == lastTableElementsNum - 1 && subTableIdx == tp.SubTablesCount - 1);
                         if (isMaxValueRow || isAverageValueRow || isMinValueRow)
                         {
                             string cellNumName = string.Empty;
@@ -180,18 +180,27 @@ namespace NormaLib.ProtocolBuilders.MSWord
                             foreach (MeasuredParameterType pType in measuredParameterTypes)
                             {
                                 MeasurePointMap map = new MeasurePointMap(structure, pType.ParameterTypeId);
-                                for (int measIdx = 0; measIdx < map.MeasurePointsPerElement; measIdx++)
+                                TableCell statCell = BuildCell("stat");
+                                List<TableCell> cells = new List<TableCell>() { statCell };
+                                TableCellBorders styleOfValueCell = BuildBordersStyle(isMaxValueRow ? (uint)2 : 0, (drawBottomBorder ? (uint)2 : 0), 2, 2);
+                                SetCellBordersStyle(statCell, styleOfValueCell);
+
+                                for (int measIdx = 1; measIdx < map.MeasurePointsPerElement; measIdx++)
                                 {
-                                    TableCell cellValue = BuildCell($"m_{measIdx}");
-                                    TableCellBorders styleOfValueCell = BuildBordersStyle(0, (drawBottomBorder ? (uint)2 : 0), 2, 2);
-                                    SetCellBordersStyle(cellValue, styleOfValueCell);
-                                    row.Append(cellValue);
+                                    cells.Add(BuildCell());
+                                    //TableCellBorders styleOfValueCell = BuildBordersStyle(isMaxValueRow ? (uint)2 : 0, (drawBottomBorder ? (uint)2 : 0), 2, 2);
+                                    //SetCellBordersStyle(cellValue, styleOfValueCell);
+                                    //row.Append(cellValue);
                                 }
+                                if (map.MeasurePointsPerElement > 1) HorizontalMergeCells(cells.ToArray());
+                                row.Append(cells);
                             }
                         }
                         else
                         {
-                            TableCell cellNumber = BuildCell($"{elIndex + 1}");
+                            elIndex = elIndex + tp.StartElementIndex;
+                            int elNumber = (int)structure.TestedElements[elIndex];
+                            TableCell cellNumber = BuildCell($"{structure.TestedElements[elIndex]}");
                             TableCellBorders style = BuildBordersStyle(0, (drawBottomBorder ? (uint)2 : 0), 2, 2);
                             SetCellBordersStyle(cellNumber, style);
                             row.Append(cellNumber);
@@ -200,7 +209,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
                                 MeasurePointMap map = new MeasurePointMap(structure, pType.ParameterTypeId);
                                 for (int measIdx = 0; measIdx < map.MeasurePointsPerElement; measIdx++)
                                 {
-                                    TableCell cellValue = BuildCell($"m_{measIdx}");
+                                    TableCell cellValue = BuildCell(new Run[] { GetTestResult(elNumber, measIdx+1, (int)pType.ParameterTypeId, structure) });
                                     TableCellBorders styleOfValueCell = BuildBordersStyle(0, (drawBottomBorder ? (uint)2 : 0), 2, 2);
                                     SetCellBordersStyle(cellValue, styleOfValueCell);
                                     row.Append(cellValue);
@@ -214,6 +223,15 @@ namespace NormaLib.ProtocolBuilders.MSWord
                 rowElements.Add(row);
             }
             return rowElements;
+        }
+
+        private Run GetTestResult(int element_number, int measure_number, int parameter_type_id, TestedCableStructure structure)
+        {
+            string v = string.Empty;
+            CableTestResult[] results = (CableTestResult[])structure.TestResults.Select($"{CableTestResult.StructElementNumber_ColumnName} = {element_number} AND {CableTestResult.MeasureOnElementNumber_ColumnName} = {measure_number} AND {MeasuredParameterType.ParameterTypeId_ColumnName} = {parameter_type_id}");
+            CableTestResult result = results.Length > 0 ? results[0] : null;
+            v = result == null ? "-" : result.Result.ToString();
+            return AddTableCellRun(v);
         }
 
         private IEnumerable<OpenXmlElement> BuildPrimaryParametersTableHeader(PrimaryParamsTablePage tp, MeasuredParameterType[] measuredParameterTypes, TestedCableStructure structure)
@@ -440,6 +458,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
                 tPlan.RowsPerSubTableNum = (elsNumOnPage / subTablesNum) + headerRowsAmount;
                 tPlan.LastSubTableRowsNum = isLastTable ? tPlan.RowsPerSubTableNum + elsNumOnPage % subTablesNum + statRowsAmount : tPlan.RowsPerSubTableNum;
                 list.Add(tPlan);
+                startIndex = tPlan.EndElementIndex + 1;
             }
 
             return list;
@@ -450,7 +469,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
             int tableNum = MaxColsPerPage / colsPerPage;
             while(tableNum > 1)
             {
-                if (tableNum > structure.TestedElements.Length)
+                if (tableNum > structure.TestedElements.Length || structure.TestedElements.Length / tableNum < 3)
                 {
                     tableNum--;
                 }
