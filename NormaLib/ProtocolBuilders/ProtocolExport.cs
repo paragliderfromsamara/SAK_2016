@@ -14,8 +14,8 @@ namespace NormaLib.ProtocolBuilders
     {
         public static bool ExportTo(CableTest cable_test, string path, NormaExportType export)
         {
-            try
-            {
+            //try
+            //{
                 CheckPath(path);
                 switch(export)
                 {
@@ -28,11 +28,11 @@ namespace NormaLib.ProtocolBuilders
                         break;
                 }
                 return true;
-            }catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка при формировании протокола", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
+            //}catch(Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Ошибка при формировании протокола", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return false;
+            //}
         }
 
         private static void CheckPath(string path)

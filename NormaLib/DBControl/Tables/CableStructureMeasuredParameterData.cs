@@ -770,7 +770,7 @@ namespace NormaLib.DBControl.Tables
 
         public static DBEntityTable get_tested_structure_measured_parameters(TestedCableStructure cable_structure)
         {
-            DBEntityTable t = get_structure_measured_parameters(cable_structure.CableStructureId);
+            DBEntityTable t = get_tested_structure_measured_parameters(cable_structure.CableStructureId);
             foreach (TestedStructureMeasuredParameterData md in t.Rows)
             {
                 md.AssignedStructure = cable_structure;

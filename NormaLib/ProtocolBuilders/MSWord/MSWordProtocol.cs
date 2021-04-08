@@ -15,7 +15,10 @@ namespace NormaLib.ProtocolBuilders.MSWord
 {
     internal class MSWordProtocol
     {
-        protected const int MaxColsPerPage = 20;
+        protected int MaxColsPerPage => DocumentWidth / ResultCellWidth;
+        protected const int MaxRowsPerPage = 50;
+        protected const int ResultCellWidth = 600;
+        protected const int DocumentWidth = 10000;
         // Creates a WordprocessingDocument.
         public string CreatorName = "ООО \"НПП \"Норма\"";
         public string EditorName = "ООО \"НПП \"Норма\"";
@@ -366,7 +369,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
             M.DisplayDefaults displayDefaults1 = new M.DisplayDefaults();
             M.LeftMargin leftMargin324 = new M.LeftMargin() { Val = (UInt32Value)0U };
             M.RightMargin rightMargin324 = new M.RightMargin() { Val = (UInt32Value)0U };
-            M.DefaultJustification defaultJustification1 = new M.DefaultJustification() { Val = M.JustificationValues.CenterGroup };
+            M.DefaultJustification defaultJustification1 = new M.DefaultJustification() { Val = M.JustificationValues.Left };
             M.WrapIndent wrapIndent1 = new M.WrapIndent() { Val = (UInt32Value)1440U };
             M.IntegralLimitLocation integralLimitLocation1 = new M.IntegralLimitLocation() { Val = M.LimitLocationValues.SubscriptSuperscript };
             M.NaryLimitLocation naryLimitLocation1 = new M.NaryLimitLocation() { Val = M.LimitLocationValues.UnderOver };
@@ -2508,6 +2511,136 @@ namespace NormaLib.ProtocolBuilders.MSWord
             document.PackageProperties.LastModifiedBy = EditorName;
         }
 
+        protected TableRowProperties BuildTableRowPropertiesForHeaderRows()
+        {
+            TableRowProperties tableRowProperties1 = new TableRowProperties();
+            TableJustification tableJustification2 = new TableJustification() { Val = TableRowAlignmentValues.Left };
+            tableRowProperties1.Append(tableJustification2);
+            return tableRowProperties1;
+        }
 
+        protected static TableCell BuildCell(Paragraph p)
+        {
+            TableCell cell = new DocumentFormat.OpenXml.Wordprocessing.TableCell();
+            cell.Append(new TableCellProperties(
+                                            new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = ResultCellWidth.ToString() },
+                                            new TableCellMargin(
+                                                                        new TableCellRightMargin() { Type = TableWidthValues.Dxa, Width = 0 },
+                                                                        new TableCellLeftMargin() { Type = TableWidthValues.Dxa, Width = 0 }
+                                                                        ),
+
+                                            new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center }
+                                            )
+
+            );
+            cell.Append(p);
+            return cell;
+        }
+
+        protected TableCell BuildCell(Run[] runList)
+        {
+            Paragraph cellParagraph = BuildTableCellParagraph();
+            cellParagraph.Append(runList);
+            return BuildCell(cellParagraph);
+        }
+
+        protected TableCell BuildCell(string content = "")
+        {
+            Run cellTextRun = AddTableCellRun(content);
+            Paragraph cellParagraph = BuildTableCellParagraph();
+            cellParagraph.Append(cellTextRun);
+            return BuildCell(cellParagraph);
+        }
+
+        protected Paragraph BuildTableCellParagraph(JustificationValues alignment = JustificationValues.Center)
+        {
+            Paragraph paragraph = new Paragraph() { RsidParagraphMarkRevision = "00586296", RsidParagraphAddition = "00C644DE", RsidParagraphProperties = "007B7D44", RsidRunAdditionDefault = "00C644DE" };
+
+            ParagraphProperties paragraphProperties21 = new ParagraphProperties();
+            ParagraphStyleId paragraphStyleId19 = new ParagraphStyleId() { Val = "a4" };
+            Justification justification19 = new Justification() { Val = alignment };
+
+            ParagraphMarkRunProperties paragraphMarkRunProperties19 = new ParagraphMarkRunProperties();
+            FontSizeComplexScript fontSizeComplexScript41 = new FontSizeComplexScript() { Val = "18" };
+
+            paragraphMarkRunProperties19.Append(fontSizeComplexScript41);
+
+            paragraphProperties21.Append(paragraphStyleId19);
+            paragraphProperties21.Append(justification19);
+            paragraphProperties21.Append(paragraphMarkRunProperties19);
+
+            paragraph.Append(paragraphProperties21);
+            paragraph.Append();
+            return paragraph;
+        }
+
+
+
+
+
+        protected Run AddTableCellRun(string text, MSWordStringTypes strType = MSWordStringTypes.Typical, bool IsBold = false, bool IsItalic = false)
+        {
+            Run run = new Run() { RsidRunProperties = "00586296" };
+            var props = new RunProperties();
+            if (strType != MSWordStringTypes.Typical)
+            {
+                FontSizeComplexScript fontSizeComplexScript2 = new FontSizeComplexScript() { Val = "18" };
+                props.Append(fontSizeComplexScript2);
+            }
+            else
+            {
+                if (IsBold) props.Append(new Bold());
+                if (IsItalic) props.Append(new Italic());
+            }
+            switch (strType)
+            {
+                case MSWordStringTypes.Subscript:
+                    props.Append(new VerticalTextAlignment() { Val = VerticalPositionValues.Subscript });
+                    break;
+                case MSWordStringTypes.Superscript:
+                    props.Append(new VerticalTextAlignment() { Val = VerticalPositionValues.Superscript });
+                    break;
+            }
+            run.Append(props);
+            run.Append(new Text { Text = text, Space = SpaceProcessingModeValues.Preserve });// (text, SpaceProcessingModeValues=));
+            return run;
+        }
+
+        protected TableCellBorders BuildBordersStyle(uint top = 2, uint bottom = 2, uint left = 2, uint right = 2)
+        {
+            TableCellBorders borderStyle = new DocumentFormat.OpenXml.Wordprocessing.TableCellBorders(
+                new RightBorder() { Size = right < 2 ? 2 : right, Val = new EnumValue<BorderValues>(right != 0 ? BorderValues.Single : BorderValues.None) },
+                new LeftBorder() { Size = left < 2 ? 2 : left, Val = new EnumValue<BorderValues>(left != 0 ? BorderValues.Single : BorderValues.None) },
+                new TopBorder() { Size = top < 2 ? 2 : top, Val = new EnumValue<BorderValues>(top != 0 ? BorderValues.Single : BorderValues.None) },
+                new BottomBorder() { Size = bottom < 2 ? 2 : bottom, Val = new EnumValue<BorderValues>(bottom != 0 ? BorderValues.Single : BorderValues.None) }
+                );
+            return borderStyle;
+        }
+
+        protected void SetCellBordersStyle(TableCell cell, TableCellBorders bordersStyle)
+        {
+            TableCellProperties props = cell.GetFirstChild<TableCellProperties>();
+            props.RemoveAllChildren<TableCellBorders>();
+            props.Append(bordersStyle);
+        }
+
+        protected void HorizontalMergeCells(TableCell[] cells)
+        {
+            for (int i = 0; i < cells.Length; i++)
+            {
+                TableCellProperties props = new TableCellProperties();
+                props.Append(new HorizontalMerge()
+                {
+                    Val = i == 0 ? MergedCellValues.Restart : MergedCellValues.Continue
+                });
+                cells[i].AppendChild<TableCellProperties>(props);
+            }
+        }
+    }
+    internal enum MSWordStringTypes
+    {
+        Typical,
+        Subscript,
+        Superscript
     }
 }

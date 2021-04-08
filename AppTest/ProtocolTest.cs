@@ -29,20 +29,20 @@ namespace AppTest
 
         private static void TestCableProtocolBuilder()
         {
-            try
-            {
+            //try
+            //{
                 DBEntityTable tests = CableTest.find_all();
                 if (tests.Rows.Count == 0) throw new Exception("Отсутствуют записи в таблице испытаний кабеля");
                 TestCableProtocolBuilderToMsWord(tests.Rows[0] as CableTest);
                 Console.WriteLine("TestCableProtocolBuilder Ok");
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("TestCableProtocolBuilder Error");
-                Console.WriteLine("------------------------------");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine("------------------------------");
-            }
+            //}
+            //catch(Exception ex)
+            //{
+            //    Console.WriteLine("TestCableProtocolBuilder Error");
+            //    Console.WriteLine("------------------------------");
+            //    Console.WriteLine(ex.Message);
+            //    Console.WriteLine("------------------------------");
+            //}
 
         }
 
