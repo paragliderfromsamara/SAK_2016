@@ -29,7 +29,7 @@ namespace AppTest
             ProtocolTest.Start();
             //GetTkcIzol();
             //GetTablesList();
-            //TestOfCableTest();
+            // TestOfCableTest();
             //CreateDump();
             Console.ReadLine();
         }
@@ -104,8 +104,35 @@ namespace AppTest
                 f.TestedCableLength = 3000;
                 f.SourceCable = cable;
                 Random r = new Random();
-                MeasurePointsHandler handler = new MeasurePointsHandler((point) => { f.SetMeasurePointValue(point, (float)r.Next(100, 125)); });
+                MeasurePointsHandler handler = new MeasurePointsHandler((point) => {
+                    CableStructure s = ((CableStructure[])cable.CableStructures.Select($"{CableStructure.StructureId_ColumnName} = {point.StructureId}"))[0];
+                    CableStructureMeasuredParameterData data = ((CableStructureMeasuredParameterData[])s.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {point.ParameterTypeId}"))[0];
+                    int startValue = data.HasMinLimit ? (int)data.MinValue : 0;
+                    int endValue = data.HasMaxLimit ? (int)data.MaxValue : (int)data.MinValue * 2;
+                    f.SetMeasurePointValue(point, (float)r.Next(startValue, endValue));
+                });
+
                 handler.ProcessCable(f.SourceCable);
+
+foreach(CableStructure s in cable.CableStructures.Rows)
+{
+    MeasurePointMap map = new MeasurePointMap(s, MeasuredParameterType.Calling);
+    if (s.RealAmount > 4)
+    {
+        for (uint i = LeadTestStatus.Ragged; i < LeadTestStatus.Broken; i++)
+        {
+            int v = r.Next(0, 10);
+            if (v > 5)
+            {
+                int e = r.Next(1, (int)s.RealAmount);
+                int m = map.MeasurePointsPerElement > 1 ? r.Next(1, map.MeasurePointsPerElement) : 1;
+                map.SetMeasurePoint(e-1, m-1);
+                f.SetLeadStatusOfPoint(map.CurrentPoint, (int)i);
+            }
+        }
+    }
+
+}
                 f.SaveTest();
             }
 

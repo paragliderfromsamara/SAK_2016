@@ -7,6 +7,7 @@ using NormaLib.DBControl.Tables;
 using NormaLib.ProtocolBuilders.MSWord;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace NormaLib.ProtocolBuilders
 {
@@ -25,6 +26,7 @@ namespace NormaLib.ProtocolBuilders
                         protocol.FirstPageHeaderText = "ООО \"НПП \"Норма\"";
                         protocol.AnotherPageHeaderText = cable_test.TestedCable.FullName;
                         protocol.CreateDocument();
+                        Process.Start(protocol.FilePath);
                         break;
                 }
                 return true;

@@ -68,7 +68,6 @@ namespace NormaLib.Measure
             if (cableTest.Save())
             {
                 TestedCable cable = TestedCable.create_for_test(cableTest);
-                int idx = 0;
                 foreach(TestedCableStructure tcs in cable.CableStructures.Rows)
                 {
                     CableStructure sourceStrucure = GetSourceStructureById(tcs.SourceStructureId);
@@ -393,7 +392,7 @@ namespace NormaLib.Measure
         {
             string section = GetTestResultSectionName((int)structure.CableStructureId);
             MeasurePointMap point_map = new MeasurePointMap(structure, MeasuredParameterType.Calling);
-            Dictionary<int, int> affected_elements = new Dictionary<int, int>();
+            Dictionary<int, uint> affected_elements = new Dictionary<int, uint>();
             do
             {
                 string val_attr_name;
@@ -401,8 +400,8 @@ namespace NormaLib.Measure
                 val_attr_name = GetTestValueAttrName((int)MeasuredParameterType.Calling, point_map.CurrentPoint.PointIndex);
                 if (file.KeyExists(val_attr_name, section))
                 {
-                    int sts = file.ReadInt(val_attr_name, section);
-                    if (sts != (int)LeadTestStatus.Ok)
+                    uint sts = (uint)file.ReadInt(val_attr_name, section);
+                    if (sts != LeadTestStatus.Ok)
                     {
                         affected_elements.Add(point_map.CurrentElementNumber, sts);
                     }

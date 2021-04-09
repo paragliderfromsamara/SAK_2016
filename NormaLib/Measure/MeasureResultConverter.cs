@@ -15,8 +15,9 @@ namespace NormaLib.Measure
         uint parameter_type_id;
         float cable_length;
         float bringing_length;
+        
         public double ConvertedValue;
-        public double ConvertedValueRounded => Math.Round(ConvertedValue, 1, MidpointRounding.AwayFromZero);
+        public double ConvertedValueRounded => RoundValue(ConvertedValue);// Math.Round(ConvertedValue, GetDecimalPartLengthByValue(ConvertedValue), MidpointRounding.AwayFromZero);
         public string ConvertedValueRoundedLabel
         {
             get
@@ -36,6 +37,23 @@ namespace NormaLib.Measure
         public double RawValue => raw_value;
         CableStructureMeasuredParameterData parameterData;
         public CableStructureMeasuredParameterData ParameterData => parameterData;
+
+        private static int GetDecimalPartLengthByValue(double val)
+        {
+            if (val < 10) return 3;
+            else if (val < 100) return 2;
+            else if (val < 1000) return 1;
+            else return 0;
+        }
+
+        public static double RoundValue(double value, int decimal_part)
+        {
+            return Math.Round(value, decimal_part, MidpointRounding.AwayFromZero);
+        }
+        public static double RoundValue(double value)
+        {
+            return RoundValue(value, GetDecimalPartLengthByValue(value));
+        }
 
         public MeasureResultConverter(double _raw_value, CableStructureMeasuredParameterData _parameter_data, float _cable_length = 1000f, float _material_coeff = 1.0f)
         {

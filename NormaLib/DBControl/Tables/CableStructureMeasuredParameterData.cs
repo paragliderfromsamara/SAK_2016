@@ -4,6 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NormaLib.Measure;
+using System.Diagnostics;
 
 namespace NormaLib.DBControl.Tables
 {
@@ -779,6 +781,76 @@ namespace NormaLib.DBControl.Tables
             }
             return t;
         }
+
+        #region Results
+
+        private DBEntityTable test_results = null;
+        public DBEntityTable TestResults
+        {
+            get
+            {
+                if (test_results == null)
+                {
+                    max_result_value = float.MinValue;
+                    min_result_value = float.MaxValue;
+                    average_result_value = 0;
+                    List<uint> normalElements = new List<uint>();
+                    for (uint i = 0; i < AssignedStructure.RealAmount; i++) normalElements.Add(i+1);
+                    test_results = new DBEntityTable(typeof(CableTestResult));
+                    string q = $"{MeasuredParameterType.ParameterTypeId_ColumnName} = {ParameterTypeId}";
+                    if (IsFreqParameter) q += $" AND {FrequencyRange.FreqRangeId_ColumnName} = {FrequencyRangeId}";
+                    ((CableTestResult[])(AssignedStructure as TestedCableStructure).TestResults.Select(q)).CopyToDataTable(test_results, LoadOption.Upsert);
+                    foreach (CableTestResult r in test_results.Rows)
+                    {
+                        float cableLength = (AssignedStructure.OwnCable as TestedCable).CableTest.CableLength;
+                        MeasureResultConverter c = new MeasureResultConverter(r.Result, this, cableLength);
+                        
+                        r.Result = (float)c.ConvertedValueRounded;
+                        NormDeterminant d = new NormDeterminant(this, r.Result);
+                        r.IsOnNorma = d.IsOnNorma && !(AssignedStructure as TestedCableStructure).AffectedElements.ContainsKey((int)r.ElementNumber);
+                        if (!r.IsOnNorma)
+                        {
+                            if (normalElements.Contains(r.ElementNumber)) normalElements.Remove(r.ElementNumber);
+                        }
+                        r.AcceptChanges();
+                        if (min_result_value > r.Result) min_result_value = r.Result;
+                        if (max_result_value < r.Result) max_result_value = r.Result;
+                        average_result_value += r.Result;
+                    }
+                    if (test_results.Rows.Count > 0) average_result_value = (float)(average_result_value / (float)test_results.Rows.Count);
+                    measured_percent = ((float)normalElements.Count / (float)AssignedStructure.RealAmount) * 100.0f;
+                    good_elements = normalElements.ToArray();
+                    Debug.WriteLine(string.Join(", ", good_elements));
+                }
+                return test_results;
+            }
+        }
+
+        public CableTestResult GetResult(uint element_number, uint measure_number, uint generator_element_number = 0, uint generator_measure_number = 0)
+        {
+            string q = $"{CableTestResult.StructElementNumber_ColumnName} = {element_number} AND {CableTestResult.MeasureOnElementNumber_ColumnName} = {measure_number}";
+            if (generator_element_number > 0) q += $" AND {CableTestResult.ElementNumberOnGenerator_ColumnName} = {generator_element_number} AND {CableTestResult.PairNumberOnGenerator_ColumnName} = {generator_measure_number}";
+            CableTestResult[] results = (CableTestResult[])TestResults.Select(q);
+            Debug.WriteLine(q);
+            if (results.Length > 0) return results[0];
+            else return null;
+        }
+
+        private float max_result_value;
+        private float min_result_value;
+        private float average_result_value;
+        private uint[] good_elements;
+        private float measured_percent;
+
+        public float MinResultValue => (float)MeasureResultConverter.RoundValue(min_result_value);
+        public float MaxResultValue => (float)MeasureResultConverter.RoundValue(max_result_value);
+        public float AverageResultValue => (float)MeasureResultConverter.RoundValue(average_result_value);
+        public uint[] GoodElements => good_elements;
+        public float MeasuredPercent => (float)MeasureResultConverter.RoundValue(measured_percent, 1);
+
+
+        #endregion
+
 
     }
 }

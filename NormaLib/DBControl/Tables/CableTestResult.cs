@@ -156,6 +156,8 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        public bool IsOnNorma = true;
+
         public uint ReceiverElementNumber
         {
             get

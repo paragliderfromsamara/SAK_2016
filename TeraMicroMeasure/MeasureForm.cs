@@ -221,8 +221,8 @@ namespace TeraMicroMeasure
                 {
                     measureResultDataGrid.Rows[measurePointMap.CurrentPoint.ElementIndex].Cells[ElementNumber.Index + 1 + i].Value = status.StatusTitle;
                 }
-                if (currentStructure.AffectedElements.ContainsKey(measurePointMap.CurrentElementNumber)) currentStructure.AffectedElements[measurePointMap.CurrentElementNumber] = (int)status.StatusId;
-                else currentStructure.AffectedElements.Add(measurePointMap.CurrentElementNumber, (int)status.StatusId);
+                if (currentStructure.AffectedElements.ContainsKey(measurePointMap.CurrentElementNumber)) currentStructure.AffectedElements[measurePointMap.CurrentElementNumber] = status.StatusId;
+                else currentStructure.AffectedElements.Add(measurePointMap.CurrentElementNumber, status.StatusId);
             }
             if (testFile.TestStatus == CableTestStatus.NotStarted)
             {

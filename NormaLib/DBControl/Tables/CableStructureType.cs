@@ -95,6 +95,31 @@ namespace NormaLib.DBControl.Tables
         public const string MeasuredParametersList_ColumnName = "structure_measured_parameters";
         #endregion
 
+        /// <summary>
+        /// Возвращает название элемента структуры в родительском падеже
+        /// </summary>
+        /// <returns></returns>
+        public string StructureTypeName_RodPadej_Multiple
+        {
+            get
+            {
+                switch (StructureTypeId)
+                {
+                    case Lead:
+                        return "жил";
+                    case Pair:
+                        return "пар";
+                    case Triplet:
+                        return "троек";
+                    case Quattro:
+                    case HightFreqQuattro:
+                        return "четвёрок";
+                    default:
+                        return "элементов";
+                }
+            }
+        }
+
         public DBEntityTable MeasuredParameterTypes
         {
             get

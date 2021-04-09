@@ -26,6 +26,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
         public string AnotherPageHeaderText = string.Empty;
         public string ProtocolTitle = "Паспорт качества";
 
+        public string FilePath => filePath;
         protected string filePath;
         public void CreateDocument()
         {
@@ -2519,7 +2520,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
             return tableRowProperties1;
         }
 
-        protected static TableCell BuildCell(Paragraph p)
+        protected TableCell BuildCell(Paragraph p)
         {
             TableCell cell = new DocumentFormat.OpenXml.Wordprocessing.TableCell();
             cell.Append(new TableCellProperties(
@@ -2539,20 +2540,25 @@ namespace NormaLib.ProtocolBuilders.MSWord
 
         protected TableCell BuildCell(Run[] runList)
         {
-            Paragraph cellParagraph = BuildTableCellParagraph();
+            Paragraph cellParagraph = BuildParagraph();
             cellParagraph.Append(runList);
             return BuildCell(cellParagraph);
         }
 
         protected TableCell BuildCell(string content = "")
         {
-            Run cellTextRun = AddTableCellRun(content);
-            Paragraph cellParagraph = BuildTableCellParagraph();
+            Run cellTextRun = AddRun(content);
+            Paragraph cellParagraph = BuildParagraph();
             cellParagraph.Append(cellTextRun);
             return BuildCell(cellParagraph);
         }
 
-        protected Paragraph BuildTableCellParagraph(JustificationValues alignment = JustificationValues.Center)
+        protected TableCell BuildCell(Run run)
+        {
+            return BuildCell(new Run[] { run });
+        }
+
+        protected Paragraph BuildParagraph(JustificationValues alignment = JustificationValues.Center)
         {
             Paragraph paragraph = new Paragraph() { RsidParagraphMarkRevision = "00586296", RsidParagraphAddition = "00C644DE", RsidParagraphProperties = "007B7D44", RsidRunAdditionDefault = "00C644DE" };
 
@@ -2574,11 +2580,19 @@ namespace NormaLib.ProtocolBuilders.MSWord
             return paragraph;
         }
 
+        protected Paragraph BuildParagraph(Run run, JustificationValues alignment = JustificationValues.Center)
+        {
+            return BuildParagraph(new Run[] { run }, alignment);
+        }
 
+        protected Paragraph BuildParagraph(Run[] textRuns, JustificationValues alignment = JustificationValues.Center)
+        {
+            Paragraph p = BuildParagraph(alignment);
+            p.Append(textRuns);
+            return p;
+        }
 
-
-
-        protected Run AddTableCellRun(string text, MSWordStringTypes strType = MSWordStringTypes.Typical, bool IsBold = false, bool IsItalic = false)
+        protected Run AddRun(string text, MSWordStringTypes strType = MSWordStringTypes.Typical, bool IsBold = false, bool IsItalic = false)
         {
             Run run = new Run() { RsidRunProperties = "00586296" };
             var props = new RunProperties();

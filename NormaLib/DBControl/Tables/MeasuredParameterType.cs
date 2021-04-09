@@ -86,10 +86,8 @@ namespace NormaLib.DBControl.Tables
 
         public static MeasuredParameterType[] get_all_by_ids_as_array(uint[] ids)
         {
-            List<MeasuredParameterType> types = new List<MeasuredParameterType>();
-            DBEntityTable t = get_all_by_ids(ids);
-            foreach (MeasuredParameterType type in t.Rows) types.Add(type);
-            return types.ToArray();
+            DBEntityTable t = get_all_by_ids(ids);            
+            return ((MeasuredParameterType[])t.RowsAsArray());//types.ToArray();
         }
 
         public static DBEntityTable get_parameter_types_for_cable_structures()
@@ -101,13 +99,18 @@ namespace NormaLib.DBControl.Tables
 
         public static DBEntityTable get_all_by_ids(uint[] ids)
         {
+            DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
+            ((MeasuredParameterType[])AllTypes.Select($"{ParameterTypeId_ColumnName} IN ({string.Join(",", ids)})")).CopyToDataTable(t, LoadOption.Upsert);
+            return t;
+            /*
             string idsStr = String.Empty;
             foreach(uint id in ids)
             {
                 if (!String.IsNullOrWhiteSpace(idsStr)) idsStr += ", ";
                 idsStr += id.ToString();
-            }
-            return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} IN ({idsStr})", typeof(MeasuredParameterType));
+            }*/
+
+            //return find_by_criteria($"WHERE {ParameterTypeId_ColumnName} IN ({idsStr})", typeof(MeasuredParameterType));
         }
 
 

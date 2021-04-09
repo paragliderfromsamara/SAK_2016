@@ -63,6 +63,23 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        public static string StatusTitle_Short(uint status_id)
+        {
+            switch (status_id)
+            {
+                case Ok:
+                    return "Годн.";
+                case Ragged:
+                    return "Обр.";
+                case Closured:
+                    return "Зам.";
+                case Broken:
+                    return "Проб.";
+                default:
+                    return "-";
+            }
+        }
+
         public const string StatusId_ColumnName = "status_id";
         public const string StatusTitle_ColumnName = "status_title";
 
