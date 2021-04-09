@@ -140,7 +140,12 @@ namespace NormaLib.Measure
             else
                 throw new MeasurePointException("Новая точка находится за пределами диапазона");
         }
-
+        public int GetPointIndex(uint element_number, uint element_point_number)
+        {
+            element_number--;
+            element_point_number--;
+            return GetPointIndex((int)element_number, (int)element_point_number);
+        }
         public int GetPointIndex(int element_index, int element_point_index)
         {
             return element_index * measurePointsPerElement + element_point_index;

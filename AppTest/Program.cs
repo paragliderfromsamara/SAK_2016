@@ -25,6 +25,7 @@ namespace AppTest
             //ExperimentFunc();
             //DBTest.Start();
             //DeviceTest.Start();
+            //
             ProtocolTest.Start();
             //GetTkcIzol();
             //GetTablesList();
@@ -100,6 +101,7 @@ namespace AppTest
             foreach(Cable cable in cables_table.Rows)
             {
                 CableTestIni f = new CableTestIni(3);
+                f.TestedCableLength = 3000;
                 f.SourceCable = cable;
                 Random r = new Random();
                 MeasurePointsHandler handler = new MeasurePointsHandler((point) => { f.SetMeasurePointValue(point, (float)r.Next(100, 125)); });

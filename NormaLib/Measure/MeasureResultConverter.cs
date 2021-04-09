@@ -16,7 +16,7 @@ namespace NormaLib.Measure
         float cable_length;
         float bringing_length;
         public double ConvertedValue;
-        public double ConvertedValueRounded => Math.Round(ConvertedValue, 3, MidpointRounding.AwayFromZero);
+        public double ConvertedValueRounded => Math.Round(ConvertedValue, 1, MidpointRounding.AwayFromZero);
         public string ConvertedValueRoundedLabel
         {
             get

@@ -228,10 +228,23 @@ namespace NormaLib.ProtocolBuilders.MSWord
         private Run GetTestResult(int element_number, int measure_number, int parameter_type_id, TestedCableStructure structure)
         {
             string v = string.Empty;
-            CableTestResult[] results = (CableTestResult[])structure.TestResults.Select($"{CableTestResult.StructElementNumber_ColumnName} = {element_number} AND {CableTestResult.MeasureOnElementNumber_ColumnName} = {measure_number} AND {MeasuredParameterType.ParameterTypeId_ColumnName} = {parameter_type_id}");
-            CableTestResult result = results.Length > 0 ? results[0] : null;
-            v = result == null ? "-" : result.Result.ToString();
-            return AddTableCellRun(v);
+            Run resultRun = null; 
+            if (structure.AffectedElements.ContainsKey(element_number))
+            {
+                resultRun = AddTableCellRun("-", MSWordStringTypes.Typical, true);
+            }else
+            {
+                TestedStructureMeasuredParameterData data = ((TestedStructureMeasuredParameterData[])structure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {parameter_type_id}"))[0];
+                MeasureResultConverter result = structure.GetValueByParameterData(data, (uint)element_number, (uint)measure_number);
+                if (result == null) resultRun = AddTableCellRun("-", MSWordStringTypes.Typical, true);
+                else
+                {
+                    NormDeterminant nrm = new NormDeterminant(data, result.ConvertedValueRounded);
+                    resultRun = AddTableCellRun(result.ConvertedValueRounded.ToString(), MSWordStringTypes.Typical, !nrm.IsOnNorma);
+                }
+                
+            }
+            return resultRun;
         }
 
         private IEnumerable<OpenXmlElement> BuildPrimaryParametersTableHeader(PrimaryParamsTablePage tp, MeasuredParameterType[] measuredParameterTypes, TestedCableStructure structure)

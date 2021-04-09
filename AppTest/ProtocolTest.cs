@@ -33,7 +33,7 @@ namespace AppTest
             //{
                 DBEntityTable tests = CableTest.find_all();
                 if (tests.Rows.Count == 0) throw new Exception("Отсутствуют записи в таблице испытаний кабеля");
-                TestCableProtocolBuilderToMsWord(tests.Rows[2] as CableTest);
+                TestCableProtocolBuilderToMsWord(tests.Rows[0] as CableTest);
                 Console.WriteLine("TestCableProtocolBuilder Ok");
             //}
             //catch(Exception ex)
