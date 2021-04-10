@@ -29,7 +29,7 @@ namespace AppTest
             ProtocolTest.Start();
             //GetTkcIzol();
             //GetTablesList();
-            // TestOfCableTest();
+            //TestOfCableTest();
             //CreateDump();
             Console.ReadLine();
         }

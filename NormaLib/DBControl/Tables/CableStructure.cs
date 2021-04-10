@@ -801,7 +801,7 @@ namespace NormaLib.DBControl.Tables
                 if (testedParametersIds == null)
                 {
                     List<uint> elNumbers = new List<uint>();
-                    foreach (CableTestResult r in TestResults.Rows) elNumbers.Add(r.ParameterTypeId);
+                    foreach (CableTestResult r in TestResults.Rows) if (r.ParameterTypeId != MeasuredParameterType.Calling) elNumbers.Add(r.ParameterTypeId);
                     IEnumerable<uint> vals = elNumbers.Distinct().OrderBy(x => x);
                     testedParametersIds = vals.ToArray();
                 }
@@ -913,15 +913,15 @@ namespace NormaLib.DBControl.Tables
                     TestedStructureMeasuredParameterData[] data = GetMeasureParameterDatasByParameterType(pType.ParameterTypeId);
                     foreach(TestedStructureMeasuredParameterData d in data)
                     {
-                        if (d.GoodElements.Length > 0)
-                        {
+                        //if (d.GoodElements.Length > 0)
+                        //{
                             temp = temp.Intersect(d.GoodElements.ToList());
-                            //Debug.WriteLine($"{string.Join(", ", temp)}");
-                        }
+                            Debug.WriteLine($"{string.Join(", ", temp)}");
+                        //}
                     }
                     //Debug.WriteLine($"{string.Join(", ", temp)}");
                 }
-                
+                Debug.WriteLine($"{string.Join(", ", temp)}");
                 return temp.Count();
             }
         } 
