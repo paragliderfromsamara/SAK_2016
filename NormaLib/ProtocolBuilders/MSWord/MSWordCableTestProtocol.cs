@@ -28,6 +28,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
                 body.Append(BuildHeaderParagraph());
                 body.Append(BuildParagraph(JustificationValues.Left));
             }
+            body.Append(BuildCableTestHeaderInfo());
             foreach (TestedCableStructure s in cableTest.TestedCable.CableStructures.Rows)
             {
                 //body.Append(new Paragraph());
@@ -36,6 +37,138 @@ namespace NormaLib.ProtocolBuilders.MSWord
             }
             return body;
         }
+        #region HeaderInfo Panel
+        private IEnumerable<OpenXmlElement> BuildCableTestHeaderInfo()
+        {
+            List<OpenXmlElement> els = new List<OpenXmlElement>();
+            Table table = BuildCableTestInfoTable();
+            TableRow row =  new TableRow() { RsidTableRowAddition = "00924D08", RsidTableRowProperties = "001D44D8" };
+            TableRow cableMarkRow = BuildCableMarkRow(); 
+            row.Append(BuildTestInfoTableLeftCell());
+            row.Append(BuildTestInfoTableCenterCell());
+            row.Append(BuildTestInfoTableRightCell());
+            table.Append(cableMarkRow, row);
+            els.Add(table);
+            return els;
+        }
+
+        private TableRow BuildCableMarkRow()
+        {
+            TableRow cableMarkRow = new TableRow() { RsidTableRowAddition = "00924D08", RsidTableRowProperties = "001D44D8" };
+            Paragraph p = BuildParagraph(JustificationValues.Left);
+            TableCellProperties props = new TableCellProperties();
+            TableCellWidth w = new TableCellWidth() { Width = $"{MaxColsPerPage*ResultCellWidth}"};
+            props.Append(w);
+            GridSpan gridSpan7 = new GridSpan() { Val = 3 };
+            props.Append(gridSpan7);
+            p.Append(AddRun($"Марка кабеля: "), AddRun($"{ cableTest.TestedCable.FullName}", MSWordStringTypes.Typical, true, true));
+            TableCell cableMarkCell = BuildCell(p);
+            cableMarkCell.Append(props);
+            cableMarkRow.Append(cableMarkCell);
+            return cableMarkRow;
+        }
+
+        private Table BuildCableTestInfoTable()
+        {
+            Table table1 = new Table();
+
+            TableProperties tableProperties1 = new TableProperties();
+            TableStyle tableStyle1 = new TableStyle() { Val = "a3" };
+            TableWidth tableWidth1 = new TableWidth() { Width = (MaxColsPerPage*ResultCellWidth).ToString(), Type = TableWidthUnitValues.Dxa };
+            TableIndentation tableIndentation1 = new TableIndentation() { Width = 0, Type = TableWidthUnitValues.Dxa };
+
+            TableBorders tableBorders1 = new TableBorders();
+            TopBorder topBorder1 = new TopBorder() { Val = BorderValues.None, Color = "auto", Size = (UInt32Value)0U, Space = (UInt32Value)0U };
+            LeftBorder leftBorder1 = new LeftBorder() { Val = BorderValues.None, Color = "auto", Size = (UInt32Value)0U, Space = (UInt32Value)0U };
+            BottomBorder bottomBorder1 = new BottomBorder() { Val = BorderValues.None, Color = "auto", Size = (UInt32Value)0U, Space = (UInt32Value)0U };
+            RightBorder rightBorder1 = new RightBorder() { Val = BorderValues.None, Color = "auto", Size = (UInt32Value)0U, Space = (UInt32Value)0U };
+            InsideHorizontalBorder insideHorizontalBorder1 = new InsideHorizontalBorder() { Val = BorderValues.None, Color = "auto", Size = (UInt32Value)0U, Space = (UInt32Value)0U };
+            InsideVerticalBorder insideVerticalBorder1 = new InsideVerticalBorder() { Val = BorderValues.None, Color = "auto", Size = (UInt32Value)0U, Space = (UInt32Value)0U };
+
+            tableBorders1.Append(topBorder1);
+            tableBorders1.Append(leftBorder1);
+            tableBorders1.Append(bottomBorder1);
+            tableBorders1.Append(rightBorder1);
+            tableBorders1.Append(insideHorizontalBorder1);
+            tableBorders1.Append(insideVerticalBorder1);
+            TableLayout tableLayout1 = new TableLayout() { Type = TableLayoutValues.Fixed };
+
+            TableCellMarginDefault tableCellMarginDefault1 = new TableCellMarginDefault();
+            TableCellLeftMargin tableCellLeftMargin1 = new TableCellLeftMargin() { Width = 28, Type = TableWidthValues.Dxa };
+            TableCellRightMargin tableCellRightMargin1 = new TableCellRightMargin() { Width = 28, Type = TableWidthValues.Dxa };
+
+            tableCellMarginDefault1.Append(tableCellLeftMargin1);
+            tableCellMarginDefault1.Append(tableCellRightMargin1);
+            TableLook tableLook1 = new TableLook() { Val = "04A0", FirstRow = true, LastRow = false, FirstColumn = true, LastColumn = false, NoHorizontalBand = false, NoVerticalBand = true };
+
+            tableProperties1.Append(tableStyle1);
+            tableProperties1.Append(tableWidth1);
+            tableProperties1.Append(tableIndentation1);
+            tableProperties1.Append(tableBorders1);
+            tableProperties1.Append(tableLayout1);
+            tableProperties1.Append(tableCellMarginDefault1);
+            tableProperties1.Append(tableLook1);
+
+            TableGrid tableGrid1 = new TableGrid();
+            GridColumn gridColumn1 = new GridColumn() { Width = $"{(MaxColsPerPage * ResultCellWidth)/3}" };
+            GridColumn gridColumn2 = new GridColumn() { Width = $"{(MaxColsPerPage * ResultCellWidth) / 3}" };
+            GridColumn gridColumn3 = new GridColumn() { Width = $"{(MaxColsPerPage * ResultCellWidth) / 3}" };
+
+            tableGrid1.Append(gridColumn1);
+            tableGrid1.Append(gridColumn2);
+            tableGrid1.Append(gridColumn3);
+
+            TableRow tableRow1 = new TableRow() { RsidTableRowAddition = "00924D08", RsidTableRowProperties = "001D44D8" };
+
+            TableCell tableCell1 = new TableCell();
+
+            TableCellProperties tableCellProperties1 = new TableCellProperties();
+            TableCellWidth tableCellWidth1 = new TableCellWidth() { Width = "7797", Type = TableWidthUnitValues.Dxa };
+
+            tableCellProperties1.Append(tableCellWidth1);
+
+            table1.Append(tableProperties1);
+            table1.Append(tableGrid1);
+
+            return table1;
+        }
+
+        private TableCell BuildTestInfoTableLeftCell()
+        {
+            TableCell cell = new TableCell();
+            Paragraph p1 = BuildParagraph(JustificationValues.Left);
+            Paragraph p2 = BuildParagraph(JustificationValues.Left);
+            Paragraph p3 = BuildParagraph(JustificationValues.Left);
+            p1.Append(AddRun($"Заказ № "));
+            p2.Append(AddRun($"Длина кабеля: {cableTest.CableLength} м"));
+            p3.Append(AddRun($"БРУТТО: "));
+            cell.Append(p1, p2, p3);
+            return cell;
+        }
+
+        private TableCell BuildTestInfoTableRightCell()
+        {
+            TableCell cell = new TableCell();
+            Paragraph p1 = BuildParagraph(JustificationValues.Left);
+            Paragraph p2 = BuildParagraph(JustificationValues.Left);
+            Paragraph p3 = BuildParagraph(JustificationValues.Left);
+            p1.Append(AddRun($"Тип барабана: {cableTest.TestedCable.FullName}"));
+            p2.Append(AddRun($"Температура: {cableTest.Temperature}°C")); 
+            p3.Append(AddRun($"Дата испытания: {cableTest.FinishedAt.ToString("dd.MM.yyyy")}"));
+            cell.Append(p1, p2, p3);
+            return cell;
+        }
+
+        private TableCell BuildTestInfoTableCenterCell()
+        {
+            TableCell cell = new TableCell();
+            Paragraph p1 = BuildParagraph(JustificationValues.Left);
+            p1.Append(AddRun($"№ барабана: "));
+            cell.Append(p1);
+            return cell;
+        }
+        #endregion
+
 
         private IEnumerable<OpenXmlElement> BuildStructureData(TestedCableStructure structure)
         {
