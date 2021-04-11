@@ -34,6 +34,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.buttonEntering = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -41,6 +42,7 @@
             // 
             this.passwordTextBox.Location = new System.Drawing.Point(3, 115);
             this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.PasswordChar = '•';
             this.passwordTextBox.Size = new System.Drawing.Size(281, 29);
             this.passwordTextBox.TabIndex = 1;
             // 
@@ -78,7 +80,7 @@
             this.buttonEntering.FlatAppearance.BorderSize = 0;
             this.buttonEntering.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonEntering.ForeColor = System.Drawing.Color.Black;
-            this.buttonEntering.Location = new System.Drawing.Point(3, 179);
+            this.buttonEntering.Location = new System.Drawing.Point(3, 189);
             this.buttonEntering.Name = "buttonEntering";
             this.buttonEntering.Size = new System.Drawing.Size(281, 44);
             this.buttonEntering.TabIndex = 5;
@@ -89,6 +91,7 @@
             // panel1
             // 
             this.panel1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Controls.Add(this.buttonEntering);
             this.panel1.Controls.Add(this.passwordTextBox);
             this.panel1.Controls.Add(this.label2);
@@ -98,6 +101,18 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(287, 249);
             this.panel1.TabIndex = 6;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkBox1.Location = new System.Drawing.Point(3, 150);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(235, 20);
+            this.checkBox1.TabIndex = 6;
+            this.checkBox1.Text = "Отобразить вводимые символы";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // SessionControlForm
             // 
@@ -123,5 +138,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonEntering;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
