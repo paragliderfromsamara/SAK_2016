@@ -15,6 +15,9 @@ using NormaLib.DBControl;
 using NormaLib.Measure;
 using NormaLib.UI;
 using System.Diagnostics;
+using NormaLib.SessionControl;
+using NormaLib.ProtocolBuilders;
+
 
 namespace TeraMicroMeasure
 {
@@ -27,6 +30,7 @@ namespace TeraMicroMeasure
         int clientID;
         bool MeasureIsStartedOnDevice;
 
+        private DBEntityTable BarabanTypes;
         private DBEntityTable LeadStatuses;
         private DBEntityTable Cables;
         private DBEntityTable MeasuredParameterTypes;
@@ -166,6 +170,7 @@ namespace TeraMicroMeasure
             LoadLeadStatuses();
             LoadMeasuredParameterTypes();
             LoadMeasuredParametersData();
+            LoadBarabanTypes();
             InitPanels();
             MeasureState = MeasureXMLState.GetDefault();
             SetDeviceCaptureStatus(DeviceCaptureStatus.DISCONNECTED);
@@ -173,6 +178,17 @@ namespace TeraMicroMeasure
             LoadMaterials();
             LoadCables();
             InitMeasureDraft();
+        }
+
+        private void LoadBarabanTypes()
+        {
+            KeyValuePair<uint, string> zeroVal = new KeyValuePair<uint, string>(0, "Не выбран");
+            BarabanTypes = BarabanType.get_all_as_table();
+            barabanTypeCB.ValueMember = "key";
+            barabanTypeCB.DisplayMember = "value";
+            barabanTypeCB.Items.Add(zeroVal);
+            foreach(BarabanType bt in BarabanTypes.Rows) barabanTypeCB.Items.Add(new KeyValuePair<uint, string>(bt.TypeId, bt.TypeName));
+            barabanTypeCB.SelectedIndex = 0;
         }
 
         private void LoadLeadStatuses()
@@ -291,6 +307,8 @@ namespace TeraMicroMeasure
                     cableComboBox.SelectedValueChanged += MeasuredCableComboBox_SelectedValueChanged;
                 }
             }
+            barabanTypeCB.SelectedValue = testFile.BarabanTypeId;
+            barabanNameCB.Text = testFile.BarabanNumber;
         }
 
         private Cable GetCableFromDraft()
@@ -404,7 +422,14 @@ namespace TeraMicroMeasure
             rIsolTypeSelectorCB.ValueMember = measuredParameterCB.ValueMember = "key";
             DisableRisolSelector();
             DisableParamtersCB();
+            InitOperatorData();  
             testDraftControlPanel.Enabled = false;
+        }
+
+        private void InitOperatorData()
+        {
+            operatorLabel.Text = $"Оператор: {SessionControl.CurrentUser.FullNameShort}";
+            //throw new NotImplementedException();
         }
 
         public void SetXmlDeviceList(Dictionary<string, DeviceXMLState> xml_device_list)
@@ -1540,7 +1565,26 @@ namespace TeraMicroMeasure
 
         private void saveResultButton_Click(object sender, EventArgs e)
         {
-
+            if (((KeyValuePair<uint, string>)barabanTypeCB.SelectedItem).Key == 0)
+            {
+                MessageBox.Show("Не выбран тип барабана!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(barabanNameCB.Text))
+            {
+                MessageBox.Show("Введите серийный номер барабана!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            testFile.OperatorID = SessionControl.CurrentUser.UserId;
+            testFile.BarabanTypeId = ((KeyValuePair<uint, string>)barabanTypeCB.SelectedItem).Key;
+            testFile.TestedCableLength = (uint)cableLengthNumericUpDown.Value;
+            testFile.TestLineNumber = ClientID;
+            testFile.Temperature = (float)temperatureValue.Value;
+            CableTest test;
+            if (testFile.SaveTest(out test))
+            {
+                ProtocolExport.ExportTo(test, @"Протоколы\MS WORD", NormaExportType.MSWORD);
+            } 
         }
 
         private void measureResultDataGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)

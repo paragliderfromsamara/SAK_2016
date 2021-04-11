@@ -14,6 +14,18 @@ namespace NormaLib.DBControl.Tables
         {
         }
 
+        public static ReleasedBaraban CreateBaraban(uint type_id, string serial_number)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(ReleasedBaraban));
+            ReleasedBaraban b = t.NewRow() as ReleasedBaraban;
+            b.BarabanTypeId = type_id;
+            b.SerialNumber = serial_number;
+            b.BarabanId = 0;
+            t.Rows.Add(b);
+            b.Save();
+            return b;
+        }
+
         public static ReleasedBaraban find_by_id(uint id)
         {
             DBEntityTable t = find_by_primary_key(id, typeof(ReleasedBaraban));

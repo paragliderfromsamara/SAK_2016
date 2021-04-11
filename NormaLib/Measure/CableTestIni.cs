@@ -63,17 +63,22 @@ namespace NormaLib.Measure
             cableTest.TestLineNumber = lineId; 
         }
 
-        public bool SaveTest()
+        public bool SaveTest(out CableTest test)
         {
             if (cableTest.Save())
             {
                 TestedCable cable = TestedCable.create_for_test(cableTest);
-                foreach(TestedCableStructure tcs in cable.CableStructures.Rows)
+                if (BarabanTypeId != 0)
+                {
+                    ReleasedBaraban b = ReleasedBaraban.CreateBaraban(BarabanTypeId, BarabanNumber);
+                    cableTest.BarabanId = b.BarabanId;
+                }
+                foreach (TestedCableStructure tcs in cable.CableStructures.Rows)
                 {
                     CableStructure sourceStrucure = GetSourceStructureById(tcs.SourceStructureId);
                     List<uint> lst = new List<uint>(sourceStrucure.MeasuredParameterTypes_ids);
                     lst.Add(MeasuredParameterType.Calling);
-                    foreach(var pTypeId in lst)
+                    foreach (var pTypeId in lst)
                     {
                         MeasurePointMap mpm = new MeasurePointMap(sourceStrucure, pTypeId);
                         do
@@ -92,11 +97,17 @@ namespace NormaLib.Measure
                         } while (mpm.TryGetNextPoint());
                         Debug.WriteLine(cableTest.TestResults.Count);
                     }
-                    cableTest.SetFinished();
                 }
+
+                cableTest.SetFinished();
+                test = cableTest;
                 return true;
             }
-            else return false;
+            else
+            {
+                test = null;
+                return false;
+            }
         }
 
         private CableStructure GetSourceStructureById(uint structure_id)
@@ -174,6 +185,19 @@ namespace NormaLib.Measure
             }
         }
 
+        public float Temperature
+        {
+            get
+            {
+                return cableTest.Temperature;
+            }
+            set
+            {
+                cableTest.Temperature = value;
+                file.Write(CableTest.Temperature_ColumnName, cableTest.Temperature.ToString(), TestAttrs_SectionName);
+            }
+        }
+
         public DateTime StartedAt
         {
             get
@@ -184,6 +208,30 @@ namespace NormaLib.Measure
             {
                 cableTest.StartedAt = value;
                 file.Write(CableTest.TestStartedAt_ColumnName, cableTest.StartedAt.ToString(), TestAttrs_SectionName);
+            }
+        }
+
+        public uint BarabanTypeId
+        {
+            get
+            {
+                return (uint)file.ReadInt(BarabanType.TypeId_ColumnName, TestAttrs_SectionName);
+            }
+            set
+            {
+                file.Write(BarabanType.TypeId_ColumnName, value.ToString(), TestAttrs_SectionName);
+            }
+        }
+
+        public string BarabanNumber
+        {
+            get
+            {
+                return file.Read(ReleasedBaraban.BarabanSerialNumber_ColumnName, TestAttrs_SectionName);
+            }
+            set
+            {
+                file.Write(ReleasedBaraban.BarabanSerialNumber_ColumnName, value, TestAttrs_SectionName);
             }
         }
 

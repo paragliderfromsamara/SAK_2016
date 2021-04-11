@@ -836,11 +836,11 @@ namespace NormaLib.DBControl.Tables
             else return null;
         }
 
-        private float max_result_value;
-        private float min_result_value;
-        private float average_result_value;
-        private uint[] good_elements;
-        private float measured_percent;
+        private float max_result_value = 0;
+        private float min_result_value = 0;
+        private float average_result_value = 0;
+        private uint[] good_elements = new uint[] { };
+        private float measured_percent = 0;
 
         public float MinResultValue => (float)MeasureResultConverter.RoundValue(min_result_value);
         public float MaxResultValue => (float)MeasureResultConverter.RoundValue(max_result_value);
