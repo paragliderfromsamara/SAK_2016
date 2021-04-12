@@ -178,8 +178,9 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         protected override bool CheckToolStripAllow()
         {
-            createFromCableToolStripItem.Enabled = AllowEditEntity & HasSelectedOneRow;
-            return createFromCableToolStripItem.Enabled | base.CheckToolStripAllow();
+            createFromCableToolStripItem.Enabled = AllowAddEntity & HasSelectedOneRow;
+            showCableToolStripItem.Enabled = HasSelectedOneRow;
+            return createFromCableToolStripItem.Enabled | base.CheckToolStripAllow() | showCableToolStripItem.Enabled;
         }
 
         protected override List<DataGridViewColumn> BuildColumnsForDataGrid()

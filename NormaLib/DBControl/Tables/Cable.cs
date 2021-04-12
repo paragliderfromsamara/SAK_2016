@@ -493,6 +493,7 @@ namespace NormaLib.DBControl.Tables
                 if (cableNormDocument == null)
                 {
                     cableNormDocument = loadDocument();
+                    if (cableNormDocument != null) this.DocumentId = cableNormDocument.DocumentId;
                 }
                 return cableNormDocument;
             }

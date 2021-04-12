@@ -38,6 +38,9 @@ namespace NormaLib.UI
         {
             //для контекстного меню флаги применяются при 
             btnNewRecordFormInit.Visible = AllowAddEntity;
+            removeEntityToolStripItem.Visible = AllowRemoveEntity;
+            editEntityTooStripButton.Visible = AllowEditEntity;
+
             headerPanel.Visible = AllowAddEntity || AllowEditEntity || AllowRemoveEntity;
         }
 

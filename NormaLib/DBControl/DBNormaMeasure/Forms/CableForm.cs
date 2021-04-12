@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NormaLib.DBControl.Tables;
-using System.Diagnostics;
+//using System.Diagnostics;
 
 namespace NormaLib.DBControl.DBNormaMeasure.Forms
 {
@@ -42,6 +42,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                     parameter_type_name_column.HeaderCell.Value = "Параметр";
                     parameter_type_name_column.HeaderCell.Style = minValueColumn.HeaderCell.Style;
                 }
+                is_edit_mode = value;
 
             }
         }
@@ -96,8 +97,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             this.Text = (cable.IsDraft) ? "Новый кабель" : cable.FullName;
             CableMark_input.Text = cable.Name;
             CableStructures_input.Text = cable.StructName;
-            //DocumentName_input.Text = cable.DocumentName;
-            //DocumentNumber_input.Text = cable.DocumentNumber;
             BuildLength_input.Value = (decimal)cable.BuildLength;
             linearMass_input.Value = (decimal)cable.LinearMass;
             cbVoltageOfCoverTest.Text = cable.UCover.ToString();
@@ -106,8 +105,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             CodeOKP_input.Text = cable.CodeOKP;
             CodeKCH_input.Text = cable.CodeKCH;
             Notes_input.Text = cable.Notes;
-
-            //////this.Text = $"{cable.id}";
         }
 
 
@@ -176,6 +173,10 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             cableFormDataSet.Tables.Add(t);
             foreach (var dr in t.Rows) mItems.Add(BuildParameterTypesContextMenuItem(dr as MeasuredParameterType));
             addMeasurerParameterContextMenu.Items.AddRange(mItems.ToArray());
+            if (t.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {MeasuredParameterType.dR}").Length == 0) Hide_dR_OnStructureSettings();
+            if (t.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", MeasuredParameterType.FrequencyParameterIds)})").Length == 0) Hide_FreqParamsPanel();
+            if (t.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {MeasuredParameterType.dCp}").Length == 0) HideGroupCapacityCheckBox();
+            HideVSVIParamsGroupBox();
         }
 
 
@@ -318,11 +319,12 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             DocumentNumber_input.ValueMember = $"{docsTableName}.document_id";
             DocumentNumber_input.DisplayMember = $"{docsTableName}.short_name";
             DocumentNumber_input.Refresh();
-            //DocumentNumber_input.SelectedIndexChanged += DocumentNumberInput_Changed;
             DocumentNumber_input.TextChanged += DocumentNumberInput_Changed;
-            if (cable.QADocument == null) cable.QADocument = getDocumentDraftFromDataTable();
+            if (cable.QADocument == null)
+                cable.QADocument = getDocumentDraftFromDataTable();
             DocumentNumber_input.SelectedValue = cable.DocumentId;
-            
+            DocumentName_input.Enabled = cable.DocumentId == 0;
+            DocumentName_input.Text = cable.QADocument.FullName;
         }
 
         protected virtual void fillCableMarks()
@@ -390,7 +392,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 doc.ShortName = txt;
             }
             cable.QADocument = doc;
-            //cp.SelectedValue = cable.QADocument.DocumentId;
             DocumentName_input.Enabled = doc.RowState == DataRowState.Added;
             DocumentName_input.Text = cable.QADocument.FullName;
         }
@@ -512,22 +513,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         }
 
-        private void closeNoSaveButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
 
-        private void saveCableButton_Click(object sender, System.EventArgs e)
-        {
-            if (!checkSelectedDocument()) return;
-            if (!saveCableStructures()) return;
-            cable.IsDraft = false;
-            if (cable.Save())
-            {
-                fillFormByCable();
-                MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-            }
-        }
 
 
 
@@ -554,7 +540,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         private void DeleteExcludedMeasureParametersFromCableStructure()
         {
-            //throw new NotImplementedException();
             IEnumerable<string> ids = ExcludedParameterTypes.Select((ept) => ((MeasuredParameterType)ept).ParameterTypeId.ToString());
             DataRow[] rData = currentStructure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} IN ({string.Join(",", ids)})");
             foreach(CableStructureMeasuredParameterData csmpd in rData)
@@ -601,7 +586,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             ReplacePanelToCurrentPage();
             FillStructurePageForCurrentStructure();
             InitParameterTypesContextMenu();
-            btnRemoveCurrentStructure.Visible = !currentStructure.IsNewRecord();
+            btnRemoveCurrentStructure.Visible = !currentStructure.IsNewRecord() && IsEditMode;
         }
 
         #region методы для AddMeasureParameterContextMenu 
@@ -792,7 +777,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         private void FillStructurePageForCurrentStructure()
         {
-            btnRemoveCurrentStructure.Visible = !currentStructure.IsNewRecord();
+            btnRemoveCurrentStructure.Visible = !currentStructure.IsNewRecord() && IsEditMode;
             cbStructureType.SelectedValue = currentStructure.StructureTypeId;
             cbLeadMaterial.SelectedValue = currentStructure.LeadMaterialTypeId;
             cbIsolationMaterial.SelectedValue = currentStructure.IsolationMaterialId;
@@ -834,7 +819,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         private void RefreshDataGridView()
         {
             freqMaxColumn.Visible = frequencyMinColumn.Visible = freqStepColumn.Visible = DoesFreqParamsInclude();
-            delButtonColumn.Visible = currentStructure.MeasuredParameters.Rows.Count > 0;
+            delButtonColumn.Visible = currentStructure.MeasuredParameters.Rows.Count > 0 && IsEditMode;
             MeasuredParametersBindingSource.ResetBindings(false);
         }
 
@@ -1223,7 +1208,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         int selIndexWas = 0;
         private void cbStructureType_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            Debug.WriteLine($"cbStructureType_SelectionChangeCommitted {cbStructureType.SelectedValue}");
             if (!GetAgreementToStructureTypeChanged())
             {
                 cbStructureType.SelectedIndex = selIndexWas;
@@ -1263,7 +1247,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             string measuredParametersToDestroy = string.Empty;
             FillMeasuredParametersToDelete(out measuredParametersToDestroy);
-            Debug.WriteLine("Check agreement HasAgreeToChangeAStructureType");
             if (!string.IsNullOrWhiteSpace(measuredParametersToDestroy))
             {
                 return MessageBox.Show($"При изменении типа структуры из списка измеряемых параметров будут исключены:\n\n{measuredParametersToDestroy}\n\nВы согласны?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
@@ -1278,9 +1261,6 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             get
             {
                 return cableStructuresTabs.SelectedTab.Tag == null ? MakeDraftStructure() : cableStructuresTabs.SelectedTab.Tag as CableStructure;
-
-                //currentStructureId < tabControl1.TabCount - 1 ? (CableStructure)(Cable.CableStructures.Rows[currentStructureId]) : draftStructure;
-                
             }
         }
 
@@ -1296,7 +1276,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 if (SaveCurrentStructure())
                 {
                     AddTabPage(MakeDraftStructure());
-                    btnRemoveCurrentStructure.Visible = !currentStructure.IsNewRecord();
+                    btnRemoveCurrentStructure.Visible = !currentStructure.IsNewRecord() && IsEditMode;
                     fillMeasuredParametersData();
                 }
             }
@@ -1430,6 +1410,68 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             if (isOnInitForm) return;
             currentStructure.IsolationResistanceVoltage = Convert.ToUInt16(cbRisolVoltageValue.SelectedItem);
+        }
+        
+        private void Hide_dR_OnStructureSettings()
+        {
+            drStructSettingsGroupBox.Visible = false;
+            this.Height = this.Height - drStructSettingsGroupBox.Height < 720 ? 720 : this.Height - drStructSettingsGroupBox.Height;
+        }
+
+        private void Hide_FreqParamsPanel()
+        {
+            freqAddParamsPanel.Visible = false;
+            this.Height = this.Height - freqAddParamsPanel.Height < 720 ? 720 : this.Height - freqAddParamsPanel.Height;
+        }
+
+        private void HideVSVIParamsGroupBox()
+        {
+            vsviSettingsGroupox.Visible = false;
+            this.Height = this.Height - vsviSettingsGroupox.Height < 720 ? 720 : this.Height - vsviSettingsGroupox.Height;
+        }
+
+        private void HideGroupCapacityCheckBox()
+        {
+            cbGroupCapacity.Visible = false;
+            this.Height = this.Height - cbGroupCapacity.Height < 720 ? 720 : this.Height - cbGroupCapacity.Height;
+        }
+
+        private void CableForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+  
+            if (DialogResult == DialogResult.OK)
+            {
+                bool flag = true;
+                flag &= checkSelectedDocument();
+                if (flag) flag &= saveCableStructures();
+                if (flag)
+                {
+                    cable.IsDraft = false;
+                    flag &= cable.Save();
+                }
+                if (flag) MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                e.Cancel = !flag;
+                /*
+                if (!checkSelectedDocument()) flag |= true;
+                if (!saveCableStructures()) return;
+                cable.IsDraft = false;
+                if (cable.Save())
+                {
+                    fillFormByCable();
+                    MessageBox.Show("Кабель успешно сохранён!", "Сохранено", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
+                */
+            }
+        }
+
+        private void closeNoSaveButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void saveCableButton_Click(object sender, System.EventArgs e)
+        {
+            this.Close();
         }
     }
 }

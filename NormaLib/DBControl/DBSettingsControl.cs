@@ -93,7 +93,7 @@ namespace NormaLib.DBControl
         public static void SetDefaultMeasuredParameters()
         {
             IniFile f = IniFile.GetAppSettingsFile();
-            int[] idsArray = new int[] { (int)MeasuredParameterType.Rleads, (int)MeasuredParameterType.Risol1, (int)MeasuredParameterType.Risol2, (int)MeasuredParameterType.dR };
+            int[] idsArray = new int[] { (int)MeasuredParameterType.Rleads, (int)MeasuredParameterType.Risol1, (int)MeasuredParameterType.Risol2 };
             f.WriteIntArray("AvailableParameters", idsArray, MeasuredParametersSettingsSectionName);
         }
 
