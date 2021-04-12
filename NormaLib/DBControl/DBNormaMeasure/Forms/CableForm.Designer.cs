@@ -57,11 +57,29 @@
             this.closeNoSaveButton = new System.Windows.Forms.Button();
             this.newTabPage = new System.Windows.Forms.TabPage();
             this.structureDataContainer = new System.Windows.Forms.Panel();
+            this.label25 = new System.Windows.Forms.Label();
+            this.cbRisolVoltageValue = new System.Windows.Forms.ComboBox();
             this.cbLeadDiameters = new System.Windows.Forms.ComboBox();
             this.cbWaveResistance = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dgMeasuredParameters = new System.Windows.Forms.DataGridView();
+            this.parameter_type_name_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.parameter_type_id_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.parameterTypeDescriptionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.parameterTypeMeasureColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.minValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.maxValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.percentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.resultMeasureColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lengthBringingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.frequencyMinColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.freqMaxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.freqStepColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delButtonColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MeasuredParameterDataId_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lengthBringingTypeIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BringingLengthMeasureTitleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MeasuredParametersBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.cbGroupCapacity = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -90,7 +108,7 @@
             this.btnRemoveCurrentStructure = new System.Windows.Forms.Button();
             this.structureType = new System.Windows.Forms.Label();
             this.cbStructureType = new System.Windows.Forms.ComboBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.cableStructuresTabs = new System.Windows.Forms.TabControl();
             this.addMeasurerParameterContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.AddAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuBringingLength = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -102,24 +120,7 @@
             this.cbPmax = new System.Windows.Forms.ComboBox();
             this.cbPmin = new System.Windows.Forms.ComboBox();
             this.cbVoltageOfCoverTest = new System.Windows.Forms.ComboBox();
-            this.parameter_type_name_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.parameter_type_id_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.parameterTypeDescriptionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.parameterTypeMeasureColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.minValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.maxValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.percentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.resultMeasureColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lengthBringingColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.frequencyMinColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.freqMaxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.freqStepColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.delButtonColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MeasuredParameterDataId_Column = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lengthBringingTypeIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BringingLengthMeasureTitleColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cbRisolVoltageValue = new System.Windows.Forms.ComboBox();
-            this.label25 = new System.Windows.Forms.Label();
+            this.cableDataPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.cableFormDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.linearMass_input)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuildLength_input)).BeginInit();
@@ -137,10 +138,11 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudRrealElementsAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDisplayedElementAmount)).BeginInit();
-            this.tabControl1.SuspendLayout();
+            this.cableStructuresTabs.SuspendLayout();
             this.addMeasurerParameterContextMenu.SuspendLayout();
             this.contextMenuBringingLength.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.cableDataPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // cableFormDataSet
@@ -151,7 +153,7 @@
             // 
             this.CableMark_input.DataSource = this.cableFormDataSet;
             this.CableMark_input.FormattingEnabled = true;
-            this.CableMark_input.Location = new System.Drawing.Point(19, 42);
+            this.CableMark_input.Location = new System.Drawing.Point(0, 26);
             this.CableMark_input.Name = "CableMark_input";
             this.CableMark_input.Size = new System.Drawing.Size(173, 26);
             this.CableMark_input.TabIndex = 2;
@@ -160,7 +162,7 @@
             // 
             // CableStructures_input
             // 
-            this.CableStructures_input.Location = new System.Drawing.Point(211, 42);
+            this.CableStructures_input.Location = new System.Drawing.Point(192, 26);
             this.CableStructures_input.Name = "CableStructures_input";
             this.CableStructures_input.Size = new System.Drawing.Size(795, 26);
             this.CableStructures_input.TabIndex = 4;
@@ -169,7 +171,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(208, 21);
+            this.label2.Location = new System.Drawing.Point(189, 5);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(151, 18);
             this.label2.TabIndex = 6;
@@ -178,7 +180,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 21);
+            this.label1.Location = new System.Drawing.Point(0, 5);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(103, 18);
             this.label1.TabIndex = 5;
@@ -187,7 +189,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(208, 83);
+            this.label4.Location = new System.Drawing.Point(189, 67);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(305, 18);
             this.label4.TabIndex = 12;
@@ -195,7 +197,7 @@
             // 
             // DocumentName_input
             // 
-            this.DocumentName_input.Location = new System.Drawing.Point(211, 104);
+            this.DocumentName_input.Location = new System.Drawing.Point(192, 88);
             this.DocumentName_input.Name = "DocumentName_input";
             this.DocumentName_input.Size = new System.Drawing.Size(795, 26);
             this.DocumentName_input.TabIndex = 11;
@@ -204,7 +206,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(19, 83);
+            this.label3.Location = new System.Drawing.Point(0, 67);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(76, 18);
             this.label3.TabIndex = 10;
@@ -214,7 +216,7 @@
             // 
             this.DocumentNumber_input.DataSource = this.cableFormDataSet;
             this.DocumentNumber_input.FormattingEnabled = true;
-            this.DocumentNumber_input.Location = new System.Drawing.Point(19, 104);
+            this.DocumentNumber_input.Location = new System.Drawing.Point(0, 88);
             this.DocumentNumber_input.Name = "DocumentNumber_input";
             this.DocumentNumber_input.Size = new System.Drawing.Size(173, 26);
             this.DocumentNumber_input.TabIndex = 9;
@@ -223,7 +225,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(208, 148);
+            this.label7.Location = new System.Drawing.Point(189, 132);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(138, 18);
             this.label7.TabIndex = 21;
@@ -232,7 +234,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(19, 203);
+            this.label6.Location = new System.Drawing.Point(0, 187);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(128, 18);
             this.label6.TabIndex = 19;
@@ -241,7 +243,7 @@
             // linearMass_input
             // 
             this.linearMass_input.DecimalPlaces = 2;
-            this.linearMass_input.Location = new System.Drawing.Point(22, 223);
+            this.linearMass_input.Location = new System.Drawing.Point(3, 207);
             this.linearMass_input.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -255,7 +257,7 @@
             // 
             // BuildLength_input
             // 
-            this.BuildLength_input.Location = new System.Drawing.Point(22, 168);
+            this.BuildLength_input.Location = new System.Drawing.Point(3, 152);
             this.BuildLength_input.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -279,7 +281,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(19, 147);
+            this.label5.Location = new System.Drawing.Point(0, 131);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(170, 18);
             this.label5.TabIndex = 16;
@@ -287,7 +289,7 @@
             // 
             // CodeKCH_input
             // 
-            this.CodeKCH_input.Location = new System.Drawing.Point(320, 222);
+            this.CodeKCH_input.Location = new System.Drawing.Point(301, 206);
             this.CodeKCH_input.Mask = "00";
             this.CodeKCH_input.Name = "CodeKCH_input";
             this.CodeKCH_input.Size = new System.Drawing.Size(39, 26);
@@ -296,7 +298,7 @@
             // 
             // CodeOKP_input
             // 
-            this.CodeOKP_input.Location = new System.Drawing.Point(211, 222);
+            this.CodeOKP_input.Location = new System.Drawing.Point(192, 206);
             this.CodeOKP_input.Mask = "00 0000 0000";
             this.CodeOKP_input.Name = "CodeOKP_input";
             this.CodeOKP_input.Size = new System.Drawing.Size(100, 26);
@@ -306,7 +308,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(317, 206);
+            this.label12.Location = new System.Drawing.Point(298, 190);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(27, 18);
             this.label12.TabIndex = 27;
@@ -315,7 +317,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(208, 206);
+            this.label11.Location = new System.Drawing.Point(189, 190);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(68, 18);
             this.label11.TabIndex = 26;
@@ -324,7 +326,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(582, 148);
+            this.label13.Location = new System.Drawing.Point(563, 132);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(92, 18);
             this.label13.TabIndex = 31;
@@ -335,7 +337,7 @@
             this.Notes_input.BackColor = System.Drawing.Color.White;
             this.Notes_input.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Notes_input.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Notes_input.Location = new System.Drawing.Point(585, 168);
+            this.Notes_input.Location = new System.Drawing.Point(566, 152);
             this.Notes_input.Name = "Notes_input";
             this.Notes_input.Size = new System.Drawing.Size(421, 80);
             this.Notes_input.TabIndex = 30;
@@ -345,23 +347,23 @@
             // panelControlButtons
             // 
             this.panelControlButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.panelControlButtons.Controls.Add(this.saveCableButton);
             this.panelControlButtons.Controls.Add(this.closeNoSaveButton);
-            this.panelControlButtons.Location = new System.Drawing.Point(22, 887);
+            this.panelControlButtons.Controls.Add(this.saveCableButton);
+            this.panelControlButtons.Location = new System.Drawing.Point(22, 906);
             this.panelControlButtons.Name = "panelControlButtons";
-            this.panelControlButtons.Size = new System.Drawing.Size(412, 72);
+            this.panelControlButtons.Size = new System.Drawing.Size(320, 45);
             this.panelControlButtons.TabIndex = 32;
             // 
             // saveCableButton
             // 
-            this.saveCableButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.saveCableButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(214)))), ((int)(((byte)(37)))));
+            this.saveCableButton.Dock = System.Windows.Forms.DockStyle.Left;
             this.saveCableButton.FlatAppearance.BorderSize = 0;
             this.saveCableButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.saveCableButton.ForeColor = System.Drawing.Color.Gainsboro;
-            this.saveCableButton.Location = new System.Drawing.Point(0, 17);
+            this.saveCableButton.Location = new System.Drawing.Point(0, 0);
             this.saveCableButton.Name = "saveCableButton";
-            this.saveCableButton.Size = new System.Drawing.Size(158, 40);
+            this.saveCableButton.Size = new System.Drawing.Size(160, 45);
             this.saveCableButton.TabIndex = 0;
             this.saveCableButton.Text = "Сохранить";
             this.saveCableButton.UseVisualStyleBackColor = false;
@@ -369,14 +371,14 @@
             // 
             // closeNoSaveButton
             // 
-            this.closeNoSaveButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.closeNoSaveButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(44)))), ((int)(((byte)(91)))));
+            this.closeNoSaveButton.Dock = System.Windows.Forms.DockStyle.Left;
             this.closeNoSaveButton.FlatAppearance.BorderSize = 0;
             this.closeNoSaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.closeNoSaveButton.ForeColor = System.Drawing.Color.Gainsboro;
-            this.closeNoSaveButton.Location = new System.Drawing.Point(171, 17);
+            this.closeNoSaveButton.Location = new System.Drawing.Point(160, 0);
             this.closeNoSaveButton.Name = "closeNoSaveButton";
-            this.closeNoSaveButton.Size = new System.Drawing.Size(241, 40);
+            this.closeNoSaveButton.Size = new System.Drawing.Size(160, 45);
             this.closeNoSaveButton.TabIndex = 26;
             this.closeNoSaveButton.Text = "Закрыть";
             this.closeNoSaveButton.UseVisualStyleBackColor = false;
@@ -388,7 +390,7 @@
             this.newTabPage.Location = new System.Drawing.Point(4, 39);
             this.newTabPage.Name = "newTabPage";
             this.newTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.newTabPage.Size = new System.Drawing.Size(980, 583);
+            this.newTabPage.Size = new System.Drawing.Size(989, 583);
             this.newTabPage.TabIndex = 0;
             this.newTabPage.Text = "Новая структура";
             this.newTabPage.UseVisualStyleBackColor = true;
@@ -419,8 +421,32 @@
             this.structureDataContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.structureDataContainer.Location = new System.Drawing.Point(3, 3);
             this.structureDataContainer.Name = "structureDataContainer";
-            this.structureDataContainer.Size = new System.Drawing.Size(974, 577);
+            this.structureDataContainer.Size = new System.Drawing.Size(983, 577);
             this.structureDataContainer.TabIndex = 0;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(794, 16);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(158, 18);
+            this.label25.TabIndex = 26;
+            this.label25.Text = "Напряжение Rизол, В";
+            // 
+            // cbRisolVoltageValue
+            // 
+            this.cbRisolVoltageValue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRisolVoltageValue.FormattingEnabled = true;
+            this.cbRisolVoltageValue.Items.AddRange(new object[] {
+            "10",
+            "100",
+            "500",
+            "1000"});
+            this.cbRisolVoltageValue.Location = new System.Drawing.Point(797, 37);
+            this.cbRisolVoltageValue.Name = "cbRisolVoltageValue";
+            this.cbRisolVoltageValue.Size = new System.Drawing.Size(163, 26);
+            this.cbRisolVoltageValue.TabIndex = 25;
+            this.cbRisolVoltageValue.SelectedIndexChanged += new System.EventHandler(this.cbRisolVoltageValue_SelectedIndexChanged);
             // 
             // cbLeadDiameters
             // 
@@ -459,7 +485,7 @@
             this.panel1.Controls.Add(this.dgMeasuredParameters);
             this.panel1.Location = new System.Drawing.Point(267, 95);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(693, 431);
+            this.panel1.Size = new System.Drawing.Size(702, 431);
             this.panel1.TabIndex = 20;
             // 
             // dgMeasuredParameters
@@ -519,13 +545,161 @@
             this.dgMeasuredParameters.RowsDefaultCellStyle = dataGridViewCellStyle6;
             this.dgMeasuredParameters.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgMeasuredParameters.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgMeasuredParameters.Size = new System.Drawing.Size(693, 431);
+            this.dgMeasuredParameters.Size = new System.Drawing.Size(702, 431);
             this.dgMeasuredParameters.TabIndex = 0;
             this.dgMeasuredParameters.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgMeasuredParameters_CellMouseClick);
             this.dgMeasuredParameters.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgMeasuredParameters_ColumnHeaderMouseClick);
             this.dgMeasuredParameters.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgMeasuredParameters_CurrentCellDirtyStateChanged);
             this.dgMeasuredParameters.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgMeasuredParameters_DataError);
             this.dgMeasuredParameters.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgMeasuredParameters_RowsAdded);
+            // 
+            // parameter_type_name_column
+            // 
+            this.parameter_type_name_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.parameter_type_name_column.DataPropertyName = "parameter_name";
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Transparent;
+            this.parameter_type_name_column.DefaultCellStyle = dataGridViewCellStyle5;
+            this.parameter_type_name_column.FillWeight = 91.57822F;
+            this.parameter_type_name_column.HeaderText = "+";
+            this.parameter_type_name_column.MinimumWidth = 40;
+            this.parameter_type_name_column.Name = "parameter_type_name_column";
+            this.parameter_type_name_column.ReadOnly = true;
+            this.parameter_type_name_column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.parameter_type_name_column.ToolTipText = "Добавить параметр";
+            // 
+            // parameter_type_id_column
+            // 
+            this.parameter_type_id_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.parameter_type_id_column.DataPropertyName = "parameter_type_id";
+            this.parameter_type_id_column.HeaderText = "ID параметра";
+            this.parameter_type_id_column.Name = "parameter_type_id_column";
+            this.parameter_type_id_column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.parameter_type_id_column.Visible = false;
+            // 
+            // parameterTypeDescriptionColumn
+            // 
+            this.parameterTypeDescriptionColumn.DataPropertyName = "parameter_description";
+            this.parameterTypeDescriptionColumn.HeaderText = "Описание параметра";
+            this.parameterTypeDescriptionColumn.Name = "parameterTypeDescriptionColumn";
+            this.parameterTypeDescriptionColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.parameterTypeDescriptionColumn.Visible = false;
+            // 
+            // parameterTypeMeasureColumn
+            // 
+            this.parameterTypeMeasureColumn.DataPropertyName = "parameter_measure";
+            this.parameterTypeMeasureColumn.HeaderText = "Мера";
+            this.parameterTypeMeasureColumn.MinimumWidth = 10;
+            this.parameterTypeMeasureColumn.Name = "parameterTypeMeasureColumn";
+            this.parameterTypeMeasureColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.parameterTypeMeasureColumn.Visible = false;
+            // 
+            // minValueColumn
+            // 
+            this.minValueColumn.DataPropertyName = "min_value";
+            this.minValueColumn.FillWeight = 80F;
+            this.minValueColumn.HeaderText = "Min";
+            this.minValueColumn.MinimumWidth = 75;
+            this.minValueColumn.Name = "minValueColumn";
+            this.minValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // maxValueColumn
+            // 
+            this.maxValueColumn.DataPropertyName = "max_value";
+            this.maxValueColumn.FillWeight = 80F;
+            this.maxValueColumn.HeaderText = "Max";
+            this.maxValueColumn.MinimumWidth = 75;
+            this.maxValueColumn.Name = "maxValueColumn";
+            this.maxValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // percentColumn
+            // 
+            this.percentColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.percentColumn.DataPropertyName = "percent";
+            this.percentColumn.FillWeight = 83.9467F;
+            this.percentColumn.HeaderText = "%";
+            this.percentColumn.MinimumWidth = 50;
+            this.percentColumn.Name = "percentColumn";
+            this.percentColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.percentColumn.Width = 50;
+            // 
+            // resultMeasureColumn
+            // 
+            this.resultMeasureColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.resultMeasureColumn.DataPropertyName = "result_measure";
+            this.resultMeasureColumn.FillWeight = 82.42039F;
+            this.resultMeasureColumn.HeaderText = "Ед. изм.";
+            this.resultMeasureColumn.MinimumWidth = 75;
+            this.resultMeasureColumn.Name = "resultMeasureColumn";
+            this.resultMeasureColumn.ReadOnly = true;
+            this.resultMeasureColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // lengthBringingColumn
+            // 
+            this.lengthBringingColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.lengthBringingColumn.DataPropertyName = "length_bringing";
+            this.lengthBringingColumn.FillWeight = 82.42039F;
+            this.lengthBringingColumn.HeaderText = "Lприв, м";
+            this.lengthBringingColumn.MinimumWidth = 52;
+            this.lengthBringingColumn.Name = "lengthBringingColumn";
+            this.lengthBringingColumn.ReadOnly = true;
+            this.lengthBringingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.lengthBringingColumn.Width = 77;
+            // 
+            // frequencyMinColumn
+            // 
+            this.frequencyMinColumn.DataPropertyName = "frequency_min";
+            this.frequencyMinColumn.FillWeight = 82.42039F;
+            this.frequencyMinColumn.HeaderText = "fmin, кГц";
+            this.frequencyMinColumn.Name = "frequencyMinColumn";
+            this.frequencyMinColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // freqMaxColumn
+            // 
+            this.freqMaxColumn.DataPropertyName = "frequency_max";
+            this.freqMaxColumn.FillWeight = 82.42039F;
+            this.freqMaxColumn.HeaderText = "fmax, кГц";
+            this.freqMaxColumn.Name = "freqMaxColumn";
+            this.freqMaxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // freqStepColumn
+            // 
+            this.freqStepColumn.DataPropertyName = "frequency_step";
+            this.freqStepColumn.FillWeight = 82.42039F;
+            this.freqStepColumn.HeaderText = "fшаг, кГц";
+            this.freqStepColumn.Name = "freqStepColumn";
+            this.freqStepColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // delButtonColumn
+            // 
+            this.delButtonColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.delButtonColumn.HeaderText = "x";
+            this.delButtonColumn.MinimumWidth = 40;
+            this.delButtonColumn.Name = "delButtonColumn";
+            this.delButtonColumn.ReadOnly = true;
+            this.delButtonColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.delButtonColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.delButtonColumn.ToolTipText = "Удалить";
+            this.delButtonColumn.Width = 40;
+            // 
+            // MeasuredParameterDataId_Column
+            // 
+            this.MeasuredParameterDataId_Column.DataPropertyName = "measured_parameter_data_id";
+            this.MeasuredParameterDataId_Column.HeaderText = "ID параметров измерения";
+            this.MeasuredParameterDataId_Column.Name = "MeasuredParameterDataId_Column";
+            this.MeasuredParameterDataId_Column.Visible = false;
+            // 
+            // lengthBringingTypeIdColumn
+            // 
+            this.lengthBringingTypeIdColumn.DataPropertyName = "length_bringing_type_id";
+            this.lengthBringingTypeIdColumn.HeaderText = "ID типа длины приведения";
+            this.lengthBringingTypeIdColumn.Name = "lengthBringingTypeIdColumn";
+            this.lengthBringingTypeIdColumn.Visible = false;
+            // 
+            // BringingLengthMeasureTitleColumn
+            // 
+            this.BringingLengthMeasureTitleColumn.HeaderText = "Мера длины приведения";
+            this.BringingLengthMeasureTitleColumn.Name = "BringingLengthMeasureTitleColumn";
+            this.BringingLengthMeasureTitleColumn.Visible = false;
             // 
             // MeasuredParametersBindingSource
             // 
@@ -807,7 +981,7 @@
             this.btnRemoveCurrentStructure.FlatAppearance.BorderSize = 0;
             this.btnRemoveCurrentStructure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemoveCurrentStructure.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.btnRemoveCurrentStructure.Location = new System.Drawing.Point(763, 532);
+            this.btnRemoveCurrentStructure.Location = new System.Drawing.Point(772, 532);
             this.btnRemoveCurrentStructure.Name = "btnRemoveCurrentStructure";
             this.btnRemoveCurrentStructure.Size = new System.Drawing.Size(197, 40);
             this.btnRemoveCurrentStructure.TabIndex = 2;
@@ -835,21 +1009,21 @@
             this.cbStructureType.SelectedIndexChanged += new System.EventHandler(this.cbStructureType_SelectedIndexChanged);
             this.cbStructureType.SelectionChangeCommitted += new System.EventHandler(this.cbStructureType_SelectionChangeCommitted);
             // 
-            // tabControl1
+            // cableStructuresTabs
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.cableStructuresTabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.newTabPage);
-            this.tabControl1.ItemSize = new System.Drawing.Size(129, 35);
-            this.tabControl1.Location = new System.Drawing.Point(22, 263);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.Padding = new System.Drawing.Point(25, 3);
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(988, 626);
-            this.tabControl1.TabIndex = 33;
-            this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
-            this.tabControl1.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Deselecting);
+            this.cableStructuresTabs.Controls.Add(this.newTabPage);
+            this.cableStructuresTabs.ItemSize = new System.Drawing.Size(129, 35);
+            this.cableStructuresTabs.Location = new System.Drawing.Point(22, 263);
+            this.cableStructuresTabs.Name = "cableStructuresTabs";
+            this.cableStructuresTabs.Padding = new System.Drawing.Point(25, 3);
+            this.cableStructuresTabs.SelectedIndex = 0;
+            this.cableStructuresTabs.Size = new System.Drawing.Size(997, 626);
+            this.cableStructuresTabs.TabIndex = 33;
+            this.cableStructuresTabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
+            this.cableStructuresTabs.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Deselecting);
             // 
             // addMeasurerParameterContextMenu
             // 
@@ -899,7 +1073,7 @@
             this.groupBox4.Controls.Add(this.label23);
             this.groupBox4.Controls.Add(this.cbPmax);
             this.groupBox4.Controls.Add(this.cbPmin);
-            this.groupBox4.Location = new System.Drawing.Point(378, 149);
+            this.groupBox4.Location = new System.Drawing.Point(359, 133);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(198, 100);
             this.groupBox4.TabIndex = 34;
@@ -947,212 +1121,48 @@
             // cbVoltageOfCoverTest
             // 
             this.cbVoltageOfCoverTest.FormattingEnabled = true;
-            this.cbVoltageOfCoverTest.Location = new System.Drawing.Point(211, 167);
+            this.cbVoltageOfCoverTest.Location = new System.Drawing.Point(192, 151);
             this.cbVoltageOfCoverTest.Name = "cbVoltageOfCoverTest";
             this.cbVoltageOfCoverTest.Size = new System.Drawing.Size(148, 26);
             this.cbVoltageOfCoverTest.TabIndex = 35;
             this.cbVoltageOfCoverTest.TextChanged += new System.EventHandler(this.cbVoltageOfCoverTest_TextChanged);
             this.cbVoltageOfCoverTest.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numFormatCheckerOn_KeyPress);
             // 
-            // parameter_type_name_column
+            // cableDataPanel
             // 
-            this.parameter_type_name_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.parameter_type_name_column.DataPropertyName = "parameter_name";
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Transparent;
-            this.parameter_type_name_column.DefaultCellStyle = dataGridViewCellStyle5;
-            this.parameter_type_name_column.FillWeight = 91.57822F;
-            this.parameter_type_name_column.HeaderText = "+";
-            this.parameter_type_name_column.MinimumWidth = 40;
-            this.parameter_type_name_column.Name = "parameter_type_name_column";
-            this.parameter_type_name_column.ReadOnly = true;
-            this.parameter_type_name_column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.parameter_type_name_column.ToolTipText = "Добавить параметр";
-            // 
-            // parameter_type_id_column
-            // 
-            this.parameter_type_id_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.parameter_type_id_column.DataPropertyName = "parameter_type_id";
-            this.parameter_type_id_column.HeaderText = "ID параметра";
-            this.parameter_type_id_column.Name = "parameter_type_id_column";
-            this.parameter_type_id_column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.parameter_type_id_column.Visible = false;
-            // 
-            // parameterTypeDescriptionColumn
-            // 
-            this.parameterTypeDescriptionColumn.DataPropertyName = "parameter_description";
-            this.parameterTypeDescriptionColumn.HeaderText = "Описание параметра";
-            this.parameterTypeDescriptionColumn.Name = "parameterTypeDescriptionColumn";
-            this.parameterTypeDescriptionColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.parameterTypeDescriptionColumn.Visible = false;
-            // 
-            // parameterTypeMeasureColumn
-            // 
-            this.parameterTypeMeasureColumn.DataPropertyName = "parameter_measure";
-            this.parameterTypeMeasureColumn.HeaderText = "Мера";
-            this.parameterTypeMeasureColumn.MinimumWidth = 10;
-            this.parameterTypeMeasureColumn.Name = "parameterTypeMeasureColumn";
-            this.parameterTypeMeasureColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.parameterTypeMeasureColumn.Visible = false;
-            // 
-            // minValueColumn
-            // 
-            this.minValueColumn.DataPropertyName = "min_value";
-            this.minValueColumn.FillWeight = 80F;
-            this.minValueColumn.HeaderText = "Min";
-            this.minValueColumn.MinimumWidth = 75;
-            this.minValueColumn.Name = "minValueColumn";
-            this.minValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // maxValueColumn
-            // 
-            this.maxValueColumn.DataPropertyName = "max_value";
-            this.maxValueColumn.FillWeight = 80F;
-            this.maxValueColumn.HeaderText = "Max";
-            this.maxValueColumn.MinimumWidth = 75;
-            this.maxValueColumn.Name = "maxValueColumn";
-            this.maxValueColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // percentColumn
-            // 
-            this.percentColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.percentColumn.DataPropertyName = "percent";
-            this.percentColumn.FillWeight = 83.9467F;
-            this.percentColumn.HeaderText = "%";
-            this.percentColumn.MinimumWidth = 50;
-            this.percentColumn.Name = "percentColumn";
-            this.percentColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.percentColumn.Width = 50;
-            // 
-            // resultMeasureColumn
-            // 
-            this.resultMeasureColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.resultMeasureColumn.DataPropertyName = "result_measure";
-            this.resultMeasureColumn.FillWeight = 82.42039F;
-            this.resultMeasureColumn.HeaderText = "Ед. изм.";
-            this.resultMeasureColumn.MinimumWidth = 75;
-            this.resultMeasureColumn.Name = "resultMeasureColumn";
-            this.resultMeasureColumn.ReadOnly = true;
-            this.resultMeasureColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // lengthBringingColumn
-            // 
-            this.lengthBringingColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.lengthBringingColumn.DataPropertyName = "length_bringing";
-            this.lengthBringingColumn.FillWeight = 82.42039F;
-            this.lengthBringingColumn.HeaderText = "Lприв, м";
-            this.lengthBringingColumn.MinimumWidth = 52;
-            this.lengthBringingColumn.Name = "lengthBringingColumn";
-            this.lengthBringingColumn.ReadOnly = true;
-            this.lengthBringingColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.lengthBringingColumn.Width = 77;
-            // 
-            // frequencyMinColumn
-            // 
-            this.frequencyMinColumn.DataPropertyName = "frequency_min";
-            this.frequencyMinColumn.FillWeight = 82.42039F;
-            this.frequencyMinColumn.HeaderText = "fmin, кГц";
-            this.frequencyMinColumn.Name = "frequencyMinColumn";
-            this.frequencyMinColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // freqMaxColumn
-            // 
-            this.freqMaxColumn.DataPropertyName = "frequency_max";
-            this.freqMaxColumn.FillWeight = 82.42039F;
-            this.freqMaxColumn.HeaderText = "fmax, кГц";
-            this.freqMaxColumn.Name = "freqMaxColumn";
-            this.freqMaxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // freqStepColumn
-            // 
-            this.freqStepColumn.DataPropertyName = "frequency_step";
-            this.freqStepColumn.FillWeight = 82.42039F;
-            this.freqStepColumn.HeaderText = "fшаг, кГц";
-            this.freqStepColumn.Name = "freqStepColumn";
-            this.freqStepColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // delButtonColumn
-            // 
-            this.delButtonColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.delButtonColumn.HeaderText = "x";
-            this.delButtonColumn.MinimumWidth = 40;
-            this.delButtonColumn.Name = "delButtonColumn";
-            this.delButtonColumn.ReadOnly = true;
-            this.delButtonColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.delButtonColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.delButtonColumn.ToolTipText = "Удалить";
-            this.delButtonColumn.Width = 40;
-            // 
-            // MeasuredParameterDataId_Column
-            // 
-            this.MeasuredParameterDataId_Column.DataPropertyName = "measured_parameter_data_id";
-            this.MeasuredParameterDataId_Column.HeaderText = "ID параметров измерения";
-            this.MeasuredParameterDataId_Column.Name = "MeasuredParameterDataId_Column";
-            this.MeasuredParameterDataId_Column.Visible = false;
-            // 
-            // lengthBringingTypeIdColumn
-            // 
-            this.lengthBringingTypeIdColumn.DataPropertyName = "length_bringing_type_id";
-            this.lengthBringingTypeIdColumn.HeaderText = "ID типа длины приведения";
-            this.lengthBringingTypeIdColumn.Name = "lengthBringingTypeIdColumn";
-            this.lengthBringingTypeIdColumn.Visible = false;
-            // 
-            // BringingLengthMeasureTitleColumn
-            // 
-            this.BringingLengthMeasureTitleColumn.HeaderText = "Мера длины приведения";
-            this.BringingLengthMeasureTitleColumn.Name = "BringingLengthMeasureTitleColumn";
-            this.BringingLengthMeasureTitleColumn.Visible = false;
-            // 
-            // cbRisolVoltageValue
-            // 
-            this.cbRisolVoltageValue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbRisolVoltageValue.FormattingEnabled = true;
-            this.cbRisolVoltageValue.Items.AddRange(new object[] {
-            "10",
-            "100",
-            "500",
-            "1000"});
-            this.cbRisolVoltageValue.Location = new System.Drawing.Point(797, 37);
-            this.cbRisolVoltageValue.Name = "cbRisolVoltageValue";
-            this.cbRisolVoltageValue.Size = new System.Drawing.Size(163, 26);
-            this.cbRisolVoltageValue.TabIndex = 25;
-            this.cbRisolVoltageValue.SelectedIndexChanged += new System.EventHandler(this.cbRisolVoltageValue_SelectedIndexChanged);
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(794, 16);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(158, 18);
-            this.label25.TabIndex = 26;
-            this.label25.Text = "Напряжение Rизол, В";
+            this.cableDataPanel.Controls.Add(this.BuildLength_input);
+            this.cableDataPanel.Controls.Add(this.CableMark_input);
+            this.cableDataPanel.Controls.Add(this.CableStructures_input);
+            this.cableDataPanel.Controls.Add(this.cbVoltageOfCoverTest);
+            this.cableDataPanel.Controls.Add(this.label1);
+            this.cableDataPanel.Controls.Add(this.groupBox4);
+            this.cableDataPanel.Controls.Add(this.label2);
+            this.cableDataPanel.Controls.Add(this.DocumentNumber_input);
+            this.cableDataPanel.Controls.Add(this.Notes_input);
+            this.cableDataPanel.Controls.Add(this.label3);
+            this.cableDataPanel.Controls.Add(this.DocumentName_input);
+            this.cableDataPanel.Controls.Add(this.label13);
+            this.cableDataPanel.Controls.Add(this.label4);
+            this.cableDataPanel.Controls.Add(this.CodeKCH_input);
+            this.cableDataPanel.Controls.Add(this.label5);
+            this.cableDataPanel.Controls.Add(this.CodeOKP_input);
+            this.cableDataPanel.Controls.Add(this.linearMass_input);
+            this.cableDataPanel.Controls.Add(this.label12);
+            this.cableDataPanel.Controls.Add(this.label6);
+            this.cableDataPanel.Controls.Add(this.label11);
+            this.cableDataPanel.Controls.Add(this.label7);
+            this.cableDataPanel.Location = new System.Drawing.Point(22, 12);
+            this.cableDataPanel.Name = "cableDataPanel";
+            this.cableDataPanel.Size = new System.Drawing.Size(991, 236);
+            this.cableDataPanel.TabIndex = 36;
             // 
             // CableForm
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1034, 962);
-            this.Controls.Add(this.cbVoltageOfCoverTest);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.Notes_input);
+            this.ClientSize = new System.Drawing.Size(1043, 962);
+            this.Controls.Add(this.cableDataPanel);
+            this.Controls.Add(this.cableStructuresTabs);
             this.Controls.Add(this.panelControlButtons);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.CodeKCH_input);
-            this.Controls.Add(this.CodeOKP_input);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.linearMass_input);
-            this.Controls.Add(this.BuildLength_input);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.DocumentName_input);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.DocumentNumber_input);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.CableStructures_input);
-            this.Controls.Add(this.CableMark_input);
             this.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -1179,13 +1189,14 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudRrealElementsAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDisplayedElementAmount)).EndInit();
-            this.tabControl1.ResumeLayout(false);
+            this.cableStructuresTabs.ResumeLayout(false);
             this.addMeasurerParameterContextMenu.ResumeLayout(false);
             this.contextMenuBringingLength.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.cableDataPanel.ResumeLayout(false);
+            this.cableDataPanel.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
         #endregion
@@ -1215,7 +1226,7 @@
         protected System.Windows.Forms.Button saveCableButton;
         private System.Windows.Forms.TabPage newTabPage;
         private System.Windows.Forms.Panel structureDataContainer;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl cableStructuresTabs;
         private System.Windows.Forms.Button btnRemoveCurrentStructure;
         private System.Windows.Forms.ComboBox cbIsolationMaterial;
         private System.Windows.Forms.Label label15;
@@ -1282,5 +1293,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn BringingLengthMeasureTitleColumn;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.ComboBox cbRisolVoltageValue;
+        private System.Windows.Forms.Panel cableDataPanel;
     }
 }

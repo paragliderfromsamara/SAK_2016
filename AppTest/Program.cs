@@ -96,6 +96,7 @@ namespace AppTest
 
         static void TestOfCableTest()
         {
+            CableTest test;
             ClearTests();
             DBEntityTable cables_table = Cable.get_all_as_table();
             foreach(Cable cable in cables_table.Rows)
@@ -116,6 +117,7 @@ namespace AppTest
 
 foreach(CableStructure s in cable.CableStructures.Rows)
 {
+    
     MeasurePointMap map = new MeasurePointMap(s, MeasuredParameterType.Calling);
     if (s.RealAmount > 4)
     {
@@ -133,7 +135,7 @@ foreach(CableStructure s in cable.CableStructures.Rows)
     }
 
 }
-                f.SaveTest();
+                f.SaveTest(out test);
             }
 
         }

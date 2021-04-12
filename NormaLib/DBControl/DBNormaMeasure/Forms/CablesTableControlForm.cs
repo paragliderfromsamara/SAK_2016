@@ -17,6 +17,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
     {
         protected DBEntityTable CablesTable;
         protected ToolStripMenuItem createFromCableToolStripItem;
+        protected ToolStripMenuItem showCableToolStripItem;
         public CablesTableControlForm() : base()
         {
             
@@ -90,16 +91,41 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             base.InitDesign();
             InitializeComponent();
+            dgEntities.DoubleClick += (o, s) => { ShowSelectedCable(); };
             CreateAdditionaButtonsForContextMenu();
         }
 
         private void CreateAdditionaButtonsForContextMenu()
         {
+            List<ToolStripMenuItem> items = new List<ToolStripMenuItem>();
+            showCableToolStripItem = new ToolStripMenuItem();
+            showCableToolStripItem.Name = "showCableToolStripMenuItem";
+            showCableToolStripItem.Text = "Просмотр";
             createFromCableToolStripItem = new ToolStripMenuItem();
             createFromCableToolStripItem.Name = "createCableFromExist";
             createFromCableToolStripItem.Text = "Создать из...";
             createFromCableToolStripItem.Click += createCableFromExistItem_Click;
-            contextTableMenu.Items.Add(createFromCableToolStripItem);
+            items.Add(showCableToolStripItem);
+            items.Add(createFromCableToolStripItem);
+            showCableToolStripItem.Click += (o, s) => { ShowSelectedCable(); };
+            foreach (ToolStripMenuItem item in contextTableMenu.Items) items.Add(item);
+
+            contextTableMenu.Items.Clear();
+            contextTableMenu.Items.AddRange(items.ToArray());
+
+
+
+           // contextTableMenu.Items.Add(createFromCableToolStripItem);
+        }
+
+        private void ShowSelectedCable()
+        {
+            if (HasSelectedOneRow)
+            {
+                Cable cable = GetCableByDataGridRow(dgEntities.SelectedRows[0]);
+                CableForm form = new CableForm(cable.CableId, false);
+                form.ShowDialog();
+            }
         }
 
         private void createCableFromExistItem_Click(object sender, EventArgs e)

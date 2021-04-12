@@ -14,6 +14,37 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 {
     public partial class CableForm : Form
     {
+        bool is_edit_mode = true;
+        
+        private bool IsEditMode
+        {
+            get
+            {
+                return is_edit_mode;
+            }set
+            {
+                if (is_edit_mode == value) return;
+                structureDataContainer.Enabled = value;
+                cableDataPanel.Enabled = value;
+                btnRemoveCurrentStructure.Visible = value;
+                saveCableButton.Visible = value;
+                delButtonColumn.Visible = value;
+
+                if (value)
+                {
+                    AddTabPage(MakeDraftStructure());
+                    parameter_type_name_column.HeaderCell.Value = "+";
+                    parameter_type_name_column.HeaderCell.Style = BuildParameterNameCellStyle();
+                }
+                else
+                {
+                    cableStructuresTabs.TabPages.Remove(cableStructuresTabs.TabPages[cableStructuresTabs.TabCount - 1]);
+                    parameter_type_name_column.HeaderCell.Value = "Параметр";
+                    parameter_type_name_column.HeaderCell.Style = minValueColumn.HeaderCell.Style;
+                }
+
+            }
+        }
         private bool isOnInitForm;
         private bool isNew = false;
         public bool IsNew => isNew;
@@ -27,12 +58,13 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             if (cable != null) InitFormByAssignedCable();
         }
 
-        public CableForm(uint cable_id)
+        public CableForm(uint cable_id, bool isEditMode = true)
         {
             isNew = false;
             InitDesign();
             cable = Cable.find_by_cable_id(cable_id);
             if (cable != null) InitFormByAssignedCable();
+            IsEditMode = isEditMode;
         }
 
         public CableForm(Cable copiedCable)
@@ -555,7 +587,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         private void initStructureTabPage()
         {
-            tabControl1.TabPages.Clear();
+            cableStructuresTabs.TabPages.Clear();
             cable.CableStructures.RowChanged += CableStructures_RowChanged;
             cable.CableStructures.RowDeleted += CableStructures_RowDeleted;
             if (cable.CableStructures.Rows.Count > 0)
@@ -678,28 +710,28 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         #region Управление TabPage структур
         private void btnRemoveCurrentStructure_Click(object sender, EventArgs e)
         {
-            if (tabControl1.TabCount == 1) return;
+            if (cableStructuresTabs.TabCount == 1) return;
             CableStructure delStruct = currentStructure;
-            int delStructIndex = tabControl1.SelectedIndex;
+            int delStructIndex = cableStructuresTabs.SelectedIndex;
             int nextStructureId;
             nextStructureId = (delStructIndex > 0) ? delStructIndex - 1 : 1;
             delTabFlag = true;
-            tabControl1.SelectedIndex = nextStructureId;
+            cableStructuresTabs.SelectedIndex = nextStructureId;
             delTabFlag = Cable.RemoveStructure(delStruct);
-            if (delTabFlag) tabControl1.TabPages[delStructIndex].Dispose();
+            if (delTabFlag) cableStructuresTabs.TabPages[delStructIndex].Dispose();
             delTabFlag = false;           
         }
 
         private void AddTabPage(CableStructure s)
         {
-            TabPage tp = new TabPage(s.StructureTypeId == 0 ? "Новая структура" : s.StructureTitle );
+            TabPage tp = new TabPage(s.CableStructureId == 0 ? "Новая структура" : s.StructureTitle );
             tp.Tag = s;
             tp.Location = new System.Drawing.Point(4, 27);
             tp.Padding = new System.Windows.Forms.Padding(3);
             tp.Size = new System.Drawing.Size(862, 371);
             tp.TabIndex = 0;
             tp.UseVisualStyleBackColor = true;
-            tabControl1.TabPages.Add(tp);
+            cableStructuresTabs.TabPages.Add(tp);
         }
 
         /// <summary>
@@ -707,7 +739,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         /// </summary>
         private void ReplacePanelToCurrentPage()
         {
-            tabControl1.TabPages[tabControl1.SelectedIndex].Controls.Add(structureDataContainer);
+            cableStructuresTabs.TabPages[cableStructuresTabs.SelectedIndex].Controls.Add(structureDataContainer);
         }
 
         private CableStructure MakeDraftStructure()
@@ -744,7 +776,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         private void tabControl1_Deselecting(object sender, TabControlCancelEventArgs e)
         {
-            if (!currentStructure.IsNewRecord() && !delTabFlag) e.Cancel = !SaveCurrentStructure();
+            if (!currentStructure.IsNewRecord() && !delTabFlag && IsEditMode) e.Cancel = !SaveCurrentStructure();
         }
 
         private bool SaveCurrentStructure()
@@ -1245,7 +1277,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             get
             {
-                return tabControl1.SelectedTab.Tag == null ? MakeDraftStructure() : tabControl1.SelectedTab.Tag as CableStructure;
+                return cableStructuresTabs.SelectedTab.Tag == null ? MakeDraftStructure() : cableStructuresTabs.SelectedTab.Tag as CableStructure;
 
                 //currentStructureId < tabControl1.TabCount - 1 ? (CableStructure)(Cable.CableStructures.Rows[currentStructureId]) : draftStructure;
                 
@@ -1257,7 +1289,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             if (isOnInitForm || cbStructureType.SelectedIndex == selIndexWas) return;
             selIndexWas = cbStructureType.SelectedIndex;
             currentStructure.StructureType = GetSelectedCableStructureType();
-            tabControl1.SelectedTab.Text = currentStructure.StructureTitle;
+            cableStructuresTabs.SelectedTab.Text = currentStructure.StructureTitle;
             if (currentStructure.IsNewRecord() && currentStructure.StructureTypeId != 0)
             {
                 //Добавляем новую структуру
