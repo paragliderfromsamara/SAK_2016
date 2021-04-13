@@ -31,7 +31,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        public static Cable GetCableCopy(uint cable_id)
+        public static Cable GetCableCopy(uint cable_id) 
         {
             Cable c = find_by_cable_id(cable_id);
             return c == null ? null : GetCableCopy(c);

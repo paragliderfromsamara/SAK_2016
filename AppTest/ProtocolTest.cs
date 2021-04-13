@@ -48,7 +48,8 @@ namespace AppTest
 
         private static void TestCableProtocolBuilderToMsWord(CableTest test)
         {
-            ProtocolExport.ExportTo(test, @"Протоколы испытаний MS WORD", NormaExportType.MSWORD);
+            ProtocolPathBuilder pathBuilder = new ProtocolPathBuilder(test);
+            ProtocolExport.ExportTo(test, NormaExportType.MSWORD);
         }
 
         //private static ProtocolTable TestTable()

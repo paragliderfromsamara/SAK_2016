@@ -14,9 +14,9 @@ namespace NormaLib.ProtocolBuilders.MSWord
     internal class MSWordCableTestProtocol : MSWordProtocol
     {
         private CableTest cableTest;
-        public MSWordCableTestProtocol(CableTest test, string path)
+        public MSWordCableTestProtocol(CableTest test, string path_with_file_name)
         {
-            filePath = path + @"\" + $"Протокол {test.TestId}.docx";
+            filePath = $@"{path_with_file_name}.docx";
             cableTest = test;
         }
 

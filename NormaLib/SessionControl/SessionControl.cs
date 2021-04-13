@@ -36,7 +36,7 @@ namespace NormaLib.SessionControl
         public static bool AllowEdit_BarabanType => AllowAdd_BarabanType;
         public static bool AllowRemove_BarabanType => AllowAdd_BarabanType;
 
-
+        public static bool AllowRemove_CableTest => IsAdmin || IsMetrolog;
 
         public static bool IsAdmin => currentUser == null ? false : CurrentUserRole.UserRoleId == UserRole.DBAdmin;
         public static bool IsMetrolog => currentUser == null ? false : CurrentUserRole.UserRoleId == UserRole.Metrolog;

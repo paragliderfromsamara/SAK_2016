@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NormaLib.UI;
 using NormaLib.DBControl.Tables;
+using NormaLib.SessionControl;
+using NormaLib.ProtocolBuilders;
+
 
 namespace NormaLib.DBControl.DBNormaMeasure.Forms
 {
     public partial class CableTestListControlForm : DBTableContolForm
     {
+        private ToolStripMenuItem msWordImportButton;
+
         protected DBEntityTable CableTestsTable;
         public CableTestListControlForm() : base()
         {
@@ -24,11 +29,63 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         protected override void ApplyUserRights()
         {
             AllowAddEntity = false;
-            AllowEditEntity = true;
-            AllowRemoveEntity = true;
+            AllowEditEntity = false;
+            AllowRemoveEntity = SessionControl.SessionControl.AllowRemove_CableTest;
             base.ApplyUserRights();
         }
 
+        private void CreateAdditionaButtonsForContextMenu()
+        {
+            List<ToolStripMenuItem> items = new List<ToolStripMenuItem>();
+            msWordImportButton = new ToolStripMenuItem();
+            msWordImportButton.Name = "msWordImportButton";
+            msWordImportButton.Text = "Импорт в MS Word";
+            msWordImportButton.Click += (o, s) => { ImportSelectedToMSWord(); };
+            items.Add(msWordImportButton);
+            
+            foreach (ToolStripMenuItem item in contextTableMenu.Items) items.Add(item);
+
+            contextTableMenu.Items.Clear();
+            contextTableMenu.Items.AddRange(items.ToArray());
+        }
+
+        private void ImportSelectedToMSWord()
+        {
+            CableTest test = GetSelectedTest();
+            //ProtocolExport.ExportTo()
+        }
+
+        private CableTest GetSelectedTest()
+        {
+            if (!HasSelectedRows) return null;
+            return GetCableTestByDataGridRow(dgEntities.SelectedRows[0]);
+
+        }
+
+        private CableTest GetCableTestByDataGridRow(DataGridViewRow r)
+        {
+            CableTest c = null;
+            uint c_id = 0;
+            if (UInt32.TryParse(r.Cells[$"{CableTest.CableTestId_ColumnName}_column"].Value.ToString(), out c_id))
+            {
+                c = SelectCableTestInListById(c_id);
+            }
+            return c;
+        }
+
+
+        private CableTest SelectCableTestInListById(uint id)
+        {
+            DataRow[] r = CableTestsTable.Select($"{CableTest.CableTestId_ColumnName} = {id}");
+            if (r.Length > 0)
+            {
+                return (CableTest)r[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         protected override DataTable FillDataSetAndGetDataGridTable()
         {

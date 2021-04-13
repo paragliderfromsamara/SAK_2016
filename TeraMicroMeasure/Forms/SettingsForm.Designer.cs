@@ -30,6 +30,7 @@
         {
             this.connectionSettingsTabPage = new System.Windows.Forms.TabPage();
             this.dataBaseSettingsTabPage = new System.Windows.Forms.TabPage();
+            this.protocolSettingsTabPage = new System.Windows.Forms.TabPage();
             this.settingsTab.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -37,14 +38,9 @@
             // 
             this.settingsTab.Controls.Add(this.connectionSettingsTabPage);
             this.settingsTab.Controls.Add(this.dataBaseSettingsTabPage);
-            this.settingsTab.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsTab.Controls.Add(this.protocolSettingsTabPage);
             this.settingsTab.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.settingsTab.Location = new System.Drawing.Point(0, 0);
-            this.settingsTab.Name = "settingsTab";
             this.settingsTab.Padding = new System.Drawing.Point(25, 10);
-            this.settingsTab.SelectedIndex = 0;
-            this.settingsTab.Size = new System.Drawing.Size(1029, 546);
-            this.settingsTab.TabIndex = 0;
             // 
             // connectionSettingsTabPage
             // 
@@ -69,14 +65,22 @@
             this.dataBaseSettingsTabPage.Text = "Настройки Базы Данных";
             this.dataBaseSettingsTabPage.UseVisualStyleBackColor = true;
             // 
+            // protocolSettingsTabPage
+            // 
+            this.protocolSettingsTabPage.Location = new System.Drawing.Point(4, 39);
+            this.protocolSettingsTabPage.Name = "protocolSettingsTabPage";
+            this.protocolSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.protocolSettingsTabPage.Size = new System.Drawing.Size(1021, 503);
+            this.protocolSettingsTabPage.TabIndex = 2;
+            this.protocolSettingsTabPage.Text = "Настройки протоколов";
+            this.protocolSettingsTabPage.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1029, 546);
-            this.Controls.Add(this.settingsTab);
             this.Name = "SettingsForm";
-            this.Text = "НАСТРОЙКИ";
             this.settingsTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -86,5 +90,6 @@
 
         private System.Windows.Forms.TabPage connectionSettingsTabPage;
         private System.Windows.Forms.TabPage dataBaseSettingsTabPage;
+        private System.Windows.Forms.TabPage protocolSettingsTabPage;
     }
 }

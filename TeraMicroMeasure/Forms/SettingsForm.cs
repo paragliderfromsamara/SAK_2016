@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using NormaLib.SocketControl.TCPControlLib;
 using NormaLib.UI;
 using System.Diagnostics;
+using NormaLib.ProtocolBuilders;
 
 namespace TeraMicroMeasure.Forms
 {
@@ -35,6 +36,8 @@ namespace TeraMicroMeasure.Forms
                     return new TCPSettingsForm(new TCPSettingsController(Properties.Settings.Default.IsServerApp));
                 case 1:
                     return new DataBaseSettingsForm();
+                case 2:
+                    return new ProtocolSettingsForm();
                 default:
                     return new NormaLib.UI.ChildForms.BlankForm();
             }

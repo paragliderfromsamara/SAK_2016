@@ -10,6 +10,7 @@ using V = DocumentFormat.OpenXml.Vml;
 using Ds = DocumentFormat.OpenXml.CustomXmlDataProperties;
 using A = DocumentFormat.OpenXml.Drawing;
 using System;
+using System.Diagnostics;
 
 namespace NormaLib.ProtocolBuilders.MSWord
 {
@@ -30,6 +31,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
         protected string filePath;
         public void CreateDocument()
         {
+            Debug.WriteLine(filePath);
             using (WordprocessingDocument package = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document))
             {
                 CreateParts(package);
