@@ -17,9 +17,9 @@ namespace NormaLib.ProtocolBuilders
             OpenFile(this.export.FilePath);
         }
 
-        public ProtocolViewer(ProtocolPathBuilder path_builder)
+        public ProtocolViewer(ProtocolPathBuilder path_builder, bool force_import = false)
         {
-            if (path_builder.FileExists())
+            if (path_builder.ProtocolExists() && !force_import)
             {
                 OpenFile(path_builder.Path_WithFileName);
             }else

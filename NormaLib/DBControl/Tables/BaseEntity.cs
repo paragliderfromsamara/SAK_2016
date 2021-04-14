@@ -277,7 +277,6 @@ namespace NormaLib.DBControl.Tables
         public virtual bool Destroy()
         {
             string query = makeDestroyQuery();
-         
             return ((DBEntityTable)this.Table).WriteSingleQuery(query);
         }
 

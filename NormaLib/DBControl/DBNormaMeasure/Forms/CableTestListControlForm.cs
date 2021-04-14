@@ -18,6 +18,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
     public partial class CableTestListControlForm : DBTableContolForm
     {
         private ToolStripMenuItem msWordImportButton;
+        private ToolStripMenuItem msWordOpenProtocolButton;
 
         protected DBEntityTable CableTestsTable;
         public CableTestListControlForm() : base()
@@ -25,6 +26,12 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         }
 
+        protected override void InitDesign()
+        {
+            base.InitDesign();
+            CreateAdditionaButtonsForContextMenu();
+            dgEntities.DoubleClick += (o, s)=> OpenSelectedOnMSWord(false);
+        }
 
         protected override void ApplyUserRights()
         {
@@ -39,8 +46,19 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             List<ToolStripMenuItem> items = new List<ToolStripMenuItem>();
             msWordImportButton = new ToolStripMenuItem();
             msWordImportButton.Name = "msWordImportButton";
-            msWordImportButton.Text = "Импорт в MS Word";
-            msWordImportButton.Click += (o, s) => { ImportSelectedToMSWord(); };
+            msWordImportButton.Text = "Перезаписать MS Word";
+            msWordImportButton.Click += (o, s) => { OpenSelectedOnMSWord(true);};
+
+            msWordOpenProtocolButton = new ToolStripMenuItem();
+            msWordOpenProtocolButton.Name = "msWordImportButton";
+            msWordOpenProtocolButton.Text = "Открыть в MS Word";
+
+
+            msWordOpenProtocolButton.Click += (o, s) => { OpenSelectedOnMSWord(false); };
+
+            removeEntityToolStripItem.Text = "Удалить из Базы Данных";
+
+            items.Add(msWordOpenProtocolButton);
             items.Add(msWordImportButton);
             
             foreach (ToolStripMenuItem item in contextTableMenu.Items) items.Add(item);
@@ -49,10 +67,23 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             contextTableMenu.Items.AddRange(items.ToArray());
         }
 
-        private void ImportSelectedToMSWord()
+
+
+        private void OpenSelectedOnMSWord(bool force_import)
         {
             CableTest test = GetSelectedTest();
-            //ProtocolExport.ExportTo()
+            if (test == null) return;
+            ProtocolViewer viewer = new ProtocolViewer(new ProtocolPathBuilder(test, NormaExportType.MSWORD), force_import);
+        }
+
+        protected override bool CheckToolStripAllow()
+        {
+            if (!HasSelectedRows) return false;
+            CableTest selectedTest = GetSelectedTest();
+            ProtocolPathBuilder wordProtocolBuilder = new ProtocolPathBuilder(selectedTest, NormaExportType.MSWORD);
+            msWordImportButton.Visible = wordProtocolBuilder.ProtocolExists();
+            msWordImportButton.Enabled = msWordOpenProtocolButton.Enabled = dgEntities.SelectedRows.Count == 1;
+            return true;
         }
 
         private CableTest GetSelectedTest()
@@ -144,6 +175,26 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             cols.Add(BuildDataGridTextColumn(CableTest.TestLineNumber_ColumnName, "Номер линии"));
             cols.Add(BuildDataGridTextColumn(CableTest.TestLineTitle_ColumnName, "Линия", true));
             return cols;
+        }
+
+        protected override void RemoveEntityHandler(DataGridViewSelectedRowCollection selectedRows)
+        {
+            if (!HasSelectedRows) return;
+            DialogResult dr = MessageBox.Show("Выбранное испытание будет удалено из Базы Данных безвозвратно. Продолжить?", "Вопрос...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes)
+            {
+                foreach(DataGridViewRow sr in dgEntities.SelectedRows)
+                {
+                    CableTest test = GetCableTestByDataGridRow(sr);
+                    if (GetSelectedTest().Destroy())
+                    {
+                        CableTestsTable.Rows.Remove(test);
+                    }
+                }
+
+                
+            }
+
         }
     }
 }

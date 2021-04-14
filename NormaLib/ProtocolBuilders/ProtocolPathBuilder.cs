@@ -15,6 +15,8 @@ namespace NormaLib.ProtocolBuilders
         private Type entity_type;
         public Type EntityType => entity_type;
         public object Entity => protocol_entity;
+
+
         public ProtocolPathBuilder(object protocol_entity, NormaExportType export_type, string path = null)
         {
             this.protocol_entity = protocol_entity;
@@ -24,10 +26,12 @@ namespace NormaLib.ProtocolBuilders
             
         }
 
-        internal bool FileExists()
+        internal bool ProtocolExists()
         {
             return File.Exists(Path_WithFileName);
         }
+
+
 
         public void InitPath()
         {

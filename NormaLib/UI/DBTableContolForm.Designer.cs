@@ -205,8 +205,8 @@
         public System.Windows.Forms.DataGridView dgEntities;
         private System.Windows.Forms.Label loadStatusLabel;
         private System.Windows.Forms.Timer loadStatusLabelTimer;
-        private System.Windows.Forms.ToolStripMenuItem editEntityTooStripButton;
-        private System.Windows.Forms.ToolStripMenuItem removeEntityToolStripItem;
+        protected System.Windows.Forms.ToolStripMenuItem editEntityTooStripButton;
+        protected System.Windows.Forms.ToolStripMenuItem removeEntityToolStripItem;
         protected System.Windows.Forms.ContextMenuStrip contextTableMenu;
         protected System.Windows.Forms.Button btnNewRecordFormInit;
         protected System.Data.DataSet entitiesDataSet;
