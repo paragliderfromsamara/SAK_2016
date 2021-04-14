@@ -39,17 +39,16 @@
             this.settingsTab.Controls.Add(this.connectionSettingsTabPage);
             this.settingsTab.Controls.Add(this.dataBaseSettingsTabPage);
             this.settingsTab.Controls.Add(this.protocolSettingsTabPage);
-            this.settingsTab.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.settingsTab.Padding = new System.Drawing.Point(25, 10);
             // 
             // connectionSettingsTabPage
             // 
             this.connectionSettingsTabPage.BackColor = System.Drawing.Color.White;
             this.connectionSettingsTabPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.connectionSettingsTabPage.Location = new System.Drawing.Point(4, 39);
+            this.connectionSettingsTabPage.Location = new System.Drawing.Point(4, 43);
             this.connectionSettingsTabPage.Name = "connectionSettingsTabPage";
             this.connectionSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.connectionSettingsTabPage.Size = new System.Drawing.Size(1021, 503);
+            this.connectionSettingsTabPage.Size = new System.Drawing.Size(1021, 499);
             this.connectionSettingsTabPage.TabIndex = 0;
             this.connectionSettingsTabPage.Text = "Настройки соединения";
             this.connectionSettingsTabPage.UseVisualStyleBackColor = true;

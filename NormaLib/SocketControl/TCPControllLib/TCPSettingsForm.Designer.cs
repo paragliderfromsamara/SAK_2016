@@ -51,7 +51,7 @@
             this.localIPComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.localIPComboBox.FormattingEnabled = true;
             this.localIPComboBox.Location = new System.Drawing.Point(22, 49);
-            this.localIPComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.localIPComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.localIPComboBox.Name = "localIPComboBox";
             this.localIPComboBox.Size = new System.Drawing.Size(201, 24);
             this.localIPComboBox.TabIndex = 0;
@@ -59,7 +59,7 @@
             // localPortInput
             // 
             this.localPortInput.Location = new System.Drawing.Point(265, 49);
-            this.localPortInput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.localPortInput.Margin = new System.Windows.Forms.Padding(4);
             this.localPortInput.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -86,9 +86,9 @@
             this.localSettings.Controls.Add(this.localIPComboBox);
             this.localSettings.Controls.Add(this.localPortInput);
             this.localSettings.Location = new System.Drawing.Point(28, 24);
-            this.localSettings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.localSettings.Margin = new System.Windows.Forms.Padding(4);
             this.localSettings.Name = "localSettings";
-            this.localSettings.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.localSettings.Padding = new System.Windows.Forms.Padding(4);
             this.localSettings.Size = new System.Drawing.Size(414, 95);
             this.localSettings.TabIndex = 2;
             this.localSettings.TabStop = false;
@@ -121,9 +121,9 @@
             this.serverSettingsPanel.Controls.Add(this.label3);
             this.serverSettingsPanel.Controls.Add(this.label4);
             this.serverSettingsPanel.Location = new System.Drawing.Point(28, 136);
-            this.serverSettingsPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.serverSettingsPanel.Margin = new System.Windows.Forms.Padding(4);
             this.serverSettingsPanel.Name = "serverSettingsPanel";
-            this.serverSettingsPanel.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.serverSettingsPanel.Padding = new System.Windows.Forms.Padding(4);
             this.serverSettingsPanel.Size = new System.Drawing.Size(414, 95);
             this.serverSettingsPanel.TabIndex = 3;
             this.serverSettingsPanel.TabStop = false;
@@ -132,7 +132,7 @@
             // remotePortInput
             // 
             this.remotePortInput.Location = new System.Drawing.Point(265, 48);
-            this.remotePortInput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.remotePortInput.Margin = new System.Windows.Forms.Padding(4);
             this.remotePortInput.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -155,7 +155,7 @@
             // remoteIPInput
             // 
             this.remoteIPInput.Location = new System.Drawing.Point(22, 48);
-            this.remoteIPInput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.remoteIPInput.Margin = new System.Windows.Forms.Padding(4);
             this.remoteIPInput.Name = "remoteIPInput";
             this.remoteIPInput.Size = new System.Drawing.Size(201, 24);
             this.remoteIPInput.TabIndex = 4;
@@ -184,7 +184,7 @@
             // 
             this.saveButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.saveButton.Location = new System.Drawing.Point(28, 254);
-            this.saveButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.saveButton.Margin = new System.Windows.Forms.Padding(4);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(189, 37);
             this.saveButton.TabIndex = 4;
@@ -196,7 +196,7 @@
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.Location = new System.Drawing.Point(254, 254);
-            this.cancelButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(189, 37);
             this.cancelButton.TabIndex = 5;
@@ -207,6 +207,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(475, 331);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
@@ -214,7 +215,7 @@
             this.Controls.Add(this.localSettings);
             this.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "TCPSettingsForm";

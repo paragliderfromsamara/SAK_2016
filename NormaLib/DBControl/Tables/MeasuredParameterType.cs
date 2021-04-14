@@ -100,7 +100,8 @@ namespace NormaLib.DBControl.Tables
         public static DBEntityTable get_all_by_ids(uint[] ids)
         {
             DBEntityTable t = new DBEntityTable(typeof(MeasuredParameterType));
-            ((MeasuredParameterType[])AllTypes.Select($"{ParameterTypeId_ColumnName} IN ({string.Join(",", ids)})")).CopyToDataTable(t, LoadOption.Upsert);
+            if (ids.Length > 0)
+                ((MeasuredParameterType[])AllTypes.Select($"{ParameterTypeId_ColumnName} IN ({string.Join(",", ids)})")).CopyToDataTable(t, LoadOption.Upsert);
             return t;
             /*
             string idsStr = String.Empty;

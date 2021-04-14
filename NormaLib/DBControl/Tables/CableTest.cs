@@ -19,13 +19,17 @@ namespace NormaLib.DBControl.Tables
         {
         }
 
-        public static DBEntityTable find_finished()
+        public static DBEntityTable find_finished(string additional_condition = null)
         {
             DBEntityTable TestedCables = new DBEntityTable(typeof(TestedCable));
             DBEntityTable CableTestTable = new DBEntityTable(typeof(CableTest));
             DBEntityTable DocumentsTable = new DBEntityTable(typeof(Document));
+            additional_condition = (string.IsNullOrWhiteSpace(additional_condition)) ? "" : $" AND {additional_condition}";
+            string limit = (string.IsNullOrWhiteSpace(additional_condition)) ? " LIMIT 50" : "";
             string select_for_test_line = $"CONVERT((IF({TestLineNumber_ColumnName} > 0, CONCAT('Линия №', {TestLineNumber_ColumnName}), 'Сервер')), char) AS {TestLineTitle_ColumnName}";
-            string query = $"SELECT *, CONCAT({TestedCable.CableName_ColumnName}, ' ', {TestedCable.StructName_ColumnName}) AS {TestedCable.FullCableName_ColumnName}, {select_for_test_line} FROM {CableTestTable.TableName} LEFT OUTER JOIN {TestedCables.TableName} USING({CableTestTable.PrimaryKey[0]}) LEFT OUTER JOIN {DocumentsTable.TableName} USING({Document.DocumentId_ColumnName}) WHERE {CableTestStatus.StatusId_ColumnName} = {CableTestStatus.Finished};";
+            string query = $"SELECT *, CONCAT({TestedCable.CableName_ColumnName}, ' ', {TestedCable.StructName_ColumnName}) AS {TestedCable.FullCableName_ColumnName}, {select_for_test_line} FROM {CableTestTable.TableName} LEFT OUTER JOIN {TestedCables.TableName} USING({CableTestTable.PrimaryKey[0]}) LEFT OUTER JOIN {DocumentsTable.TableName} USING({Document.DocumentId_ColumnName}) WHERE {CableTestStatus.StatusId_ColumnName} = {CableTestStatus.Finished}{additional_condition} ORDER BY {TestFinishedAt_ColumnName} DESC{limit};";
+            CableTestTable = find_by_query(query, typeof(CableTest));
+            Debug.WriteLine(CableTestTable.Rows.Count);
             return find_by_query(query, typeof(CableTest));
         }
 
@@ -46,6 +50,26 @@ namespace NormaLib.DBControl.Tables
             return test;
         }
 
+        public static DBEntityTable GetMinMaxDate()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableTest), DBEntityTableMode.NoColumns);
+            string query = $"select startdate.{TestFinishedAt_ColumnName} as start, enddate.{TestFinishedAt_ColumnName}  as finish from (select {TestFinishedAt_ColumnName} from {t.TableName} ORDER BY {TestFinishedAt_ColumnName} ASC LIMIT 1) AS startdate, (select {TestFinishedAt_ColumnName} from {t.TableName} ORDER BY {TestFinishedAt_ColumnName} DESC LIMIT 1) as enddate;";
+            t.TableName = "min_max_date";
+            t.Columns.Add("start", typeof(DateTime));
+            t.Columns.Add("finish", typeof(DateTime));
+            t.FillByQuery(query);
+
+            return t;
+        }
+
+        public static DBEntityTable FindByFilter(string cable_mark, DateTime date_start, DateTime date_finish)
+        {
+            DBEntityTable t = new DBEntityTable(typeof(TestedCable));
+            string query = $"{TestFinishedAt_ColumnName} BETWEEN '{date_start.ToString("yyyy-MM-dd")}T00:00:00' AND '{date_finish.ToString("yyyy-MM-dd")}T23:59:59'";
+            if (!string.IsNullOrWhiteSpace(cable_mark)) query += $" AND CONCAT({TestedCable.CableName_ColumnName}, ' ', {TestedCable.StructName_ColumnName}) LIKE '%{cable_mark}%'";
+            Debug.WriteLine(query);
+            return find_finished(query);
+        }
 
         public static CableTest GetLastOrCreateNew(int test_line_number = -1)
         {
@@ -123,6 +147,8 @@ namespace NormaLib.DBControl.Tables
         {
             if (testResults.SaveToDB())
             {
+                //Random r = new Random();
+                //DateTime t = new DateTime(r.Next(2012, 2021), r.Next(1, 12), r.Next(1, 28), r.Next(0, 23), r.Next(0, 59), r.Next(0, 59));
                 FinishedAt = DateTime.Now;
                 SetStatus(CableTestStatus.Finished);
             }

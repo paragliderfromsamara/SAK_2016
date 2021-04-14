@@ -61,10 +61,11 @@ namespace NormaLib.UI
             //throw new NotImplementedException();
         }
 
-        protected void AddOrMergeTableToFormDataSet(DataTable t)
+        protected void AddOrMergeTableToFormDataSet(DataTable t, bool force_replace = false)
         {
             if (entitiesDataSet.Tables.Contains(t.TableName))
             {
+                if (force_replace) entitiesDataSet.Tables[t.TableName].Clear();
                 entitiesDataSet.Tables[t.TableName].Merge(t);
             }
             else

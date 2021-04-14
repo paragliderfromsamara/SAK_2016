@@ -606,6 +606,22 @@ namespace NormaLib.DBControl.Tables
             
         }
 
+        /// <summary>
+        /// Выдаёт таблицу марок кабеля
+        /// </summary>
+        /// <returns></returns>
+        public static DBEntityTable get_tested_cable_marks()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(TestedCable), DBEntityTableMode.NoColumns);
+            t.TableName = "full_cable_marks";
+            t.Columns.Add(FullCableName_ColumnName);
+            string q = $"{t.SelectQuery} WHERE {IsDraftFlag_ColumnName} = 0 ORDER BY {FullCableName_ColumnName} ASC";
+            string selectString = $" DISTINCT CONCAT({CableName_ColumnName}, ' ', {StructName_ColumnName}) AS {FullCableName_ColumnName} ";
+            q = q.Replace("*", selectString);
+            t.FillByQuery(q);
+            return t;
+        }
+
         public static TestedCable find_by_test_id(uint test_id)
         {
             DBEntityTable t = find_by_criteria($"{CableTest.CableTestId_ColumnName} = {test_id}", typeof(TestedCable));

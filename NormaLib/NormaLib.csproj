@@ -315,6 +315,9 @@
     <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\CablesListForm.resx">
       <DependentUpon>CablesListForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\CablesTableControlForm.resx">
+      <DependentUpon>CablesTableControlForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DBControl\DBNormaMeasure\Forms\CableTestListControlForm.resx">
       <DependentUpon>CableTestListControlForm.cs</DependentUpon>
     </EmbeddedResource>

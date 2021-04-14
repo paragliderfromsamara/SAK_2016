@@ -152,7 +152,8 @@ namespace NormaLib.Measure
             }
             set
             {
-                file.Write(CableTest.CableLength_ColumnName, value.ToString(), TestAttrs_SectionName);
+                cableTest.CableLength = value;
+                file.Write(CableTest.CableLength_ColumnName, cableTest.CableLength.ToString(), TestAttrs_SectionName);
             }
         }
 

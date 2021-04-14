@@ -23,13 +23,27 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         protected DBEntityTable CableTestsTable;
         public CableTestListControlForm() : base()
         {
+            FillCableMarks();
+            FillMinMaxDate();
+        }
 
+        private void FillMinMaxDate()
+        {
+            DBEntityTable t = CableTest.GetMinMaxDate();
+            if (t.Rows.Count > 0)
+            {
+                dateFromInput.Value = (DateTime)t.Rows[0][0];
+                dateToValueInput.Value = (DateTime)t.Rows[0][1];
+            }
         }
 
         protected override void InitDesign()
         {
             base.InitDesign();
+            InitializeComponent();
+            
             CreateAdditionaButtonsForContextMenu();
+
             dgEntities.DoubleClick += (o, s)=> OpenSelectedOnMSWord(false);
         }
 
@@ -39,6 +53,8 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             AllowEditEntity = false;
             AllowRemoveEntity = SessionControl.SessionControl.AllowRemove_CableTest;
             base.ApplyUserRights();
+            headerPanel.Visible = false;
+            
         }
 
         private void CreateAdditionaButtonsForContextMenu()
@@ -118,11 +134,23 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             }
         }
 
+        bool use_filter_condition = false;
+        DBEntityTable cable_marks;
         protected override DataTable FillDataSetAndGetDataGridTable()
         {
-            CableTestsTable = CableTest.find_finished();
-            AddOrMergeTableToFormDataSet(CableTestsTable);
+            CableTestsTable = use_filter_condition ? CableTest.FindByFilter(cableMarkComboBox.Text, dateFromInput.Value, dateToValueInput.Value) : CableTest.find_finished();
+            AddOrMergeTableToFormDataSet(CableTestsTable, true);
+            use_filter_condition = false;
             return CableTestsTable;
+        }
+
+        private void FillCableMarks()
+        {
+            cable_marks = TestedCable.get_tested_cable_marks();
+            cableMarkComboBox.DataSource = cable_marks;
+            cableMarkComboBox.ValueMember = TestedCable.FullCableName_ColumnName;
+            cableMarkComboBox.DisplayMember = TestedCable.FullCableName_ColumnName;
+            cableMarkComboBox.SelectedIndex = -1;
         }
 
         protected override List<DataGridViewColumn> BuildColumnsForDataGrid()
@@ -180,7 +208,8 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         protected override void RemoveEntityHandler(DataGridViewSelectedRowCollection selectedRows)
         {
             if (!HasSelectedRows) return;
-            DialogResult dr = MessageBox.Show("Выбранное испытание будет удалено из Базы Данных безвозвратно. Продолжить?", "Вопрос...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            string msg = selectedRows.Count > 1 ? "Выбранные испытания будут удалены" : "Выбранное испытание будет удалено";
+            DialogResult dr = MessageBox.Show($"{msg} из Базы Данных безвозвратно. Продолжить?", "Вопрос...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dr == DialogResult.Yes)
             {
                 foreach(DataGridViewRow sr in dgEntities.SelectedRows)
@@ -191,10 +220,35 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                         CableTestsTable.Rows.Remove(test);
                     }
                 }
-
-                
             }
 
+        }
+
+        private void dateFromInput_ValueChanged(object sender, EventArgs e)
+        {
+            if (dateFromInput.Value > dateToValueInput.Value)
+            {
+                dateToValueInput.Value = dateFromInput.Value;
+            }
+        }
+
+        private void dateToValueChanged_ValueChanged(object sender, EventArgs e)
+        {
+            if (dateFromInput.Value > dateToValueInput.Value)
+            {
+                dateFromInput.Value = dateToValueInput.Value;
+            }
+        }
+
+        private void filterButton_Click(object sender, EventArgs e)
+        {
+            use_filter_condition = true;
+            FillDataSetAndGetDataGridTable();
+        }
+
+        private void refreshButton_Click(object sender, EventArgs e)
+        {
+            FillDataSetAndGetDataGridTable();
         }
     }
 }
