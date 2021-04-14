@@ -26,6 +26,8 @@ namespace NormaLib.ProtocolBuilders.MSWord
         public string FirstPageHeaderText = string.Empty;
         public string AnotherPageHeaderText = string.Empty;
         public string ProtocolTitle = "Паспорт качества";
+        public DateTime CreatedAt = DateTime.Now;
+        public DateTime ModifiedAt = DateTime.Now;
 
         public string FilePath => filePath;
         protected string filePath;
@@ -2509,8 +2511,8 @@ namespace NormaLib.ProtocolBuilders.MSWord
             document.PackageProperties.Keywords = "";
             document.PackageProperties.Description = "";
             document.PackageProperties.Revision = "3";
-            document.PackageProperties.Created = DateTime.Now;//System.Xml.XmlConvert.ToDateTime("2021-04-07T03:49:00Z", System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
-            document.PackageProperties.Modified = DateTime.Now;//System.Xml.XmlConvert.ToDateTime("2021-04-07T10:27:00Z", System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
+            document.PackageProperties.Created = CreatedAt;//System.Xml.XmlConvert.ToDateTime("2021-04-07T03:49:00Z", System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
+            document.PackageProperties.Modified = ModifiedAt;//System.Xml.XmlConvert.ToDateTime("2021-04-07T10:27:00Z", System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
             document.PackageProperties.LastModifiedBy = EditorName;
         }
 

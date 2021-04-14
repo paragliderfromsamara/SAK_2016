@@ -1583,7 +1583,7 @@ namespace TeraMicroMeasure
             CableTest test;
             if (testFile.SaveTest(out test))
             {
-                ProtocolExport.ExportTo(test, @"Протоколы\MS WORD", NormaExportType.MSWORD);
+                ProtocolViewer v = new ProtocolViewer(new ProtocolPathBuilder(test, NormaExportType.MSWORD));
             } 
         }
 

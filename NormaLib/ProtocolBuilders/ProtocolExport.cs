@@ -11,57 +11,39 @@ using System.Diagnostics;
 
 namespace NormaLib.ProtocolBuilders
 {
-    public static class ProtocolExport
+    public class ProtocolExport
     {
-        public static bool ExportTo(CableTest cable_test, NormaExportType export)
+        private ProtocolPathBuilder path_builder = null;
+        public string FilePath => path_builder.Path_WithFileName;
+        public ProtocolExport(ProtocolPathBuilder path_builder)
         {
-            ProtocolPathBuilder path_builder = new ProtocolPathBuilder(cable_test);
-            switch (export)
-            {
-                case NormaExportType.MSWORD:
-                    return ExportTo(cable_test, path_builder.FullPathWithFileName_ForMSWordProtocols, export);
-                default:
-                    return false;
-            }
-        }
-        public static bool ExportTo(CableTest cable_test, string path, NormaExportType export)
-        {
-            //try
-            //{
-                CheckPath(path);
-                ProtocolPathBuilder builder = new ProtocolPathBuilder(cable_test);
-                builder.Path = path;
-                switch(export)
-                {
-                    case NormaExportType.MSWORD:
-                        MSWordCableTestProtocol protocol = new MSWordCableTestProtocol(cable_test, builder.Path);
-                        protocol.EditorName = "Roman Kozvonin";
-                        protocol.FirstPageHeaderText = "ООО \"НПП \"Норма\"";
-                        protocol.AnotherPageHeaderText = cable_test.TestedCable.FullName;
-                        protocol.CreateDocument();
-                        Process.Start(builder.PathWithFileName);
-                        break;
-                }
-                return true;
-            //}catch(Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message, "Ошибка при формировании протокола", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return false;
-            //}
+            this.path_builder = path_builder;
+           // try
+           // {
+                path_builder.InitPath();
+                if (path_builder.EntityType == typeof(CableTest))
+                    ExportCableTestProtocol();
+          //  }catch(Exception ex)
+          //  {
+          //      MessageBox.Show(ex.Message, "Ошибка при формировании протокола", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          //  }
+
         }
 
-        private static void CheckPath(string path)
+        private void ExportCableTestProtocol()
         {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            CableTest test = path_builder.Entity as CableTest;
+            MSWordCableTestProtocol protocol = new MSWordCableTestProtocol(path_builder);
+            protocol.CreateDocument();
+            //Process.Start(path_builder.Path_WithFileName);
         }
+
+
+
+       
+        
+
     }
 
-    public enum NormaExportType
-    {
-        MSWORD,
-        PDF
-    }
+
 }

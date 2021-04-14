@@ -706,6 +706,19 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        private User test_operator = null;
+        public User TestOperator
+        {
+            get
+            {
+                if (test_operator == null && OperatorId > 0)
+                {
+                    test_operator = User.FindById(OperatorId);
+                }
+                return test_operator;
+            }
+        }
+
         private const string RisolFavourTypeId_iniKeyName = "RisolFavourId";
         private const string CableConnectedFrom_iniKeyName = "cable_connected_from";
         private const string UseTermoSensor_iniKeyName = "using_termo_sensor";
@@ -993,6 +1006,7 @@ namespace NormaLib.DBControl.Tables
         private CableTest cable_test;
         private DBEntityTable results_Table = new DBEntityTable(typeof(CableTestResult));
         private Dictionary<string, List<CableTestResult>> results_Dictionary = new Dictionary<string, List<CableTestResult>>();
+
     }
 
 

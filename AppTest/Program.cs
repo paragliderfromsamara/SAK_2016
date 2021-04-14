@@ -29,7 +29,7 @@ namespace AppTest
             ProtocolTest.Start();
             //GetTkcIzol();
             //GetTablesList();
-            //TestOfCableTest();
+            // TestOfCableTest();
             //CreateDump();
             Console.ReadLine();
         }
@@ -104,6 +104,7 @@ namespace AppTest
                 CableTestIni f = new CableTestIni(3);
                 f.TestedCableLength = 3000;
                 f.SourceCable = cable;
+                f.OperatorID = (User.get_all_as_table().Rows[0] as User).UserId;
                 Random r = new Random();
                 MeasurePointsHandler handler = new MeasurePointsHandler((point) => {
                     CableStructure s = ((CableStructure[])cable.CableStructures.Select($"{CableStructure.StructureId_ColumnName} = {point.StructureId}"))[0];
@@ -137,7 +138,7 @@ foreach(CableStructure s in cable.CableStructures.Rows)
 }
                 f.SaveTest(out test);
             }
-
+            Console.WriteLine("TestOfCableTest Completed!");
         }
 
         static void ClearTests()

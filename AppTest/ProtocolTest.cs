@@ -9,6 +9,7 @@ using NormaLib.DBControl.Tables;
 
 using NormaLib.ProtocolBuilders;
 using NormaLib.DBControl;
+using NormaLib.SessionControl;
 
 namespace AppTest
 {
@@ -48,8 +49,11 @@ namespace AppTest
 
         private static void TestCableProtocolBuilderToMsWord(CableTest test)
         {
-            ProtocolPathBuilder pathBuilder = new ProtocolPathBuilder(test);
-            ProtocolExport.ExportTo(test, NormaExportType.MSWORD);
+            ProtocolPathBuilder pathBuilder = new ProtocolPathBuilder(test, NormaExportType.MSWORD);
+            User user = User.get_all_as_table().Rows[0] as User;
+            SessionControl.SignIn(user);
+            ProtocolViewer v = new ProtocolViewer(new ProtocolExport(new ProtocolPathBuilder(test, NormaExportType.MSWORD)));
+            //ProtocolExport.ExportTo(test, NormaExportType.MSWORD);
         }
 
         //private static ProtocolTable TestTable()

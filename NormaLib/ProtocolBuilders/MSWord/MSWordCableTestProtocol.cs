@@ -9,15 +9,25 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Diagnostics;
 using NormaLib.Measure;
+using NormaLib.ProtocolBuilders;
+using NormaLib.SessionControl;
+
 namespace NormaLib.ProtocolBuilders.MSWord
 {
     internal class MSWordCableTestProtocol : MSWordProtocol
     {
         private CableTest cableTest;
-        public MSWordCableTestProtocol(CableTest test, string path_with_file_name)
+        public MSWordCableTestProtocol(ProtocolPathBuilder path_builder)
         {
-            filePath = $@"{path_with_file_name}.docx";
-            cableTest = test;
+            filePath = path_builder.Path_WithFileName;
+            cableTest = path_builder.Entity as CableTest;
+            CreatorName = $"{cableTest.TestOperator.FullNameShort}"; 
+            EditorName = $"{SessionControl.SessionControl.CurrentUser.FullNameShort}";
+            ProtocolTitle = ProtocolSettings.ProtocolHeader;
+            if (ProtocolSettings.DoesAddTestIdOnProtocolHeader) ProtocolTitle = $" № {cableTest.TestId}";
+            FirstPageHeaderText = ProtocolSettings.CompanyName;
+            CreatedAt = cableTest.FinishedAt;
+            AnotherPageHeaderText = cableTest.TestedCable.FullName;
         }
 
         protected override Body BuildBody()

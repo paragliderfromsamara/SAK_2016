@@ -42,6 +42,13 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        public static User FindById(uint id)
+        {
+            DBEntityTable t = find_by_primary_key(id, typeof(User));
+            if (t.Rows.Count > 0) return (User)t.Rows[0];
+            else return null;
+        }
+
         public static User SignIn(User u)
         {
             User user = null;

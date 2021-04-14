@@ -234,6 +234,7 @@
     <Compile Include="ProtocolBuilders\ProtocolSettingsForm.Designer.cs">
       <DependentUpon>ProtocolSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProtocolBuilders\ProtocolViewer.cs" />
     <Compile Include="SessionControl\SessionControl.cs" />
     <Compile Include="SessionControl\SessionControlForm.cs">
       <SubType>Form</SubType>
