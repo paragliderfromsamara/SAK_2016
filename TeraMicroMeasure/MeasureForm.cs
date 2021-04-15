@@ -183,12 +183,21 @@ namespace TeraMicroMeasure
         private void LoadBarabanTypes()
         {
             KeyValuePair<uint, string> zeroVal = new KeyValuePair<uint, string>(0, "Не выбран");
-            BarabanTypes = BarabanType.get_all_as_table();
-            barabanTypeCB.ValueMember = "key";
-            barabanTypeCB.DisplayMember = "value";
-            barabanTypeCB.Items.Add(zeroVal);
-            foreach(BarabanType bt in BarabanTypes.Rows) barabanTypeCB.Items.Add(new KeyValuePair<uint, string>(bt.TypeId, bt.TypeName));
-            barabanTypeCB.SelectedIndex = 0;
+            BarabanTypes = BarabanType.get_all_active_as_table();
+            if (BarabanTypes.Rows.Count > 0)
+            {
+                barabanTypeCB.ValueMember = "key";
+                barabanTypeCB.DisplayMember = "value";
+                barabanTypeCB.Items.Add(zeroVal);
+                foreach (BarabanType bt in BarabanTypes.Rows) barabanTypeCB.Items.Add(new KeyValuePair<uint, string>(bt.TypeId, bt.TypeName));
+                barabanTypeCB.SelectedIndex = 0;
+            } else
+            {
+                barabanTypeCB.DropDownStyle = ComboBoxStyle.DropDown;
+                barabanTypeCB.Text = "Список пуст";
+                barabanSelectorPanel.Enabled = false;
+            }
+
         }
 
         private void LoadLeadStatuses()
@@ -1565,21 +1574,28 @@ namespace TeraMicroMeasure
 
         private void saveResultButton_Click(object sender, EventArgs e)
         {
-            if (((KeyValuePair<uint, string>)barabanTypeCB.SelectedItem).Key == 0)
+            if (BarabanTypes.Rows.Count > 0)
             {
-                MessageBox.Show("Не выбран тип барабана!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(barabanNameCB.Text))
-            {
-                MessageBox.Show("Введите серийный номер барабана!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                if (((KeyValuePair<uint, string>)barabanTypeCB.SelectedItem).Key == 0)
+                {
+                    MessageBox.Show("Не выбран тип барабана!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(barabanNameCB.Text))
+                {
+                    MessageBox.Show("Введите серийный номер барабана!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                BarabanType bType = ((BarabanType[])BarabanTypes.Select($"{BarabanType.TypeId_ColumnName} = {((KeyValuePair<uint, string>)barabanTypeCB.SelectedItem).Key}"))[0];
+                testFile.BarabanTypeWeight = bType.BarabanWeight;
+                testFile.BarabanTypeId = bType.TypeId;
+                testFile.BarabanNumber = barabanNameCB.Text;
             }
             testFile.OperatorID = SessionControl.CurrentUser.UserId;
-            testFile.BarabanTypeId = ((KeyValuePair<uint, string>)barabanTypeCB.SelectedItem).Key;
             testFile.TestedCableLength = (uint)cableLengthNumericUpDown.Value;
             testFile.TestLineNumber = ClientID;
             testFile.Temperature = (float)temperatureValue.Value;
+
             CableTest test;
             if (testFile.SaveTest(out test))
             {

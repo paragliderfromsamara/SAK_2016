@@ -42,6 +42,22 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             }
         }
 
+        protected override void RemoveEntityHandler(DataGridViewSelectedRowCollection selectedRows)
+        {
+            if (!HasSelectedRows) return;
+            string msg = selectedRows.Count > 1 ? "Типы барабанов будут удалены безвозвратно. \n\nПродолжить?" : "Тип барабана будет удалён безвозвратно. \n\nПродолжить?";
+            DialogResult dr = MessageBox.Show(msg, "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr != DialogResult.Yes) return;
+            base.RemoveEntityHandler(selectedRows);
+            foreach(DataGridViewRow row in selectedRows)
+            {
+                BarabanType t = GetBarabanTypeByDataGridRow(row);
+                if (t.Destroy()) dgEntities.Rows.Remove(row);
+            }
+            dgEntities.ClearSelection();
+           
+        }
+
         private BarabanType GetBarabanTypeByDataGridRow(DataGridViewRow r)
         {
             BarabanType u = null;
@@ -94,7 +110,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         protected override DataTable FillDataSetAndGetDataGridTable()
         {
-            BarabanTypes = BarabanType.get_all_as_table();
+            BarabanTypes = BarabanType.get_all_active_as_table();
             AddOrMergeTableToFormDataSet(BarabanTypes);
             return BarabanTypes;
         }

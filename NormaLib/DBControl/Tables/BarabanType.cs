@@ -26,6 +26,8 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+
+
         public static BarabanType build()
         {
             DBEntityTable t = new DBEntityTable(typeof(BarabanType));
@@ -47,6 +49,21 @@ namespace NormaLib.DBControl.Tables
             {
                 //System.Windows.Forms.MessageBox.Show(ex.Message, "Не удалось добавить тип барабана...", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
                 return false;
+            }
+        }
+
+        public override bool Destroy()
+        {
+
+            DBEntityTable t = new DBEntityTable(typeof(ReleasedBaraban));
+            t.FillByQuery($"SELECT * FROM {t.TableName} WHERE {TypeId_ColumnName} = {this.TypeId} LIMIT 1");
+            if (t.Rows.Count == 0)
+            {
+                return base.Destroy();
+            }else
+            {
+                this.IsDeleted = true;
+                return this.Save();
             }
         }
 
@@ -80,7 +97,7 @@ namespace NormaLib.DBControl.Tables
         protected void CheckNameUniquiness()
         {
 
-            string select_cmd = $"(NOT {TypeId_ColumnName} = {this.TypeId}) AND {TypeName_ColumnName} = '{this.TypeName}'";
+            string select_cmd = $"(NOT {TypeId_ColumnName} = {this.TypeId}) AND {TypeName_ColumnName} = '{this.TypeName}' AND {BarabanIsDeleted_ColumnName} = 0";
             DBEntityTable t = find_by_criteria(select_cmd, typeof(BarabanType));//new DBEntityTable(typeof(BarabanType));
             if (t.Rows.Count > 0)
             {
@@ -88,6 +105,10 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        public static DBEntityTable get_all_active_as_table()
+        {
+            return find_by_criteria($"{BarabanIsDeleted_ColumnName} = 0", typeof(BarabanType));//new DBEntityTable(typeof(BarabanType));
+        }
 
         public static DBEntityTable get_all_as_table()
         {
@@ -134,9 +155,23 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        [DBColumn(BarabanIsDeleted_ColumnName, ColumnDomain.Boolean, Order = 13, OldDBColumnName = "", DefaultValue = false, IsPrimaryKey = false)]
+        public bool IsDeleted
+        {
+            get
+            {
+                return tryParseBoolean(BarabanIsDeleted_ColumnName, false);
+            }
+            set
+            {
+                this[BarabanIsDeleted_ColumnName] = value;
+            }
+        }
+
         public const string TypeId_ColumnName = "baraban_type_id";
         public const string TypeName_ColumnName = "baraban_type_name";
         public const string BarabanWeight_ColumnName = "baraban_weight";
+        public const string BarabanIsDeleted_ColumnName = "is_deleted";
         #endregion
     }
 }
