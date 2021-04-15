@@ -34,8 +34,8 @@
             // 
             // dataPanel
             // 
-            //this.dataPanel.Location = new System.Drawing.Point(0, 0);
-            // this.dataPanel.Size = new System.Drawing.Size(1361, 903);
+            this.dataPanel.Location = new System.Drawing.Point(0, 0);
+            this.dataPanel.Size = new System.Drawing.Size(1361, 903);
             // 
             // btnNewRecordFormInit
             // 

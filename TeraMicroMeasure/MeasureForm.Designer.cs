@@ -68,12 +68,6 @@
             this.panelResultMeasure = new System.Windows.Forms.Panel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.testParamsControlPanel = new System.Windows.Forms.Panel();
-            this.barabanSelectorPanel = new System.Windows.Forms.Panel();
-            this.barabanTypeCB = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.barabanNameCB = new System.Windows.Forms.TextBox();
-            this.operatorLabel = new System.Windows.Forms.Label();
             this.measureDelayLabel = new System.Windows.Forms.Label();
             this.testDraftControlPanel = new System.Windows.Forms.Panel();
             this.resetTestButton = new System.Windows.Forms.Button();
@@ -93,6 +87,12 @@
             this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
             this.leadStatusContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.barabanTypeCB = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.barabanNameCB = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.operatorLabel = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -105,7 +105,6 @@
             this.tabPage1.SuspendLayout();
             this.panelResultMeasure.SuspendLayout();
             this.testParamsControlPanel.SuspendLayout();
-            this.barabanSelectorPanel.SuspendLayout();
             this.testDraftControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.temperatureValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.measureDelayUpDown)).BeginInit();
@@ -113,6 +112,7 @@
             this.panel5.SuspendLayout();
             this.measureControlPanel.SuspendLayout();
             this.measuredParameterSelect.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonPrevElement
@@ -584,7 +584,7 @@
             // testParamsControlPanel
             // 
             this.testParamsControlPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
-            this.testParamsControlPanel.Controls.Add(this.barabanSelectorPanel);
+            this.testParamsControlPanel.Controls.Add(this.panel2);
             this.testParamsControlPanel.Controls.Add(this.operatorLabel);
             this.testParamsControlPanel.Controls.Add(this.measureDelayLabel);
             this.testParamsControlPanel.Controls.Add(this.testDraftControlPanel);
@@ -604,60 +604,6 @@
             this.testParamsControlPanel.Name = "testParamsControlPanel";
             this.testParamsControlPanel.Size = new System.Drawing.Size(475, 647);
             this.testParamsControlPanel.TabIndex = 35;
-            // 
-            // barabanSelectorPanel
-            // 
-            this.barabanSelectorPanel.Controls.Add(this.barabanTypeCB);
-            this.barabanSelectorPanel.Controls.Add(this.label5);
-            this.barabanSelectorPanel.Controls.Add(this.label6);
-            this.barabanSelectorPanel.Controls.Add(this.barabanNameCB);
-            this.barabanSelectorPanel.Location = new System.Drawing.Point(17, 230);
-            this.barabanSelectorPanel.Name = "barabanSelectorPanel";
-            this.barabanSelectorPanel.Size = new System.Drawing.Size(434, 66);
-            this.barabanSelectorPanel.TabIndex = 44;
-            // 
-            // barabanTypeCB
-            // 
-            this.barabanTypeCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.barabanTypeCB.FormattingEnabled = true;
-            this.barabanTypeCB.Location = new System.Drawing.Point(0, 32);
-            this.barabanTypeCB.Name = "barabanTypeCB";
-            this.barabanTypeCB.Size = new System.Drawing.Size(231, 27);
-            this.barabanTypeCB.TabIndex = 39;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(-3, 10);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(110, 19);
-            this.label5.TabIndex = 40;
-            this.label5.Text = "Тип барабана";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(233, 10);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(129, 19);
-            this.label6.TabIndex = 42;
-            this.label6.Text = "Номер барабана";
-            // 
-            // barabanNameCB
-            // 
-            this.barabanNameCB.Location = new System.Drawing.Point(237, 32);
-            this.barabanNameCB.Name = "barabanNameCB";
-            this.barabanNameCB.Size = new System.Drawing.Size(197, 27);
-            this.barabanNameCB.TabIndex = 41;
-            // 
-            // operatorLabel
-            // 
-            this.operatorLabel.AutoSize = true;
-            this.operatorLabel.Location = new System.Drawing.Point(13, 336);
-            this.operatorLabel.Name = "operatorLabel";
-            this.operatorLabel.Size = new System.Drawing.Size(92, 19);
-            this.operatorLabel.TabIndex = 43;
-            this.operatorLabel.Text = "Оператор: ";
             // 
             // measureDelayLabel
             // 
@@ -892,6 +838,60 @@
             this.leadStatusContextMenu.ShowItemToolTips = false;
             this.leadStatusContextMenu.Size = new System.Drawing.Size(61, 4);
             // 
+            // barabanTypeCB
+            // 
+            this.barabanTypeCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.barabanTypeCB.FormattingEnabled = true;
+            this.barabanTypeCB.Location = new System.Drawing.Point(0, 32);
+            this.barabanTypeCB.Name = "barabanTypeCB";
+            this.barabanTypeCB.Size = new System.Drawing.Size(231, 27);
+            this.barabanTypeCB.TabIndex = 39;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(-3, 10);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(110, 19);
+            this.label5.TabIndex = 40;
+            this.label5.Text = "Тип барабана";
+            // 
+            // barabanNameCB
+            // 
+            this.barabanNameCB.Location = new System.Drawing.Point(237, 32);
+            this.barabanNameCB.Name = "barabanNameCB";
+            this.barabanNameCB.Size = new System.Drawing.Size(197, 27);
+            this.barabanNameCB.TabIndex = 41;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(233, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(129, 19);
+            this.label6.TabIndex = 42;
+            this.label6.Text = "Номер барабана";
+            // 
+            // operatorLabel
+            // 
+            this.operatorLabel.AutoSize = true;
+            this.operatorLabel.Location = new System.Drawing.Point(13, 336);
+            this.operatorLabel.Name = "operatorLabel";
+            this.operatorLabel.Size = new System.Drawing.Size(92, 19);
+            this.operatorLabel.TabIndex = 43;
+            this.operatorLabel.Text = "Оператор: ";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.barabanTypeCB);
+            this.panel2.Controls.Add(this.label5);
+            this.panel2.Controls.Add(this.label6);
+            this.panel2.Controls.Add(this.barabanNameCB);
+            this.panel2.Location = new System.Drawing.Point(17, 230);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(434, 66);
+            this.panel2.TabIndex = 44;
+            // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
@@ -924,8 +924,6 @@
             this.panelResultMeasure.ResumeLayout(false);
             this.testParamsControlPanel.ResumeLayout(false);
             this.testParamsControlPanel.PerformLayout();
-            this.barabanSelectorPanel.ResumeLayout(false);
-            this.barabanSelectorPanel.PerformLayout();
             this.testDraftControlPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.temperatureValue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.measureDelayUpDown)).EndInit();
@@ -933,6 +931,8 @@
             this.panel5.ResumeLayout(false);
             this.measureControlPanel.ResumeLayout(false);
             this.measuredParameterSelect.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1004,6 +1004,6 @@
         private System.Windows.Forms.TextBox barabanNameCB;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox barabanTypeCB;
-        private System.Windows.Forms.Panel barabanSelectorPanel;
+        private System.Windows.Forms.Panel panel2;
     }
 }
