@@ -417,8 +417,8 @@ namespace TeraMicroMeasure
         private bool InitDataBaseOnServer()
         {
             retry:
-            //try
-            //{
+            try
+            {
                 DBNormaMeasureTablesMigration dbnm = new DBNormaMeasureTablesMigration();
                 dbnm.OnStepChanged += (o, s) =>
                 {
@@ -427,17 +427,17 @@ namespace TeraMicroMeasure
                 };
                 dbnm.InitDataBase();
                 return true;
-            //}
-            //catch(Exception ex)
-           // {
-           //     MessageBox.Show($"{ex.Message}", "Не удалось подключиться к Базе данных", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-           //     DataBaseSettingsForm dbfm = new DataBaseSettingsForm();
-           //     dbfm.StartPosition = FormStartPosition.CenterScreen;
-           //     dbfm.cancelButton.Visible = true;
-           //     DialogResult dr =  dbfm.ShowDialog();
-           //     if (dr == DialogResult.Retry) goto retry;
-           //     else return false;
-           // }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}", "Не удалось подключиться к Базе данных", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DataBaseSettingsForm dbfm = new DataBaseSettingsForm();
+                dbfm.StartPosition = FormStartPosition.CenterScreen;
+                dbfm.cancelButton.Visible = true;
+                DialogResult dr =  dbfm.ShowDialog();
+                if (dr == DialogResult.Retry) goto retry;
+                else return false;
+            }
         }
 
         private void reinitServer()

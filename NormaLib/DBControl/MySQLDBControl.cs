@@ -8,6 +8,7 @@ using System.Xml;
 using System.Threading;
 using MySql.Data.MySqlClient;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace NormaLib.DBControl
 {
@@ -176,6 +177,7 @@ namespace NormaLib.DBControl
                 string query = "SELECT * FROM mysql.user";
                 System.Collections.Generic.List<string> list = new List<string>();
                 MySqlDataReader r;
+                Debug.WriteLine(MyConn == null);
                 MyConn.Open();
                 r = GetReader(query);
                 while (r.Read()) list.Add(r.GetString("User"));
