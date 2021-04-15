@@ -33,7 +33,7 @@ namespace TeraMicroMeasure.Forms
             switch (idx)
             {
                 case 0:
-                    return new TCPSettingsForm(new TCPSettingsController(Properties.Settings.Default.IsServerApp));
+                    return new TCPSettingsForm(new TCPSettingsController(SettingsControl.GetClientId() == 0));
                 case 1:
                     return new DataBaseSettingsForm();
                 case 2:

@@ -22,6 +22,7 @@ namespace NormaLib.SocketControl.TCPControlLib
         const string ServerTCPInfoSectionName = "ServerTCPSettings";
         const string SelfTCPInfoSectionName = "LocalTCPSettings";
         
+        public static EventHandler OnTCPSettingsChanged;
 
         public string localIPOnSettingsFile
         {
@@ -129,7 +130,8 @@ namespace NormaLib.SocketControl.TCPControlLib
             {
                 localIPAddress = l;
                 serverIPAddress = r;
-            }else
+            }
+            else
             {
                 throw new TCPSettingsControllerException(msg+$"{IsServerSettings}");
             }

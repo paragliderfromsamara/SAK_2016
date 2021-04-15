@@ -38,7 +38,6 @@ namespace NormaLib.DBControl
             {
                 this._userName = value;
             }
-
         }
 
         public string Server
@@ -91,6 +90,7 @@ namespace NormaLib.DBControl
             { 
                MyConn = new MySqlConnection(ConnectionString);
                MC = new MySqlCommand() { Connection = MyConn };
+               
             }
             catch (MySqlException ex)
             {

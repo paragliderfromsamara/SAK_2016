@@ -18,7 +18,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         protected DBEntityTable BarabanTypes;
         public BarabanTypesTableControlForm() : base()
         {
-            
+
         }
 
         protected override void InitNewEntityForm()
@@ -69,6 +69,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         protected override void InitDesign()
         {
+            EmptyListText = "Список типов барабанов пуст";
             base.InitDesign();
             InitializeComponent();
         }
@@ -87,6 +88,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             list.Add(BuildDataGridTextColumn("baraban_type_id", "ID", true));
             list.Add(BuildDataGridTextColumn("baraban_type_name", "Наименование типа барабана", true));
             list.Add(BuildDataGridTextColumn("baraban_weight", "Вес, кг", true));
+            list.Add(BuildDataGridTextColumn(BarabanType.BarabanIsDeleted_ColumnName, "Удалён", false));
             return list;
         }
 

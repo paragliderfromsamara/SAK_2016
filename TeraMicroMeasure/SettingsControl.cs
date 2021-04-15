@@ -72,7 +72,7 @@ namespace TeraMicroMeasure
         {
             IniFile f = IniFile.GetAppSettingsFile();
             int v = f.ReadInt("client_id", ClientSettingsSectionName);
-            if (v == 0 && !Properties.Settings.Default.IsServerApp) v = -1;
+           // if (v == 0 && !Properties.Settings.Default.IsServerApp) v = -1;
             return v;
         }
 

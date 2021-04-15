@@ -12,6 +12,7 @@ namespace NormaLib.UI
 {
     public partial class DBTableContolForm : Form
     {
+        protected string EmptyListText = "Список пуст";
         protected bool AllowAddEntity;
         protected bool AllowEditEntity;
         protected bool AllowRemoveEntity;
@@ -47,6 +48,9 @@ namespace NormaLib.UI
         protected virtual void InitDesign()
         {
             InitializeComponent();
+            emptyEntitiesList.Text = EmptyListText;
+            dgEntities.RowsRemoved += (o, s) => { CheckListIsEmpty(); };
+
         }
 
         private void InitDataGridView()
@@ -73,6 +77,7 @@ namespace NormaLib.UI
                 entitiesDataSet.Tables.Add(t);
             }
         }
+
 
 
         protected virtual List<DataGridViewColumn> BuildColumnsForDataGrid()
@@ -125,7 +130,14 @@ namespace NormaLib.UI
         {
             DeinitLoadStatusLabelAnimation();
             ShowAfterLoadModeEntities();
-            foreach (DataGridViewRow r in dgEntities.SelectedRows) r.Selected = false;
+            dgEntities.ClearSelection();// foreach (DataGridViewRow r in dgEntities.SelectedRows) r.Selected = false;
+            CheckListIsEmpty();
+        }
+
+        protected void CheckListIsEmpty()
+        {
+            emptyEntitiesList.Visible = dgEntities.Rows.Count == 0;
+            dgEntities.Visible = dgEntities.Rows.Count > 0;
         }
 
         async protected void FillDataGridAsync()

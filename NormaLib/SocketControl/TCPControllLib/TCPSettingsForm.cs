@@ -110,7 +110,9 @@ namespace NormaLib.SocketControl.TCPControlLib
                     }
                 }
                 if (isPartOfSettingsMenu) MessageBox.Show("Настройки успешно обновлены", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-            }catch(TCPSettingsControllerException ex)
+                TCPSettingsController.OnTCPSettingsChanged?.Invoke(controller, new EventArgs());
+            }
+            catch(TCPSettingsControllerException ex)
             {
                 MessageBox.Show(ex.Message, "Неверный формат TCP параметров");
             }
@@ -119,7 +121,12 @@ namespace NormaLib.SocketControl.TCPControlLib
 
         private void TCPSettingsForm_Load(object sender, EventArgs e)
         {
-            isPartOfSettingsMenu = this.Parent.GetType().Name == "TabPage";
+            if (this.Parent != null)
+            {
+                isPartOfSettingsMenu = this.Parent.GetType().Name == "TabPage";
+            }
+            else isPartOfSettingsMenu = false;
+            
             cancelButton.Visible = !isPartOfSettingsMenu;
             InitLocalIPComboBox();
         }

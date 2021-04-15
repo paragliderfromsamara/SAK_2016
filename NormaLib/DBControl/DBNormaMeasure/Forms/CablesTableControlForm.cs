@@ -89,10 +89,12 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         protected override void InitDesign()
         {
+            EmptyListText = "Список кабелей пуст";
             base.InitDesign();
             InitializeComponent();
             dgEntities.DoubleClick += (o, s) => { ShowSelectedCable(); };
             CreateAdditionaButtonsForContextMenu();
+            
         }
 
         private void CreateAdditionaButtonsForContextMenu()

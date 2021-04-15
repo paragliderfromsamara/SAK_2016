@@ -90,7 +90,7 @@ namespace NormaLib.SocketControl.TCPControlLib
                     ProcessClient(client_object);
                 }
             }
-            catch (SocketException ex) when (ex.ErrorCode == 10004)
+            catch (SocketException ex) when (ex.ErrorCode == 10004 || ex.ErrorCode == 10049)
             {
                 return;
             }
