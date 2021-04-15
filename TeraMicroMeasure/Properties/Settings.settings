@@ -2,12 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TeraMicroMeasure.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="FirstRun" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="IsServerApp" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="LeftButtonActiveColor" Type="System.Drawing.Color" Scope="Application">
       <Value Profile="(Default)">181, 218, 255</Value>
     </Setting>

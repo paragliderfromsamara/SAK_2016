@@ -41,6 +41,7 @@
             this.loadStatusLabelTimer = new System.Windows.Forms.Timer(this.components);
             this.entitiesDataSet = new System.Data.DataSet();
             this.headerPanel = new System.Windows.Forms.Panel();
+            this.emptyEntitiesList = new System.Windows.Forms.Label();
             this.dataPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgEntities)).BeginInit();
             this.contextTableMenu.SuspendLayout();
@@ -50,6 +51,7 @@
             // 
             // dataPanel
             // 
+            this.dataPanel.Controls.Add(this.emptyEntitiesList);
             this.dataPanel.Controls.Add(this.dgEntities);
             this.dataPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataPanel.Location = new System.Drawing.Point(0, 110);
@@ -182,6 +184,16 @@
             this.headerPanel.Size = new System.Drawing.Size(2042, 110);
             this.headerPanel.TabIndex = 3;
             // 
+            // emptyEntitiesList
+            // 
+            this.emptyEntitiesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.emptyEntitiesList.Location = new System.Drawing.Point(0, 0);
+            this.emptyEntitiesList.Name = "emptyEntitiesList";
+            this.emptyEntitiesList.Size = new System.Drawing.Size(2042, 1279);
+            this.emptyEntitiesList.TabIndex = 1;
+            this.emptyEntitiesList.Text = "Список пуст";
+            this.emptyEntitiesList.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // DBTableContolForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -218,5 +230,6 @@
         protected System.Windows.Forms.Button btnNewRecordFormInit;
         protected System.Data.DataSet entitiesDataSet;
         protected System.Windows.Forms.Panel headerPanel;
+        private System.Windows.Forms.Label emptyEntitiesList;
     }
 }

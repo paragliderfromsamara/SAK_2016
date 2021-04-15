@@ -25,6 +25,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             FillCableMarks();
             FillMinMaxDate();
+
         }
 
         private void FillMinMaxDate()
@@ -39,6 +40,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
 
         protected override void InitDesign()
         {
+            EmptyListText = "Список испытаний пуст";
             base.InitDesign();
             InitializeComponent();
             

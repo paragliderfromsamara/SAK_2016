@@ -25,6 +25,11 @@ namespace NormaLib.Utils
             return file;
         }
 
+        public static bool SettingsFileExists()
+        {
+            return File.Exists($@"{AppContext.BaseDirectory}\appSettings.ini");
+        }
+
         public IniFile(string IniPath = null)
         {
             Path = new FileInfo(IniPath ?? EXE + ".ini").FullName.ToString();

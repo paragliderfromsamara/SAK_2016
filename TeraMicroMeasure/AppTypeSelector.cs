@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using NormaLib.SocketControl.TCPControlLib;
+using NormaLib.DBControl;
+
 namespace TeraMicroMeasure
 {
     public partial class AppTypeSelector : Form
@@ -38,19 +41,28 @@ namespace TeraMicroMeasure
         {
             // ok.PerformClick();
             DialogResult = DialogResult.OK;
-            Properties.Settings.Default.IsServerApp = true;
-            Properties.Settings.Default.FirstRun = false;
-            Properties.Settings.Default.Save();
+            SettingsControl.SetClientId(0);
+            TCPSettingsForm form = new TCPSettingsForm(new TCPSettingsController(true));
+            form.StartPosition = FormStartPosition.CenterScreen;
+            DialogResult = form.ShowDialog(this);
+            //Properties.Settings.Default.IsServerApp = true;
+            //Properties.Settings.Default.FirstRun = false;
+            //Properties.Settings.Default.Save();
             this.Close();
             //this.Dispose();
         }
 
         private void label2_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
-            Properties.Settings.Default.IsServerApp = false;
-            Properties.Settings.Default.FirstRun = false;
-            Properties.Settings.Default.Save();
+            SettingsControl.SetClientId(-1);
+            TCPSettingsForm form = new TCPSettingsForm(new TCPSettingsController(false));
+            DBSettingsControl.IsEnabled = false;
+            form.StartPosition = FormStartPosition.CenterScreen;
+            DialogResult = form.ShowDialog(this);
+
+            //Properties.Settings.Default.IsServerApp = false;
+            //Properties.Settings.Default.FirstRun = false;
+            //Properties.Settings.Default.Save();
             this.Close();
             //this.Dispose();
         }

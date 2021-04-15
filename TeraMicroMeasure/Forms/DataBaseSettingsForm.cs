@@ -32,8 +32,8 @@ namespace TeraMicroMeasure.Forms
         public DataBaseSettingsForm()
         {
             InitializeComponent();
-            tbHostName.Enabled = tbUserName.Enabled = tbUserPassword.Enabled = btnReset.Visible = btnSave.Visible = Properties.Settings.Default.IsServerApp;
-            lblSettingsInfo.Visible = !Properties.Settings.Default.IsServerApp;
+            tbHostName.Enabled = tbUserName.Enabled = tbUserPassword.Enabled = btnReset.Visible = btnSave.Visible = (SettingsControl.GetClientId() == 0);
+            lblSettingsInfo.Visible = !(SettingsControl.GetClientId() == 0); 
         }
 
         private void DataBaseSettingsForm_Load(object sender, EventArgs e)
