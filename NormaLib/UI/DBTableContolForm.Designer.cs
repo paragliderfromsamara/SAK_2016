@@ -52,9 +52,10 @@
             // 
             this.dataPanel.Controls.Add(this.dgEntities);
             this.dataPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataPanel.Location = new System.Drawing.Point(0, 77);
+            this.dataPanel.Location = new System.Drawing.Point(0, 110);
+            this.dataPanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dataPanel.Name = "dataPanel";
-            this.dataPanel.Size = new System.Drawing.Size(1361, 826);
+            this.dataPanel.Size = new System.Drawing.Size(2042, 1279);
             this.dataPanel.TabIndex = 0;
             // 
             // dgEntities
@@ -72,7 +73,7 @@
             this.dgEntities.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
             dataGridViewCellStyle1.NullValue = "-";
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(3);
@@ -83,7 +84,8 @@
             this.dgEntities.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgEntities.ContextMenuStrip = this.contextTableMenu;
             this.dgEntities.EnableHeadersVisualStyles = false;
-            this.dgEntities.Location = new System.Drawing.Point(12, 15);
+            this.dgEntities.Location = new System.Drawing.Point(13, 0);
+            this.dgEntities.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dgEntities.Name = "dgEntities";
             this.dgEntities.ReadOnly = true;
             this.dgEntities.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
@@ -100,7 +102,7 @@
             this.dgEntities.RowTemplate.Height = 30;
             this.dgEntities.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgEntities.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgEntities.Size = new System.Drawing.Size(1338, 798);
+            this.dgEntities.Size = new System.Drawing.Size(2016, 1259);
             this.dgEntities.TabIndex = 0;
             this.dgEntities.TabStop = false;
             // 
@@ -138,9 +140,10 @@
             this.btnNewRecordFormInit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNewRecordFormInit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnNewRecordFormInit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.btnNewRecordFormInit.Location = new System.Drawing.Point(12, 23);
+            this.btnNewRecordFormInit.Location = new System.Drawing.Point(18, 33);
+            this.btnNewRecordFormInit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnNewRecordFormInit.Name = "btnNewRecordFormInit";
-            this.btnNewRecordFormInit.Size = new System.Drawing.Size(175, 30);
+            this.btnNewRecordFormInit.Size = new System.Drawing.Size(262, 46);
             this.btnNewRecordFormInit.TabIndex = 1;
             this.btnNewRecordFormInit.Text = "Новая запись";
             this.btnNewRecordFormInit.UseVisualStyleBackColor = false;
@@ -151,7 +154,8 @@
             this.loadStatusLabel.AutoSize = true;
             this.loadStatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.loadStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.loadStatusLabel.Location = new System.Drawing.Point(12, 23);
+            this.loadStatusLabel.Location = new System.Drawing.Point(25, 42);
+            this.loadStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.loadStatusLabel.Name = "loadStatusLabel";
             this.loadStatusLabel.Size = new System.Drawing.Size(223, 37);
             this.loadStatusLabel.TabIndex = 2;
@@ -173,18 +177,21 @@
             this.headerPanel.Controls.Add(this.loadStatusLabel);
             this.headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.headerPanel.Location = new System.Drawing.Point(0, 0);
+            this.headerPanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.headerPanel.Name = "headerPanel";
-            this.headerPanel.Size = new System.Drawing.Size(1361, 77);
+            this.headerPanel.Size = new System.Drawing.Size(2042, 110);
             this.headerPanel.TabIndex = 3;
             // 
             // DBTableContolForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1361, 903);
+            this.ClientSize = new System.Drawing.Size(2042, 1389);
             this.Controls.Add(this.dataPanel);
             this.Controls.Add(this.headerPanel);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "DBTableContolForm";
             this.Text = "DBTableContolForm";
             this.Load += new System.EventHandler(this.DBTableContolForm_Load);

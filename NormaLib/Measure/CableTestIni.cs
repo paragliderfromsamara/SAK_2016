@@ -68,11 +68,14 @@ namespace NormaLib.Measure
             if (cableTest.Save())
             {
                 TestedCable cable = TestedCable.create_for_test(cableTest);
+                cableTest.NettoWeight = cable.LinearMass > 0 ? cableTest.CableLength * cable.LinearMass : 0;
                 if (BarabanTypeId != 0)
                 {
                     ReleasedBaraban b = ReleasedBaraban.CreateBaraban(BarabanTypeId, BarabanNumber);
                     cableTest.BarabanId = b.BarabanId;
+
                 }
+                
                 foreach (TestedCableStructure tcs in cable.CableStructures.Rows)
                 {
                     CableStructure sourceStrucure = GetSourceStructureById(tcs.SourceStructureId);
@@ -233,6 +236,18 @@ namespace NormaLib.Measure
             set
             {
                 file.Write(ReleasedBaraban.BarabanSerialNumber_ColumnName, value, TestAttrs_SectionName);
+            }
+        }
+
+        public float BarabanTypeWeight
+        {
+            get
+            {
+                return file.ReadFloat(BarabanType.BarabanWeight_ColumnName, TestAttrs_SectionName);
+            }
+            set
+            {
+                file.Write(BarabanType.BarabanWeight_ColumnName, value.ToString(), TestAttrs_SectionName);
             }
         }
 
