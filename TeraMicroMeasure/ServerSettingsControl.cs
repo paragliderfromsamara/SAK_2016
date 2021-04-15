@@ -24,7 +24,7 @@ namespace TeraMicroMeasure
         private string[] addrList;
         public Button ConfirmButton;
         public EventHandler OnButtonClick;
-        private bool is_server => SettingsControl.GetClientId() == 0;
+        private bool is_server => Properties.Settings.Default.IsServerApp;
         public ServerSettingsControl(Control parent)
         {
             panel = new Panel();

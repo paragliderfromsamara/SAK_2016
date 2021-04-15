@@ -28,35 +28,6 @@ namespace NormaLib.DBControl
         private string[] AddedTables;
 
 
-        public EventHandler OnStepChanged;
-        private string cur_action_name = string.Empty;
-        public string CurrentStep
-        {
-            set
-            {
-                if (cur_action_name == value) return;
-                cur_action_name = value;
-                OnStepChanged?.Invoke(this, new EventArgs());
-            }get
-            {
-                return cur_action_name;
-            }
-        }
-
-        private string cur_sub_action_name = string.Empty;
-        public string CurrentSubStep
-        {
-            set
-            {
-                if (cur_sub_action_name == value) return;
-                cur_sub_action_name = value;
-                OnStepChanged?.Invoke(this, new EventArgs());
-            }get
-            {
-                return cur_sub_action_name;
-            }
-        }
-
         public static DBTable OutputTable(System.Type t)
         {
             DBTable _table = new DBTable();
@@ -118,7 +89,6 @@ namespace NormaLib.DBControl
         public void InitDataBase()
         {
             //dropDB();
-            CurrentStep = "Инициализация Базы Данных";
             checkAndCreateDB();
             GetTablesOnServer();
             CreateTables();
@@ -129,7 +99,6 @@ namespace NormaLib.DBControl
 
         private void GetTablesOnServer()
         {
-            CurrentSubStep = "Получение списка сущетвующих таблиц";
             _dbControl.ConnectToDB(dbName);
             TablesOnServer = _dbControl.GetTablesList();
             
@@ -230,7 +199,7 @@ namespace NormaLib.DBControl
         private string checkAndCreateDB()
         {
             string message = "Создаём базу данных испытаний с кодовой страницей cp1251, если она не создана";
-            CurrentSubStep = "Проверка наличия установленной Базы Данных";
+
             if (!_dbControl.IsDBExists(dbName))
             {
                 _query = "CREATE DATABASE IF NOT EXISTS " + dbName + " DEFAULT CHARACTER SET cp1251";
@@ -249,7 +218,6 @@ namespace NormaLib.DBControl
         private bool checkAndAddTable(DBTable table)
         {
             if (TablesOnServer.Contains(table.tableName)) return false;
-            CurrentSubStep =  $"Добавление таблицы {(string.IsNullOrWhiteSpace(table.entityName) ? table.tableName : table.entityName)}";
             dbName = table.dbName;
             //checkAndCreateDB();
             _query = table.AddTableQuery;

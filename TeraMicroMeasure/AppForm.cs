@@ -21,7 +21,6 @@ using NormaLib.SocketControl;
 using System.Diagnostics;
 using TeraMicroMeasure.Properties;
 using NormaLib.SessionControl;
-using NormaLib.Utils;
 
 namespace TeraMicroMeasure
 {
@@ -43,37 +42,29 @@ namespace TeraMicroMeasure
         List<string> WillDisconnectDevice = new List<string>();
         #endregion
 
-        LoadAppForm LoadAppForm;
         Type CurrentFormType => currentForm == null ? null : currentForm.GetType();
         MeasureForm OpenedMeasureForm => (CurrentFormType == typeof(MeasureForm)) ? (MeasureForm)currentForm : null;  
 
-        static bool IsServerApp => SettingsControl.GetClientId() == 0;
-        static bool IsFirstRun => !IniFile.SettingsFileExists();
+        static bool IsServerApp => Properties.Settings.Default.IsServerApp;
+        static bool IsFirstRun => Properties.Settings.Default.FirstRun;
         public AppForm()
         {
             if (IsFirstRun)
             {
                 AppTypeSelector appSel = new AppTypeSelector();
-                appSel.ShowDialog();
+                if (appSel.ShowDialog() == DialogResult.OK)
+                {
+                    Properties.Settings.Default.FirstRun = false;
+                }
             }
             if (!IsFirstRun)
             {
-                TCPSettingsController.OnTCPSettingsChanged += (o, s) => {ReinitTCP();};
                 Load += (s, a) =>
                 {
-                    bool flag = true;
-                    if (IsServerApp)
-                        flag = InitAsServerApp();
-                    else flag = InitAsClientApp();
-                    if (flag)
-                    {
-                        InitSessionForm();
-                        InitDeviceFinder();
-                    }else
-                    {
-                        MessageBox.Show("Невозможно запустить приложение", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Close();
-                    }
+                    if (IsServerApp) InitAsServerApp();
+                    else InitAsClientApp();
+                    InitSessionForm();
+                    InitDeviceFinder();
                 };
             }
             else
@@ -106,6 +97,10 @@ namespace TeraMicroMeasure
         private void SetMeasureFormsOffline()
         {
             if (OpenedMeasureForm != null) OpenedMeasureForm.SetConnectionStatus(false);
+            //foreach (var f in measureFormsList.Values)
+           // {
+             //   f.SetConnectionStatus(false);
+            //}
         }
 
         #region Инициализация дизайна
@@ -184,20 +179,15 @@ namespace TeraMicroMeasure
         #endregion
 
         #region ClientSideApp
-        private bool InitAsClientApp()
+        private void InitAsClientApp()
         {
-            LoadAppForm = new LoadAppForm();
-            LoadAppForm.Show();
-            LoadAppForm.SetTaskLabelsValue("Поиск сервера");
-            Thread.Sleep(750);
-            ConnectToServer();
+            //throw new NotImplementedException();
             CheckClientDBSettings();
             connectionTimesNow = clientTryConnectionTimes;
             SetClientTitle();
             setClientButtonStatus(ClientStatus.disconnected);
-            LoadAppForm.Close();
-            LoadAppForm.Dispose();
-            return true;
+            ConnectToServer();
+            //InitMeasureForm();
         }
 
         private void CheckClientDBSettings()
@@ -241,6 +231,7 @@ namespace TeraMicroMeasure
                                                                         OnClientIDChanged_Handler,
                                                                         OnMeasureStatusChanged_Handler,
                                                                         OnServerStateReceived_Handler
+
                                                                       );
             }
             catch (TCPSettingsControllerException)
@@ -265,6 +256,7 @@ namespace TeraMicroMeasure
                         connectionTimesNow = clientTryConnectionTimes;
                         break;
                     case TCP_CLIENT_STATUS.DISCONNECTED:
+                        //failureCounter.Text = $"Отвалов от сервера {failureCount++}";
                         setClientButtonStatus(ClientStatus.disconnected);
                         break;
                     case TCP_CLIENT_STATUS.TRY_CONNECT:
@@ -277,11 +269,8 @@ namespace TeraMicroMeasure
                         setClientButtonStatus(ClientStatus.disconnected);
                         break;
                 }
-                RefreshSessionForm(client.Status);
             }
         }
-
-
 
         private void switchConnectToServerButton_Click(object sender, EventArgs e)
         {
@@ -390,54 +379,27 @@ namespace TeraMicroMeasure
 
 
         #region ServerSideApp
-        private bool InitAsServerApp()
+        private void InitAsServerApp()
         {
-            bool flag = true;
             clientTitle.Text = "Сервер";
-            SettingsControl.SetClientId(0);
             refreshClientCounterStatusText(0);
-
-            LoadAppForm = new LoadAppForm();
-            LoadAppForm.Show();
-            LoadAppForm.Refresh();
-            flag &= InitDataBaseOnServer();
-            Thread.Sleep(1500);
-            if (flag)
-            {
-                LoadAppForm.SetTaskLabelsValue("Запуск сервера");
-                Thread.Sleep(1500);
-                initServerControl();
-            }
-            LoadAppForm.Close();
-
-            return flag;
+            initServerControl();
+            InitDataBaseOnServer();
+            SettingsControl.SetClientId(0);
             //throw new NotImplementedException();
         }
 
-        private bool InitDataBaseOnServer()
+        private void InitDataBaseOnServer()
         {
-            retry:
-            //try
-            //{
-                DBNormaMeasureTablesMigration dbnm = new DBNormaMeasureTablesMigration();
-                dbnm.OnStepChanged += (o, s) =>
-                {
-                    LoadAppForm.SetTaskLabelsValue(dbnm.CurrentStep, dbnm.CurrentSubStep);
-                    Thread.Sleep(750);
-                };
-                dbnm.InitDataBase();
-                return true;
-            //}
-            //catch(Exception ex)
-           // {
-           //     MessageBox.Show($"{ex.Message}", "Не удалось подключиться к Базе данных", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-           //     DataBaseSettingsForm dbfm = new DataBaseSettingsForm();
-           //     dbfm.StartPosition = FormStartPosition.CenterScreen;
-           //     dbfm.cancelButton.Visible = true;
-           //     DialogResult dr =  dbfm.ShowDialog();
-           //     if (dr == DialogResult.Retry) goto retry;
-           //     else return false;
-           // }
+            try
+            {
+                   DBNormaMeasureTablesMigration dbnm = new DBNormaMeasureTablesMigration();
+                   dbnm.InitDataBase();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void reinitServer()
@@ -648,20 +610,10 @@ namespace TeraMicroMeasure
                 CheckClientDBSettings();
                 if (OpenedMeasureForm != null) OpenedMeasureForm.ClientID = a.IdNew;
                 CheckClientUseOnDataBaseAsync(a.IdNew);
-                SetClientTitle();
-                RefreshSessionForm(TCP_CLIENT_STATUS.CONNECTED);
             }
         }
 
-        private void RefreshSessionForm(TCP_CLIENT_STATUS status)
-        {
-            if (CurrentFormType == typeof(SessionControlForm))
-            {
-                SessionControlForm f = currentForm as SessionControlForm;
-                if (status == TCP_CLIENT_STATUS.CONNECTED) f.FillAllowedUsersAsync();
-                else if (status == TCP_CLIENT_STATUS.DISCONNECTED) f.SetDefaultFormState();
-            }
-        }
+
 
         private void OnServerStateChangedByClient_Handler(object sender, EventArgs e)
         {
@@ -798,7 +750,6 @@ namespace TeraMicroMeasure
         private void InitSessionForm()
         {
             SessionControlForm scf = new SessionControlForm();
-            scf.IsServerApp = IsServerApp;
             scf.Shown += (o, s) => { panelMenu.Visible = false; };
             scf.OnUserSignedIn += (o, s) =>
             {
