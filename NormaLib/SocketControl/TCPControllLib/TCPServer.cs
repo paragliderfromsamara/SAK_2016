@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace NormaLib.SocketControl.TCPControlLib
 {
@@ -25,6 +26,18 @@ namespace NormaLib.SocketControl.TCPControlLib
         TRY_START,
         ABORTED
     }
+
+    public enum EXECUTION_STATE : uint
+    {
+        ES_AWAYMODE_REQUIRED = 0x00000040,
+        ES_CONTINUOUS = 0x80000000,
+        ES_DISPLAY_REQUIRED = 0x00000002,
+        ES_SYSTEM_REQUIRED = 0x00000001,
+        ES_USER_PRESENT = 0x00000004
+    }
+
+
+
     public class TCPServer : IDisposable
     {
         public EventHandler OnServerStatusChanged;
@@ -38,6 +51,15 @@ namespace NormaLib.SocketControl.TCPControlLib
         private NORMA_SERVER_STATUS _status;
         private Thread serverThread;
         private Dictionary<string, int> ClientConnectionCounter = new Dictionary<string, int>();
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern uint SetThreadExecutionState(EXECUTION_STATE esFlags);
+        private void KeepAlive()
+        {
+            
+            SetThreadExecutionState(EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS);
+        }
+
         private NORMA_SERVER_STATUS status
         {
             set
@@ -79,12 +101,13 @@ namespace NormaLib.SocketControl.TCPControlLib
             tcpListener = new TcpListener(settings.localIPAddress, settings.localPortOnSettingsFile);
             try
             {
-
+                
                 tcpListener.Start();
                 status = NORMA_SERVER_STATUS.ACTIVE;
                 //OnStatusChanged?.Invoke($"IP aдрес: {ipAddress}; порт: {port}", new EventArgs());
                 while (true)
                 {
+                    KeepAlive();
                     TcpClient client = tcpListener.AcceptTcpClient();
                     NormaTCPClient client_object = new NormaTCPClient(client);
                     ProcessClient(client_object);

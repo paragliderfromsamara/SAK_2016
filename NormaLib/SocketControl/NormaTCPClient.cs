@@ -9,6 +9,7 @@ using System.Threading;
 using System.Diagnostics;
 using NormaLib.SocketControl.TCPControlLib;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace NormaLib.SocketControl
 {
@@ -61,6 +62,15 @@ namespace NormaLib.SocketControl
         public TCP_CLIENT_STATUS Status => status;
         private TCP_CLIENT_STATUS _status = TCP_CLIENT_STATUS.DISCONNECTED;
         private TCPSettingsController _tcpSettingsController;
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern uint SetThreadExecutionState(EXECUTION_STATE esFlags);
+        private void KeepAlive()
+        {
+
+            SetThreadExecutionState(EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS);
+        }
+
         private TCPSettingsController tcpSettingsController
         {
             get
@@ -213,6 +223,7 @@ namespace NormaLib.SocketControl
                 sendingIsActive = true;
                 while (sendingIsActive)
                 {
+                    KeepAlive();
                     // получаем сообщение
                     dataOut = Encoding.Default.GetBytes(MessageToSend);
                     StringBuilder builder = new StringBuilder();

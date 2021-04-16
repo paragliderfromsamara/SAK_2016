@@ -16,6 +16,7 @@ namespace TeraMicroMeasure
         const string ServerTCPInfoSectionName = "ServerTCPSettings";
         const string ClientSettingsSectionName = "ClientSettings";
 
+        public static bool IsServerApp => GetClientId() == 0;
 
         public static void SetLocalIpAndPort(string ip, string port)
         {

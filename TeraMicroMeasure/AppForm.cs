@@ -48,7 +48,7 @@ namespace TeraMicroMeasure
         Type CurrentFormType => currentForm == null ? null : currentForm.GetType();
         MeasureForm OpenedMeasureForm => (CurrentFormType == typeof(MeasureForm)) ? (MeasureForm)currentForm : null;  
 
-        static bool IsServerApp => SettingsControl.GetClientId() == 0;
+        static bool IsServerApp => SettingsControl.IsServerApp;
         static bool IsFirstRun => !IniFile.SettingsFileExists();
 
 
@@ -400,7 +400,6 @@ namespace TeraMicroMeasure
         {
             bool flag = true;
             clientTitle.Text = "Сервер";
-            SettingsControl.SetClientId(0);
             refreshClientCounterStatusText(0);
 
             LoadAppForm = new LoadAppForm();
