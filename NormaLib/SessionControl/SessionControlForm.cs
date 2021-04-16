@@ -69,13 +69,16 @@ namespace NormaLib.SessionControl
                 retry:
                 try
                 {
-                    Thread.Sleep(1000);
                     AllowedUsers = User.get_all_as_table();
                     flag = true;
                 }
                 catch
                 {
-                    if (tryCouter-- > 0) goto retry; 
+                    if (tryCouter-- > 0)
+                    {
+                        Thread.Sleep(1000);
+                        goto retry;
+                    }
                     flag = false;
                 }
             }));
