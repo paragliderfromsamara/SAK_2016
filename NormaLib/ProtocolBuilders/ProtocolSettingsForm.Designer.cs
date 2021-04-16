@@ -108,7 +108,7 @@
             // 
             // protocolHeaderText
             // 
-            this.protocolHeaderText.Location = new System.Drawing.Point(376, 55);
+            this.protocolHeaderText.Location = new System.Drawing.Point(349, 55);
             this.protocolHeaderText.Name = "protocolHeaderText";
             this.protocolHeaderText.Size = new System.Drawing.Size(230, 26);
             this.protocolHeaderText.TabIndex = 3;
@@ -117,7 +117,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(372, 32);
+            this.label3.Location = new System.Drawing.Point(345, 32);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(175, 20);
             this.label3.TabIndex = 4;
@@ -126,7 +126,7 @@
             // printProtocolNumberAtTitle
             // 
             this.printProtocolNumberAtTitle.AutoSize = true;
-            this.printProtocolNumberAtTitle.Location = new System.Drawing.Point(627, 55);
+            this.printProtocolNumberAtTitle.Location = new System.Drawing.Point(600, 55);
             this.printProtocolNumberAtTitle.Name = "printProtocolNumberAtTitle";
             this.printProtocolNumberAtTitle.Size = new System.Drawing.Size(226, 24);
             this.printProtocolNumberAtTitle.TabIndex = 5;
