@@ -7,11 +7,15 @@ using NormaLib.Utils;
 
 namespace NormaLib.ProtocolBuilders
 {
-    internal static class ProtocolSettings
+    public static class ProtocolSettings
     {
-
+        public static EventHandler OnCommonSettingsChanged;
         #region MSWord Section 
         private const string MSWordProtocolSettings_SectionName = "MSWordProtocolSettings";
+
+
+
+
 
         /// <summary>
         /// Адрес папки хранилища в которой сохраняются протоколы испытаний
@@ -33,11 +37,32 @@ namespace NormaLib.ProtocolBuilders
             {
                 IniFile f = IniFile.GetAppSettingsFile();
                 f.Write("path", value, MSWordProtocolSettings_SectionName);
+                
             }
         }
         #endregion
 
         #region CommonSection
+      
+        private static bool read_only = false;
+        
+        public static bool ReadOnly
+        {
+            get
+            {
+                IniFile f = IniFile.GetAppSettingsFile();
+                return f.Read("read_only_protocol_settings", CommonProtocolSettings_SectionName) == "1";
+            }
+            set
+            {
+                if (read_only == value) return;
+                read_only = value;
+                IniFile f = IniFile.GetAppSettingsFile();
+                f.Write("read_only_protocol_settings", value ? "1" : "0", CommonProtocolSettings_SectionName);
+                OnCommonSettingsChanged?.Invoke(new ProtocolSettingsXMLState(), new EventArgs());
+            }
+        }
+
         private const string CommonProtocolSettings_SectionName = "CommonProtocolSettings";
         public static string ProtocolHeader
         {
@@ -56,6 +81,7 @@ namespace NormaLib.ProtocolBuilders
             {
                 IniFile f = IniFile.GetAppSettingsFile();
                 f.Write("header_text", value, CommonProtocolSettings_SectionName);
+                OnCommonSettingsChanged?.Invoke(new ProtocolSettingsXMLState(), new EventArgs());
             }
         }
 
@@ -71,6 +97,7 @@ namespace NormaLib.ProtocolBuilders
             {
                 IniFile f = IniFile.GetAppSettingsFile();
                 f.Write("add_test_id_to_header", value ? "1" : "0", CommonProtocolSettings_SectionName);
+                OnCommonSettingsChanged?.Invoke(new ProtocolSettingsXMLState(), new EventArgs());
             }
         }
 
@@ -91,6 +118,7 @@ namespace NormaLib.ProtocolBuilders
             {
                 IniFile f = IniFile.GetAppSettingsFile();
                 f.Write("company_name", value, CommonProtocolSettings_SectionName);
+                OnCommonSettingsChanged?.Invoke(new ProtocolSettingsXMLState(), new EventArgs());
             }
         }
         #endregion

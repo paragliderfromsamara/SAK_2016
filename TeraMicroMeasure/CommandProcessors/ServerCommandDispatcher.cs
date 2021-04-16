@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Threading;
 using NormaLib.Devices.XmlObjects;
 using NormaLib.Devices;
+using NormaLib.ProtocolBuilders;
 
 namespace TeraMicroMeasure.CommandProcessors
 {
@@ -100,6 +101,7 @@ namespace TeraMicroMeasure.CommandProcessors
         private static object locker7 = new object();
         private static object locker8 = new object();
         private static object locker9 = new object();
+        private static object locker10 = new object();
         #endregion
 
         public ServerCommandDispatcher(TCPServerClientsControl _clients_control, ServerXmlState server_state, EventHandler on_client_id_changed, EventHandler on_client_measure_settings_changed, EventHandler on_measure_start_by_client, EventHandler on_measure_stop_by_client, EventHandler on_client_connected, EventHandler on_client_disconnected, EventHandler on_device_try_capture, EventHandler on_device_released)
@@ -120,6 +122,17 @@ namespace TeraMicroMeasure.CommandProcessors
             OnDeviceTryCapture += on_device_try_capture;
             OnDeviceReleased += on_device_released;
 
+            ProtocolSettings.OnCommonSettingsChanged += RefreshProtocolSettingsOnServerState;
+
+        }
+
+        private void RefreshProtocolSettingsOnServerState(object sender, EventArgs e)
+        {
+            lock(locker10)
+            {
+                currentServerState.ProtocolSettingsState = sender as ProtocolSettingsXMLState;
+                RefreshCurrentServerStateOnClientControl();
+            }
         }
 
         internal void RemoveDeviceFromServerState(DeviceType typeId, string serial)

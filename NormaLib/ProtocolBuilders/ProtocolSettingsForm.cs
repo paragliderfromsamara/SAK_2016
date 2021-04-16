@@ -18,6 +18,18 @@ namespace NormaLib.ProtocolBuilders
             initMSWordPanel();
             initCommonPanel();
             FormClosing += ProtocolSettingsForm_FormClosing;
+            
+
+            ProtocolSettings.OnCommonSettingsChanged += (o, s) =>
+            {
+                if (ProtocolSettings.ReadOnly)
+                {
+                    ProtocolSettingsXMLState state = o as ProtocolSettingsXMLState;
+                    companyNameTextBox.Text = state.CompanyName;
+                    protocolHeaderText.Text = state.ProtocolHeader;
+                    printProtocolNumberAtTitle.Checked = state.AddTestIdToProtocolTitleFlag;
+                }
+            };
         }
 
 
@@ -74,22 +86,23 @@ namespace NormaLib.ProtocolBuilders
             companyNameTextBox.Text = ProtocolSettings.CompanyName;
             printProtocolNumberAtTitle.Checked = ProtocolSettings.DoesAddTestIdOnProtocolHeader;
             protocolHeaderText.Text = ProtocolSettings.ProtocolHeader;
+            commonSettingsPanel.Enabled = !ProtocolSettings.ReadOnly;
         }
         #endregion
 
         private void printProtocolNumberAtTitle_CheckedChanged(object sender, EventArgs e)
         {
-            ProtocolSettings.DoesAddTestIdOnProtocolHeader = (sender as CheckBox).Checked;
+            if (commonSettingsPanel.Enabled) ProtocolSettings.DoesAddTestIdOnProtocolHeader = (sender as CheckBox).Checked;
         }
 
         private void companyNameTextBox_TextChanged(object sender, EventArgs e)
         {
-            ProtocolSettings.CompanyName = (sender as TextBox).Text;
+           if (commonSettingsPanel.Enabled) ProtocolSettings.CompanyName = (sender as TextBox).Text;
         }
 
         private void protocolHeaderText_TextChanged(object sender, EventArgs e)
         {
-            ProtocolSettings.ProtocolHeader = (sender as TextBox).Text;
+           if (commonSettingsPanel.Enabled) ProtocolSettings.ProtocolHeader = (sender as TextBox).Text;
         }
     }
 

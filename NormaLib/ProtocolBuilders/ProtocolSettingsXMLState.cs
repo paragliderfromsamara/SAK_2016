@@ -145,9 +145,9 @@ namespace NormaLib.ProtocolBuilders
                 if (protocolSettingsState.CompanyName != CurrentState.CompanyName) ProtocolSettings.CompanyName = protocolSettingsState.CompanyName;
                 if (protocolSettingsState.ProtocolHeader != CurrentState.ProtocolHeader) ProtocolSettings.ProtocolHeader = protocolSettingsState.ProtocolHeader;
                 if (protocolSettingsState.AddTestIdToProtocolTitleFlag != CurrentState.AddTestIdToProtocolTitleFlag) ProtocolSettings.DoesAddTestIdOnProtocolHeader = protocolSettingsState.AddTestIdToProtocolTitleFlag;
+                ProtocolSettings.ReadOnly = true;
                 CurrentState = new ProtocolSettingsXMLState(protocolSettingsState.InnerXml);
             }
-            
         }
     }
 }
