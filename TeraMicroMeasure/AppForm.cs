@@ -215,7 +215,7 @@ namespace TeraMicroMeasure
         private void SetClientTitle()
         {
             int cId = SettingsControl.GetClientId();
-            clientTitle.Text = (cId <= 0) ? "Клиент N" : $"Клиент {cId}";
+            clientTitle.Text = (cId <= 0) ? "Линия N" : $"Линия {cId}";
         }
 
         private ClientXmlState buildClientXML()
