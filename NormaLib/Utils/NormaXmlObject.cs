@@ -12,6 +12,7 @@ namespace NormaLib.Utils
 {
     public class NormaXmlObject
     {
+        public static EventHandler OnStateChanged;
         private static readonly Random random = new Random();
         private static readonly object syncLock = new object();
         private XDocument xDoc;
@@ -111,6 +112,7 @@ namespace NormaLib.Utils
                 string sTime = t.ToBinary().ToString("x") + v.ToString("x");//$"{t.ToString()}:{t.Millisecond}-{r.Next(1, 99999999).ToString("x")}";
                 this.state_id_was = state_id;
                 this.state_id = sTime;
+                OnStateChanged?.Invoke(this, new EventArgs());
             }
             return state_id;
         }

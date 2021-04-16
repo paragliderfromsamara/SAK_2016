@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NormaLib.Utils;
 using NormaLib.Devices.XmlObjects;
-
+using NormaLib.ProtocolBuilders;
 
 namespace TeraMicroMeasure.XmlObjects
 {
@@ -39,6 +39,24 @@ namespace TeraMicroMeasure.XmlObjects
         public ServerXmlState(string inner_xml) : base(inner_xml)
         {
 
+        }
+
+        private ProtocolSettingsXMLState _protocol_settings;
+        public ProtocolSettingsXMLState ProtocolSettingsState
+        {
+            get
+            {
+                return _protocol_settings;
+            }set
+            {
+                bool f = _protocol_settings == null;
+                if (!f) f = _protocol_settings.StateId != value.StateId;
+                if (f)
+                {
+                    _protocol_settings = value;
+                    setChangedFlag(true);
+                }
+            }
         }
 
         private ClientXmlState _server_client_state;
@@ -216,6 +234,7 @@ namespace TeraMicroMeasure.XmlObjects
             fillClientsFromXML();
             fillDevicesFromXML();
             fillMeasureStateFromXML();
+            fillProtocolSettingsStateFromXML();
         }
 
         private void fillMeasureStateFromXML()
@@ -271,6 +290,22 @@ namespace TeraMicroMeasure.XmlObjects
             port = v;
         }
 
+        private void fillProtocolSettingsStateFromXML()
+        {
+            ProtocolSettingsXMLState s = new ProtocolSettingsXMLState();
+
+            try
+            {
+                s = new ProtocolSettingsXMLState(getOuterOfXMLObject(s.RootElementTagName));
+                if (s.IsValid) ProtocolSettingsState = s;
+            }
+            catch (System.Xml.XmlException)
+            {
+                ProtocolSettingsState = null;
+            }
+            //s.InnerXml = getOuterOfXMLObject(s.RootElementTagName);
+        }
+
         protected override void fillXMLDocument()
         {
             base.fillXMLDocument();
@@ -280,6 +315,7 @@ namespace TeraMicroMeasure.XmlObjects
             addClientsToXML();
             addDevicesToXML();
             AddXMLObject(ServerClientState);
+            AddXMLObject(ProtocolSettingsState);
         }
 
         private void addDevicesToXML()

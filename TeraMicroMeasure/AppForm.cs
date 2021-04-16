@@ -22,6 +22,7 @@ using System.Diagnostics;
 using TeraMicroMeasure.Properties;
 using NormaLib.SessionControl;
 using NormaLib.Utils;
+using NormaLib.ProtocolBuilders;
 
 namespace TeraMicroMeasure
 {
@@ -49,6 +50,8 @@ namespace TeraMicroMeasure
 
         static bool IsServerApp => SettingsControl.GetClientId() == 0;
         static bool IsFirstRun => !IniFile.SettingsFileExists();
+
+
         public AppForm()
         {
             if (IsFirstRun)
@@ -361,7 +364,10 @@ namespace TeraMicroMeasure
         {
             ServerXmlState sState = sender as ServerXmlState;
             CheckDeviceListChanges(sState.Devices);
+            ProtocolSettingsXMLState.CheckCurrentStateChanges(sState.ProtocolSettingsState);
         }
+
+
 
         private void MainForm_FormClosing_ForClient()
         {
@@ -722,6 +728,8 @@ namespace TeraMicroMeasure
             serverState.IPAddress = SettingsControl.GetLocalIP();
             serverState.Port = SettingsControl.GetLocalPort();
             serverState.RequestPeriod = SettingsControl.GetRequestPeriod();
+            serverState.ProtocolSettingsState = ProtocolSettingsXMLState.CurrentState;
+
             return serverState;
         }
 
