@@ -533,7 +533,6 @@ namespace TeraMicroMeasure
             if (DeviceDispatcher != null)
             {
                 DeviceXMLState ds = DeviceDispatcher.ReleaseDeviceAndGetDeviceXmlState(cs.ClientID);
-
                 if (ds != null)
                 {
                     ReplaceDeviceXMLStateOnServerCommandDispatcher(ds);

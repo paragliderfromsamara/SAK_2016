@@ -457,6 +457,7 @@ namespace NormaLib.Devices
                     {
                         if (IsOnMeasureCycle)
                         {
+                            if (next_client_id == -1) measure_cycle_flag = false;
                             if (!measure_cycle_flag)
                             {
                                 MeasureStopThreadFunc();
