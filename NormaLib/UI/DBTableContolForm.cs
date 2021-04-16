@@ -50,7 +50,7 @@ namespace NormaLib.UI
             InitializeComponent();
             emptyEntitiesList.Text = EmptyListText;
             dgEntities.RowsRemoved += (o, s) => { CheckListIsEmpty(); };
-
+            dgEntities.RowsAdded += (o, s) => { CheckListIsEmpty(); };
         }
 
         private void InitDataGridView()
