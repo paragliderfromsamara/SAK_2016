@@ -647,7 +647,7 @@ namespace TeraMicroMeasure
                 ClientIDChangedEventArgs a = e as ClientIDChangedEventArgs;
                 CheckClientDBSettings();
                 if (OpenedMeasureForm != null) OpenedMeasureForm.ClientID = a.IdNew;
-                CheckClientUseOnDataBaseAsync(a.IdNew);
+                if (IsServerApp)CheckClientUseOnDataBaseAsync(a.IdNew);
                 SetClientTitle();
                 RefreshSessionForm(TCP_CLIENT_STATUS.CONNECTED);
             }
@@ -658,8 +658,10 @@ namespace TeraMicroMeasure
             if (CurrentFormType == typeof(SessionControlForm))
             {
                 SessionControlForm f = currentForm as SessionControlForm;
-                if (status == TCP_CLIENT_STATUS.CONNECTED) f.FillAllowedUsersAsync();
-                else if (status == TCP_CLIENT_STATUS.DISCONNECTED) f.SetDefaultFormState();
+                if (status == TCP_CLIENT_STATUS.CONNECTED)
+                    f.FillAllowedUsersAsync();
+                else if (status == TCP_CLIENT_STATUS.DISCONNECTED)
+                    f.SetDefaultFormState();
             }
         }
 

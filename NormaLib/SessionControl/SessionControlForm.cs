@@ -60,17 +60,22 @@ namespace NormaLib.SessionControl
             DataTable dt = new DataTable();
             bool flag = false;
             dbStatusLbl.Visible = true;
-            dbStatusLbl.Text = "Попытка связи с базой данных...";
             connectionSettingsButton.Enabled = false;
             isOnLoading = true;
+            dbStatusLbl.Text = "Попытка связи с базой данных...";
+            Debug.WriteLine("----------------- FillAllowedUsersAsync() ------------------");
             await Task.Run((Action)(() => {
+                int tryCouter = 5;
+                retry:
                 try
                 {
+                    Thread.Sleep(1000);
                     AllowedUsers = User.get_all_as_table();
                     flag = true;
                 }
                 catch
                 {
+                    if (tryCouter-- > 0) goto retry; 
                     flag = false;
                 }
             }));
