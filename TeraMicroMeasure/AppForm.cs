@@ -187,9 +187,17 @@ namespace TeraMicroMeasure
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            StopDeviceFinder();
-            if (IsServerApp) MainForm_FormClosing_ForServer();
-            else MainForm_FormClosing_ForClient();
+            if (!MeasureIsActive())
+            {
+                StopDeviceFinder();
+                if (IsServerApp) MainForm_FormClosing_ForServer();
+                else MainForm_FormClosing_ForClient();
+            }else
+            {
+                MessageBox.Show("Невозможно перейти в другое меню или закрыть приложение при запущенном измерении!", "Измерение не завершено!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                e.Cancel = true;
+            }
+
         }
         #endregion
 
