@@ -209,7 +209,7 @@
             this.measureResultDataGrid.ShowCellToolTips = false;
             this.measureResultDataGrid.ShowEditingIcon = false;
             this.measureResultDataGrid.ShowRowErrors = false;
-            this.measureResultDataGrid.Size = new System.Drawing.Size(426, 610);
+            this.measureResultDataGrid.Size = new System.Drawing.Size(426, 470);
             this.measureResultDataGrid.TabIndex = 0;
             this.measureResultDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.measureResultDataGrid_CellClick);
             this.measureResultDataGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.measureResultDataGrid_CellMouseClick);
@@ -513,7 +513,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(915, 985);
+            this.panel3.Size = new System.Drawing.Size(915, 845);
             this.panel3.TabIndex = 42;
             // 
             // panel6
@@ -525,7 +525,7 @@
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 227);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(915, 647);
+            this.panel6.Size = new System.Drawing.Size(915, 507);
             this.panel6.TabIndex = 45;
             // 
             // lblNoMeasureData
@@ -547,7 +547,7 @@
             this.measuredParameterDataTabs.Location = new System.Drawing.Point(0, 0);
             this.measuredParameterDataTabs.Name = "measuredParameterDataTabs";
             this.measuredParameterDataTabs.SelectedIndex = 0;
-            this.measuredParameterDataTabs.Size = new System.Drawing.Size(440, 647);
+            this.measuredParameterDataTabs.Size = new System.Drawing.Size(440, 507);
             this.measuredParameterDataTabs.TabIndex = 38;
             this.measuredParameterDataTabs.SelectedIndexChanged += new System.EventHandler(this.measuredParameterDataTabs_SelectedIndexChanged);
             // 
@@ -557,7 +557,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 27);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(432, 616);
+            this.tabPage1.Size = new System.Drawing.Size(432, 476);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -568,7 +568,7 @@
             this.panelResultMeasure.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelResultMeasure.Location = new System.Drawing.Point(3, 3);
             this.panelResultMeasure.Name = "panelResultMeasure";
-            this.panelResultMeasure.Size = new System.Drawing.Size(426, 610);
+            this.panelResultMeasure.Size = new System.Drawing.Size(426, 470);
             this.panelResultMeasure.TabIndex = 38;
             // 
             // tabPage2
@@ -602,7 +602,7 @@
             this.testParamsControlPanel.Location = new System.Drawing.Point(440, 0);
             this.testParamsControlPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.testParamsControlPanel.Name = "testParamsControlPanel";
-            this.testParamsControlPanel.Size = new System.Drawing.Size(475, 647);
+            this.testParamsControlPanel.Size = new System.Drawing.Size(475, 507);
             this.testParamsControlPanel.TabIndex = 35;
             // 
             // barabanSelectorPanel
@@ -674,7 +674,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.testDraftControlPanel.Controls.Add(this.resetTestButton);
             this.testDraftControlPanel.Controls.Add(this.saveResultButton);
-            this.testDraftControlPanel.Location = new System.Drawing.Point(18, 579);
+            this.testDraftControlPanel.Location = new System.Drawing.Point(18, 439);
             this.testDraftControlPanel.Name = "testDraftControlPanel";
             this.testDraftControlPanel.Size = new System.Drawing.Size(433, 47);
             this.testDraftControlPanel.TabIndex = 38;
@@ -835,7 +835,7 @@
             this.panel5.Controls.Add(this.panel1);
             this.panel5.Controls.Add(this.voltagesGroupBox);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 874);
+            this.panel5.Location = new System.Drawing.Point(0, 734);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(915, 111);
             this.panel5.TabIndex = 44;
@@ -897,7 +897,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(915, 985);
+            this.ClientSize = new System.Drawing.Size(915, 845);
             this.Controls.Add(this.panel3);
             this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

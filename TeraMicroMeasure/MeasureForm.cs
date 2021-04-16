@@ -533,7 +533,7 @@ namespace TeraMicroMeasure
         {
             MeasureState = measure_state;
             SetConnectionStatus(true);
-            richTextBox1.Text = measure_state.InnerXml;
+            //richTextBox1.Text = measure_state.InnerXml;
         }
 
         public void SetConnectionStatus(bool is_online)
@@ -815,6 +815,7 @@ namespace TeraMicroMeasure
                     testParamsControlPanel.Enabled = true;
                     measuredParameterDataTabs.Enabled = true;
                     StopMeasureTimer();
+                    StopCountDownTimer();
                     break;
                 case MeasureStatus.WILL_START:
                     startMeasureButton.Text = "Запускается...";
@@ -869,7 +870,7 @@ namespace TeraMicroMeasure
         private MeasureTimer measureTimer;
         private void StartMeasureTimer()
         {
-            if (measureTimer == null) StopMeasureTimer();
+            if (measureTimer != null) StopMeasureTimer();
             if (!MeasuredParameterType.IsItIsolationResistance(measureState.MeasureTypeId)) return;
             int time = currentStructure.GetRisolTimeLimit(CurrentParameterData);
             measureTimerLabel.Text = "00:00";
@@ -885,7 +886,9 @@ namespace TeraMicroMeasure
                 BeginInvoke(new EventHandler(MeasureTimer_Tick), new object[] { sender, e });
             }else
             {
-                measureTimerLabel.Text = measureTimer.WatchDisplay;
+                MeasureTimer t = sender as MeasureTimer;
+                Debug.WriteLine(t.WatchDisplay);
+                measureTimerLabel.Text = t.WatchDisplay;
             }
 
         }
@@ -906,8 +909,35 @@ namespace TeraMicroMeasure
         {
             if (measureTimer != null)
             {
+                Debug.WriteLine("StopMeasureTimer()");
                 measureTimer.Stop();
                 measureTimer.Dispose();
+            }
+        }
+        private MeasureTimer CountDownTimer = null;
+
+        private void StartCountDownTimer()
+        {
+            if (CountDownTimer != null) StopCountDownTimer();
+            if (measureTimer != null) StopMeasureTimer();
+            if (!MeasuredParameterType.IsItIsolationResistance(measureState.MeasureTypeId)) return;
+            int time = (int)measureDelayUpDown.Value;
+            measureTimerLabel.Text = $"00:00";
+            if (time > 0)
+            {
+                CountDownTimer = new MeasureTimer(time, MeasureTimer_Tick);
+                CountDownTimer.Start(true);
+            }
+
+        }
+
+        private void StopCountDownTimer()
+        {
+            if (CountDownTimer != null)
+            {
+                measureTimerLabel.Text = $"00:00";
+                CountDownTimer.Stop();
+                CountDownTimer.Dispose();
             }
         }
 
@@ -1009,9 +1039,11 @@ namespace TeraMicroMeasure
                 if (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION)
                 {
                     SetMeasureStatus(MeasureStatus.WILL_STOPPED);
+                    StartCountDownTimer();
                 }
                 else if (xml_device.WorkStatusId == (int)DeviceWorkStatus.IDLE)
                 {
+            
                     SetMeasureStatus(MeasureStatus.STOPPED);
                 }
             }
@@ -1023,6 +1055,7 @@ namespace TeraMicroMeasure
                 if (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION)
                 {
                     SetMeasureStatus(MeasureStatus.WILL_STOPPED);
+                    StartCountDownTimer();
                 }
                 else if (xml_device.WorkStatusId == (int)DeviceWorkStatus.IDLE)
                 {

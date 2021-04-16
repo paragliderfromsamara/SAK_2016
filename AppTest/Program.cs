@@ -28,7 +28,7 @@ namespace AppTest
             //ProtocolTest.Start();
             //GetTkcIzol();
             //GetTablesList();
-            TestOfCableTest();
+            //TestOfCableTest();
             //CreateDump();
             Console.ReadLine();
         }
@@ -63,7 +63,7 @@ namespace AppTest
                 Console.WriteLine(s);
             }
 
-            File.WriteAllText(@"ass_hole.txt", string.Join("\n", values));//fs.WriteAsync()(values.ToArray(), 0, values.Count);
+            //File.WriteAllText(@"ass_hole.txt", string.Join("\n", values));//fs.WriteAsync()(values.ToArray(), 0, values.Count);
             dbc.MyConn.Close();
         }
 
@@ -127,7 +127,7 @@ namespace AppTest
                             for (uint i = LeadTestStatus.Ragged; i < LeadTestStatus.Broken; i++)
                             {
                                 int v = r.Next(0, 10);
-                                if (v > 5)
+                                if (v > 9)
                                 {
                                     int e = r.Next(1, (int)s.RealAmount);
                                     int m = map.MeasurePointsPerElement > 1 ? r.Next(1, map.MeasurePointsPerElement) : 1;

@@ -18,13 +18,20 @@ namespace NormaLib.Measure
         public int Minutes => counter / 60;
         public int Seconds => (counter + 60) % 60;
         public string WatchDisplay => $"{convertToStringWatchElements(Minutes)}:{convertToStringWatchElements(Seconds)}";
-
+        private bool IsCountDown = false;
         public MeasureTimer()
         {
             timer = new Timer(1000);
             timer.Elapsed += Timer_Elapsed;
             counter = 0;
         }
+
+        public MeasureTimer(int limit_on_seconds, EventHandler on_timer_tick) : this()
+        {
+            limit = limit_on_seconds;
+            OnTimerTick = on_timer_tick;
+        }
+
         public MeasureTimer(int limit_on_seconds, EventHandler on_timer_tick, EventHandler on_timer_finished) : this()
         {
             limit = limit_on_seconds;
@@ -34,7 +41,10 @@ namespace NormaLib.Measure
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            counter++;
+            if (IsCountDown)
+                --counter;
+            else
+                counter++;
             OnTimerTick?.Invoke(this, new EventArgs());
             if (counter == limit)
             {
@@ -43,8 +53,14 @@ namespace NormaLib.Measure
             }
         }
 
-        public void Start()
+        public void Start(bool is_count_down = false)
         {
+            IsCountDown = is_count_down;
+            if (is_count_down)
+            {
+                counter = limit;
+                limit = 0;
+            }
             timer.Start();
         }
 
