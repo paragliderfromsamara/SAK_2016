@@ -163,6 +163,13 @@ namespace TeraMicroMeasure
                 return null;
         }
 
+        private bool MeasureIsActive()
+        {
+            MeasureForm mf = FindOpened_MeasureForm();
+            if (mf == null) return false;
+            return mf.MeasureState.MeasureStartFlag;
+        }
+
         private void RefreshMeasureStateHandler(object sender, EventArgs e)
         {
             if (IsServerApp)
@@ -290,7 +297,9 @@ namespace TeraMicroMeasure
         {
             if (clientCommandDispatcher != null)
             {
-                disconnectFromServer();
+                if (MeasureIsActive()) MessageBox.Show("Прежде чем отключиться от сервера, необходимо остановить измерение!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else
+                    disconnectFromServer();
             }
             else
             {
