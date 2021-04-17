@@ -28,7 +28,8 @@ namespace AppTest
             //ProtocolTest.Start();
             //GetTkcIzol();
             //GetTablesList();
-            //TestOfCableTest();
+            //
+            TestOfCableTest();
             //CreateDump();
             Console.ReadLine();
         }
@@ -99,7 +100,7 @@ namespace AppTest
             ClearTests();
             DBEntityTable cables_table = Cable.get_all_as_table();
             Random r = new Random();
-            for(int time = 0; time < 25; time++)
+            for(int time = 0; time < 1; time++)
             {
                 foreach (Cable cable in cables_table.Rows)
                 {

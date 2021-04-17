@@ -136,8 +136,14 @@ namespace NormaLib.UI
 
         protected void CheckListIsEmpty()
         {
-            emptyEntitiesList.Visible = dgEntities.Rows.Count == 0;
-            dgEntities.Visible = dgEntities.Rows.Count > 0;
+            if (InvokeRequired)
+            {
+                BeginInvoke(new CrossAppDomainDelegate(CheckListIsEmpty));
+            }else
+            {
+                emptyEntitiesList.Visible = dgEntities.Rows.Count == 0;
+                dgEntities.Visible = dgEntities.Rows.Count > 0;
+            }
         }
 
         async protected void FillDataGridAsync()
