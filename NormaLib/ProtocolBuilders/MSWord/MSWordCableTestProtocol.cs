@@ -149,10 +149,12 @@ namespace NormaLib.ProtocolBuilders.MSWord
             Paragraph p1 = BuildParagraph(JustificationValues.Left);
             Paragraph p2 = BuildParagraph(JustificationValues.Left);
             Paragraph p3 = BuildParagraph(JustificationValues.Left);
+            Paragraph p4 = BuildParagraph(JustificationValues.Left);
             p1.Append(AddRun($"Заказ № "));
             p2.Append(AddRun($"Длина кабеля: {cableTest.CableLength} м"));
-            p3.Append(AddRun($"БРУТТО: "));
-            cell.Append(p1, p2, p3);
+            p3.Append(AddRun($"БРУТТО: {(cableTest.BruttoWeight == 0 || cableTest.BarabanId == 0 ? "_________" : cableTest.BruttoWeight.ToString())}кг"));
+            p4.Append(AddRun($"НЕТТО: {(cableTest.NettoWeight == 0 ? "_________" : cableTest.NettoWeight.ToString())}кг"));
+            cell.Append(p1, p2, p3, p4);
             return cell;
         }
 
@@ -162,7 +164,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
             Paragraph p1 = BuildParagraph(JustificationValues.Left);
             Paragraph p2 = BuildParagraph(JustificationValues.Left);
             Paragraph p3 = BuildParagraph(JustificationValues.Left);
-            p1.Append(AddRun($"Тип барабана: {cableTest.TestedCable.FullName}"));
+            p1.Append(AddRun($"Тип барабана: {(cableTest.BarabanId != 0 ? cableTest.ReleasedBaraban.BarabanType.TypeName : "__________")}"));
             p2.Append(AddRun($"Температура: {cableTest.Temperature}°C")); 
             p3.Append(AddRun($"Дата испытания: {cableTest.FinishedAt.ToString("dd.MM.yyyy")}"));
             cell.Append(p1, p2, p3);
@@ -173,7 +175,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
         {
             TableCell cell = new TableCell();
             Paragraph p1 = BuildParagraph(JustificationValues.Left);
-            p1.Append(AddRun($"№ барабана: "));
+            p1.Append(AddRun($"№ барабана: {(cableTest.BarabanId != 0 ? cableTest.ReleasedBaraban.SerialNumber : "__________")}"));
             cell.Append(p1);
             return cell;
         }

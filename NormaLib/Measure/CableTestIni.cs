@@ -44,15 +44,11 @@ namespace NormaLib.Measure
 
         IniFile file;
 
-
-
         public CableTestIni(int _test_line_number = -1)
         {
             file = new IniFile(draft_name);
             TestLineNumber = _test_line_number;
         }
-
-        
 
         public void ResetFile()
         {
@@ -68,12 +64,12 @@ namespace NormaLib.Measure
             if (cableTest.Save())
             {
                 TestedCable cable = TestedCable.create_for_test(cableTest);
-                cableTest.NettoWeight = cable.LinearMass > 0 ? cableTest.CableLength * cable.LinearMass : 0;
+                cableTest.NettoWeight = cable.LinearMass > 0 ? cableTest.CableLength * cable.LinearMass / 1000.0f : 0;
+                cableTest.BruttoWeight = cableTest.NettoWeight + BarabanTypeWeight;
                 if (BarabanTypeId != 0)
                 {
                     ReleasedBaraban b = ReleasedBaraban.CreateBaraban(BarabanTypeId, BarabanNumber);
                     cableTest.BarabanId = b.BarabanId;
-
                 }
                 
                 foreach (TestedCableStructure tcs in cable.CableStructures.Rows)

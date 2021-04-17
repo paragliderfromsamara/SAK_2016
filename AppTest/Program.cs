@@ -99,16 +99,34 @@ namespace AppTest
             CableTest test;
             ClearTests();
             DBEntityTable cables_table = Cable.get_all_as_table();
+            DBEntityTable baraban_types = BarabanType.get_all_active_as_table();
+
             Random r = new Random();
             for(int time = 0; time < 1; time++)
             {
                 foreach (Cable cable in cables_table.Rows)
                 {
                     CableTestIni f = new CableTestIni(r.Next(0, 4));
+                    f.ResetFile();
+
+                    int bTypeIdx = r.Next(0, 2);
+
                     f.TestedCableLength = r.Next(250, 3000);
                     f.SourceCable = cable;
                     f.OperatorID = (User.get_all_as_table().Rows[0] as User).UserId;
 
+                    if (bTypeIdx > 0)
+                    {
+                        int number;
+                        number = r.Next(10000, 99999);
+                        int year = r.Next(2010, 2021);
+                        string b = $"{number}-{year}";
+                        int id = r.Next(0, r.Next(-1, baraban_types.Rows.Count - 1));
+                        BarabanType bt = (BarabanType)baraban_types.Rows[id];
+                        f.BarabanNumber = b;
+                        f.BarabanTypeWeight = bt.BarabanWeight;
+                        f.BarabanTypeId = bt.TypeId;
+                    }
                     MeasurePointsHandler handler = new MeasurePointsHandler((point) => {
                         CableStructure s = ((CableStructure[])cable.CableStructures.Select($"{CableStructure.StructureId_ColumnName} = {point.StructureId}"))[0];
                         CableStructureMeasuredParameterData data = ((CableStructureMeasuredParameterData[])s.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {point.ParameterTypeId}"))[0];
