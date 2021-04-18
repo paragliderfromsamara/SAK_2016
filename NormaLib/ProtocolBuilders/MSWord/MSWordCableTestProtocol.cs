@@ -207,7 +207,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
             List<Paragraph> paragraphs = new List<Paragraph>();
             paragraphs.Add(BuildParagraph(AddRun($"Номинальное количество {structure.StructureType.StructureTypeName_RodPadej_Multiple}: {structure.DisplayedAmount}"), JustificationValues.Left));
             paragraphs.Add(BuildParagraph(AddRun($"Фактическое количество {structure.StructureType.StructureTypeName_RodPadej_Multiple}: {structure.RealAmount}"), JustificationValues.Left));
-            paragraphs.Add(BuildParagraph(AddRun($"Годных {structure.StructureType.StructureTypeName_RodPadej_Multiple}: {structure.NormalElementsAmount}"), JustificationValues.Left));
+            paragraphs.Add(BuildParagraph(AddRun($"Годных {structure.StructureType.StructureTypeName_RodPadej_Multiple}: {structure.NormalElementPercent}"), JustificationValues.Left));
             Paragraph descriptionParagraph = BuildParagraph(JustificationValues.Left);
             descriptionParagraph.Append(AddRun("Значения измеренных параметров вышедшие за установленные нормы выделены", MSWordStringTypes.Typical, false, true));
             descriptionParagraph.Append(AddRun(" жирным ", MSWordStringTypes.Typical, true, true), AddRun("шрифтом.", MSWordStringTypes.Typical, false, true));

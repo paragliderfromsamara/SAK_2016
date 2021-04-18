@@ -132,7 +132,6 @@ namespace NormaLib.DBControl
             CurrentSubStep = "Получение списка сущеcтвующих таблиц";
             _dbControl.ConnectToDB(dbName);
             TablesOnServer = _dbControl.GetTablesList();
-            
         }
 
         public void MigrateData()

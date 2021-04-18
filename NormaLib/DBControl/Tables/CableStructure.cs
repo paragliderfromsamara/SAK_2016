@@ -899,11 +899,20 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        public float NormalElementPercent
+        {
+            get
+            {
+                float v = ((NormalElementsAmount / RealAmount) * 100);
+                return (float)Math.Round(v, 1);
+            }
+        }
 
         public int NormalElementsAmount
         {
             get
             {
+            
                 IEnumerable<uint> temp = new List<uint>();
                 for (uint i = 0; i < RealAmount; i++) ((List<uint>)temp).Add(i+1);               
                 
@@ -913,18 +922,14 @@ namespace NormaLib.DBControl.Tables
                     TestedStructureMeasuredParameterData[] data = GetMeasureParameterDatasByParameterType(pType.ParameterTypeId);
                     foreach(TestedStructureMeasuredParameterData d in data)
                     {
-                        //if (d.GoodElements.Length > 0)
-                        //{
-                            temp = temp.Intersect(d.GoodElements.ToList());
-                            Debug.WriteLine($"{string.Join(", ", temp)}");
-                        //}
+                       temp = temp.Intersect(d.GoodElements.ToList());
                     }
-                    //Debug.WriteLine($"{string.Join(", ", temp)}");
                 }
-                Debug.WriteLine($"{string.Join(", ", temp)}");
                 return temp.Count();
             }
         } 
+
+
     }
 
 

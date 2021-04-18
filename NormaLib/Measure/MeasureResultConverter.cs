@@ -14,7 +14,7 @@ namespace NormaLib.Measure
         double raw_value;
         uint parameter_type_id;
         float cable_length;
-        float bringing_length;
+        float bringing_length = 0;
         
         public double ConvertedValue;
         public double ConvertedValueRounded => RoundValue(ConvertedValue);// Math.Round(ConvertedValue, GetDecimalPartLengthByValue(ConvertedValue), MidpointRounding.AwayFromZero);
@@ -60,7 +60,7 @@ namespace NormaLib.Measure
             ConvertedValue = raw_value = _raw_value;
             parameter_type_id = _parameter_data.ParameterTypeId;
             cable_length = _cable_length;
-            bringing_length = _parameter_data.LengthBringing;
+            bringing_length = (_parameter_data.LengthBringingTypeId == LengthBringingType.NoBringing) ? 0 : _parameter_data.LengthBringing;
             material_coeff = _material_coeff;
             parameterData = _parameter_data;
             calculate();
@@ -94,12 +94,13 @@ namespace NormaLib.Measure
 
         private void calculate_Rleads()
         {
-            ConvertedValue = ((raw_value * bringing_length) / cable_length) / material_coeff;
+            ConvertedValue = (bringing_length == 0) ? raw_value / material_coeff : ((raw_value * bringing_length) / cable_length) / material_coeff;
         }
 
         private void calculate_Rizol()
         {
-            ConvertedValue = (raw_value * cable_length * material_coeff) / bringing_length;
+            ConvertedValue = (bringing_length == 0) ? raw_value * material_coeff : (raw_value * cable_length * material_coeff) / bringing_length;
+
         }
     }
 }
