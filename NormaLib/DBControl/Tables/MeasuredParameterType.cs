@@ -141,11 +141,7 @@ namespace NormaLib.DBControl.Tables
         public static bool IsHasMaxLimit(uint parameter_type_id)
         {
             uint[] notAllowed = new uint[] {Calling, Ao, Az};
-            foreach(uint v in notAllowed)
-            {
-                if (v == parameter_type_id) return false;
-            }
-            return true;
+            return !notAllowed.Contains(parameter_type_id);
         }
 
         /// <summary>

@@ -129,7 +129,7 @@ namespace NormaLib.DBControl
 
         private void GetTablesOnServer()
         {
-            CurrentSubStep = "Получение списка сущетвующих таблиц";
+            CurrentSubStep = "Получение списка сущеcтвующих таблиц";
             _dbControl.ConnectToDB(dbName);
             TablesOnServer = _dbControl.GetTablesList();
             

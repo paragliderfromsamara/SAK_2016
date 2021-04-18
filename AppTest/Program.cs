@@ -121,7 +121,7 @@ namespace AppTest
                         number = r.Next(10000, 99999);
                         int year = r.Next(2010, 2021);
                         string b = $"{number}-{year}";
-                        int id = r.Next(0, r.Next(-1, baraban_types.Rows.Count - 1));
+                        int id = r.Next(0, r.Next(0, baraban_types.Rows.Count - 1));
                         BarabanType bt = (BarabanType)baraban_types.Rows[id];
                         f.BarabanNumber = b;
                         f.BarabanTypeWeight = bt.BarabanWeight;
@@ -132,7 +132,9 @@ namespace AppTest
                         CableStructureMeasuredParameterData data = ((CableStructureMeasuredParameterData[])s.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {point.ParameterTypeId}"))[0];
                         int startValue = data.HasMinLimit ? (int)data.MinValue : 0;
                         int endValue = data.HasMaxLimit ? (int)data.MaxValue : (int)data.MinValue * 2;
-                        f.SetMeasurePointValue(point, (float)r.Next(startValue, endValue));
+                        float v = (float)r.Next(startValue, endValue);
+                        Console.WriteLine($"Min: {startValue}; Max: {endValue}; value: {v}");
+                        f.SetMeasurePointValue(point, v);
                     });
 
                     handler.ProcessCable(f.SourceCable);
