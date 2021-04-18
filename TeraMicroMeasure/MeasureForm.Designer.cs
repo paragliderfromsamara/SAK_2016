@@ -93,6 +93,8 @@
             this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
             this.leadStatusContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.resetCurrentResultsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -113,6 +115,7 @@
             this.panel5.SuspendLayout();
             this.measureControlPanel.SuspendLayout();
             this.measuredParameterSelect.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonPrevElement
@@ -564,6 +567,7 @@
             // 
             // panelResultMeasure
             // 
+            this.panelResultMeasure.Controls.Add(this.panel2);
             this.panelResultMeasure.Controls.Add(this.measureResultDataGrid);
             this.panelResultMeasure.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelResultMeasure.Location = new System.Drawing.Point(3, 3);
@@ -576,7 +580,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 27);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(432, 616);
+            this.tabPage2.Size = new System.Drawing.Size(432, 476);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -892,6 +896,31 @@
             this.leadStatusContextMenu.ShowItemToolTips = false;
             this.leadStatusContextMenu.Size = new System.Drawing.Size(61, 4);
             // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Transparent;
+            this.panel2.Controls.Add(this.resetCurrentResultsButton);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 426);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(426, 44);
+            this.panel2.TabIndex = 1;
+            // 
+            // resetCurrentResultsButton
+            // 
+            this.resetCurrentResultsButton.BackColor = System.Drawing.Color.Navy;
+            this.resetCurrentResultsButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.resetCurrentResultsButton.FlatAppearance.BorderSize = 0;
+            this.resetCurrentResultsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.resetCurrentResultsButton.ForeColor = System.Drawing.Color.Gainsboro;
+            this.resetCurrentResultsButton.Location = new System.Drawing.Point(0, 0);
+            this.resetCurrentResultsButton.Name = "resetCurrentResultsButton";
+            this.resetCurrentResultsButton.Size = new System.Drawing.Size(277, 44);
+            this.resetCurrentResultsButton.TabIndex = 0;
+            this.resetCurrentResultsButton.Text = "Очистить текущее измерение";
+            this.resetCurrentResultsButton.UseVisualStyleBackColor = false;
+            this.resetCurrentResultsButton.Click += new System.EventHandler(this.resetCurrentResultsButton_Click);
+            // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
@@ -933,6 +962,7 @@
             this.panel5.ResumeLayout(false);
             this.measureControlPanel.ResumeLayout(false);
             this.measuredParameterSelect.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1005,5 +1035,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox barabanTypeCB;
         private System.Windows.Forms.Panel barabanSelectorPanel;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button resetCurrentResultsButton;
     }
 }

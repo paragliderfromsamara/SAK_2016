@@ -1661,6 +1661,20 @@ namespace TeraMicroMeasure
                 }
             }
         }
+
+        private void resetCurrentResultsButton_Click(object sender, EventArgs e)
+        {
+            ImitateCurrentMeasure();
+        }
+
+
+
+        #region MeasureImitation
+        private void ImitateCurrentMeasure()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 
 
