@@ -899,11 +899,37 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        public bool IsOnNorma
+        {
+            get
+            {
+                return NormalElementPercent >= PercentLimit;
+            }
+        }
+
+        public float PercentLimit
+        {
+            get
+            {
+                float limit = 0;
+                foreach (MeasuredParameterType pType in TestedParameterTypes.Rows)
+                {
+                    if (pType.ParameterTypeId == MeasuredParameterType.Risol3 || pType.ParameterTypeId == MeasuredParameterType.Risol4) continue;
+                    TestedStructureMeasuredParameterData[] data = GetMeasureParameterDatasByParameterType(pType.ParameterTypeId);
+                    foreach (TestedStructureMeasuredParameterData d in data)
+                    {
+                        if (d.Percent > limit) limit = d.Percent;
+                    }
+                }
+                return limit;
+            }
+        }
+
         public float NormalElementPercent
         {
             get
             {
-                float v = ((NormalElementsAmount / RealAmount) * 100);
+                float v = (((float)NormalElementsAmount / (float)RealAmount) * 100.0f);
                 return (float)Math.Round(v, 1);
             }
         }
@@ -927,9 +953,9 @@ namespace NormaLib.DBControl.Tables
                 }
                 return temp.Count();
             }
-        } 
+        }
 
-
+        
     }
 
 

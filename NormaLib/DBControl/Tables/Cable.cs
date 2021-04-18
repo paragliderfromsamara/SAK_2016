@@ -712,8 +712,22 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+
+
         #endregion
 
+        public bool IsOnNorma
+        {
+            get
+            {
+                foreach (TestedCableStructure s in CableStructures.Rows)
+                {
+                    if (!s.IsOnNorma) return false;
+                }
+
+                return true;
+            }
+        }
 
         protected CableTest cable_test;
     }

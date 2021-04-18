@@ -100,7 +100,7 @@ namespace AppTest
             ClearTests();
             DBEntityTable cables_table = Cable.get_all_as_table();
             DBEntityTable baraban_types = BarabanType.get_all_active_as_table();
-
+           
             Random r = new Random();
             for(int time = 0; time < 1; time++)
             {
@@ -132,7 +132,7 @@ namespace AppTest
                         CableStructureMeasuredParameterData data = ((CableStructureMeasuredParameterData[])s.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {point.ParameterTypeId}"))[0];
                         int startValue = data.HasMinLimit ? (int)data.MinValue : 0;
                         int endValue = data.HasMaxLimit ? (int)data.MaxValue : (int)data.MinValue * 2;
-                        float v = (float)r.Next(startValue, endValue);
+                        float v = (float)r.Next(startValue, endValue + 10);
                         Console.WriteLine($"Min: {startValue}; Max: {endValue}; value: {v}");
                         f.SetMeasurePointValue(point, v);
                     });

@@ -45,8 +45,66 @@ namespace NormaLib.ProtocolBuilders.MSWord
                 body.Append(BuildParagraph(JustificationValues.Left));
                 body.Append(BuildStructureData(s));
             }
+            body.Append(BuildCableTestResultText());
+            body.Append(BuildTestUserInfo());
             return body;
         }
+
+        private IEnumerable<OpenXmlElement> BuildTestUserInfo()
+        {
+            List<OpenXmlElement> els = new List<OpenXmlElement>();
+            Table table = BuildCableTestInfoTable();
+            TableRow row = new TableRow() { RsidTableRowAddition = "00924D08", RsidTableRowProperties = "001D44D8" };
+            row.Append(BuildTestUserInfoLeftCell());
+            row.Append(BuildCell(AddRun("           ")));
+            row.Append(BuildTestUserInfoRightCell());
+            table.Append(row);
+            els.Add(BuildParagraph());
+            els.Add(BuildParagraph());
+            els.Add(BuildParagraph());
+            els.Add(table);
+            return els;
+
+        }
+
+        private OpenXmlElement BuildTestUserInfoLeftCell()
+        {
+            TableCell cell = new TableCell();
+            Paragraph p1 = BuildParagraph(JustificationValues.Left);
+            p1.Append(AddRun($"Оператор:"));
+            cell.Append(p1);
+            return cell;
+        }
+
+        private OpenXmlElement BuildTestUserInfoRightCell()
+        {
+            TableCell cell = new TableCell();
+            Paragraph p1 = BuildParagraph(JustificationValues.Left);
+            Paragraph p2 = BuildParagraph(JustificationValues.Left);
+            p1.Append(AddRun($"___________"));
+            p1.Append(AddRun(cableTest.TestOperator.FullNameShort));
+            p2.Append(AddRun(DateTime.Now.ToString("    (dd.MM.yyyyг.)"), MSWordStringTypes.Superscript, false, true));
+            cell.Append(p1);
+            cell.Append(p2);
+            return cell;
+        }
+
+        private IEnumerable<OpenXmlElement> BuildCableTestResultText()
+        {
+            List<OpenXmlElement> els = new List<OpenXmlElement>();
+            Paragraph p = BuildParagraph(JustificationValues.Left);
+            p.Append(AddRun("Кабель "));
+            p.Append(AddRun(cableTest.TestedCable.FullName, MSWordStringTypes.Typical, false, true));
+            p.Append(AddRun(" признан "));
+            p.Append(AddRun(cableTest.TestedCable.IsOnNorma ? "годным" : "не годным", MSWordStringTypes.Typical, true));
+            p.Append(AddRun(" в соответствии с "));
+            p.Append(AddRun(cableTest.TestedCable.QADocument.ShortName, MSWordStringTypes.Typical, false, true));
+            p.Append(AddRun("."));
+            els.Add(BuildParagraph(JustificationValues.Left));
+            els.Add(p);
+            return els;
+        }
+
         #region HeaderInfo Panel
         private IEnumerable<OpenXmlElement> BuildCableTestHeaderInfo()
         {
@@ -143,6 +201,8 @@ namespace NormaLib.ProtocolBuilders.MSWord
             return table1;
         }
 
+
+
         private TableCell BuildTestInfoTableLeftCell()
         {
             TableCell cell = new TableCell();
@@ -207,7 +267,9 @@ namespace NormaLib.ProtocolBuilders.MSWord
             List<Paragraph> paragraphs = new List<Paragraph>();
             paragraphs.Add(BuildParagraph(AddRun($"Номинальное количество {structure.StructureType.StructureTypeName_RodPadej_Multiple}: {structure.DisplayedAmount}"), JustificationValues.Left));
             paragraphs.Add(BuildParagraph(AddRun($"Фактическое количество {structure.StructureType.StructureTypeName_RodPadej_Multiple}: {structure.RealAmount}"), JustificationValues.Left));
-            paragraphs.Add(BuildParagraph(AddRun($"Годных {structure.StructureType.StructureTypeName_RodPadej_Multiple}: {structure.NormalElementPercent}"), JustificationValues.Left));
+            paragraphs.Add(BuildParagraph(AddRun($"Годных {structure.StructureType.StructureTypeName_RodPadej_Multiple}: {structure.NormalElementsAmount}"), JustificationValues.Left));
+            paragraphs.Add(BuildParagraph(AddRun($"Процент годных {structure.StructureType.StructureTypeName_RodPadej_Multiple}: {structure.NormalElementPercent}%"), JustificationValues.Left));
+            //paragraphs.Add(BuildParagraph(AddRun($"По результатам измерений структура признана {(structure.IsOnNorma ? "Годной" : "НЕ годной")}"), JustificationValues.Left));
             Paragraph descriptionParagraph = BuildParagraph(JustificationValues.Left);
             descriptionParagraph.Append(AddRun("Значения измеренных параметров вышедшие за установленные нормы выделены", MSWordStringTypes.Typical, false, true));
             descriptionParagraph.Append(AddRun(" жирным ", MSWordStringTypes.Typical, true, true), AddRun("шрифтом.", MSWordStringTypes.Typical, false, true));
