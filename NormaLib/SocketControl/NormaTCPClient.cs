@@ -207,6 +207,8 @@ namespace NormaLib.SocketControl
         private void sendProcess()
         {
             NetworkStream stream = null;
+            byte t = 100;
+            retry:
             try
             {
                 IPEndPoint localPoint = new IPEndPoint(tcpSettingsController.localIPAddress, tcpSettingsController.localPortOnSettingsFile);
@@ -217,7 +219,7 @@ namespace NormaLib.SocketControl
                 tcpClient.Connect(remotePoint);
                 stream = tcpClient.GetStream();
                 
-                ////retry:
+                
                 byte[] dataIn = new byte[32768]; // буфер для получаемых данных
                 byte[] dataOut;
                 sendingIsActive = true;
@@ -247,6 +249,11 @@ namespace NormaLib.SocketControl
             }
             catch (Exception ex)
             {
+                if (t-- > 0)
+                {
+                    Thread.Sleep(50);
+                    goto retry;
+                }
                 /*
                 if (ex.GetType().Name == "XmlException" && ex.HResult == -2146232000)
                 {
