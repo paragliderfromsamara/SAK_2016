@@ -41,6 +41,13 @@ namespace NormaLib.DBControl.Tables
         public static CableTest New(DBEntityTable table = null)
         {
             if (table == null) table = new DBEntityTable(typeof(CableTest));
+            /*else
+            {
+                if (table.Select($"{CableTest.CableTestId_ColumnName} = {0}").Length > 0)
+                {
+                    table.Rows.Remove(table.Select($"{CableTest.CableTestId_ColumnName} = {0}")[0]);
+                }
+            }*/
             CableTest test = (CableTest)table.NewRow();
             test.StatusId = CableTestStatus.NotStarted;
             test.TestId = 0;
@@ -53,7 +60,7 @@ namespace NormaLib.DBControl.Tables
         public static DBEntityTable GetMinMaxDate()
         {
             DBEntityTable t = new DBEntityTable(typeof(CableTest), DBEntityTableMode.NoColumns);
-            string query = $"select startdate.{TestFinishedAt_ColumnName} as start, enddate.{TestFinishedAt_ColumnName}  as finish from (select {TestFinishedAt_ColumnName} from {t.TableName} ORDER BY {TestFinishedAt_ColumnName} ASC LIMIT 1) AS startdate, (select {TestFinishedAt_ColumnName} from {t.TableName} ORDER BY {TestFinishedAt_ColumnName} DESC LIMIT 1) as enddate;";
+            string query = $"select startdate.{TestFinishedAt_ColumnName} as start, enddate.{TestFinishedAt_ColumnName}  as finish from (select {TestFinishedAt_ColumnName} from {t.TableName} WHERE {CableTestStatus.StatusId_ColumnName} = {CableTestStatus.Finished} ORDER BY {TestFinishedAt_ColumnName} ASC LIMIT 1) AS startdate, (select {TestFinishedAt_ColumnName} from {t.TableName} WHERE {CableTestStatus.StatusId_ColumnName} = {CableTestStatus.Finished} ORDER BY {TestFinishedAt_ColumnName} DESC LIMIT 1) as enddate;";
             t.TableName = "min_max_date";
             t.Columns.Add("start", typeof(DateTime));
             t.Columns.Add("finish", typeof(DateTime));
@@ -958,7 +965,7 @@ namespace NormaLib.DBControl.Tables
             //throw new NotImplementedException();
         }
 
-        private void CleanList()
+        public void CleanList()
         {
             results_Table.Clear();
             //System.Windows.Forms.MessageBox.Show("CleanList");

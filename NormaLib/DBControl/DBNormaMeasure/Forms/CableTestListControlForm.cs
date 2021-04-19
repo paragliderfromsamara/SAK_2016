@@ -37,7 +37,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
                 dateToValueInput.Value = (DateTime)t.Rows[0][1];
             }
         }
-
+        
         protected override void InitDesign()
         {
             EmptyListText = "Список испытаний пуст";

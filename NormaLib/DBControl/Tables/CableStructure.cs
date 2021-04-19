@@ -714,16 +714,16 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        private uint[] testedElements = null;
-        public uint[] TestedElements
+        private int[] testedElements = null;
+        public int[] TestedElements
         {
             get
             {
                 if (testedElements == null)
                 {
-                    List<uint> elNumbers = new List<uint>();
-                    foreach (CableTestResult r in TestResults.Rows) elNumbers.Add(r.ElementNumber);
-                    IEnumerable<uint> vals = elNumbers.Distinct().OrderBy(x => x);
+                    List<int> elNumbers = new List<int>();
+                    foreach (CableTestResult r in TestResults.Rows) elNumbers.Add((int)r.ElementNumber);
+                    IEnumerable<int> vals = elNumbers.Distinct().OrderBy(x => x);
                     testedElements = vals.ToArray();
                 }
                 return testedElements;
@@ -821,6 +821,8 @@ namespace NormaLib.DBControl.Tables
                 return tested_parameter_types;
             }
         }
+
+
 
         public new static TestedCableStructure find_by_structure_id(uint structure_id)
         {
@@ -939,8 +941,8 @@ namespace NormaLib.DBControl.Tables
             get
             {
             
-                IEnumerable<uint> temp = new List<uint>();
-                for (uint i = 0; i < RealAmount; i++) ((List<uint>)temp).Add(i+1);               
+                IEnumerable<int> temp = new List<int>();
+                for (int i = 0; i < RealAmount; i++) ((List<int>)temp).Add(i+1);               
                 
                 foreach (MeasuredParameterType pType in TestedParameterTypes.Rows)
                 {

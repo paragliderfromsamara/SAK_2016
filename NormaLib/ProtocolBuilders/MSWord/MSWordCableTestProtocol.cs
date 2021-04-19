@@ -282,7 +282,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
             Paragraph p = BuildParagraph();
             Table table = InitStatisticStructureTable(structure);
            
-            foreach(uint pTypeId in structure.MeasuredParameterTypes_ids)
+            foreach(uint pTypeId in structure.TestedParametersIds)
             {
                 TestedStructureMeasuredParameterData[] pData = structure.GetMeasureParameterDatasByParameterType(pTypeId);
                 for (int pDataIdx = 0; pDataIdx < pData.Length; pDataIdx++)
@@ -999,7 +999,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
         private IEnumerable<OpenXmlElement> BuildPrimaryParametersTable(TestedCableStructure structure)
         {
             List<OpenXmlElement> tablesForAdd = new List<OpenXmlElement>();
-            uint[] tst = structure.TestedElements;
+            int[] tst = structure.TestedElements;
             Debug.WriteLine($"{(structure.OwnCable as TestedCable).CableTest.TestResults.Count}");
             int maxCols = MaxColsPerPage;
             int colsCount = 1; //Первая колонка номер элемента

@@ -18,15 +18,15 @@ namespace NormaLib.ProtocolBuilders
         public ProtocolExport(ProtocolPathBuilder path_builder)
         {
             this.path_builder = path_builder;
-           // try
-           // {
+            try
+            {
                 path_builder.InitPath();
                 if (path_builder.EntityType == typeof(CableTest))
                     ExportCableTestProtocol();
-          //  }catch(Exception ex)
-          //  {
-          //      MessageBox.Show(ex.Message, "Ошибка при формировании протокола", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          //  }
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка при формировании протокола", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
 

@@ -71,6 +71,8 @@ namespace NormaLib.Measure
                     ReleasedBaraban b = ReleasedBaraban.CreateBaraban(BarabanTypeId, BarabanNumber);
                     cableTest.BarabanId = b.BarabanId;
                 }
+                cableTest.TestResults.CleanList();
+                Debug.WriteLine(cableTest.TestResults.Count);
                 
                 foreach (TestedCableStructure tcs in cable.CableStructures.Rows)
                 {
@@ -92,6 +94,9 @@ namespace NormaLib.Measure
                                 r.Temperature = temperature;
                                 r.Result = value;
                                 cableTest.TestResults.Add(r);
+                            }else
+                            {
+                                Debug.WriteLine(mpt.ParameterName);
                             }
                         } while (mpm.TryGetNextPoint());
                         Debug.WriteLine(cableTest.TestResults.Count);
@@ -319,16 +324,26 @@ namespace NormaLib.Measure
                 cable_test = t.NewRow() as CableTest;
                 foreach (DataColumn dc in t.Columns)
                 {
-                    cable_test[dc] = file.Read(dc.ColumnName, TestAttrs_SectionName);
+                    cable_test[dc] = (string.IsNullOrEmpty(file.Read(dc.ColumnName, TestAttrs_SectionName))) ? GetDefaultVal(dc.DataType) : string.IsNullOrEmpty(file.Read(dc.ColumnName, TestAttrs_SectionName));
                 }
                 t.Rows.Add(cable_test);
                 cable_test.SourceCable = BuildCableFromFile();
+                
             }
-            catch
+            catch(Exception ex)
             {
+                t.Clear();
                 cable_test = CableTest.New(t);
                 FillCableTestToFile();
             }
+        }
+
+        private object GetDefaultVal(Type d_type)
+        {
+            if (d_type == typeof(DateTime))
+            {
+                return DateTime.Now;
+            }return null;
         }
 
         public Cable BuildCableFromFile()
@@ -436,17 +451,21 @@ namespace NormaLib.Measure
             string temperatureAttrName = GetTestTemperatureAttrName((int)point.ParameterTypeId, point.PointIndex);
             string valueAttrName = GetTestValueAttrName((int)point.ParameterTypeId, point.PointIndex);
             file.Write(valueAttrName, value.ToString(), section);
+            SetMeasureStarted();
             //cableTest.BuildTestResult();
 
-            if (temperature >= 5) file.Write(temperatureAttrName, temperature.ToString(), section);
+            if (temperature >= 5 && temperature <= 35) file.Write(temperatureAttrName, temperature.ToString(), section);
         }
 
         public void SetLeadStatusOfPoint(MeasurePoint point, int lead_status_id)
         {
             string section = GetTestResultSectionName((int)point.StructureId);
             string valueAttrName = GetTestValueAttrName((int)MeasuredParameterType.Calling, point.PointIndex);
+            SetMeasureStarted();
             file.Write(valueAttrName, lead_status_id.ToString(), section);
         }
+
+        private void SetMeasureStarted() => TestStatus = CableTestStatus.Started;
 
         private void FillAffectedElementOnStructure(CableStructure structure)
         {

@@ -794,8 +794,11 @@ namespace NormaLib.DBControl.Tables
                     max_result_value = float.MinValue;
                     min_result_value = float.MaxValue;
                     average_result_value = 0;
-                    List<uint> normalElements = new List<uint>();
-                    for (uint i = 0; i < AssignedStructure.RealAmount; i++) normalElements.Add(i+1);
+                    int[] affected = ((AssignedStructure as TestedCableStructure).AffectedElements.Keys.ToArray());
+                    int[] elements = (int[])((AssignedStructure as TestedCableStructure).TestedElements.Clone());
+                    List<int> normalElements = ((int[])((AssignedStructure as TestedCableStructure).TestedElements.Clone())).ToList();// ((int[])(AssignedStructure as TestedCableStructure).TestedElements).ToList();
+                    //for (int i = 0; i < AssignedStructure.RealAmount; i++) normalElements.Add(i+1);
+                    
                     test_results = new DBEntityTable(typeof(CableTestResult));
                     string q = $"{MeasuredParameterType.ParameterTypeId_ColumnName} = {ParameterTypeId}";
                     if (IsFreqParameter) q += $" AND {FrequencyRange.FreqRangeId_ColumnName} = {FrequencyRangeId}";
@@ -807,10 +810,10 @@ namespace NormaLib.DBControl.Tables
                         
                         r.Result = (float)c.ConvertedValueRounded;
                         NormDeterminant d = new NormDeterminant(this, r.Result);
-                        r.IsOnNorma = d.IsOnNorma && !(AssignedStructure as TestedCableStructure).AffectedElements.ContainsKey((int)r.ElementNumber);
+                        r.IsOnNorma = d.IsOnNorma;
                         if (!r.IsOnNorma)
                         {
-                            if (normalElements.Contains(r.ElementNumber)) normalElements.Remove(r.ElementNumber);
+                            if (normalElements.Contains((int)r.ElementNumber)) normalElements.Remove((int)r.ElementNumber);
                         }
                         r.AcceptChanges();
                         if (min_result_value > r.Result) min_result_value = r.Result;
@@ -818,9 +821,11 @@ namespace NormaLib.DBControl.Tables
                         average_result_value += r.Result;
                     }
                     if (test_results.Rows.Count > 0) average_result_value = (float)(average_result_value / (float)test_results.Rows.Count);
-                    measured_percent = ((float)normalElements.Count / (float)AssignedStructure.RealAmount) * 100.0f;
-                    good_elements = normalElements.ToArray();
-                    Debug.WriteLine(string.Join(", ", good_elements));
+                    
+                    good_elements = (normalElements.ToArray().Except(affected)).ToArray();
+                    measured_percent = ((float)good_elements.Length / (float)AssignedStructure.RealAmount) * 100.0f;
+                    //Debug.WriteLine("Normal: " + string.Join(", ", good_elements));
+                    //Debug.WriteLine("Affected "+string.Join(", ", (AssignedStructure as TestedCableStructure).AffectedElements.Keys));
                 }
                 return test_results;
             }
@@ -839,13 +844,13 @@ namespace NormaLib.DBControl.Tables
         private float max_result_value = 0;
         private float min_result_value = 0;
         private float average_result_value = 0;
-        private uint[] good_elements = new uint[] { };
+        private int[] good_elements = new int[] { };
         private float measured_percent = 0;
 
         public float MinResultValue => (float)MeasureResultConverter.RoundValue(min_result_value);
         public float MaxResultValue => (float)MeasureResultConverter.RoundValue(max_result_value);
         public float AverageResultValue => (float)MeasureResultConverter.RoundValue(average_result_value);
-        public uint[] GoodElements => good_elements;
+        public int[] GoodElements => good_elements;
         public float MeasuredPercent => (float)MeasureResultConverter.RoundValue(measured_percent, 1);
 
 
