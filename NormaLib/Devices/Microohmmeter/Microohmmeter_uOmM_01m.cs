@@ -55,8 +55,8 @@ namespace NormaLib.Devices.Microohmmeter
         protected override void SendMeasureParamsToDevice()
         {
             Micro_01_m_CommandProtocol p = CommandProtocol as Micro_01_m_CommandProtocol;
-            p.BeforeMeasureDelay = beforeMeasureDelay;
-            p.BetweenMeasureDelay = betweenMeasureDelay;
+            p.BeforeMeasureDelay = beforeMeasureDelay < 200 ? 200 : beforeMeasureDelay;
+            p.BetweenMeasureDelay = betweenMeasureDelay < 1 ? 1 : betweenMeasureDelay;
             p.CableLength = cableLength;
             p.MeasureModeId = (ushort)measureMode;
             p.StatMeasureAmount = statMeasureTimes;

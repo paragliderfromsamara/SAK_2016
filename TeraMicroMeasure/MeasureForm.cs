@@ -1664,7 +1664,7 @@ namespace TeraMicroMeasure
 
         private void resetCurrentResultsButton_Click(object sender, EventArgs e)
         {
-            ImitateCurrentMeasure();
+            //
         }
 
 
