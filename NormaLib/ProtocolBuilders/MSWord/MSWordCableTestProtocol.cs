@@ -1000,7 +1000,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
         {
             List<OpenXmlElement> tablesForAdd = new List<OpenXmlElement>();
             int[] tst = structure.TestedElements;
-            Debug.WriteLine($"{(structure.OwnCable as TestedCable).CableTest.TestResults.Count}");
+            Debug.WriteLine($"{(structure.OwnCable as TestedCable).CableTest.TestResults.Rows.Count}");
             int maxCols = MaxColsPerPage;
             int colsCount = 1; //Первая колонка номер элемента
 

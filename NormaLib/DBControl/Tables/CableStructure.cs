@@ -706,7 +706,7 @@ namespace NormaLib.DBControl.Tables
                 if (testResults == null)
                 {
                     testResults = new DBEntityTable(typeof(CableTestResult));
-                    (OwnCable as TestedCable).CableTest.TestResults.GetForStructure(CableStructureId).CopyToDataTable(testResults, LoadOption.Upsert);
+                    (OwnCable as TestedCable).CableTest.GetResultsForStructure(CableStructureId).CopyToDataTable(testResults, LoadOption.Upsert);
                     CableTestResult[] affected = (CableTestResult[])testResults.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {MeasuredParameterType.Calling}");
                     foreach (CableTestResult r in affected) if (!AffectedElements.ContainsKey((int)r.ElementNumber)) AffectedElements.Add((int)r.ElementNumber, (uint)r.Result);
                 }

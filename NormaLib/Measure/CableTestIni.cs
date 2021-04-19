@@ -71,8 +71,8 @@ namespace NormaLib.Measure
                     ReleasedBaraban b = ReleasedBaraban.CreateBaraban(BarabanTypeId, BarabanNumber);
                     cableTest.BarabanId = b.BarabanId;
                 }
-                cableTest.TestResults.CleanList();
-                Debug.WriteLine(cableTest.TestResults.Count);
+                //cableTest.TestResults.CleanList();
+                Debug.WriteLine(cableTest.TestResults.Rows.Count);
                 
                 foreach (TestedCableStructure tcs in cable.CableStructures.Rows)
                 {
@@ -93,13 +93,13 @@ namespace NormaLib.Measure
                                 CableTestResult r = cableTest.BuildTestResult(mpt, tcs, (uint)point.ElementNumber, (uint)point.MeasureNumber);
                                 r.Temperature = temperature;
                                 r.Result = value;
-                                cableTest.TestResults.Add(r);
+                                cableTest.AddResult(r);
                             }else
                             {
                                 Debug.WriteLine(mpt.ParameterName);
                             }
                         } while (mpm.TryGetNextPoint());
-                        Debug.WriteLine(cableTest.TestResults.Count);
+                        Debug.WriteLine(cableTest.TestResults.Rows.Count);
                     }
                 }
 

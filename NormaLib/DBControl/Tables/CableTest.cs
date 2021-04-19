@@ -94,12 +94,25 @@ namespace NormaLib.DBControl.Tables
 
         public void AddResult(CableTestResult result)
         {
-            TestResults.Add(result);
+            TestResults.Rows.Add(result);
         }
 
         public CableTestResult BuildTestResult(MeasuredParameterType pType, TestedCableStructure structure, uint elNumber, uint measNumber, FrequencyRange frRange = null, uint genEl = 0, uint genPair = 0)
         {
-            return TestResults.Build(pType, structure, elNumber, measNumber, frRange, genEl, genPair);
+            //System.Windows.Forms.MessageBox.Show("Build");
+            CableTestResult r = (CableTestResult)TestResults.NewRow();
+            r.TestedCableStructure = structure;
+            r.ParameterType = pType;
+            r.ElementNumber = elNumber;
+            r.MeasureNumber = measNumber;
+            r.TestId = TestId;
+            if (frRange != null)
+            {
+                r.FrequencyRange = frRange;
+                r.GeneratorElementNumber = genEl;
+                r.GeneratorPairNumber = genPair;
+            }
+            return r;
         }
 
         public static CableTest get_new_test(int test_line_number)
@@ -130,6 +143,22 @@ namespace NormaLib.DBControl.Tables
             return test;
         }
 
+        public DBEntityTable TestResults
+        {
+            get
+            {
+                if (testResults == null)
+                {
+                    testResults = (IsFinished) ? CableTestResult.FindByTestId(TestId) : new DBEntityTable(typeof(CableTestResult));
+                }
+                return testResults;
+            }
+        }
+
+        public CableTestResult[] GetResultsForStructure(uint structure_id)
+        {
+            return (CableTestResult[])TestResults.Select($"{CableStructure.StructureId_ColumnName} = {structure_id}");
+        }
 
         public void SetNotStarted()
         {
@@ -152,13 +181,24 @@ namespace NormaLib.DBControl.Tables
         /// </summary>
         public void SetFinished()
         {
-            if (testResults.SaveToDB())
+            if (SaveTestResultsToDB())
             {
                 //Random r = new Random();
                 //DateTime t = new DateTime(r.Next(2012, 2021), r.Next(1, 12), r.Next(1, 28), r.Next(0, 23), r.Next(0, 59), r.Next(0, 59));
                 FinishedAt = DateTime.Now;
                 SetStatus(CableTestStatus.Finished);
             }
+        }
+
+        public bool SaveTestResultsToDB()
+        {
+            ClearResultsOnDB();
+            return TestResults.CreateRowsToDB();
+        }
+
+        private void ClearResultsOnDB()
+        {
+            CableTestResult.delete_all_from_cable_test(TestId);
         }
 
 
@@ -195,9 +235,10 @@ namespace NormaLib.DBControl.Tables
         {
             get
             {
-                List<MeasuredParameterType> types = new List<MeasuredParameterType>();
-                foreach (MeasuredParameterType type in AllowedMeasuredParameterTypes) if (IsOnTestProgram(type)) types.Add(type);
-                return types.ToArray();
+                throw new NotImplementedException();
+                //List<MeasuredParameterType> types = new List<MeasuredParameterType>();
+                //foreach (MeasuredParameterType type in AllowedMeasuredParameterTypes) if (IsOnTestProgram(type)) types.Add(type);
+                //return types.ToArray();
             }
         }
 
@@ -538,8 +579,10 @@ namespace NormaLib.DBControl.Tables
         public bool HasSourceCable => SourceCableId > 0;
         public bool HasOperator => OperatorId > 0;
         public bool HasBaraban => ReleasedBaraban != null;
+        private DBEntityTable testResults;
 
 
+        /*
         public bool IsOnTestProgram(MeasuredParameterType t)
         {
             string pKey = $"{t.RefText}";
@@ -559,13 +602,12 @@ namespace NormaLib.DBControl.Tables
             }
             return defVal;
         }
-
+        
         public void SetParameterTypeFlagInTestProgram(string parameterRefText, bool state)
         {
             TestFile.Write_TestProgram(parameterRefText, state);
         }
-        
-
+    
         internal CableTest_File TestFile
         {
             get
@@ -581,10 +623,12 @@ namespace NormaLib.DBControl.Tables
                 testFile = value;
             }
         }
-
+        */
         /// <summary>
         /// Id типа барабана
         /// </summary>
+        /// 
+        /*
         public uint BarabanTypeId
         {
             get
@@ -613,6 +657,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+
         /// <summary>
         /// Серийный номер барабана
         /// </summary>
@@ -633,7 +678,7 @@ namespace NormaLib.DBControl.Tables
                 TestFile.Write_BarabanInfo(ReleasedBaraban.BarabanSerialNumber_ColumnName, value);
             }
         }
-
+       
 
         /// <summary>
         /// Испытание с дальним столом? (true - c ДК, false - без ДК)
@@ -738,7 +783,7 @@ namespace NormaLib.DBControl.Tables
                 return testResults;
             }
         }
-
+        */
         private User test_operator = null;
         public User TestOperator
         {
@@ -767,7 +812,7 @@ namespace NormaLib.DBControl.Tables
         private Cable sourceCable;
         private TestedCable testedCable;
         private ReleasedBaraban releasedBaraban;
-        private CableTestResultCollection testResults;
+        //private CableTestResultCollection testResults;
 
     } 
 
@@ -976,7 +1021,7 @@ namespace NormaLib.DBControl.Tables
         public void Add(CableTestResult result)
         {
             results_Table.Rows.Add(result);
-            cable_test.TestFile.Write_TestResult(result);
+            ///cable_test.TestFile.Write_TestResult(result);
         }
 
         public CableTestResult Build(MeasuredParameterType pType, TestedCableStructure structure, uint elNumber, uint measNumber, FrequencyRange frRange = null, uint genEl = 0, uint genPair = 0)
@@ -1018,7 +1063,7 @@ namespace NormaLib.DBControl.Tables
                             r.TestedCableStructure = structure;
                             r.ElementNumber = (uint)pointMap.CurrentElementNumber;
                             r.MeasureNumber = (uint)pointMap.CurrentMeasurePointNumber;
-                            cable_test.TestFile.Read_TestResult(r, ref result);
+                            //cable_test.TestFile.Read_TestResult(r, ref result);
                             r.Result = result;
                             r.TestId = cable_test.TestId;
                             results_Table.Rows.Add(r);

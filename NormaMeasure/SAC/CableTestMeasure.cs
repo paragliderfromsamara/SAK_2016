@@ -22,7 +22,7 @@ namespace NormaMeasure.MeasureControl.SAC
 
         private void measureFunction()
         {
-           currentTableConnector = cableTest.CableConnectedFrom;
+          // currentTableConnector = cableTest.CableConnectedFrom;
          
             foreach (MeasuredParameterType pType in cableTest.TestProgramMeasuredParameterTypes)
             {

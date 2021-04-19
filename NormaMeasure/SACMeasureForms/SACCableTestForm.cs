@@ -81,36 +81,36 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void FillRisolType()
         {
-            if (CurrentTest.RisolTypeFavourTypeId == 0)
-            {
-                CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
-            }
+            //if (CurrentTest.RisolTypeFavourTypeId == 0)
+           // {
+           //     CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
+           // }
         }
 
         private void FillTableSettings()
         {
-            mergedTable_RadioBatton.Checked = !CurrentTest.IsSplittedTable;
+            //mergedTable_RadioBatton.Checked = !CurrentTest.IsSplittedTable;
             RefreshTableElementsList();
         }
 
         private void FillTemperature()
         {
-            temperature_NumericUpDown.Value = (uint)CurrentTest.Temperature;
-            useTemperatureSensor_CheckBox.Checked = CurrentTest.IsUseTermoSensor;
+           // temperature_NumericUpDown.Value = (uint)CurrentTest.Temperature;
+           // useTemperatureSensor_CheckBox.Checked = CurrentTest.IsUseTermoSensor;
         }
 
         private void FillBarabanInfo()
         {
-            if(CurrentTest.BarabanTypeId > 0)
-            {
-                barabanTypes_CB.SelectedValue = CurrentTest.BarabanTypeId;
-                barabanSerial_TextBox.Text = CurrentTest.BarabanSerial;
-            }
-            else
-            {
-                CurrentTest.BarabanTypeId = (uint)barabanTypes_CB.SelectedValue;
-                CurrentTest.BarabanSerial = barabanSerial_TextBox.Text;
-            }
+           // if(CurrentTest.BarabanTypeId > 0)
+           // {
+           //     barabanTypes_CB.SelectedValue = CurrentTest.BarabanTypeId;
+          //      barabanSerial_TextBox.Text = CurrentTest.BarabanSerial;
+          //  }
+          //  else
+          //  {
+          //      CurrentTest.BarabanTypeId = (uint)barabanTypes_CB.SelectedValue;
+          //      CurrentTest.BarabanSerial = barabanSerial_TextBox.Text;
+          //  }
         }
 
         private void FillOperatorId()
@@ -140,22 +140,22 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void RizolSelector_CB_SelectedValueChanged(object sender, EventArgs e)
         {
-            CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
+            //CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
         }
 
         private void ConnectedFromTableElement_ComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CurrentTest.CableConnectedFrom = Convert.ToUInt16(connectedFromTableElement_ComboBox.Text);
+            //CurrentTest.CableConnectedFrom = Convert.ToUInt16(connectedFromTableElement_ComboBox.Text);
         }
 
         private void CableLength_NumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            CurrentTest.CableLength = (float)cableLength_NumericUpDown.Value;
+           // CurrentTest.CableLength = (float)cableLength_NumericUpDown.Value;
         }
 
         private void UseTemperatureSensor_CheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CurrentTest.IsUseTermoSensor = useTemperatureSensor_CheckBox.Checked;
+         //   CurrentTest.IsUseTermoSensor = useTemperatureSensor_CheckBox.Checked;
         }
 
         private void Temperature_NumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -172,12 +172,12 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
 
         private void BarabanSerial_TextBox_TextChanged(object sender, EventArgs e)
         {
-            CurrentTest.BarabanSerial = barabanSerial_TextBox.Text;
+            //CurrentTest.BarabanSerial = barabanSerial_TextBox.Text;
         }
 
         private void BarabanTypes_CB_SelectedValueChanged(object sender, EventArgs e)
         {
-            CurrentTest.BarabanTypeId = (uint)barabanTypes_CB.SelectedValue;
+           // CurrentTest.BarabanTypeId = (uint)barabanTypes_CB.SelectedValue;
         }
 
 
@@ -206,17 +206,17 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
             RizolSelector_CB.Enabled = t.Rows.Count > 0;
             if (RizolSelector_CB.Enabled)
             {
-                if (t.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {CurrentTest.RisolTypeFavourTypeId}").Length > 0)
-                {
-                    RizolSelector_CB.SelectedValue = CurrentTest.RisolTypeFavourTypeId;
-                }
-                else
-                {
-                    RizolSelector_CB.SelectedIndex = 0;
-                    CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
-                }
+               // if (t.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {CurrentTest.RisolTypeFavourTypeId}").Length > 0)
+              //  {
+                  //  RizolSelector_CB.SelectedValue = CurrentTest.RisolTypeFavourTypeId;
+             //   }
+             //   else
+             //   {
+             //       RizolSelector_CB.SelectedIndex = 0;
+                   // CurrentTest.RisolTypeFavourTypeId = (uint)RizolSelector_CB.SelectedValue;
+            //    }
 
-            }
+           }
 
         }
 
@@ -234,7 +234,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
                 {
                     cb.Enabled = CurrentTest.MeasuredParameterTypes_IDs.Contains(mpt.ParameterTypeId);
                 }
-                cb.Checked = CurrentTest.IsOnTestProgram(mpt);
+                //cb.Checked = CurrentTest.IsOnTestProgram(mpt);
             }
         }
 
@@ -303,7 +303,7 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         private void Cb_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox cb = sender as CheckBox;
-            CurrentTest.SetParameterTypeFlagInTestProgram(cb.Name, cb.Checked);
+           // CurrentTest.SetParameterTypeFlagInTestProgram(cb.Name, cb.Checked);
            // MessageBox.Show(cb.Name);
         }
 
@@ -517,12 +517,12 @@ namespace NormaMeasure.MeasureControl.SACMeasureForms
         {
             connectedFromTableElement_ComboBox.Items.Clear();
             int maxRows = (mergedTable_RadioBatton.Checked) ? 104 : 52;
-            CurrentTest.IsSplittedTable = !mergedTable_RadioBatton.Checked;
+            //CurrentTest.IsSplittedTable = !mergedTable_RadioBatton.Checked;
             for (int i=0; i<maxRows; i++)
             {
                 connectedFromTableElement_ComboBox.Items.Add(i+1);
             }
-            connectedFromTableElement_ComboBox.SelectedIndex = (CurrentTest.CableConnectedFrom <= connectedFromTableElement_ComboBox.Items.Count) ? (int)(CurrentTest.CableConnectedFrom-1) : 0;
+            //connectedFromTableElement_ComboBox.SelectedIndex = (CurrentTest.CableConnectedFrom <= connectedFromTableElement_ComboBox.Items.Count) ? (int)(CurrentTest.CableConnectedFrom-1) : 0;
         }
 
         private MeasuredParameterType[] getSelectedParameterTypes()
