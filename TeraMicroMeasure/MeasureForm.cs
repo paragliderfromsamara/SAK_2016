@@ -354,11 +354,11 @@ namespace TeraMicroMeasure
             }
         }
 
-        private void ResetMeasureDraft()
+        private void ResetMeasureDraft(bool force_reset = false)
         {
             if (testFile != null)
             {
-                DialogResult r = MessageBox.Show("При сбросе испытания полученные результаты будут безвозвратно утеряны!\n\nСбросить?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult r = force_reset ? DialogResult.Yes : MessageBox.Show("При сбросе испытания полученные результаты будут безвозвратно утеряны!\n\nСбросить?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (r == DialogResult.Yes)
                 {
                     ForceResetMeasureDraft();
@@ -1633,6 +1633,7 @@ namespace TeraMicroMeasure
             if (testFile.SaveTest(out test))
             {
                 ProtocolViewer v = new ProtocolViewer(new ProtocolPathBuilder(test, NormaExportType.MSWORD));
+                ResetMeasureDraft(true);
             } 
         }
 
