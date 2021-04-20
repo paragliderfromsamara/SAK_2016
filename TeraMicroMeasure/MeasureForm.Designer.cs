@@ -66,6 +66,8 @@
             this.measuredParameterDataTabs = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panelResultMeasure = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.resetCurrentResultsButton = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.testParamsControlPanel = new System.Windows.Forms.Panel();
             this.barabanSelectorPanel = new System.Windows.Forms.Panel();
@@ -93,8 +95,6 @@
             this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
             this.leadStatusContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.resetCurrentResultsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -106,6 +106,7 @@
             this.measuredParameterDataTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panelResultMeasure.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.testParamsControlPanel.SuspendLayout();
             this.barabanSelectorPanel.SuspendLayout();
             this.testDraftControlPanel.SuspendLayout();
@@ -115,7 +116,6 @@
             this.panel5.SuspendLayout();
             this.measureControlPanel.SuspendLayout();
             this.measuredParameterSelect.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonPrevElement
@@ -575,6 +575,31 @@
             this.panelResultMeasure.Size = new System.Drawing.Size(426, 470);
             this.panelResultMeasure.TabIndex = 38;
             // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Transparent;
+            this.panel2.Controls.Add(this.resetCurrentResultsButton);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 426);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(426, 44);
+            this.panel2.TabIndex = 1;
+            // 
+            // resetCurrentResultsButton
+            // 
+            this.resetCurrentResultsButton.BackColor = System.Drawing.Color.Navy;
+            this.resetCurrentResultsButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.resetCurrentResultsButton.FlatAppearance.BorderSize = 0;
+            this.resetCurrentResultsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.resetCurrentResultsButton.ForeColor = System.Drawing.Color.Gainsboro;
+            this.resetCurrentResultsButton.Location = new System.Drawing.Point(0, 0);
+            this.resetCurrentResultsButton.Name = "resetCurrentResultsButton";
+            this.resetCurrentResultsButton.Size = new System.Drawing.Size(277, 44);
+            this.resetCurrentResultsButton.TabIndex = 0;
+            this.resetCurrentResultsButton.Text = "Очистить текущее измерение";
+            this.resetCurrentResultsButton.UseVisualStyleBackColor = false;
+            this.resetCurrentResultsButton.Click += new System.EventHandler(this.resetCurrentResultsButton_Click);
+            // 
             // tabPage2
             // 
             this.tabPage2.Location = new System.Drawing.Point(4, 27);
@@ -896,31 +921,6 @@
             this.leadStatusContextMenu.ShowItemToolTips = false;
             this.leadStatusContextMenu.Size = new System.Drawing.Size(61, 4);
             // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.Transparent;
-            this.panel2.Controls.Add(this.resetCurrentResultsButton);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 426);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(426, 44);
-            this.panel2.TabIndex = 1;
-            // 
-            // resetCurrentResultsButton
-            // 
-            this.resetCurrentResultsButton.BackColor = System.Drawing.Color.Navy;
-            this.resetCurrentResultsButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.resetCurrentResultsButton.FlatAppearance.BorderSize = 0;
-            this.resetCurrentResultsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.resetCurrentResultsButton.ForeColor = System.Drawing.Color.Gainsboro;
-            this.resetCurrentResultsButton.Location = new System.Drawing.Point(0, 0);
-            this.resetCurrentResultsButton.Name = "resetCurrentResultsButton";
-            this.resetCurrentResultsButton.Size = new System.Drawing.Size(277, 44);
-            this.resetCurrentResultsButton.TabIndex = 0;
-            this.resetCurrentResultsButton.Text = "Очистить текущее измерение";
-            this.resetCurrentResultsButton.UseVisualStyleBackColor = false;
-            this.resetCurrentResultsButton.Click += new System.EventHandler(this.resetCurrentResultsButton_Click);
-            // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
@@ -933,7 +933,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MinimumSize = new System.Drawing.Size(931, 39);
             this.Name = "MeasureForm";
-            this.Text = "Измерение";
+            this.Text = "Измерения";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MeasureForm_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).EndInit();
@@ -951,6 +951,7 @@
             this.measuredParameterDataTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panelResultMeasure.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             this.testParamsControlPanel.ResumeLayout(false);
             this.testParamsControlPanel.PerformLayout();
             this.barabanSelectorPanel.ResumeLayout(false);
@@ -962,7 +963,6 @@
             this.panel5.ResumeLayout(false);
             this.measureControlPanel.ResumeLayout(false);
             this.measuredParameterSelect.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

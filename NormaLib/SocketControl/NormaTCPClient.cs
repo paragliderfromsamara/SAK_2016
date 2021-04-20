@@ -207,8 +207,6 @@ namespace NormaLib.SocketControl
         private void sendProcess()
         {
             NetworkStream stream = null;
-            byte t = 100;
-            retry:
             try
             {
                 IPEndPoint localPoint = new IPEndPoint(tcpSettingsController.localIPAddress, tcpSettingsController.localPortOnSettingsFile);
@@ -249,27 +247,11 @@ namespace NormaLib.SocketControl
             }
             catch (Exception ex)
             {
-                if (t-- > 0)
-                {
-                    Thread.Sleep(50);
-                    goto retry;
-                }
-                /*
-                if (ex.GetType().Name == "XmlException" && ex.HResult == -2146232000)
-                {
-                   
-                    bufferSize = dataLength * 2;
-                    goto retry;
-                }
-                else
-                {
-                    MessageBox.Show(ex.Message + "\n" + dataLength.ToString(), ex.GetType().Name + " код " + ex.HResult);
-                }*/
                 sendingIsActive = false;
                 status = TCP_CLIENT_STATUS.ABORTED;
                 this.Exception = ex;
+                Debug.WriteLine(ex.Message);
                 OnClientDisconnectedWithException?.Invoke(this, new EventArgs());
-
                 //ClientSendMessageException?.Invoke(remoteIP, ex);
             }
             finally

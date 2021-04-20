@@ -283,24 +283,6 @@ namespace TeraMicroMeasure.CommandProcessors
             }
         }
 
-        /*
-        private void OnClientDisconnected_Handler(object client, EventArgs e)
-        {
-            lock (locker)
-            {
-                NormaTCPClient cl = client as NormaTCPClient;
-                string ip = cl.RemoteIP as string;
-                if (currentServerState.Clients.ContainsKey(ip))
-                {
-                    ClientXmlState cs = currentServerState.Clients[ip];
-                    currentServerState.RemoveClient(ip);
-                    RefreshCurrentServerStateOnClientControl();
-                    OnClientDisconnected?.Invoke(this, new ClientListChangedEventArgs(currentServerState, cs));
-                }
-            }
-        }
-        */
-
         private void OnClientDisconnected_Handler(object client, EventArgs e)
         {
             lock (locker6)
@@ -348,11 +330,12 @@ namespace TeraMicroMeasure.CommandProcessors
         }
     }
 
-    class ClientDisconnectionTimer : IDisposable
+    public class ClientDisconnectionTimer : IDisposable
     {
-        public string ClientIp;
+        public string ClientIp = "127.0.0.0";
         Thread thread;
         EventHandler OnTimerEnd;
+        int time = 1500;
         public ClientDisconnectionTimer(EventHandler onTimerTick, string ip)
         {
             ClientIp = ip;
@@ -361,9 +344,17 @@ namespace TeraMicroMeasure.CommandProcessors
             thread.Start();
         }
 
+        public ClientDisconnectionTimer(EventHandler onTimerTick, int _time)
+        {
+            time = _time;
+            OnTimerEnd += onTimerTick;
+            thread = new Thread(new ThreadStart(ThreadFunc));
+            thread.Start();
+        }
+
         void ThreadFunc()
         {
-            Thread.Sleep(1500);
+            Thread.Sleep(time);
             OnTimerEnd?.Invoke(this, new EventArgs());
         }
 

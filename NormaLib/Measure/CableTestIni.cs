@@ -161,6 +161,7 @@ namespace NormaLib.Measure
             }
         }
 
+
         public bool IsLockDraft
         {
             get
@@ -328,9 +329,8 @@ namespace NormaLib.Measure
                 }
                 t.Rows.Add(cable_test);
                 cable_test.SourceCable = BuildCableFromFile();
-                
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 t.Clear();
                 cable_test = CableTest.New(t);
@@ -465,7 +465,10 @@ namespace NormaLib.Measure
             file.Write(valueAttrName, lead_status_id.ToString(), section);
         }
 
-        private void SetMeasureStarted() => TestStatus = CableTestStatus.Started;
+        private void SetMeasureStarted()
+        {
+            TestStatus = CableTestStatus.Started;
+        }
 
         private void FillAffectedElementOnStructure(CableStructure structure)
         {
