@@ -246,6 +246,7 @@
     <Compile Include="SocketControl\NormaServer.cs" />
     <Compile Include="SocketControl\NormaServerClient.cs" />
     <Compile Include="SocketControl\NormaTCPClient.cs" />
+    <Compile Include="SocketControl\TCPControllLib\SocketLogFile.cs" />
     <Compile Include="SocketControl\TCPControllLib\TCPClientConnetctionControl.cs" />
     <Compile Include="SocketControl\TCPControllLib\TCPServer.cs" />
     <Compile Include="SocketControl\TCPControllLib\TCPServerClientsControl.cs" />

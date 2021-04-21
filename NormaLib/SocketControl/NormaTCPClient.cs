@@ -10,6 +10,7 @@ using System.Diagnostics;
 using NormaLib.SocketControl.TCPControlLib;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using NormaLib.SocketControl.TCPControllLib;
 
 namespace NormaLib.SocketControl
 {
@@ -118,32 +119,24 @@ namespace NormaLib.SocketControl
                 return messageToSend;
             }
         }
-        public void SetTimeouts(int rec_time, int send_time)
-        {
-            this.receiveTimeout = rec_time;
-            this.sendTimeout = send_time;
-        }
 
-        public void RefreshConnection()
+        public TcpClient TCPClient
         {
-        }
-        public NormaTCPClient(string local_ip, string remote_ip, int local_port, int remote_port)
-        {
-            localIP = local_ip;
-            remoteIP = remote_ip;
-            localPort = local_port;
-            remotePort = remote_port;
+            set
+            {
+                tcpClient = value;
+                string fullRemoteAddr = tcpClient.Client.RemoteEndPoint.ToString();
+                string fullLocalAddr = tcpClient.Client.LocalEndPoint.ToString();
+                this.remoteIP = GetIPFromFullAddr(fullRemoteAddr); //fullRemoteAddr.Substring(0, fullRemoteAddr.IndexOf(':'));
+                this.localIP = GetIPFromFullAddr(fullLocalAddr);// fullLocalAddr.Substring(0, fullLocalAddr.IndexOf(':'));
+                this.localPort = getPortFromFullAddr(fullLocalAddr);
+                this.remotePort = getPortFromFullAddr(fullRemoteAddr);
+            }
         }
 
         public NormaTCPClient(TcpClient _client)
         {
-            string fullRemoteAddr = _client.Client.RemoteEndPoint.ToString();
-            string fullLocalAddr = _client.Client.LocalEndPoint.ToString();
-            this.remoteIP = getIPFromFullAddr(fullRemoteAddr); //fullRemoteAddr.Substring(0, fullRemoteAddr.IndexOf(':'));
-            this.localIP = getIPFromFullAddr(fullLocalAddr);// fullLocalAddr.Substring(0, fullLocalAddr.IndexOf(':'));
-            this.localPort = getPortFromFullAddr(fullLocalAddr);
-            this.remotePort = getPortFromFullAddr(fullRemoteAddr);
-            tcpClient = _client;
+            TCPClient = _client;
         }
 
         public NormaTCPClient(TCPSettingsController tcp_settings_controller)
@@ -152,7 +145,7 @@ namespace NormaLib.SocketControl
 
         }
 
-        private string getIPFromFullAddr(string addr)
+        public static string GetIPFromFullAddr(string addr)
         {
             return addr.Substring(0, addr.IndexOf(':'));
         }
@@ -179,34 +172,76 @@ namespace NormaLib.SocketControl
             {
                 status = TCP_CLIENT_STATUS.TRY_CONNECT;
                 clientThread = new Thread(new ThreadStart(receiveProcess));
+                RefreshEstimateConnectionTime();
                 clientThread.Start();
             }
         }
 
         public void InitSending()
         {
-            clientThread = new Thread(new ThreadStart(sendProcess));
+            clientThread = new Thread(new ThreadStart(sendLoopProcess));
             clientThread.Name = $"Client_{LocalIP}";
             status = TCP_CLIENT_STATUS.TRY_CONNECT;
+            RefreshEstimateConnectionTime();
             clientThread.Start();
         }
 
-        public void Send(string message)
+        public bool ConnectionTimeoutIsOver
         {
-            //if (tcpClient == null) initTCPClient();
-            MessageToSend = message;
-            if (!sendingIsActive) InitSending();
+            get
+            {
+                return DateTime.Compare(estimateTryConnectionTime, DateTime.Now) <= 0;
+            }
+        }
+        public DateTime EstimateConnectionTime => estimateTryConnectionTime;
+        private DateTime estimateTryConnectionTime;
+        private void RefreshEstimateConnectionTime()
+        {
+            estimateTryConnectionTime = DateTime.Now.AddSeconds(5);
         }
 
-        public void StopSending()
+        private void sendLoopProcess()
         {
-            sendingIsActive = false;
-            Thread.Sleep(300);
+            uint failedSendCounter = 0;
+            uint goodSendCounter = 0;
+            string message = "";
+            sendingIsActive = true;
+            Thread connectionStatusChecker = new Thread(new ThreadStart(()=> {
+                while(!ConnectionTimeoutIsOver && sendingIsActive)
+                {
+                    Thread.Sleep(750);
+                }
+                sendingIsActive = false;
+                status = TCP_CLIENT_STATUS.DISCONNECTED;
+            }));
+            connectionStatusChecker.Start();
+            while (sendingIsActive)
+            {
+                KeepAlive();
+                if (oneTimeSend(out message))
+                {
+                    OnAnswerReceived_Handler(message);
+                    status = TCP_CLIENT_STATUS.CONNECTED;
+                    goodSendCounter++;
+                    Thread.Sleep(300);
+                    failedSendCounter = 0;
+                    RefreshEstimateConnectionTime();
+                }
+                else
+                {
+                    status = TCP_CLIENT_STATUS.TRY_CONNECT;
+                    failedSendCounter++;
+                }
+            }
+            status = TCP_CLIENT_STATUS.DISCONNECTED;
         }
 
-        private void sendProcess()
+        
+
+        private bool oneTimeSend(out string answer)
         {
             NetworkStream stream = null;
+            answer = "";
             try
             {
                 IPEndPoint localPoint = new IPEndPoint(tcpSettingsController.localIPAddress, tcpSettingsController.localPortOnSettingsFile);
@@ -216,53 +251,48 @@ namespace NormaLib.SocketControl
                 tcpClient.SendTimeout = sendTimeout;
                 tcpClient.Connect(remotePoint);
                 stream = tcpClient.GetStream();
-                
-                
-                byte[] dataIn = new byte[32768]; // буфер для получаемых данных
+                byte[] dataIn = new byte[32768];
                 byte[] dataOut;
-                sendingIsActive = true;
-                while (sendingIsActive)
+                KeepAlive();
+                // получаем сообщение
+                dataOut = Encoding.Default.GetBytes(MessageToSend);
+                StringBuilder builder = new StringBuilder();
+                int bytes = 0;
+                stream.Write(dataOut, 0, dataOut.Length);
+                do
                 {
-                    KeepAlive();
-                    // получаем сообщение
-                    dataOut = Encoding.Default.GetBytes(MessageToSend);
-                    StringBuilder builder = new StringBuilder();
-                    int bytes = 0;
-                    stream.Write(dataOut, 0, dataOut.Length);
-                    do
-                    {
-                        bytes = stream.Read(dataIn, 0, dataIn.Length);
-                        builder.Append(Encoding.Default.GetString(dataIn, 0, bytes));
-                    }
-                    while (stream.DataAvailable);
-                    status = TCP_CLIENT_STATUS.CONNECTED;
-                    string recMessage = builder.ToString();
-                    //msg = recMessage;
-                    recMessage.Trim();
-                    OnAnswerReceived_Handler(recMessage);
-                    Thread.Sleep(300);
+                    bytes = stream.Read(dataIn, 0, dataIn.Length);
+                    builder.Append(Encoding.Default.GetString(dataIn, 0, bytes));
                 }
-                stream.Close();
-                dispose_tcp_client();
+                while (stream.DataAvailable);
+                answer = builder.ToString();
+                answer.Trim();
+                return true;
             }
-            catch (Exception ex)
+            catch (ArgumentNullException e)
             {
-                sendingIsActive = false;
-                status = TCP_CLIENT_STATUS.ABORTED;
-                this.Exception = ex;
-                Debug.WriteLine(ex.Message);
-                OnClientDisconnectedWithException?.Invoke(this, new EventArgs());
-                //ClientSendMessageException?.Invoke(remoteIP, ex);
+                this.Exception = e;
+                return false;
+            }
+            catch (SocketException e)
+            {
+                this.Exception = e;
+                return false;
+            }
+            catch (Exception e)
+            {
+                this.Exception = e;
+                return false;
             }
             finally
             {
-                if (stream != null)
-                    stream.Close();
+                if (stream != null) stream.Close();
                 if (tcpClient != null)
                 {
                     dispose_tcp_client();
                 }
             }
+            
         }
 
         private void OnAnswerReceived_Handler(string recMessage)
@@ -306,19 +336,27 @@ namespace NormaLib.SocketControl
                     data = Encoding.Default.GetBytes(MessageToSend);
                     stream.Write(data, 0, data.Length);
                     status = TCP_CLIENT_STATUS.CONNECTED;
-
+                    RefreshEstimateConnectionTime();
                 }
-                stream.Close();
-                dispose_tcp_client();
             }
+            /*
+            catch (ArgumentNullException e)
+            {
+                this.Exception = e;//SocketLogFile.WriteExceptionAsync(e).GetAwaiter();
+            }
+            catch (SocketException e)
+            {
+                this.Exception = e;//SocketLogFile.WriteExceptionAsync(e).GetAwaiter();
+            }
+            catch (Exception e)
+            {
+                this.Exception = e;//SocketLogFile.WriteExceptionAsync(e).GetAwaiter();
+            }
+            */
             catch (Exception ex)
             {
-                receiveIsActive = false;
-                Debug.WriteLine("Клиент отвалился от сервера");
-                Debug.WriteLine(ex.Message);
                 this.Exception = ex;
                 OnClientDisconnectedWithException?.Invoke(this, new EventArgs());
-                //ClientReceiveMessageException?.Invoke(remoteIP, ex);
             }
             finally
             {
@@ -339,7 +377,6 @@ namespace NormaLib.SocketControl
             tcpClient.Close();
             tcpClient.Dispose();
             tcpClient = null;
-            //if (status != TCP_CLIENT_STATUS.ABORTED) status = TCP_CLIENT_STATUS.DISCONNECTED;
         }
 
         public void Dispose()

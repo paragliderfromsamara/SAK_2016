@@ -32,7 +32,6 @@ namespace NormaLib.SocketControl.TCPControlLib
             client.OnAnswerReceived += OnServerAnswerReceived_Handler;
             client.OnClientStatusChanged += OnClientStatusChanged_Handler;
             OnConnectionStatusChanged += on_connection_status_changed;
-           // client.InitSending();
         }
 
         private void OnClientStatusChanged_Handler(object sender, EventArgs e)
@@ -52,7 +51,6 @@ namespace NormaLib.SocketControl.TCPControlLib
 
         private void OnServerAnswerReceived_Handler(object sender, EventArgs e)
         {
-            //NormaTCPClientEventArgs a = e as NormaTCPClientEventArgs;
             OnServerAnswerReceived?.Invoke(sender, e);
         }
     }

@@ -104,7 +104,6 @@ namespace NormaLib.SocketControl.TCPControlLib
                 
                 tcpListener.Start();
                 status = NORMA_SERVER_STATUS.ACTIVE;
-                //OnStatusChanged?.Invoke($"IP aдрес: {ipAddress}; порт: {port}", new EventArgs());
                 while (true)
                 {
                     KeepAlive();
@@ -124,7 +123,6 @@ namespace NormaLib.SocketControl.TCPControlLib
             finally
             {
                 Dispose();
-                //throw new NormaServerException();
             }
         }
 

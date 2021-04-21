@@ -101,7 +101,6 @@ namespace TeraMicroMeasure
             }
             else
             {
-                connectionTimesNow = clientTryConnectionTimes;
                 refreshConnectionToServer();
             }
         }
@@ -208,9 +207,8 @@ namespace TeraMicroMeasure
             LoadAppForm.Show();
             LoadAppForm.SetTaskLabelsValue("Поиск сервера");
             Thread.Sleep(750);
-            InitTryConnection();//ConnectToServer();
+            ConnectToServer();
             CheckClientDBSettings();
-            connectionTimesNow = clientTryConnectionTimes;
             SetClientTitle();
             //setClientButtonStatus(ClientStatus.disconnected);
             LoadAppForm.Close();
@@ -280,24 +278,17 @@ namespace TeraMicroMeasure
                 switch (client.Status)
                 {
                     case TCP_CLIENT_STATUS.CONNECTED:
-                        DeinitConnectionTimer();
-                        need_try_connect = true;
                         setClientButtonStatus(ClientStatus.connected);
-                        connectionTimesNow = 0;
                         break;
                     case TCP_CLIENT_STATUS.DISCONNECTED:
                         setClientButtonStatus(ClientStatus.disconnected);
                         disconnectFromServer();
                         break;
                     case TCP_CLIENT_STATUS.TRY_CONNECT:
-                        has_answer = false;
-                        if (need_try_connect)setClientButtonStatus(ClientStatus.tryConnect);
+                        setClientButtonStatus(ClientStatus.tryConnect);
                         break;
                     case TCP_CLIENT_STATUS.ABORTED:
-                        has_answer = true;
-                        if (WaitConnectionTimer == null && need_try_connect) InitTryConnection();
-                        else if (WaitConnectionTimer != null && need_try_connect) tryToConnect();
-                        else disconnectFromServer();
+                        disconnectFromServer();
                        // tryToConnect();
                         break;
                     default:
@@ -309,46 +300,8 @@ namespace TeraMicroMeasure
             }
         }
 
-        private void DeinitConnectionTimer()
-        {
-            if (WaitConnectionTimer != null)
-            {
-                WaitConnectionTimer.Dispose();
-                WaitConnectionTimer = null;
-            }
-        }
-
-        private void InitTryConnection()
-        {
-            has_answer = true;
-            need_try_connect = true;
-            connectionTimesNow = 0;
-            setClientButtonStatus(ClientStatus.tryConnect);
-            if (WaitConnectionTimer == null) WaitConnectionTimer = new ClientDisconnectionTimer((o, s) => { SwitchOffConnectionTrying(); }, 5000);
-            tryToConnect();
-        }
-
-
-        private void SwitchOffConnectionTrying()
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new CrossAppDomainDelegate(SwitchOffConnectionTrying));
-            }else
-            {
-                DeinitConnectionTimer();
-                need_try_connect = false;
-                disconnectFromServer();
-                setClientButtonStatus(ClientStatus.disconnected);
-            }
-        }
-
-
-
-
         private void switchConnectToServerButton_Click(object sender, EventArgs e)
         {
-            if (WaitConnectionTimer != null) return;
             if (clientCommandDispatcher != null)
             {
                 if (MeasureIsActive()) MessageBox.Show("Прежде чем отключиться от сервера, необходимо остановить измерение!", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -357,30 +310,10 @@ namespace TeraMicroMeasure
             }
             else
             {
-                InitTryConnection();
-                //need_try_connect = true;
-                //connectionTimesNow = 0;
-                //ConnectToServer();
+                ConnectToServer();
             }
         }
 
-        private ClientDisconnectionTimer WaitConnectionTimer = null;
-        bool need_try_connect = true;
-        bool has_answer;
-        async private void tryToConnect()
-        {
-            if (!need_try_connect || !has_answer) return;
-            titleLabel_2.Text = $"Попытка связи № {++connectionTimesNow}";
-            titleLabel_2.Refresh();
-            await (Task.Run(()=> {
-                Thread.Sleep(500);
-                refreshConnectionToServer();
-                //Debug.WriteLine($"----------------------------------- tryConnectThreadFunc connectionTimesNow {connectionTimesNow}");
-            }));
-        }
-        
-
-        
         private void refreshConnectionToServer()
         {
             disconnectFromServer();
@@ -411,8 +344,6 @@ namespace TeraMicroMeasure
                     connectToServerButton.Text = "  Подключение...";
                     connectToServerButton.Image = Resources.disconnect_white;
                     titleLabel_1.Text = $"Подключение...";
-                    //titleLabel_2.Text = $"Осталось попыток: {connectionTimesNow + 1}";
-                    //Debug.WriteLine(titleLabel_2.Text);
                     break;
             }
         }
@@ -435,11 +366,9 @@ namespace TeraMicroMeasure
         private void MainForm_FormClosing_ForClient()
         {
             disconnectFromServer();
-            need_try_connect = false;//connectionTimesNow = -1; //Чтоб при выключении не совершал попыток поиска связи
         }
 
-        const int clientTryConnectionTimes = 5;
-        int connectionTimesNow = clientTryConnectionTimes;
+
         private void disconnectFromServer()
         {
             if (clientCommandDispatcher != null)
@@ -479,7 +408,6 @@ namespace TeraMicroMeasure
             LoadAppForm.Close();
 
             return flag;
-            //throw new NotImplementedException();
         }
 
         private bool InitDataBaseOnServer()
@@ -597,7 +525,6 @@ namespace TeraMicroMeasure
                 ClientListChangedEventArgs a = e as ClientListChangedEventArgs;
                 SetOfflineStatusOnMeasureForm(a.OnFocusClientState);
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
-                //failureCounter.Text = $"Отвалов от сервера {++clientDisconnectedTimes}";
                 if (!String.IsNullOrWhiteSpace(a.OnFocusClientState.MeasureState.CapturedDeviceSerial))
                 {
                     OnDeviceReleased_Handler(a.OnFocusClientState, new EventArgs());
@@ -621,7 +548,6 @@ namespace TeraMicroMeasure
             {
                 ClientListChangedEventArgs a = e as ClientListChangedEventArgs;
                 RefreshTestLinesMenuItems(a.OnFocusClientState);
-                //if (a.OnFocusClientState.ClientID == SettingsControl.GetClientId())RefreshMeasureStateOnMeasureForm(a.OnFocusClientState.MeasureState);
                 refreshClientCounterStatusText(a.ServerState.Clients.Count);
                 CheckClientUseOnDataBaseAsync(a.OnFocusClientState.ClientID);
             }
@@ -727,8 +653,8 @@ namespace TeraMicroMeasure
                 SessionControlForm f = currentForm as SessionControlForm;
                 if (status == TCP_CLIENT_STATUS.CONNECTED)
                     f.FillAllowedUsersAsync();
-                else if (status == TCP_CLIENT_STATUS.DISCONNECTED)
-                    f.SetDefaultFormState();
+                //else if (status == TCP_CLIENT_STATUS.DISCONNECTED)
+                    //f.SetDefaultFormState();
             }
         }
 

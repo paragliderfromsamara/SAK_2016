@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
+using System.Threading;
 
 namespace NormaLib.SocketControl.TCPControlLib
 {
@@ -51,7 +52,27 @@ namespace NormaLib.SocketControl.TCPControlLib
             server = _server;
             server.OnClientDetected += OnClientDetected_Handler;
             server.OnServerStatusChanged += OnServerStatusChanged_Handler;
+            
             server.Start();
+            Thread checkConnectionThread = new Thread(new ThreadStart(() => {
+                while(server.Status != NORMA_SERVER_STATUS.STOPPED)
+                {
+                    Thread.Sleep(750);
+                    try
+                    {
+                        foreach (NormaTCPClient cl in ServerClients.Values)
+                        {
+                            if (cl.ConnectionTimeoutIsOver) disposeClient(cl, new EventArgs());
+                        }
+                    }
+                    catch(Exception)
+                    {
+                        continue;
+                    }
+                }
+
+            }));
+            checkConnectionThread.Start();
         }
 
         private void OnClientDetected_Handler(object s, EventArgs e)
@@ -60,12 +81,18 @@ namespace NormaLib.SocketControl.TCPControlLib
             TCPServerClientEventArgs a = e as TCPServerClientEventArgs;
             if (!ServerClients.ContainsKey(cl.RemoteIP))
             {
-                
-                cl.OnClientDisconnectedWithException += disposeClient;
                 cl.OnMessageReceived += OnClientMessageReceived_Handler;
                 ServerClients.Add(cl.RemoteIP, cl);
                 Debug.WriteLine($"OnClientDetected_Handler on TCPServerClientsControl {cl.RemoteIP} connection № {a.ClientConnectionNumber}");
                 OnClientDetected?.Invoke(cl, e);
+                cl.MessageToSend = answer;
+                cl.InitReceiveThread();
+            }
+            else
+            {
+                cl.OnMessageReceived += OnClientMessageReceived_Handler;
+                ServerClients[cl.RemoteIP] = cl;
+                Debug.WriteLine($"OnClientDetected_Handler on TCPServerClientsControl {cl.RemoteIP} not first connection № {a.ClientConnectionNumber}");
                 cl.MessageToSend = answer;
                 cl.InitReceiveThread();
             }
@@ -100,6 +127,7 @@ namespace NormaLib.SocketControl.TCPControlLib
         private void OnClientMessageReceived_Handler(object sender, EventArgs e)
         {
             OnClientMessageReceived?.Invoke(sender, e);
+
         }
 
         public void Dispose()

@@ -53,7 +53,7 @@ namespace TeraMicroMeasure.CommandProcessors
     public class ServerCommandDispatcher : IDisposable
     {
         TCPServerClientsControl clientsControl;
-        private List<string> WillDisconnectedIPList;
+        //private List<string> WillDisconnectedIPList;
         private ServerXmlState _currentServerState;
         private NormaTCPClient currentTCPClient;
         public int ClientsConnected => currentServerState.Clients.Count;
@@ -106,7 +106,6 @@ namespace TeraMicroMeasure.CommandProcessors
 
         public ServerCommandDispatcher(TCPServerClientsControl _clients_control, ServerXmlState server_state, EventHandler on_client_id_changed, EventHandler on_client_measure_settings_changed, EventHandler on_measure_start_by_client, EventHandler on_measure_stop_by_client, EventHandler on_client_connected, EventHandler on_client_disconnected, EventHandler on_device_try_capture, EventHandler on_device_released)
         {
-            WillDisconnectedIPList = new List<string>();
             clientsControl = _clients_control;
             currentServerState = new ServerXmlState(server_state.InnerXml);
             clientsControl.OnClientMessageReceived += OnClientMessageReceived_Handler;
@@ -206,7 +205,6 @@ namespace TeraMicroMeasure.CommandProcessors
                     if (cs.IsValid)
                     {
                         ServerXmlState newState = new ServerXmlState(currentServerState.InnerXml);
-                        if (WillDisconnectedIPList.Contains(cs.ClientIP)) WillDisconnectedIPList.Remove(cs.ClientIP);
                         if (currentServerState.Clients.ContainsKey(cs.ClientIP))
                         {
                             ClientXmlState last_cs = currentServerState.Clients[cs.ClientIP];
@@ -289,30 +287,15 @@ namespace TeraMicroMeasure.CommandProcessors
             {
                 NormaTCPClient cl = client as NormaTCPClient;
                 string ip = cl.RemoteIP as string;
-                if (currentServerState.Clients.ContainsKey(ip) && !WillDisconnectedIPList.Contains(ip))
+                if (currentServerState.Clients.ContainsKey(ip))
                 {
-                    WillDisconnectedIPList.Add(ip);
-                    ClientDisconnectionTimer t = new ClientDisconnectionTimer(ClientDisconnectionTimer_Handler, ip);
-                }
-            }
-        }
-
-        private void ClientDisconnectionTimer_Handler(object sender, EventArgs e)
-        {
-            lock (locker7)
-            {
-                ClientDisconnectionTimer t = sender as ClientDisconnectionTimer;
-                if (currentServerState.Clients.ContainsKey(t.ClientIp) && WillDisconnectedIPList.Contains(t.ClientIp))
-                {
-                    ClientXmlState cs = currentServerState.Clients[t.ClientIp];
-                    currentServerState.RemoveClient(t.ClientIp);
+                    ClientXmlState cs = currentServerState.Clients[ip];
+                    currentServerState.RemoveClient(ip);
                     RefreshCurrentServerStateOnClientControl();
                     OnClientDisconnected?.Invoke(this, new ClientListChangedEventArgs(currentServerState, cs));
                 }
-                t.Dispose();
             }
         }
-
 
         public ClientXmlState GetClientStateByClientID(int client_id)
         {
@@ -327,43 +310,6 @@ namespace TeraMicroMeasure.CommandProcessors
         public void Dispose()
         {
             clientsControl.Dispose();
-        }
-    }
-
-    public class ClientDisconnectionTimer : IDisposable
-    {
-        public string ClientIp = "127.0.0.0";
-        Thread thread;
-        EventHandler OnTimerEnd;
-        int time = 1500;
-        public ClientDisconnectionTimer(EventHandler onTimerTick, string ip)
-        {
-            ClientIp = ip;
-            OnTimerEnd += onTimerTick;
-            thread = new Thread(new ThreadStart(ThreadFunc));
-            thread.Start();
-        }
-
-        public ClientDisconnectionTimer(EventHandler onTimerTick, int _time)
-        {
-            time = _time;
-            OnTimerEnd += onTimerTick;
-            thread = new Thread(new ThreadStart(ThreadFunc));
-            thread.Start();
-        }
-
-        void ThreadFunc()
-        {
-            Thread.Sleep(time);
-            OnTimerEnd?.Invoke(this, new EventArgs());
-        }
-
-        public void Dispose()
-        {
-            if (thread != null)
-            {
-                thread.Abort();
-            }
         }
     }
 }
