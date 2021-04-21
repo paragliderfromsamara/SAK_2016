@@ -35,7 +35,8 @@
             // primaryTaskLabel
             // 
             this.primaryTaskLabel.AutoSize = true;
-            this.primaryTaskLabel.Location = new System.Drawing.Point(25, 167);
+            this.primaryTaskLabel.BackColor = System.Drawing.Color.Transparent;
+            this.primaryTaskLabel.Location = new System.Drawing.Point(30, 143);
             this.primaryTaskLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.primaryTaskLabel.Name = "primaryTaskLabel";
             this.primaryTaskLabel.Size = new System.Drawing.Size(70, 16);
@@ -45,7 +46,8 @@
             // subTaskLabel
             // 
             this.subTaskLabel.AutoSize = true;
-            this.subTaskLabel.Location = new System.Drawing.Point(25, 192);
+            this.subTaskLabel.BackColor = System.Drawing.Color.Transparent;
+            this.subTaskLabel.Location = new System.Drawing.Point(30, 164);
             this.subTaskLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.subTaskLabel.Name = "subTaskLabel";
             this.subTaskLabel.Size = new System.Drawing.Size(0, 16);
@@ -55,14 +57,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.SteelBlue;
+            this.BackColor = System.Drawing.Color.White;
+            this.BackgroundImage = global::TeraMicroMeasure.Properties.Resources.ЗаставкаПОv1;
             this.ClientSize = new System.Drawing.Size(420, 230);
             this.Controls.Add(this.subTaskLabel);
             this.Controls.Add(this.primaryTaskLabel);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "LoadAppForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Загрузка...";
