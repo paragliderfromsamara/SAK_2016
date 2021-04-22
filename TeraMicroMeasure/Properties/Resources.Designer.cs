@@ -63,26 +63,6 @@ namespace TeraMicroMeasure.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap backgroundMdi {
-            get {
-                object obj = ResourceManager.GetObject("backgroundMdi", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap backgroundMdi1 {
-            get {
-                object obj = ResourceManager.GetObject("backgroundMdi1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap connected_white {
             get {
                 object obj = ResourceManager.GetObject("connected_white", resourceCulture);
@@ -103,9 +83,9 @@ namespace TeraMicroMeasure.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ЗаставкаПОv1 {
+        internal static System.Drawing.Bitmap ЗаставкаПОv12 {
             get {
-                object obj = ResourceManager.GetObject("ЗаставкаПОv1", resourceCulture);
+                object obj = ResourceManager.GetObject("ЗаставкаПОv12", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

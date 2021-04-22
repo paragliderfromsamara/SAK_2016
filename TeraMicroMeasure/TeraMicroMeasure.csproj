@@ -207,16 +207,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\backgroundMdi.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\connected_white.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\disconnect_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ЗаставкаПОv1.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -233,6 +227,7 @@
   <ItemGroup>
     <Content Include="AppIconv1 %283%29.ico" />
     <Content Include="AppIconv1.ico" />
+    <None Include="Resources\ЗаставкаПОv12.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

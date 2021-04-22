@@ -34,34 +34,34 @@
             // 
             // primaryTaskLabel
             // 
-            this.primaryTaskLabel.AutoSize = true;
             this.primaryTaskLabel.BackColor = System.Drawing.Color.Transparent;
             this.primaryTaskLabel.Location = new System.Drawing.Point(30, 143);
             this.primaryTaskLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.primaryTaskLabel.Name = "primaryTaskLabel";
-            this.primaryTaskLabel.Size = new System.Drawing.Size(70, 16);
+            this.primaryTaskLabel.Size = new System.Drawing.Size(340, 20);
             this.primaryTaskLabel.TabIndex = 0;
             this.primaryTaskLabel.Text = "Загрузка";
             // 
             // subTaskLabel
             // 
-            this.subTaskLabel.AutoSize = true;
             this.subTaskLabel.BackColor = System.Drawing.Color.Transparent;
             this.subTaskLabel.Location = new System.Drawing.Point(30, 164);
             this.subTaskLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.subTaskLabel.Name = "subTaskLabel";
-            this.subTaskLabel.Size = new System.Drawing.Size(0, 16);
+            this.subTaskLabel.Size = new System.Drawing.Size(340, 20);
             this.subTaskLabel.TabIndex = 1;
             // 
             // LoadAppForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.BackgroundImage = global::TeraMicroMeasure.Properties.Resources.ЗаставкаПОv1;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
+            this.BackgroundImage = global::TeraMicroMeasure.Properties.Resources.ЗаставкаПОv12;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(420, 230);
             this.Controls.Add(this.subTaskLabel);
             this.Controls.Add(this.primaryTaskLabel);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -70,7 +70,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Загрузка...";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
