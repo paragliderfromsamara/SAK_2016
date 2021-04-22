@@ -284,6 +284,7 @@ namespace TeraMicroMeasure
         private void InitMeasureDraft()
         {
             if (Cables.Rows.Count == 0) return;
+            uint measureModeOnState = measureState.MeasureTypeId;
             testFile = new CableTestIni(ClientID);
             testFile.OnDraftLocked += (s, a)=> { SetDraftIsLock(); };
             if (!testFile.IsLockDraft)
@@ -318,6 +319,20 @@ namespace TeraMicroMeasure
             }
             barabanTypeCB.SelectedValue = testFile.BarabanTypeId;
             barabanNameCB.Text = testFile.BarabanNumber;
+            //if (measureState.MeasureTypeId != measureModeOnState && currentCable.MeasuredParameterTypes_IDs.Contains(measureModeOnState)) SetMeasureModeComboBoxValue(measureModeOnState);
+        }
+
+        private void SetMeasureModeComboBoxValue(uint val)
+        {
+            if (MeasuredParameterType.IsItIsolationResistance(val))
+            {
+                measuredParameterCB.SelectedValue = MeasuredParameterType.Risol1;
+                rIsolTypeSelectorCB.SelectedValue = val;
+            }
+            else
+            {
+                measuredParameterCB.SelectedValue = val;
+            }
         }
 
         private Cable GetCableFromDraft()
@@ -872,7 +887,7 @@ namespace TeraMicroMeasure
         {
             if (measureTimer != null) StopMeasureTimer();
             if (!MeasuredParameterType.IsItIsolationResistance(measureState.MeasureTypeId)) return;
-            int time = currentStructure.GetRisolTimeLimit(CurrentParameterData);
+            int time = (MeasuredParameterType.IsItIsolationResistanceTime(measureState.MeasureTypeId)) ? currentStructure.GetRisolTimeLimit(CurrentParameterData) * 2 : currentStructure.GetRisolTimeLimit(CurrentParameterData);
             measureTimerLabel.Text = "00:00";
 
             measureTimer = new MeasureTimer(time, MeasureTimer_Tick, MeasureTimerFinished);
@@ -1066,65 +1081,6 @@ namespace TeraMicroMeasure
 
         }
 
-        private void processMeasureCycleStatusBothSideDisconnected(DeviceXMLState xml_device)
-        {
-            SetMeasureStatus(MeasureStatus.STOPPED);
-        }
-
-        private void processMeasureCycleStatusOnCaseServerSideConnection(DeviceXMLState xml_device)
-        {
-            
-        }
-
-        private void processMeasureCycleStatusOnCaseClientOnlyConnection(DeviceXMLState xml_device)
-        {
-            switch (measureStatus)
-            {
-                case MeasureStatus.WILL_START:
-                case MeasureStatus.STARTED:
-                    if (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION)
-                    {
-                        SetMeasureStatus(MeasureStatus.WILL_STOPPED);
-                    }
-                    else if (xml_device.WorkStatusId == (int)DeviceWorkStatus.IDLE)
-                    {
-                        SetMeasureStatus(MeasureStatus.STOPPED);
-                    }
-                    break;
-            }
-            measureState.MeasureStartFlag = false;
-            MeasureStateOnFormChanged();
-        }
-
-        private void processMeasureCycleStatusOnCaseBothSideConnection(DeviceXMLState xml_device)
-        {
-            switch (measureStatus)
-            {
-                case MeasureStatus.STARTED:
-                    if (xml_device.WorkStatusId == (int)DeviceWorkStatus.DEPOLARIZATION)
-                    {
-                        SetMeasureStatus(MeasureStatus.WILL_STOPPED);
-                    }
-                    break;
-                case MeasureStatus.WILL_START:
-                    if (xml_device.WorkStatusId == (int)DeviceWorkStatus.MEASURE || (xml_device.WorkStatusId == (int)DeviceWorkStatus.POLARIZATION))
-                    {
-                        SetMeasureStatus(MeasureStatus.STARTED);
-                    }
-                    else
-                    {
-                        SetMeasureStatus(MeasureStatus.STOPPED);
-                        if (measureState.MeasureStartFlag)
-                        {
-                            measureState.MeasureStartFlag = false;
-                            MeasureStateOnFormChanged();
-                        }
-                    }
-                    break;
-
-            }
-        }
-
         private bool CheckDeviceCaptureStatus(DeviceXMLState device_state)
         {
             if (device_capture_status == DeviceCaptureStatus.WAITING_FOR_CONNECTION)
@@ -1198,7 +1154,7 @@ namespace TeraMicroMeasure
                     MeasureResultConverter cr = new MeasureResultConverter(c.RawValue, RisolNormaValue, (float)cableLengthNumericUpDown.Value, MaterialCoeff);
                     NormDeterminant d = new NormDeterminant(RisolNormaValue, cr.ConvertedValueRounded);
                     stringVal = cr.ConvertedValueLabel;
-                    if (addValueToProtocol = d.IsOnNorma)
+                    if (addValueToProtocol = d.IsOnNorma || measureTimer.TimeInSeconds > CurrentParameterData.MaxValue)
                     {
                         normaLabel.Text = valueToTable.ToString();
                         valueToProtocol = valueToTable = measureTimer.TimeInSeconds;
@@ -1526,15 +1482,64 @@ namespace TeraMicroMeasure
 
         private void measuredParameterCB_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             ComboBox rb = sender as ComboBox;
+            int selIdx = rb.SelectedIndex;
             uint parameterTypeId = rb.SelectedIndex == -1 ? 0 : ((KeyValuePair<uint, string>)rb.SelectedItem).Key;
             uint parameterTypeWas = measureState.MeasureTypeId;
-            //MessageBox.Show(rb.SelectedItem.ToString());
+            if (DeviceCaptureStatus == DeviceCaptureStatus.CONNECTED && rb.Name != rIsolTypeSelectorCB.Name)
+            {
+                try
+                {
+                    bool isIsolResistance = MeasuredParameterType.IsItIsolationResistance(parameterTypeWas);
+                    uint pTypeId = isIsolResistance ? MeasuredParameterType.Risol1 : parameterTypeWas;
+                    if (currentCable.MeasuredParameterTypes_IDs.Contains(pTypeId))
+                    {
+                        measuredParameterCB.SelectedIndexChanged -= measuredParameterCB_SelectedIndexChanged;
+                        for (int i = 0; i < measuredParameterCB.Items.Count; i++)
+                        {
+                            KeyValuePair<uint, string> v = (KeyValuePair<uint, string>)measuredParameterCB.Items[i];
+                            if (v.Key == pTypeId)
+                            {
+                                measuredParameterCB.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                        measuredParameterCB.SelectedIndexChanged += measuredParameterCB_SelectedIndexChanged;
+                        measuredParameterCB.Enabled = false;
+                        if (MeasuredParameterType.IsItIsolationResistance(pTypeId))
+                        {
+                            rIsolTypeSelectorCB.SelectedIndexChanged -= measuredParameterCB_SelectedIndexChanged;
+                            rIsolTypeSelectorCB.SelectedIndex = 0;
+                            for (int i = 0; i < rIsolTypeSelectorCB.Items.Count; i++)
+                            {
+                                KeyValuePair<uint, string> v = (KeyValuePair<uint, string>)rIsolTypeSelectorCB.Items[i];
+                                if (v.Key == parameterTypeWas)
+                                {
+                                    rIsolTypeSelectorCB.SelectedIndex = i;
+                                    break;
+                                }
+                            }
+                            parameterTypeId = (rIsolTypeSelectorCB.SelectedIndex == 0) ? pTypeId : parameterTypeWas;
+                            rIsolTypeSelectorCB.SelectedIndexChanged += measuredParameterCB_SelectedIndexChanged;
+                            rIsolTypeSelectorCB.Enabled = true;
+                        }
+                        else parameterTypeId = parameterTypeWas;
+                    }
+                    else deviceControlButton.PerformClick();
+                }
+                catch(Exception)
+                {
+                    deviceControlButton.PerformClick();
+                    rb.SelectedIndexChanged -= measuredParameterCB_SelectedIndexChanged;
+                    rb.SelectedIndex = selIdx;
+                    rb.SelectedIndexChanged += measuredParameterCB_SelectedIndexChanged;
+                }
+            }
             if (MeasuredParameterType.IsItIsolationResistance(parameterTypeId) && !MeasuredParameterType.IsItIsolationResistance(parameterTypeWas))
                 EnableRisolSelector();
             else if (!MeasuredParameterType.IsItIsolationResistance(parameterTypeId) && MeasuredParameterType.IsItIsolationResistance(parameterTypeWas))
                 DisableRisolSelector();
-
             CapturedDeviceType = GetDeviceTypeBySelectedParameterType();
             measureState.MeasureTypeId = parameterTypeId;
             RefreshMeasureParameterDataTabs();
