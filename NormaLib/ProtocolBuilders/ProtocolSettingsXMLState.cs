@@ -140,6 +140,7 @@ namespace NormaLib.ProtocolBuilders
 
         public static void CheckCurrentStateChanges(ProtocolSettingsXMLState protocolSettingsState)
         {
+            if (protocolSettingsState == null) return;
             if (CurrentState.StateId != protocolSettingsState.StateId)
             {
                 if (protocolSettingsState.CompanyName != CurrentState.CompanyName) ProtocolSettings.CompanyName = protocolSettingsState.CompanyName;
