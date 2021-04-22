@@ -44,7 +44,7 @@ namespace TeraMicroMeasure.CommandProcessors
                 NormaTCPClientEventArgs a = e as NormaTCPClientEventArgs;
                 NormaTCPClient cl = sender as NormaTCPClient;
                 ServerXmlState s = new ServerXmlState(a.Message);
-                if (s.Clients.ContainsKey(cl.LocalIP))
+                if (s.Clients.ContainsKey(cl.LocalIP) && s.IsValid)
                 {
                     ClientXmlState fromServerState = s.Clients[cl.LocalIP];
                     OnServerStateReceived?.Invoke(s, new EventArgs());

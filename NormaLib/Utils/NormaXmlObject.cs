@@ -54,27 +54,35 @@ namespace NormaLib.Utils
                 return _innerXML;
             }set
             {
-                XElement e = createFromAString(value);
-                if (isValidRoot(e))
+                try
                 {
-                    string new_state_id = state_id;
-                    if (isDifferentState(e, out new_state_id))
+                    XElement e = createFromAString(value);
+                    if (isValidRoot(e))
                     {
-                        xRoot = e;
-                        xDoc.RemoveNodes();
-                        xDoc.Add(xRoot);
-                        buildFromXML();
-                        state_id_was = state_id = new_state_id;
-                       
-                        isValid = true;
-                        _innerXML = value;
-                       
-                    }
+                        string new_state_id = state_id;
+                        if (isDifferentState(e, out new_state_id))
+                        {
+                            xRoot = e;
+                            xDoc.RemoveNodes();
+                            xDoc.Add(xRoot);
+                            buildFromXML();
+                            state_id_was = state_id = new_state_id;
 
-                }else
+                            isValid = true;
+                            _innerXML = value;
+
+                        }
+                    }
+                    else
+                    {
+                        isValid = false;
+                    }
+                }
+                catch(System.Xml.XmlException)
                 {
                     isValid = false;
                 }
+
             }
         }
 

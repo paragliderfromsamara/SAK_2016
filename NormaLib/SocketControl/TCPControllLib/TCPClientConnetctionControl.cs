@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace NormaLib.SocketControl.TCPControlLib
 {
@@ -51,7 +52,7 @@ namespace NormaLib.SocketControl.TCPControlLib
 
         private void OnServerAnswerReceived_Handler(object sender, EventArgs e)
         {
-            OnServerAnswerReceived?.Invoke(sender, e);
+           OnServerAnswerReceived?.Invoke(sender, e);
         }
     }
 }
