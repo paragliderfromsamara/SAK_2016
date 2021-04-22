@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppForm));
             this.clientTitle = new System.Windows.Forms.Label();
             this.titleLabel_2 = new System.Windows.Forms.Label();
             this.titleLabel_1 = new System.Windows.Forms.Label();
@@ -59,12 +60,12 @@
             this.panelHeader.Controls.Add(this.titleLabel_1);
             this.panelHeader.Controls.Add(this.titleLabel_2);
             this.panelHeader.Controls.Add(this.clientTitle);
-            this.panelHeader.TabIndex = 1;
+            resources.ApplyResources(this.panelHeader, "panelHeader");
             // 
             // btnMeasure
             // 
             this.btnMeasure.FlatAppearance.BorderSize = 0;
-            this.btnMeasure.TabIndex = 2;
+            resources.ApplyResources(this.btnMeasure, "btnMeasure");
             // 
             // btnSettings
             // 
@@ -76,64 +77,37 @@
             // 
             // clientTitle
             // 
-            this.clientTitle.AutoSize = true;
-            this.clientTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            resources.ApplyResources(this.clientTitle, "clientTitle");
             this.clientTitle.ForeColor = System.Drawing.Color.White;
-            this.clientTitle.Location = new System.Drawing.Point(12, 3);
             this.clientTitle.Name = "clientTitle";
-            this.clientTitle.Size = new System.Drawing.Size(108, 31);
-            this.clientTitle.TabIndex = 0;
-            this.clientTitle.Text = "Сервер";
-            this.clientTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // titleLabel_2
             // 
-            this.titleLabel_2.AutoSize = true;
-            this.titleLabel_2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            resources.ApplyResources(this.titleLabel_2, "titleLabel_2");
             this.titleLabel_2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.titleLabel_2.Location = new System.Drawing.Point(15, 57);
             this.titleLabel_2.Name = "titleLabel_2";
-            this.titleLabel_2.Size = new System.Drawing.Size(181, 15);
-            this.titleLabel_2.TabIndex = 1;
-            this.titleLabel_2.Text = "IP 192.168.100.232 Порт: 4999";
             // 
             // titleLabel_1
             // 
-            this.titleLabel_1.AutoSize = true;
+            resources.ApplyResources(this.titleLabel_1, "titleLabel_1");
             this.titleLabel_1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.titleLabel_1.Location = new System.Drawing.Point(15, 40);
             this.titleLabel_1.Name = "titleLabel_1";
-            this.titleLabel_1.Size = new System.Drawing.Size(55, 13);
-            this.titleLabel_1.TabIndex = 2;
-            this.titleLabel_1.Text = "Клиентов";
             // 
             // connectToServerButton
             // 
             this.connectToServerButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.connectToServerButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.connectToServerButton, "connectToServerButton");
             this.connectToServerButton.FlatAppearance.BorderSize = 0;
-            this.connectToServerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.connectToServerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.connectToServerButton.ForeColor = System.Drawing.Color.Gainsboro;
             this.connectToServerButton.Image = global::TeraMicroMeasure.Properties.Resources.disconnect_white;
-            this.connectToServerButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.connectToServerButton.Location = new System.Drawing.Point(0, 0);
             this.connectToServerButton.Name = "connectToServerButton";
-            this.connectToServerButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.connectToServerButton.Size = new System.Drawing.Size(240, 60);
-            this.connectToServerButton.TabIndex = 4;
-            this.connectToServerButton.Text = "  Подключен";
-            this.connectToServerButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.connectToServerButton.UseVisualStyleBackColor = true;
             // 
             // connectButPanel
             // 
             this.connectButPanel.Controls.Add(this.connectToServerButton);
-            this.connectButPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.connectButPanel.Location = new System.Drawing.Point(0, 824);
+            resources.ApplyResources(this.connectButPanel, "connectButPanel");
             this.connectButPanel.Name = "connectButPanel";
-            this.connectButPanel.Size = new System.Drawing.Size(240, 60);
-            this.connectButPanel.TabIndex = 5;
             // 
             // sessionPanel
             // 
@@ -141,60 +115,37 @@
             this.sessionPanel.Controls.Add(this.roleTitleLabel);
             this.sessionPanel.Controls.Add(this.userNameLabel);
             this.sessionPanel.Controls.Add(this.button1);
-            this.sessionPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.sessionPanel.Location = new System.Drawing.Point(0, 764);
+            resources.ApplyResources(this.sessionPanel, "sessionPanel");
             this.sessionPanel.Name = "sessionPanel";
-            this.sessionPanel.Size = new System.Drawing.Size(240, 60);
-            this.sessionPanel.TabIndex = 6;
             // 
             // roleTitleLabel
             // 
-            this.roleTitleLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            resources.ApplyResources(this.roleTitleLabel, "roleTitleLabel");
             this.roleTitleLabel.ForeColor = System.Drawing.Color.Gainsboro;
-            this.roleTitleLabel.Location = new System.Drawing.Point(76, 27);
             this.roleTitleLabel.Name = "roleTitleLabel";
-            this.roleTitleLabel.Size = new System.Drawing.Size(164, 21);
-            this.roleTitleLabel.TabIndex = 2;
-            this.roleTitleLabel.Text = "Администратор";
-            this.roleTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // userNameLabel
             // 
-            this.userNameLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            resources.ApplyResources(this.userNameLabel, "userNameLabel");
             this.userNameLabel.ForeColor = System.Drawing.Color.Gainsboro;
-            this.userNameLabel.Location = new System.Drawing.Point(76, 0);
             this.userNameLabel.Name = "userNameLabel";
-            this.userNameLabel.Size = new System.Drawing.Size(164, 27);
-            this.userNameLabel.TabIndex = 1;
-            this.userNameLabel.Text = "Иванов Иван Иванович";
-            this.userNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.MidnightBlue;
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Dock = System.Windows.Forms.DockStyle.Left;
+            resources.ApplyResources(this.button1, "button1");
             this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button1.ForeColor = System.Drawing.Color.Gainsboro;
-            this.button1.Location = new System.Drawing.Point(0, 0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(76, 60);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Выйти";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.signoutButton_Click);
             // 
             // AppForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1284, 884);
-            this.Location = new System.Drawing.Point(0, 0);
-            this.MinimumSize = new System.Drawing.Size(1170, 900);
             this.Name = "AppForm";
-            this.Text = "AppForm";
             this.panelMenu.ResumeLayout(false);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();

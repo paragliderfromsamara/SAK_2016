@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace NormaLib.ProtocolBuilders
 {
+    delegate void ProtocolSettingsDelegate(ProtocolSettingsXMLState state);
     public partial class ProtocolSettingsForm : Form
     {
         public ProtocolSettingsForm()
@@ -25,13 +26,24 @@ namespace NormaLib.ProtocolBuilders
                 if (ProtocolSettings.ReadOnly)
                 {
                     ProtocolSettingsXMLState state = o as ProtocolSettingsXMLState;
-                    companyNameTextBox.Text = state.CompanyName;
-                    protocolHeaderText.Text = state.ProtocolHeader;
-                    printProtocolNumberAtTitle.Checked = state.AddTestIdToProtocolTitleFlag;
+                    RefreshProtocolSettings(state);
                 }
             };
         }
 
+
+        private void RefreshProtocolSettings(ProtocolSettingsXMLState settings)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new ProtocolSettingsDelegate(RefreshProtocolSettings), new object[] { settings });
+            }else
+            {
+                companyNameTextBox.Text = settings.CompanyName;
+                protocolHeaderText.Text = settings.ProtocolHeader;
+                printProtocolNumberAtTitle.Checked = settings.AddTestIdToProtocolTitleFlag;
+            }
+        }
 
 
         private void ProtocolSettingsForm_FormClosing(object sender, FormClosingEventArgs e)
