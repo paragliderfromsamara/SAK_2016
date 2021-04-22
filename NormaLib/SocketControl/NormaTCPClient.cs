@@ -241,6 +241,7 @@ namespace NormaLib.SocketControl
         private bool oneTimeSend(out string answer)
         {
             NetworkStream stream = null;
+            
             answer = "";
             try
             {
@@ -272,16 +273,19 @@ namespace NormaLib.SocketControl
             catch (ArgumentNullException e)
             {
                 this.Exception = e;
+                SocketLogFile.WriteExceptionAsync(e).GetAwaiter();
                 return false;
             }
             catch (SocketException e)
             {
                 this.Exception = e;
+                SocketLogFile.WriteExceptionAsync(e).GetAwaiter();
                 return false;
             }
             catch (Exception e)
             {
                 this.Exception = e;
+                SocketLogFile.WriteExceptionAsync(e).GetAwaiter();
                 return false;
             }
             finally
@@ -357,13 +361,14 @@ namespace NormaLib.SocketControl
             {
                 this.Exception = ex;
                 OnClientDisconnectedWithException?.Invoke(this, new EventArgs());
+                SocketLogFile.WriteExceptionAsync(ex).GetAwaiter();
             }
             finally
             {
                 if (stream != null)
                     stream.Close();
                 if (tcpClient != null) dispose_tcp_client();
-
+               
             }
         }
 
