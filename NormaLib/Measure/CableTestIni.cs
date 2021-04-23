@@ -492,6 +492,21 @@ namespace NormaLib.Measure
             structure.AffectedElements = affected_elements;
         }
 
+        public void ClearParameterDataResults(CableStructureMeasuredParameterData currentParameterData)
+        {
+            MeasurePointMap map = new MeasurePointMap(currentParameterData.AssignedStructure, currentParameterData.ParameterTypeId);
+            string section = GetTestResultSectionName((int)currentParameterData.AssignedStructure.CableStructureId);
+            string val_attr_name;
+            string temperatureAttrName;
+            do
+            {
+                temperatureAttrName = GetTestTemperatureAttrName((int)currentParameterData.ParameterTypeId, map.CurrentPoint.PointIndex);
+                val_attr_name = GetTestValueAttrName((int)currentParameterData.ParameterTypeId, map.CurrentPoint.PointIndex);
+                file.DeleteKey(val_attr_name, section);
+                file.DeleteKey(temperatureAttrName, section);
+            } while (map.TryGetNextPoint());
+        }
+
         #endregion
 
     }

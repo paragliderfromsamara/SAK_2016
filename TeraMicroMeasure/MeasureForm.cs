@@ -1587,6 +1587,7 @@ namespace TeraMicroMeasure
                 measuredParameterDataTabs.TabPages[measuredParameterDataTabs.SelectedIndex].Controls.Add(panelResultMeasure);
                 norma = CurrentParameterData.GetFullTitle();
                 normaLabel.Text = string.IsNullOrWhiteSpace(norma) ? "" : $"Норма: {norma}";
+                resetCurrentResultsButton.Text = $"Очистить результаты {CurrentParameterData.ParameterName}";
             }
         }
 
@@ -1670,17 +1671,11 @@ namespace TeraMicroMeasure
 
         private void resetCurrentResultsButton_Click(object sender, EventArgs e)
         {
-            //
+            DialogResult r = MessageBox.Show($"Вы уверены, что хотите очистить все результаты параметра {CurrentParameterData.ParameterName} ({CurrentParameterData.ParameterDescription})?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (r != DialogResult.Yes) return;
+            testFile.ClearParameterDataResults(CurrentParameterData);
+            RefreshMeasureControl();
         }
-
-
-
-        #region MeasureImitation
-        private void ImitateCurrentMeasure()
-        {
-            throw new NotImplementedException();
-        }
-        #endregion
     }
 
 

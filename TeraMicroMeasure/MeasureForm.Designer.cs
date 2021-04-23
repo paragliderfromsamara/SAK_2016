@@ -587,16 +587,17 @@
             // 
             // resetCurrentResultsButton
             // 
-            this.resetCurrentResultsButton.BackColor = System.Drawing.Color.Navy;
+            this.resetCurrentResultsButton.BackColor = System.Drawing.Color.Gray;
+            this.resetCurrentResultsButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.resetCurrentResultsButton.Dock = System.Windows.Forms.DockStyle.Left;
             this.resetCurrentResultsButton.FlatAppearance.BorderSize = 0;
             this.resetCurrentResultsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.resetCurrentResultsButton.ForeColor = System.Drawing.Color.Gainsboro;
+            this.resetCurrentResultsButton.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.resetCurrentResultsButton.Location = new System.Drawing.Point(0, 0);
             this.resetCurrentResultsButton.Name = "resetCurrentResultsButton";
-            this.resetCurrentResultsButton.Size = new System.Drawing.Size(277, 44);
+            this.resetCurrentResultsButton.Size = new System.Drawing.Size(255, 44);
             this.resetCurrentResultsButton.TabIndex = 0;
-            this.resetCurrentResultsButton.Text = "Очистить текущее измерение";
+            this.resetCurrentResultsButton.Text = "Очистить результаты";
             this.resetCurrentResultsButton.UseVisualStyleBackColor = false;
             this.resetCurrentResultsButton.Click += new System.EventHandler(this.resetCurrentResultsButton_Click);
             // 
@@ -719,7 +720,7 @@
             this.resetTestButton.Name = "resetTestButton";
             this.resetTestButton.Size = new System.Drawing.Size(221, 47);
             this.resetTestButton.TabIndex = 1;
-            this.resetTestButton.Text = "Сбросить результаты";
+            this.resetTestButton.Text = "Сбросить испытание";
             this.resetTestButton.UseVisualStyleBackColor = false;
             this.resetTestButton.Click += new System.EventHandler(this.resetTestButton_Click);
             // 
