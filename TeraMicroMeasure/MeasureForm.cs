@@ -781,7 +781,6 @@ namespace TeraMicroMeasure
             deviceInfo.Text = "Измеритель не выбран";
             resultField.Text = "0.0";
             measureTimerLabel.Text = "";
-            normaLabel.Text = "";
         }
 
         private void CaptureSelectedDevice()
@@ -1156,7 +1155,6 @@ namespace TeraMicroMeasure
                     stringVal = cr.ConvertedValueLabel;
                     if (addValueToProtocol = d.IsOnNorma || measureTimer.TimeInSeconds > CurrentParameterData.MaxValue)
                     {
-                        normaLabel.Text = valueToTable.ToString();
                         valueToProtocol = valueToTable = measureTimer.TimeInSeconds;
                         if (measureStatus == MeasureStatus.STARTED) startMeasureButton.PerformClick();
                     }
@@ -1544,6 +1542,7 @@ namespace TeraMicroMeasure
             measureState.MeasureTypeId = parameterTypeId;
             RefreshMeasureParameterDataTabs();
             MeasureStateOnFormChanged();
+            normaLabel.Text = string.Empty;
         }
 
         private void EnableRisolSelector()
