@@ -462,7 +462,8 @@ namespace NormaLib.Measure
             string section = GetTestResultSectionName((int)point.StructureId);
             string valueAttrName = GetTestValueAttrName((int)MeasuredParameterType.Calling, point.PointIndex);
             SetMeasureStarted();
-            file.Write(valueAttrName, lead_status_id.ToString(), section);
+            if (lead_status_id == LeadTestStatus.Ok) file.DeleteKey(valueAttrName, section);
+            else file.Write(valueAttrName, lead_status_id.ToString(), section);
         }
 
         private void SetMeasureStarted()
