@@ -495,16 +495,28 @@ namespace NormaLib.Measure
         public void ClearParameterDataResults(CableStructureMeasuredParameterData currentParameterData)
         {
             MeasurePointMap map = new MeasurePointMap(currentParameterData.AssignedStructure, currentParameterData.ParameterTypeId);
-            string section = GetTestResultSectionName((int)currentParameterData.AssignedStructure.CableStructureId);
-            string val_attr_name;
-            string temperatureAttrName;
             do
             {
-                temperatureAttrName = GetTestTemperatureAttrName((int)currentParameterData.ParameterTypeId, map.CurrentPoint.PointIndex);
-                val_attr_name = GetTestValueAttrName((int)currentParameterData.ParameterTypeId, map.CurrentPoint.PointIndex);
-                file.DeleteKey(val_attr_name, section);
-                file.DeleteKey(temperatureAttrName, section);
+                ClearMeasurePointValue(map.CurrentPoint);
             } while (map.TryGetNextPoint());
+        }
+
+        public void ClearMeasurePointValue(MeasurePoint currentPoint)
+        {
+            string section = GetTestResultSectionName((int)currentPoint.StructureId);
+            string val_attr_name;
+            string temperatureAttrName;
+            temperatureAttrName = GetTestTemperatureAttrName((int)currentPoint.ParameterTypeId, currentPoint.PointIndex);
+            val_attr_name = GetTestValueAttrName((int)currentPoint.ParameterTypeId, currentPoint.PointIndex);
+            file.DeleteKey(val_attr_name, section);
+            file.DeleteKey(temperatureAttrName, section);
+        }
+
+        public bool HasMeasurePointValue(MeasurePoint point)
+        {
+            string section = GetTestResultSectionName((int)point.StructureId);
+            string val_attr_name = GetTestValueAttrName((int)point.ParameterTypeId, point.PointIndex);
+            return file.KeyExists(val_attr_name, section);
         }
 
         #endregion

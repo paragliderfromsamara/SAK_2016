@@ -214,7 +214,6 @@
             this.measureResultDataGrid.ShowRowErrors = false;
             this.measureResultDataGrid.Size = new System.Drawing.Size(426, 470);
             this.measureResultDataGrid.TabIndex = 0;
-            this.measureResultDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.measureResultDataGrid_CellClick);
             this.measureResultDataGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.measureResultDataGrid_CellMouseClick);
             this.measureResultDataGrid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             // 

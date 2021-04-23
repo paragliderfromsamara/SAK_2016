@@ -200,6 +200,7 @@ namespace TeraMicroMeasure
 
         }
 
+        ToolStripMenuItem ClearCurrentPointValueToolStripItem;
         private void LoadLeadStatuses()
         {
             LeadStatuses = LeadTestStatus.get_all_as_table();
@@ -207,6 +208,12 @@ namespace TeraMicroMeasure
             ToolStripLabel label = new ToolStripLabel("Статус жилы");
             label.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             label.ForeColor = Color.DarkBlue;
+
+            ClearCurrentPointValueToolStripItem = new ToolStripMenuItem("Сбросить");
+            ClearCurrentPointValueToolStripItem.Click += (s, q) => {
+                ClearValueOfCurrentPoint();
+            };
+            leadStatusContextMenu.Items.Add(ClearCurrentPointValueToolStripItem);
             leadStatusContextMenu.Items.Add(label);
             foreach (LeadTestStatus sts in LeadStatuses.Rows)
             {
@@ -221,7 +228,10 @@ namespace TeraMicroMeasure
                 };
                 leadStatusContextMenu.Items.Add(i);
             }
+
         }
+
+
 
         private void SetLeadStatusForCurrentPointOnTestFile(LeadTestStatus status)
         {
@@ -1203,6 +1213,12 @@ namespace TeraMicroMeasure
             }
         }
 
+        private void ClearValueOfCurrentPoint()
+        {
+            testFile.ClearMeasurePointValue(measurePointMap.CurrentPoint);
+            WriteValueToDataGridViewCell(double.NaN, measurePointMap.CurrentElementIndex, measurePointMap.CurrentElementMeasurePointIndex);
+        }
+
         public void DisconnectDeviceFromServerSide()
         {
             if (InvokeRequired)
@@ -1441,10 +1457,6 @@ namespace TeraMicroMeasure
             RefreshMeasurePointControlButtons();
         }
 
-        private void measureResultDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
 
         void dataGridView1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1653,7 +1665,8 @@ namespace TeraMicroMeasure
                 {
                     Point p = new Point(Cursor.Position.X, Cursor.Position.Y);
                     LeadTestStatus sts = GetLeadStatusByElementNumber(measurePointMap.CurrentPoint.ElementNumber);
-                    foreach(object item in leadStatusContextMenu.Items)
+                    ClearCurrentPointValueToolStripItem.Enabled = false;
+                    foreach (object item in leadStatusContextMenu.Items)
                     {
                         if (typeof(ToolStripMenuItem) != item.GetType()) continue;
                         ToolStripMenuItem titem = item as ToolStripMenuItem;
@@ -1661,8 +1674,10 @@ namespace TeraMicroMeasure
                         {
                             LeadTestStatus s = titem.Tag as LeadTestStatus;
                             titem.Checked = s.StatusId == sts.StatusId;
+                            if (titem.Checked) ClearCurrentPointValueToolStripItem.Enabled |= s.StatusId == LeadTestStatus.Ok;
                         } 
                     }
+                    ClearCurrentPointValueToolStripItem.Visible = testFile.HasMeasurePointValue(measurePointMap.CurrentPoint);
                     leadStatusContextMenu.Show(p);
                 }
             }
