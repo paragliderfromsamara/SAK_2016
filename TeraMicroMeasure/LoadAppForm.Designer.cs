@@ -56,7 +56,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
-            this.BackgroundImage = global::TeraMicroMeasure.Properties.Resources.ЗаставкаПОv12;
+            this.BackgroundImage = global::NormaMeasure.Properties.Resources.ЗаставкаПОv12;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(420, 230);
             this.Controls.Add(this.subTaskLabel);

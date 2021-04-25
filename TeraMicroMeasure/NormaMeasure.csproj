@@ -7,8 +7,8 @@
     <ProjectGuid>{79773892-79C9-42C3-8367-B7B03FB8D1D1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TeraMicroMeasure</RootNamespace>
-    <AssemblyName>TeraMicroMeasure</AssemblyName>
+    <RootNamespace>NormaMeasure</RootNamespace>
+    <AssemblyName>NormaMeasure</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

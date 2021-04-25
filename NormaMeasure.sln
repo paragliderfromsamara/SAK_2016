@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaMeasureControl", "Norm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaMeasureProtocolBuilder", "NormaMeasureProtocolBuilder\NormaMeasureProtocolBuilder.csproj", "{47EFD1B0-1FE0-4A5B-84BF-48AEC15B4B74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeraMicroMeasure", "TeraMicroMeasure\TeraMicroMeasure.csproj", "{79773892-79C9-42C3-8367-B7B03FB8D1D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaMeasure", "TeraMicroMeasure\NormaMeasure.csproj", "{79773892-79C9-42C3-8367-B7B03FB8D1D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormaUIDebugger", "NormaUIDebugger\NormaUIDebugger.csproj", "{29FD61B6-BEA9-430B-B247-5288047C2033}"
 EndProject

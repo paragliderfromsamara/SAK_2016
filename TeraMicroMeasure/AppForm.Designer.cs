@@ -99,7 +99,7 @@
             resources.ApplyResources(this.connectToServerButton, "connectToServerButton");
             this.connectToServerButton.FlatAppearance.BorderSize = 0;
             this.connectToServerButton.ForeColor = System.Drawing.Color.Gainsboro;
-            this.connectToServerButton.Image = global::TeraMicroMeasure.Properties.Resources.disconnect_white;
+            this.connectToServerButton.Image = global::NormaMeasure.Properties.Resources.disconnect_white;
             this.connectToServerButton.Name = "connectToServerButton";
             this.connectToServerButton.UseVisualStyleBackColor = true;
             // 

@@ -19,7 +19,7 @@ using TeraMicroMeasure.Forms;
 using System.Threading;
 using NormaLib.SocketControl;
 using System.Diagnostics;
-using TeraMicroMeasure.Properties;
+using NormaMeasure.Properties;
 using NormaLib.SessionControl;
 using NormaLib.Utils;
 using NormaLib.ProtocolBuilders;
