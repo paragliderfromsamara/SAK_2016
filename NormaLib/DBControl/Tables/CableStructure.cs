@@ -509,7 +509,7 @@ namespace NormaLib.DBControl.Tables
         {
             get
             {
-                return $"{((StructureType == null) ? "0" : StructureType.StructureLeadsAmount.ToString())}x{DisplayedAmount}x{LeadDiameter}";
+                return $"{((StructureType == null) ? "0" : StructureType.StructureLeadsAmount.ToString())}×{DisplayedAmount}×{LeadDiameter}";
             }
         }
         public CableStructureType StructureType
