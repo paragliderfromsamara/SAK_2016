@@ -1032,9 +1032,16 @@ namespace NormaLib.ProtocolBuilders.MSWord
                     colsCount = 1;
                 }
             }
+            if (structure.TestedParametersIds.Contains(MeasuredParameterType.Risol2))
+            {
+                tablesForAdd.AddRange(BuildTimeRisolDescription(structure));
+            }
             return tablesForAdd;
 
         }
+
+
+
 
         private IEnumerable<OpenXmlElement> BuildPrimaryParametersTable_WithOpenXML(MeasuredParameterType[] measuredParameterTypes, TestedCableStructure structure, int colsCountPerSubTable)
         {
@@ -1159,6 +1166,132 @@ namespace NormaLib.ProtocolBuilders.MSWord
                 rowElements.Add(row);
             }
             return rowElements;
+        }
+
+        private IEnumerable<OpenXmlElement> BuildTimeRisolDescription(TestedCableStructure structure)
+        {
+            List<OpenXmlElement> els = new List<OpenXmlElement>();
+            TestedStructureMeasuredParameterData[] risolData = (TestedStructureMeasuredParameterData[])structure.MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {MeasuredParameterType.Risol1}");
+
+            TestedStructureMeasuredParameterData pData = risolData[0];
+            Paragraph paragraph302 = new Paragraph() { RsidParagraphMarkRevision = "00586296", RsidParagraphAddition = "00586296", RsidParagraphProperties = "00586296", RsidRunAdditionDefault = "00586296" };
+
+            ParagraphProperties paragraphProperties294 = new ParagraphProperties();
+            ParagraphStyleId paragraphStyleId292 = new ParagraphStyleId() { Val = "a4" };
+
+            ParagraphMarkRunProperties paragraphMarkRunProperties292 = new ParagraphMarkRunProperties();
+            FontSizeComplexScript fontSizeComplexScript489 = new FontSizeComplexScript() { Val = "18" };
+
+            paragraphMarkRunProperties292.Append(fontSizeComplexScript489);
+
+            paragraphProperties294.Append(paragraphStyleId292);
+            paragraphProperties294.Append(paragraphMarkRunProperties292);
+
+            Run run209 = new Run() { RsidRunProperties = "00586296" };
+
+            RunProperties runProperties200 = new RunProperties();
+            FontSizeComplexScript fontSizeComplexScript490 = new FontSizeComplexScript() { Val = "18" };
+            VerticalTextAlignment verticalTextAlignment1 = new VerticalTextAlignment() { Val = VerticalPositionValues.Superscript };
+
+            runProperties200.Append(fontSizeComplexScript490);
+            runProperties200.Append(verticalTextAlignment1);
+            Text text209 = new Text();
+            text209.Text = "*";
+
+            run209.Append(runProperties200);
+            run209.Append(text209);
+
+            Run run210 = new Run() { RsidRunProperties = "00586296" };
+
+            RunProperties runProperties201 = new RunProperties();
+            FontSizeComplexScript fontSizeComplexScript491 = new FontSizeComplexScript() { Val = "18" };
+            Languages languages215 = new Languages() { Val = "en-US" };
+
+            runProperties201.Append(fontSizeComplexScript491);
+            runProperties201.Append(languages215);
+            Text text210 = new Text();
+            text210.Text = "T";
+
+            run210.Append(runProperties201);
+            run210.Append(text210);
+
+            Run run211 = new Run() { RsidRunProperties = "00586296" };
+
+            RunProperties runProperties202 = new RunProperties();
+            FontSizeComplexScript fontSizeComplexScript492 = new FontSizeComplexScript() { Val = "18" };
+            VerticalTextAlignment verticalTextAlignment2 = new VerticalTextAlignment() { Val = VerticalPositionValues.Subscript };
+
+            runProperties202.Append(fontSizeComplexScript492);
+            runProperties202.Append(verticalTextAlignment2);
+            Text text211 = new Text();
+            text211.Text = "из";
+
+            run211.Append(runProperties202);
+            run211.Append(text211);
+
+            Run run212 = new Run() { RsidRunProperties = "00586296" };
+
+            RunProperties runProperties203 = new RunProperties();
+            FontSizeComplexScript fontSizeComplexScript493 = new FontSizeComplexScript() { Val = "18" };
+
+            runProperties203.Append(fontSizeComplexScript493);
+            Text text212 = new Text() { Space = SpaceProcessingModeValues.Preserve };
+            text212.Text = " – время достижения ";
+
+            run212.Append(runProperties203);
+            run212.Append(text212);
+
+            Run run213 = new Run() { RsidRunProperties = "00586296" };
+
+            RunProperties runProperties204 = new RunProperties();
+            FontSizeComplexScript fontSizeComplexScript494 = new FontSizeComplexScript() { Val = "18" };
+            Languages languages216 = new Languages() { Val = "en-US" };
+
+            runProperties204.Append(fontSizeComplexScript494);
+            runProperties204.Append(languages216);
+            Text text213 = new Text();
+            text213.Text = "R";
+
+            run213.Append(runProperties204);
+            run213.Append(text213);
+
+            Run run214 = new Run() { RsidRunProperties = "00586296" };
+
+            RunProperties runProperties205 = new RunProperties();
+            FontSizeComplexScript fontSizeComplexScript495 = new FontSizeComplexScript() { Val = "18" };
+            VerticalTextAlignment verticalTextAlignment3 = new VerticalTextAlignment() { Val = VerticalPositionValues.Subscript };
+
+            runProperties205.Append(fontSizeComplexScript495);
+            runProperties205.Append(verticalTextAlignment3);
+            Text text214 = new Text();
+            text214.Text = "из";
+
+            run214.Append(runProperties205);
+            run214.Append(text214);
+
+            Run run215 = new Run() { RsidRunProperties = "00586296" };
+
+            RunProperties runProperties206 = new RunProperties();
+            FontSizeComplexScript fontSizeComplexScript496 = new FontSizeComplexScript() { Val = "18" };
+
+            runProperties206.Append(fontSizeComplexScript496);
+            Text text215 = new Text() { Space = SpaceProcessingModeValues.Preserve };
+            text215.Text = $" свыше {pData.MinValue} {pData.ResultMeasure}";
+
+            run215.Append(runProperties206);
+            run215.Append(text215);
+
+            paragraph302.Append(paragraphProperties294);
+            paragraph302.Append(run209);
+            paragraph302.Append(run210);
+            paragraph302.Append(run211);
+            paragraph302.Append(run212);
+            paragraph302.Append(run213);
+            paragraph302.Append(run214);
+            paragraph302.Append(run215);
+
+            els.Add(paragraph302);
+            return els;
         }
 
         private Run GetTestResult(int element_number, int measure_number, int parameter_type_id, TestedCableStructure structure)
