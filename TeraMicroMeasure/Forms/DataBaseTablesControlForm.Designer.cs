@@ -37,43 +37,43 @@
             // 
             // settingsTab
             // 
-            this.settingsTab.Controls.Add(this.usersTabPage);
-            this.settingsTab.Controls.Add(this.barabanTypeTabPage);
-            this.settingsTab.Controls.Add(this.cablesTabPage);
             this.settingsTab.Controls.Add(this.resultsTabPage);
+            this.settingsTab.Controls.Add(this.cablesTabPage);
+            this.settingsTab.Controls.Add(this.barabanTypeTabPage);
+            this.settingsTab.Controls.Add(this.usersTabPage);
             // 
             // usersTabPage
             // 
-            this.usersTabPage.Location = new System.Drawing.Point(4, 39);
+            this.usersTabPage.Location = new System.Drawing.Point(4, 53);
             this.usersTabPage.Name = "usersTabPage";
-            this.usersTabPage.Size = new System.Drawing.Size(1021, 503);
+            this.usersTabPage.Size = new System.Drawing.Size(1021, 489);
             this.usersTabPage.TabIndex = 0;
             this.usersTabPage.Text = "Пользователи";
             this.usersTabPage.UseVisualStyleBackColor = true;
             // 
             // barabanTypeTabPage
             // 
-            this.barabanTypeTabPage.Location = new System.Drawing.Point(4, 39);
+            this.barabanTypeTabPage.Location = new System.Drawing.Point(4, 53);
             this.barabanTypeTabPage.Name = "barabanTypeTabPage";
-            this.barabanTypeTabPage.Size = new System.Drawing.Size(1021, 503);
+            this.barabanTypeTabPage.Size = new System.Drawing.Size(1021, 489);
             this.barabanTypeTabPage.TabIndex = 1;
             this.barabanTypeTabPage.Text = "Типы барабанов";
             this.barabanTypeTabPage.UseVisualStyleBackColor = true;
             // 
             // cablesTabPage
             // 
-            this.cablesTabPage.Location = new System.Drawing.Point(4, 39);
+            this.cablesTabPage.Location = new System.Drawing.Point(4, 53);
             this.cablesTabPage.Name = "cablesTabPage";
-            this.cablesTabPage.Size = new System.Drawing.Size(1021, 503);
+            this.cablesTabPage.Size = new System.Drawing.Size(1021, 489);
             this.cablesTabPage.TabIndex = 2;
             this.cablesTabPage.Text = "Кабели";
             this.cablesTabPage.UseVisualStyleBackColor = true;
             // 
             // resultsTabPage
             // 
-            this.resultsTabPage.Location = new System.Drawing.Point(4, 39);
+            this.resultsTabPage.Location = new System.Drawing.Point(4, 53);
             this.resultsTabPage.Name = "resultsTabPage";
-            this.resultsTabPage.Size = new System.Drawing.Size(1021, 503);
+            this.resultsTabPage.Size = new System.Drawing.Size(1021, 489);
             this.resultsTabPage.TabIndex = 3;
             this.resultsTabPage.Text = "Результаты испытаний";
             this.resultsTabPage.UseVisualStyleBackColor = true;

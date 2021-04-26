@@ -30,13 +30,13 @@ namespace TeraMicroMeasure.Forms
             switch(idx)
             {
                 case 0:
-                    return new UsersTableControlForm();//UsersList();
-                case 1:
-                    return new BarabanTypesTableControlForm();//BarabanTypesControlForm();
-                case 2:
-                    return new CablesTableControlForm();//new CablesListForm(CABLE_FORM_TYPE.TERA_MICRO);
-                case 3:
                     return new CableTestListControlForm();
+                case 1:
+                    return new CablesTableControlForm();//new CablesListForm(CABLE_FORM_TYPE.TERA_MICRO);
+                case 2:
+                    return new BarabanTypesTableControlForm();//BarabanTypesControlForm();
+                case 3:
+                    return new UsersTableControlForm();//UsersList();
                 default:
                     return new NormaLib.UI.ChildForms.BlankForm();
             }

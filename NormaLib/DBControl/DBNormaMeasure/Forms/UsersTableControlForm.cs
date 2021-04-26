@@ -121,8 +121,8 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             List<DataGridViewColumn> columns = base.BuildColumnsForDataGrid();
             columns.Add(BuildDataGridTextColumn("user_id", "ID", true));
-            columns.Add(BuildDataGridTextColumn("first_name", "Имя", true));
             columns.Add(BuildDataGridTextColumn("last_name", "Фамилия", true));
+            columns.Add(BuildDataGridTextColumn("first_name", "Имя", true));
             columns.Add(BuildDataGridTextColumn("third_name", "Отчество", true));
             columns.Add(BuildDataGridTextColumn("employee_number", "Табельный номер", true));
             columns.Add(BuildDataGridTextColumn("user_role_name", "Должность", true));
