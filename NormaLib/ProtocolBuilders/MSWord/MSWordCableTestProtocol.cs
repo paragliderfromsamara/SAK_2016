@@ -42,6 +42,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
             foreach (TestedCableStructure s in cableTest.TestedCable.CableStructures.Rows)
             {
                 //body.Append(new Paragraph());
+                if (cableTest.TestedCable.CableStructures.Rows.Count > 1)body.Append(GenerateStructureTitleParagraph(s));
                 body.Append(BuildParagraph(JustificationValues.Left));
                 body.Append(BuildStructureData(s));
             }
@@ -1693,7 +1694,56 @@ namespace NormaLib.ProtocolBuilders.MSWord
             return ParameterNameText(pData.ParameterTypeId, measure, pData.ParameterName);
         }
 
+        // Creates an Paragraph instance and adds its children.
+        public IEnumerable<OpenXmlElement> GenerateStructureTitleParagraph(TestedCableStructure structure)
+        {
+            Paragraph whiteSpace = BuildParagraph();
+            Paragraph paragraph1 = new Paragraph() { RsidParagraphAddition = "007C2323", RsidParagraphProperties = "004B27DB", RsidRunAdditionDefault = "007C2323" };
 
+            ParagraphProperties paragraphProperties1 = new ParagraphProperties();
+
+            ParagraphMarkRunProperties paragraphMarkRunProperties1 = new ParagraphMarkRunProperties();
+            Bold bold1 = new Bold();
+            Italic italic1 = new Italic();
+
+            paragraphMarkRunProperties1.Append(bold1);
+            paragraphMarkRunProperties1.Append(italic1);
+
+            paragraphProperties1.Append(paragraphMarkRunProperties1);
+            BookmarkStart bookmarkStart1 = new BookmarkStart() { Name = "_GoBack", Id = "0" };
+
+            Run run1 = new Run() { RsidRunProperties = "0079375B" };
+
+            RunProperties runProperties1 = new RunProperties();
+            Bold bold2 = new Bold();
+
+            runProperties1.Append(bold2);
+            Text text1 = new Text() { Space = SpaceProcessingModeValues.Preserve };
+            text1.Text = "Результаты по структуре ";
+
+            run1.Append(runProperties1);
+            run1.Append(text1);
+
+            Run run2 = new Run() { RsidRunProperties = "0079375B" };
+
+            RunProperties runProperties2 = new RunProperties();
+            Bold bold3 = new Bold();
+            Italic italic2 = new Italic();
+
+            runProperties2.Append(bold3);
+            runProperties2.Append(italic2);
+            Text text2 = new Text();
+            text2.Text = structure.StructureTitle;
+
+            run2.Append(runProperties2);
+            run2.Append(text2);
+
+            paragraph1.Append(paragraphProperties1);
+            paragraph1.Append(bookmarkStart1);
+            paragraph1.Append(run1);
+            paragraph1.Append(run2);
+            return new List<OpenXmlElement>() { whiteSpace, paragraph1 };
+        }
 
     }
 
