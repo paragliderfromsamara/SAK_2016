@@ -789,8 +789,9 @@ namespace TeraMicroMeasure
         private void ResetMeasureField()
         {
             deviceInfo.Text = "Измеритель не выбран";
-            resultField.Text = "0.0";
+            resultFieldLabel.Text = "0.0";
             measureTimerLabel.Text = "";
+            SetResultFieldStyle(ResultFieldStyle.SIMPLE_RESULT);
         }
 
         private void CaptureSelectedDevice()
@@ -1128,7 +1129,7 @@ namespace TeraMicroMeasure
             deviceInfo.Text = $"{xml_device.TypeNameFull} {xml_device.Serial}\n{xml_device.WorkStatusText}";
             if (xml_device.WorkStatusId == (uint)DeviceWorkStatus.MEASURE)
             {
-                resultField.Text = GetResultFieldText(xml_device);
+                resultFieldLabel.Text = GetResultFieldText(xml_device);
             }
         }
 
@@ -1138,7 +1139,6 @@ namespace TeraMicroMeasure
             {
                 //return $"{xml_device.RawResult}";
                 MeasureResultConverter c = new MeasureResultConverter(xml_device.RawResult, CurrentParameterData, (Single)cableLengthNumericUpDown.Value, MaterialCoeff);
-
                 return ProcessResult(c);//return $"{Math.Round(xml_device.ConvertedResult, 3, MidpointRounding.AwayFromZero)}";
             }else if (xml_device.MeasureStatusId == 0 || xml_device.MeasureStatusId == (uint)DeviceMeasureStatus.IN_WORK)
             {
@@ -1146,6 +1146,7 @@ namespace TeraMicroMeasure
             }
             else
             {
+                SetResultFieldStyle(ResultFieldStyle.DEVICE_ERROR_MESSAGE);
                 return xml_device.MeasureStatusText;
             }
         }
@@ -1156,12 +1157,14 @@ namespace TeraMicroMeasure
             double valueToProtocol = c.RawValue;
             double valueToTable = c.ConvertedValueRounded;
             string stringVal = c.ConvertedValueLabel;
+            NormDeterminant d;
+            MeasureResultConverter cr;
             switch (measureState.MeasureTypeId)
             {
                 case MeasuredParameterType.Risol2:
                     CableStructureMeasuredParameterData RisolNormaValue = CurrentParameterData.GetRisolNormaValue();
-                    MeasureResultConverter cr = new MeasureResultConverter(c.RawValue, RisolNormaValue, (float)cableLengthNumericUpDown.Value, MaterialCoeff);
-                    NormDeterminant d = new NormDeterminant(RisolNormaValue, cr.ConvertedValueRounded);
+                    cr = new MeasureResultConverter(c.RawValue, RisolNormaValue, (float)cableLengthNumericUpDown.Value, MaterialCoeff);
+                    d = new NormDeterminant(RisolNormaValue, cr.ConvertedValueRounded);
                     stringVal = cr.ConvertedValueLabel;
                     if (addValueToProtocol = d.IsOnNorma || measureTimer.TimeInSeconds > CurrentParameterData.MaxValue)
                     {
@@ -1169,10 +1172,10 @@ namespace TeraMicroMeasure
                         if (measureStatus == MeasureStatus.STARTED) startMeasureButton.PerformClick();
                     }
                     break;
-                case MeasuredParameterType.Risol1:
-                    
-                    break;
-                case MeasuredParameterType.Rleads:
+                default:
+                    cr = new MeasureResultConverter(c.RawValue, CurrentParameterData, (float)cableLengthNumericUpDown.Value, MaterialCoeff);
+                    d = new NormDeterminant(CurrentParameterData, cr.ConvertedValueRounded);
+                    SetResultFieldStyle((d.IsOnNorma ? ResultFieldStyle.IN_NORMA_RESULT : ResultFieldStyle.OUT_NORMA_RESULT));
                     break;
             }
             if (addValueToProtocol)
@@ -1554,7 +1557,7 @@ namespace TeraMicroMeasure
             measureState.MeasureTypeId = parameterTypeId;
             RefreshMeasureParameterDataTabs();
             MeasureStateOnFormChanged();
-            normaLabel.Text = string.Empty;
+            //normaLabel.Text = string.Empty;
         }
 
         private void EnableRisolSelector()
@@ -1690,6 +1693,29 @@ namespace TeraMicroMeasure
             testFile.ClearParameterDataResults(CurrentParameterData);
             RefreshMeasureControl();
         }
+
+        private void SetResultFieldStyle(ResultFieldStyle style)
+        {
+            switch(style)
+            {
+                case ResultFieldStyle.SIMPLE_RESULT:
+                    resultFieldLabel.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+                    resultFieldLabel.ForeColor = Color.White;
+                    break;
+                case ResultFieldStyle.IN_NORMA_RESULT:
+                    resultFieldLabel.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+                    resultFieldLabel.ForeColor = Color.FromArgb(142, 255, 142);
+                    break;
+                case ResultFieldStyle.OUT_NORMA_RESULT:
+                    resultFieldLabel.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+                    resultFieldLabel.ForeColor = Color.FromArgb(255, 142, 142);
+                    break;
+                case ResultFieldStyle.DEVICE_ERROR_MESSAGE:
+                    resultFieldLabel.Font = new System.Drawing.Font("Tahoma", 18.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+                    resultFieldLabel.ForeColor = Color.FromArgb(255, 142, 142);
+                    break;
+            }
+        }
     }
 
 
@@ -1706,5 +1732,13 @@ namespace TeraMicroMeasure
         WILL_START,
         STARTED,
         WILL_STOPPED
+    }
+
+    enum ResultFieldStyle
+    {
+        SIMPLE_RESULT, 
+        IN_NORMA_RESULT,
+        OUT_NORMA_RESULT,
+        DEVICE_ERROR_MESSAGE
     }
 }

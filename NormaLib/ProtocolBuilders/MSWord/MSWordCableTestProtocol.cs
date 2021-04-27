@@ -95,7 +95,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
             List<OpenXmlElement> els = new List<OpenXmlElement>();
             Paragraph p = BuildParagraph(JustificationValues.Left);
             p.Append(AddRun("Кабель "));
-            p.Append(AddRun(cableTest.TestedCable.FullName, MSWordStringTypes.Typical, false, true));
+            p.Append(AddRun(cableTest.TestedCable.FullNameForProtocol, MSWordStringTypes.Typical, false, true));
             p.Append(AddRun(" признан "));
             p.Append(AddRun(cableTest.TestedCable.IsOnNorma ? "годным" : "не годным", MSWordStringTypes.Typical, true));
             p.Append(AddRun(" в соответствии с "));
@@ -130,7 +130,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
             props.Append(w);
             GridSpan gridSpan7 = new GridSpan() { Val = 3 };
             props.Append(gridSpan7);
-            p.Append(AddRun($"Марка кабеля: "), AddRun($"{ cableTest.TestedCable.FullName}", MSWordStringTypes.Typical, true, true));
+            p.Append(AddRun($"Марка кабеля: "), AddRun($"{ cableTest.TestedCable.FullNameForProtocol}", MSWordStringTypes.Typical, true, true));
             TableCell cableMarkCell = BuildCell(p);
             cableMarkCell.Append(props);
             cableMarkRow.Append(cableMarkCell);

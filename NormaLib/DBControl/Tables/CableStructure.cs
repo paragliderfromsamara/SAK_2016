@@ -505,6 +505,8 @@ namespace NormaLib.DBControl.Tables
             
         }
 
+        public string StructureTitle_CP1251 => StructureTitle.Replace('×', 'x');
+
         public string StructureTitle
         {
             get
@@ -729,64 +731,7 @@ namespace NormaLib.DBControl.Tables
                 return testedElements;
             }
         }
-        /*
-        private Dictionary<uint, Dictionary<int, double>> ConvertedResultsDictionary = new Dictionary<uint, Dictionary<int, double>>();
 
-
-
-        public Dictionary<int, double> GetConvertedResultsByMeasureParameterData(TestedStructureMeasuredParameterData parameter_data)
-        {
-            if (ConvertedResultsDictionary.ContainsKey(parameter_data.MeasuredParameterDataId)) return ConvertedResultsDictionary[parameter_data.MeasuredParameterDataId];
-            else
-            {
-                Dictionary<int, double> vals = new Dictionary<int, double>();
-                MeasurePointMap map = new MeasurePointMap(this, parameter_data.ParameterTypeId);
-                string NotAffectedElements = AffectedElements.Count > 0 ? $" AND {CableTestResult.StructElementNumber_ColumnName} NOT IN ({string.Join(",", AffectedElements.Keys)})" : string.Empty;
-                CableTestResult[] results = (CableTestResult[])TestResults.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {parameter_data.ParameterTypeId}{NotAffectedElements}");
-                foreach(CableTestResult r in results)
-                {
-                    float cableLength = (OwnCable as TestedCable).CableTest.CableLength;
-                    MeasureResultConverter converter = new MeasureResultConverter((double)r.Result, parameter_data, cableLength);
-                    int point = map.GetPointIndex(r.ElementNumber, r.MeasureNumber);
-                    vals.Add(point, converter.ConvertedValueRounded);
-                }
-                ConvertedResultsDictionary.Add(parameter_data.MeasuredParameterDataId, vals);
-                return vals;
-            }
-        }
-
-        public double GetValueByParameterData(TestedStructureMeasuredParameterData parameter_data, uint element_number, uint measure_number)
-        {
-            Dictionary<int, double> results = GetConvertedResultsByMeasureParameterData(parameter_data);
-            MeasurePointMap map = new MeasurePointMap(this, parameter_data.ParameterTypeId);
-            int point = map.GetPointIndex(element_number, measure_number);
-            if (results.ContainsKey(point)) return results[point];
-            else return double.NaN;
-        }
-
-        public double MaxValueOfParameterData(TestedStructureMeasuredParameterData parameter_data)
-        {
-            Dictionary<int, double> results = GetConvertedResultsByMeasureParameterData(parameter_data);
-            return results.Values.Max();
-        }
-
-        public double MinValueOfParameterData(TestedStructureMeasuredParameterData parameter_data)
-        {
-            Dictionary<int, double> results = GetConvertedResultsByMeasureParameterData(parameter_data);
-            return results.Values.Min();
-        }
-
-        public double AverageValueOfParameterData(TestedStructureMeasuredParameterData parameter_data)
-        {
-            Dictionary<int, double> results = GetConvertedResultsByMeasureParameterData(parameter_data);
-            return results.Values.Average();
-        }
-
-
-
-
-
-        */
         public TestedStructureMeasuredParameterData[] GetMeasureParameterDatasByParameterType(uint parameter_type_id)
         {
             return (TestedStructureMeasuredParameterData[])MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {parameter_type_id}");

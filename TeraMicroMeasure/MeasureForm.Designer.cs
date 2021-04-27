@@ -51,7 +51,7 @@
             this.measureResultPanel = new System.Windows.Forms.Panel();
             this.normaLabel = new System.Windows.Forms.Label();
             this.measureTimerLabel = new System.Windows.Forms.Label();
-            this.resultField = new System.Windows.Forms.Label();
+            this.resultFieldLabel = new System.Windows.Forms.Label();
             this.deviceInfo = new System.Windows.Forms.Label();
             this.labelPointNumber = new System.Windows.Forms.Label();
             this.voltagesGroupBox = new System.Windows.Forms.GroupBox();
@@ -371,7 +371,7 @@
             this.measureResultPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(104)))), ((int)(((byte)(169)))));
             this.measureResultPanel.Controls.Add(this.normaLabel);
             this.measureResultPanel.Controls.Add(this.measureTimerLabel);
-            this.measureResultPanel.Controls.Add(this.resultField);
+            this.measureResultPanel.Controls.Add(this.resultFieldLabel);
             this.measureResultPanel.Controls.Add(this.deviceInfo);
             this.measureResultPanel.Controls.Add(this.labelPointNumber);
             this.measureResultPanel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -401,15 +401,16 @@
             this.measureTimerLabel.TabIndex = 21;
             this.measureTimerLabel.Text = "00:00";
             // 
-            // resultField
+            // resultFieldLabel
             // 
-            this.resultField.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.resultField.Location = new System.Drawing.Point(12, 54);
-            this.resultField.Name = "resultField";
-            this.resultField.Size = new System.Drawing.Size(794, 48);
-            this.resultField.TabIndex = 1;
-            this.resultField.Text = "106.56 ТОм⋅м";
-            this.resultField.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.resultFieldLabel.BackColor = System.Drawing.Color.Transparent;
+            this.resultFieldLabel.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.resultFieldLabel.Location = new System.Drawing.Point(12, 49);
+            this.resultFieldLabel.Name = "resultFieldLabel";
+            this.resultFieldLabel.Size = new System.Drawing.Size(572, 46);
+            this.resultFieldLabel.TabIndex = 1;
+            this.resultFieldLabel.Text = "106.56 ТОм⋅м";
+            this.resultFieldLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // deviceInfo
             // 
@@ -985,7 +986,7 @@
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Panel measureResultPanel;
-        private System.Windows.Forms.Label resultField;
+        private System.Windows.Forms.Label resultFieldLabel;
         private System.Windows.Forms.Label deviceInfo;
         private System.Windows.Forms.Label labelPointNumber;
         private System.Windows.Forms.GroupBox voltagesGroupBox;

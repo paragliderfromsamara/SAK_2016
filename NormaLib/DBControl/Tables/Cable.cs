@@ -316,11 +316,12 @@ namespace NormaLib.DBControl.Tables
         {
             get
             {
+
                 return  this[StructName_ColumnName].ToString();
             }
             set
             {
-                this[StructName_ColumnName] = value;
+                this[StructName_ColumnName] = value.Replace('×', 'x');
             }
         }
 
@@ -482,6 +483,10 @@ namespace NormaLib.DBControl.Tables
         public const string FullCableName_ColumnName = "full_cable_name";
 
         #endregion
+
+        public string StructName_ASCII => StructName.Replace('x', '×');
+
+        public string FullNameForProtocol => $"{Name} {StructName_ASCII}";
 
         /// <summary>
         /// Выдает нормативный документ по данному кабелю

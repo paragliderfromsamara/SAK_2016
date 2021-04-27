@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataPanel = new System.Windows.Forms.Panel();
-            this.emptyEntitiesList = new System.Windows.Forms.Label();
             this.dgEntities = new System.Windows.Forms.DataGridView();
             this.contextTableMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEntityTooStripButton = new System.Windows.Forms.ToolStripMenuItem();
             this.removeEntityToolStripItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.emptyEntitiesList = new System.Windows.Forms.Label();
             this.btnNewRecordFormInit = new System.Windows.Forms.Button();
             this.loadStatusLabel = new System.Windows.Forms.Label();
             this.loadStatusLabelTimer = new System.Windows.Forms.Timer(this.components);
@@ -60,16 +60,6 @@
             this.dataPanel.Size = new System.Drawing.Size(2042, 1279);
             this.dataPanel.TabIndex = 0;
             // 
-            // emptyEntitiesList
-            // 
-            this.emptyEntitiesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.emptyEntitiesList.Location = new System.Drawing.Point(0, 0);
-            this.emptyEntitiesList.Name = "emptyEntitiesList";
-            this.emptyEntitiesList.Size = new System.Drawing.Size(2042, 1279);
-            this.emptyEntitiesList.TabIndex = 1;
-            this.emptyEntitiesList.Text = "Список пуст";
-            this.emptyEntitiesList.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // dgEntities
             // 
             this.dgEntities.AllowUserToAddRows = false;
@@ -83,16 +73,16 @@
             this.dgEntities.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgEntities.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.dgEntities.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle3.NullValue = "-";
-            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(3);
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgEntities.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle1.NullValue = "-";
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(3);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgEntities.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgEntities.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgEntities.ContextMenuStrip = this.contextTableMenu;
             this.dgEntities.EnableHeadersVisualStyles = false;
@@ -102,15 +92,15 @@
             this.dgEntities.ReadOnly = true;
             this.dgEntities.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgEntities.RowHeadersVisible = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle4.NullValue = "-";
-            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(108)))), ((int)(((byte)(205)))));
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgEntities.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle2.NullValue = "-";
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(108)))), ((int)(((byte)(205)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgEntities.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dgEntities.RowTemplate.Height = 30;
             this.dgEntities.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgEntities.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -144,6 +134,16 @@
             this.removeEntityToolStripItem.Size = new System.Drawing.Size(134, 22);
             this.removeEntityToolStripItem.Text = "Удалить";
             this.removeEntityToolStripItem.Click += new System.EventHandler(this.removeEntityToolStripItem_Click);
+            // 
+            // emptyEntitiesList
+            // 
+            this.emptyEntitiesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.emptyEntitiesList.Location = new System.Drawing.Point(0, 0);
+            this.emptyEntitiesList.Name = "emptyEntitiesList";
+            this.emptyEntitiesList.Size = new System.Drawing.Size(2042, 1279);
+            this.emptyEntitiesList.TabIndex = 1;
+            this.emptyEntitiesList.Text = "Список пуст";
+            this.emptyEntitiesList.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnNewRecordFormInit
             // 

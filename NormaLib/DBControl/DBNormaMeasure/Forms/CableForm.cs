@@ -96,7 +96,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
         {
             this.Text = (cable.IsDraft) ? "Новый кабель" : cable.FullName;
             CableMark_input.Text = cable.Name;
-            CableStructures_input.Text = cable.StructName;
+            CableStructures_input.Text = cable.StructName_ASCII;
             BuildLength_input.Value = (decimal)cable.BuildLength;
             linearMass_input.Value = (decimal)cable.LinearMass;
             cbVoltageOfCoverTest.Text = cable.UCover.ToString();

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cableFormDataSet = new System.Data.DataSet();
             this.CableMark_input = new System.Windows.Forms.ComboBox();
             this.CableStructures_input = new System.Windows.Forms.TextBox();
@@ -355,7 +355,7 @@
             this.panelControlButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelControlButtons.Controls.Add(this.closeNoSaveButton);
             this.panelControlButtons.Controls.Add(this.saveCableButton);
-            this.panelControlButtons.Location = new System.Drawing.Point(22, 906);
+            this.panelControlButtons.Location = new System.Drawing.Point(22, 944);
             this.panelControlButtons.Name = "panelControlButtons";
             this.panelControlButtons.Size = new System.Drawing.Size(320, 45);
             this.panelControlButtons.TabIndex = 32;
@@ -396,7 +396,7 @@
             this.newTabPage.Location = new System.Drawing.Point(4, 39);
             this.newTabPage.Name = "newTabPage";
             this.newTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.newTabPage.Size = new System.Drawing.Size(987, 583);
+            this.newTabPage.Size = new System.Drawing.Size(986, 621);
             this.newTabPage.TabIndex = 0;
             this.newTabPage.Text = "Новая структура";
             this.newTabPage.UseVisualStyleBackColor = true;
@@ -418,7 +418,7 @@
             this.structureDataContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.structureDataContainer.Location = new System.Drawing.Point(3, 3);
             this.structureDataContainer.Name = "structureDataContainer";
-            this.structureDataContainer.Size = new System.Drawing.Size(981, 577);
+            this.structureDataContainer.Size = new System.Drawing.Size(980, 615);
             this.structureDataContainer.TabIndex = 0;
             // 
             // leftStructurePanel
@@ -431,7 +431,7 @@
             this.leftStructurePanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.leftStructurePanel.Location = new System.Drawing.Point(0, 0);
             this.leftStructurePanel.Name = "leftStructurePanel";
-            this.leftStructurePanel.Size = new System.Drawing.Size(252, 577);
+            this.leftStructurePanel.Size = new System.Drawing.Size(252, 615);
             this.leftStructurePanel.TabIndex = 27;
             // 
             // cbGroupCapacity
@@ -763,7 +763,7 @@
             this.panel1.Controls.Add(this.dgMeasuredParameters);
             this.panel1.Location = new System.Drawing.Point(267, 95);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(696, 431);
+            this.panel1.Size = new System.Drawing.Size(695, 457);
             this.panel1.TabIndex = 20;
             // 
             // dgMeasuredParameters
@@ -777,16 +777,16 @@
             this.dgMeasuredParameters.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgMeasuredParameters.CausesValidation = false;
             this.dgMeasuredParameters.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle4.NullValue = "-";
-            dataGridViewCellStyle4.Padding = new System.Windows.Forms.Padding(3);
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgMeasuredParameters.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle1.NullValue = "-";
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(3);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgMeasuredParameters.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgMeasuredParameters.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgMeasuredParameters.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.parameter_type_name_column,
@@ -813,17 +813,17 @@
             this.dgMeasuredParameters.Name = "dgMeasuredParameters";
             this.dgMeasuredParameters.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dgMeasuredParameters.RowHeadersVisible = false;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle6.NullValue = "-";
-            dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(108)))), ((int)(((byte)(205)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Gainsboro;
-            this.dgMeasuredParameters.RowsDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.NullValue = "-";
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(108)))), ((int)(((byte)(205)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Gainsboro;
+            this.dgMeasuredParameters.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.dgMeasuredParameters.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgMeasuredParameters.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgMeasuredParameters.Size = new System.Drawing.Size(696, 431);
+            this.dgMeasuredParameters.Size = new System.Drawing.Size(695, 457);
             this.dgMeasuredParameters.TabIndex = 0;
             this.dgMeasuredParameters.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgMeasuredParameters_CellMouseClick);
             this.dgMeasuredParameters.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgMeasuredParameters_ColumnHeaderMouseClick);
@@ -835,8 +835,8 @@
             // 
             this.parameter_type_name_column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.parameter_type_name_column.DataPropertyName = "parameter_name";
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Transparent;
-            this.parameter_type_name_column.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Transparent;
+            this.parameter_type_name_column.DefaultCellStyle = dataGridViewCellStyle2;
             this.parameter_type_name_column.FillWeight = 91.57822F;
             this.parameter_type_name_column.HeaderText = "+";
             this.parameter_type_name_column.MinimumWidth = 40;
@@ -1037,7 +1037,7 @@
             this.btnRemoveCurrentStructure.FlatAppearance.BorderSize = 0;
             this.btnRemoveCurrentStructure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemoveCurrentStructure.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.btnRemoveCurrentStructure.Location = new System.Drawing.Point(1438, 532);
+            this.btnRemoveCurrentStructure.Location = new System.Drawing.Point(765, 564);
             this.btnRemoveCurrentStructure.Name = "btnRemoveCurrentStructure";
             this.btnRemoveCurrentStructure.Size = new System.Drawing.Size(197, 40);
             this.btnRemoveCurrentStructure.TabIndex = 2;
@@ -1056,7 +1056,7 @@
             this.cableStructuresTabs.Name = "cableStructuresTabs";
             this.cableStructuresTabs.Padding = new System.Drawing.Point(25, 3);
             this.cableStructuresTabs.SelectedIndex = 0;
-            this.cableStructuresTabs.Size = new System.Drawing.Size(995, 626);
+            this.cableStructuresTabs.Size = new System.Drawing.Size(994, 664);
             this.cableStructuresTabs.TabIndex = 33;
             this.cableStructuresTabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             this.cableStructuresTabs.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Deselecting);
@@ -1197,7 +1197,7 @@
             this.AcceptButton = this.saveCableButton;
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.closeNoSaveButton;
-            this.ClientSize = new System.Drawing.Size(1042, 962);
+            this.ClientSize = new System.Drawing.Size(1041, 1000);
             this.Controls.Add(this.cableDataPanel);
             this.Controls.Add(this.cableStructuresTabs);
             this.Controls.Add(this.panelControlButtons);
