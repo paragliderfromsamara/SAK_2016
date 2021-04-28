@@ -95,6 +95,7 @@
             this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
             this.leadStatusContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cableStatusLable = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -369,6 +370,7 @@
             // measureResultPanel
             // 
             this.measureResultPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(104)))), ((int)(((byte)(169)))));
+            this.measureResultPanel.Controls.Add(this.cableStatusLable);
             this.measureResultPanel.Controls.Add(this.normaLabel);
             this.measureResultPanel.Controls.Add(this.measureTimerLabel);
             this.measureResultPanel.Controls.Add(this.resultFieldLabel);
@@ -922,6 +924,15 @@
             this.leadStatusContextMenu.ShowItemToolTips = false;
             this.leadStatusContextMenu.Size = new System.Drawing.Size(61, 4);
             // 
+            // cableStatusLable
+            // 
+            this.cableStatusLable.AutoSize = true;
+            this.cableStatusLable.Location = new System.Drawing.Point(771, 8);
+            this.cableStatusLable.Name = "cableStatusLable";
+            this.cableStatusLable.Size = new System.Drawing.Size(108, 19);
+            this.cableStatusLable.TabIndex = 23;
+            this.cableStatusLable.Text = "Кабель годен";
+            // 
             // MeasureForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
@@ -1038,5 +1049,6 @@
         private System.Windows.Forms.Panel barabanSelectorPanel;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button resetCurrentResultsButton;
+        private System.Windows.Forms.Label cableStatusLable;
     }
 }

@@ -329,6 +329,7 @@ namespace TeraMicroMeasure
             }
             barabanTypeCB.SelectedValue = testFile.BarabanTypeId;
             barabanNameCB.Text = testFile.BarabanNumber;
+            cableStatusLable.Text = testFile.TestedCableIsOnNorma ? "Кабель годен" : "Кабель не годен";
             //if (measureState.MeasureTypeId != measureModeOnState && currentCable.MeasuredParameterTypes_IDs.Contains(measureModeOnState)) SetMeasureModeComboBoxValue(measureModeOnState);
         }
 

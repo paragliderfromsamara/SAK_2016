@@ -73,36 +73,7 @@ namespace NormaLib.Measure
                 }
                 //cableTest.TestResults.CleanList();
                 Debug.WriteLine(cableTest.TestResults.Rows.Count);
-                
-                foreach (TestedCableStructure tcs in cable.CableStructures.Rows)
-                {
-                    CableStructure sourceStrucure = GetSourceStructureById(tcs.SourceStructureId);
-                    List<uint> lst = new List<uint>(sourceStrucure.MeasuredParameterTypes_ids);
-                    lst.Add(MeasuredParameterType.Calling);
-                    foreach (var pTypeId in lst)
-                    {
-                        MeasurePointMap mpm = new MeasurePointMap(sourceStrucure, pTypeId);
-                        do
-                        {
-                            MeasurePoint point = mpm.CurrentPoint;
-                            MeasuredParameterType mpt = MeasuredParameterType.find_by_parameter_type_id(pTypeId);
-                            float value = GetMeasurePointValue((int)point.StructureId, (int)pTypeId, point.PointIndex);
-                            if (!float.IsNaN(value))
-                            {
-                                float temperature = GetMeasurePointTemperature((int)point.StructureId, (int)pTypeId, point.PointIndex);
-                                CableTestResult r = cableTest.BuildTestResult(mpt, tcs, (uint)point.ElementNumber, (uint)point.MeasureNumber);
-                                r.Temperature = temperature;
-                                r.Result = value;
-                                cableTest.AddResult(r);
-                            }else
-                            {
-                                Debug.WriteLine(mpt.ParameterName);
-                            }
-                        } while (mpm.TryGetNextPoint());
-                        Debug.WriteLine(cableTest.TestResults.Rows.Count);
-                    }
-                }
-
+                FillTestResultToStructure(cable, cableTest);
                 cableTest.SetFinished();
                 test = cableTest;
                 return true;
@@ -111,6 +82,39 @@ namespace NormaLib.Measure
             {
                 test = null;
                 return false;
+            }
+        }
+
+        private void FillTestResultToStructure(Cable cable, CableTest test)
+        {
+            foreach (TestedCableStructure tcs in cable.CableStructures.Rows)
+            {
+                CableStructure sourceStrucure = GetSourceStructureById(tcs.SourceStructureId);
+                List<uint> lst = new List<uint>(sourceStrucure.MeasuredParameterTypes_ids);
+                lst.Add(MeasuredParameterType.Calling);
+                foreach (var pTypeId in lst)
+                {
+                    MeasurePointMap mpm = new MeasurePointMap(sourceStrucure, pTypeId);
+                    do
+                    {
+                        MeasurePoint point = mpm.CurrentPoint;
+                        MeasuredParameterType mpt = MeasuredParameterType.find_by_parameter_type_id(pTypeId);
+                        float value = GetMeasurePointValue((int)point.StructureId, (int)pTypeId, point.PointIndex);
+                        if (!float.IsNaN(value))
+                        {
+                            float temperature = GetMeasurePointTemperature((int)point.StructureId, (int)pTypeId, point.PointIndex);
+                            CableTestResult r = test.BuildTestResult(mpt, tcs, (uint)point.ElementNumber, (uint)point.MeasureNumber);
+                            r.Temperature = temperature;
+                            r.Result = value;
+                            test.AddResult(r);
+                        }
+                        else
+                        {
+                            Debug.WriteLine(mpt.ParameterName);
+                        }
+                    } while (mpm.TryGetNextPoint());
+                    Debug.WriteLine(test.TestResults.Rows.Count);
+                }
             }
         }
 
@@ -522,6 +526,101 @@ namespace NormaLib.Measure
 
         #endregion
 
+        #region TestStats 
+
+        private CableTest virtual_test = null;
+        private CableTest virtualTest => virtual_test == null ? virtual_test = BuildVirtualTest() : virtual_test;
+
+        private CableTest BuildVirtualTest()
+        {
+            DBEntityTable t = new DBEntityTable(typeof(CableTest));
+            virtual_test = t.NewRow() as CableTest;
+            try
+            {
+                virtual_test = t.NewRow() as CableTest;
+                foreach (DataColumn dc in t.Columns)
+                {
+                    virtual_test[dc] = (string.IsNullOrEmpty(file.Read(dc.ColumnName, TestAttrs_SectionName))) ? GetDefaultVal(dc.DataType) : string.IsNullOrEmpty(file.Read(dc.ColumnName, TestAttrs_SectionName));
+                }
+                t.Rows.Add(virtual_test);
+                virtual_test.TestedCable = BuildTestedCableFromFile();
+                return virtual_test;
+            }
+            catch (Exception)
+            {
+                t.Clear();
+                virtual_test = CableTest.New(t);
+                return virtual_test;
+                //FillCableTestToFile();
+            }
+        }
+
+        private TestedCable BuildTestedCableFromFile()
+        {
+            try
+            {
+                DBEntityTable t = new DBEntityTable(typeof(TestedCable));
+                TestedCable cable = t.NewRow() as TestedCable;
+                foreach (DataColumn dc in t.Columns)
+                {
+                    cable[dc] = (object)file.Read(dc.ColumnName, "SourceCable");
+                }
+                cable.CableStructures = new DBEntityTable(typeof(CableStructure));
+                cable.SetCableTest(virtualTest);
+                BuildVirtualCableStructuresFromIni(cable);
+                t.Rows.Add(cable);
+                return cable;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
+
+        public bool TestedCableIsOnNorma => virtualTest.TestedCable == null ? false : virtualTest.TestedCable.IsOnNorma;
+
+        private void BuildVirtualCableStructuresFromIni(TestedCable cable)
+        {
+            //DBEntityTable t = new DBEntityTable(typeof(TestedCableStructure));
+            string structSectName = "TestedStructure_{0}";
+            int idx = 0;
+            while (file.KeyExists(CableStructure.StructureId_ColumnName, string.Format(structSectName, idx)))
+            {
+                TestedCableStructure s = cable.CableStructures.NewRow() as TestedCableStructure;
+                s.OwnCable = cable;
+                foreach (DataColumn dc in cable.CableStructures.Columns)
+                {
+                    s[dc] = (object)file.Read(dc.ColumnName, string.Format(structSectName, idx));
+                }
+                s.MeasuredParameters = new DBEntityTable(typeof(TestedStructureMeasuredParameterData));
+                BuildVirtualMeasureParametersData(s, idx);
+                cable.CableStructures.Rows.Add(s);
+                idx++;
+            }
+        }
+
+
+        private void BuildVirtualMeasureParametersData(CableStructure structure, int structure_idx)
+        {
+            string params_sect_name = "ParameterData_{0}_of_structure_{1}";
+            int param_idx = 0;
+            string sect_name;
+            while (file.KeyExists(MeasuredParameterType.ParameterTypeId_ColumnName, sect_name = string.Format(params_sect_name, param_idx++, structure_idx)))
+            {
+                TestedStructureMeasuredParameterData csmpd = structure.MeasuredParameters.NewRow() as TestedStructureMeasuredParameterData;
+                foreach (DataColumn dc in structure.MeasuredParameters.Columns)
+                {
+                    csmpd[dc] = file.Read(dc.ColumnName, sect_name);
+                }
+                csmpd.AssignedStructure = structure;
+                structure.MeasuredParameters.Rows.Add(csmpd);
+            }
+            FillAffectedElementOnStructure(structure);
+        }
+
+        
+        #endregion
     }
 
     public class CableTestIniException : Exception

@@ -209,6 +209,7 @@
     <Compile Include="Devices\XmlObjects\MeasureXMLState.cs" />
     <Compile Include="Devices\XmlObjects\MicroohmmeterXMLState.cs" />
     <Compile Include="Devices\XmlObjects\TeraohmmetrXMLState.cs" />
+    <Compile Include="Measure\CableStructureMeasureResultStats.cs" />
     <Compile Include="Measure\CableTestIni.cs" />
     <Compile Include="Measure\MaterialCoeffCalculator.cs" />
     <Compile Include="Measure\MeasurePointMap.cs" />

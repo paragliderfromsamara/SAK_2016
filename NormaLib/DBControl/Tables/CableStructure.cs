@@ -850,7 +850,29 @@ namespace NormaLib.DBControl.Tables
         {
             get
             {
-                return NormalElementPercent >= PercentLimit;
+                return NormalElementPercent >= PercentLimit && ParametersIsOnPercentNorma;
+            }
+        }
+
+
+        public bool ParametersIsOnPercentNorma
+        {
+            get
+            {
+                bool f1 = true;
+                foreach(MeasuredParameterType tpt in TestedParameterTypes.Rows)
+                {
+                    bool f2 = false;
+                    TestedStructureMeasuredParameterData[] datas = (TestedStructureMeasuredParameterData[])MeasuredParameters.Select($"{MeasuredParameterType.ParameterTypeId_ColumnName} = {tpt.ParameterTypeId}");
+                    foreach(TestedStructureMeasuredParameterData data in datas)
+                    {
+                        f2 |= data.MeasuredPercent >= data.Percent;
+                        if (f2) break; 
+                    }
+                    f1 &= f2;
+                    if (!f1) break;
+                }
+                return f1;
             }
         }
 
@@ -858,14 +880,14 @@ namespace NormaLib.DBControl.Tables
         {
             get
             {
-                float limit = 0;
+                float limit = 100;
                 foreach (MeasuredParameterType pType in TestedParameterTypes.Rows)
                 {
                     if (pType.ParameterTypeId == MeasuredParameterType.Risol3 || pType.ParameterTypeId == MeasuredParameterType.Risol4) continue;
                     TestedStructureMeasuredParameterData[] data = GetMeasureParameterDatasByParameterType(pType.ParameterTypeId);
                     foreach (TestedStructureMeasuredParameterData d in data)
                     {
-                        if (d.Percent > limit) limit = d.Percent;
+                        if (d.Percent < limit) limit = d.Percent;
                     }
                 }
                 return limit;
@@ -902,7 +924,6 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        
     }
 
 
