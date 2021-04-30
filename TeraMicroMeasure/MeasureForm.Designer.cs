@@ -49,6 +49,7 @@
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.measureResultPanel = new System.Windows.Forms.Panel();
+            this.cableStatusLable = new System.Windows.Forms.Label();
             this.normaLabel = new System.Windows.Forms.Label();
             this.measureTimerLabel = new System.Windows.Forms.Label();
             this.resultFieldLabel = new System.Windows.Forms.Label();
@@ -95,7 +96,6 @@
             this.rIsolTypeSelectorCB = new System.Windows.Forms.ComboBox();
             this.measuredParameterCB = new System.Windows.Forms.ComboBox();
             this.leadStatusContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cableStatusLable = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.measureResultDataGrid)).BeginInit();
             this.selectDevicePanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -383,6 +383,15 @@
             this.measureResultPanel.Name = "measureResultPanel";
             this.measureResultPanel.Size = new System.Drawing.Size(915, 176);
             this.measureResultPanel.TabIndex = 32;
+            // 
+            // cableStatusLable
+            // 
+            this.cableStatusLable.AutoSize = true;
+            this.cableStatusLable.Location = new System.Drawing.Point(530, 8);
+            this.cableStatusLable.Name = "cableStatusLable";
+            this.cableStatusLable.Size = new System.Drawing.Size(108, 19);
+            this.cableStatusLable.TabIndex = 23;
+            this.cableStatusLable.Text = "Кабель годен";
             // 
             // normaLabel
             // 
@@ -923,15 +932,6 @@
             this.leadStatusContextMenu.ShowImageMargin = false;
             this.leadStatusContextMenu.ShowItemToolTips = false;
             this.leadStatusContextMenu.Size = new System.Drawing.Size(61, 4);
-            // 
-            // cableStatusLable
-            // 
-            this.cableStatusLable.AutoSize = true;
-            this.cableStatusLable.Location = new System.Drawing.Point(771, 8);
-            this.cableStatusLable.Name = "cableStatusLable";
-            this.cableStatusLable.Size = new System.Drawing.Size(108, 19);
-            this.cableStatusLable.TabIndex = 23;
-            this.cableStatusLable.Text = "Кабель годен";
             // 
             // MeasureForm
             // 

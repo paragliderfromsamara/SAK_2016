@@ -791,45 +791,50 @@ namespace NormaLib.DBControl.Tables
             {
                 if (test_results == null)
                 {
-                    max_result_value = float.MinValue;
-                    min_result_value = float.MaxValue;
-                    average_result_value = 0;
-                    int[] affected = ((AssignedStructure as TestedCableStructure).AffectedElements.Keys.ToArray());
-                    int[] elements = (int[])((AssignedStructure as TestedCableStructure).TestedElements.Clone());
-                    List<int> normalElements = ((int[])((AssignedStructure as TestedCableStructure).TestedElements.Clone())).ToList();// ((int[])(AssignedStructure as TestedCableStructure).TestedElements).ToList();
-                    //for (int i = 0; i < AssignedStructure.RealAmount; i++) normalElements.Add(i+1);
-                    
-                    test_results = new DBEntityTable(typeof(CableTestResult));
-                    string q = $"{MeasuredParameterType.ParameterTypeId_ColumnName} = {ParameterTypeId}";
-                    if (IsFreqParameter) q += $" AND {FrequencyRange.FreqRangeId_ColumnName} = {FrequencyRangeId}";
-                    ((CableTestResult[])(AssignedStructure as TestedCableStructure).TestResults.Select(q)).CopyToDataTable(test_results, LoadOption.Upsert);
-                    foreach (CableTestResult r in test_results.Rows)
-                    {
-                        float cableLength = (AssignedStructure.OwnCable as TestedCable).CableTest.CableLength;
-                        MeasureResultConverter c = new MeasureResultConverter(r.Result, this, cableLength);
-                        
-                        r.Result = (float)c.ConvertedValueRounded;
-                        NormDeterminant d = new NormDeterminant(this, r.Result);
-                        r.IsOnNorma = d.IsOnNorma;
-                        if (!r.IsOnNorma)
-                        {
-                            if (normalElements.Contains((int)r.ElementNumber)) normalElements.Remove((int)r.ElementNumber);
-                        }
-                        r.AcceptChanges();
-                        if (min_result_value > r.Result) min_result_value = r.Result;
-                        if (max_result_value < r.Result) max_result_value = r.Result;
-                        average_result_value += r.Result;
-                    }
-                    if (test_results.Rows.Count > 0) average_result_value = (float)(average_result_value / (float)test_results.Rows.Count);
-                    
-                    good_elements = (normalElements.ToArray().Except(affected)).ToArray();
-                    measured_percent = ((float)good_elements.Length / (float)AssignedStructure.RealAmount) * 100.0f;
-                    //Debug.WriteLine("Normal: " + string.Join(", ", good_elements));
-                    //Debug.WriteLine("Affected "+string.Join(", ", (AssignedStructure as TestedCableStructure).AffectedElements.Keys));
+                    SetTestResultsFromAssignedStructure();
                 }
                 return test_results;
             }
         }
+
+        public void SetTestResultsFromAssignedStructure()
+        {
+            max_result_value = float.MinValue;
+            min_result_value = float.MaxValue;
+            average_result_value = 0;
+            int[] affected = ((AssignedStructure as TestedCableStructure).AffectedElements.Keys.ToArray());
+            int[] elements = (int[])((AssignedStructure as TestedCableStructure).TestedElements.Clone());
+            List<int> normalElements = ((int[])((AssignedStructure as TestedCableStructure).TestedElements.Clone())).ToList();
+            if (test_results == null)
+                test_results = new DBEntityTable(typeof(CableTestResult));
+            else
+                test_results.Clear();
+            string q = $"{MeasuredParameterType.ParameterTypeId_ColumnName} = {ParameterTypeId}";
+            if (IsFreqParameter) q += $" AND {FrequencyRange.FreqRangeId_ColumnName} = {FrequencyRangeId}";
+            ((CableTestResult[])(AssignedStructure as TestedCableStructure).TestResults.Select(q)).CopyToDataTable(test_results, LoadOption.Upsert);
+            foreach (CableTestResult r in test_results.Rows)
+            {
+                float cableLength = (AssignedStructure.OwnCable as TestedCable).CableTest.CableLength;
+                MeasureResultConverter c = new MeasureResultConverter(r.Result, this, cableLength);
+
+                r.Result = (float)c.ConvertedValueRounded;
+                NormDeterminant d = new NormDeterminant(this, r.Result);
+                r.IsOnNorma = d.IsOnNorma;
+                if (!r.IsOnNorma)
+                {
+                    if (normalElements.Contains((int)r.ElementNumber)) normalElements.Remove((int)r.ElementNumber);
+                }
+                r.AcceptChanges();
+                if (min_result_value > r.Result) min_result_value = r.Result;
+                if (max_result_value < r.Result) max_result_value = r.Result;
+                average_result_value += r.Result;
+            }
+            if (test_results.Rows.Count > 0) average_result_value = (float)(average_result_value / (float)test_results.Rows.Count);
+
+            good_elements = (normalElements.ToArray().Except(affected)).ToArray();
+            measured_percent = ((float)good_elements.Length / (float)AssignedStructure.RealAmount) * 100.0f;
+        }
+
 
         public CableTestResult GetResult(uint element_number, uint measure_number, uint generator_element_number = 0, uint generator_measure_number = 0)
         {

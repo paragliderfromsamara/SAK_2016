@@ -734,6 +734,24 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
+        public double NormalElementsPercent
+        {
+            get
+            {
+                int commonElementsNumber = 0;
+                int normalElementsNumber = 0;
+                foreach(CableStructure s in CableStructures.Rows)
+                {
+                    TestedCableStructure ts = s as TestedCableStructure;
+                    commonElementsNumber += (int)ts.RealAmount;
+                    normalElementsNumber += (int)ts.NormalElementsAmount;
+                }
+                if (commonElementsNumber == 0) commonElementsNumber = 1;
+                double percent = ((double)normalElementsNumber * 100.0) / (double)commonElementsNumber;
+                return Math.Round(percent, 1);
+            }
+        }
+
         protected CableTest cable_test;
     }
 

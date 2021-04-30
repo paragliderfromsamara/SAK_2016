@@ -557,8 +557,8 @@ namespace NormaLib.Measure
 
         private TestedCable BuildTestedCableFromFile()
         {
-            try
-            {
+            //try
+            //{
                 DBEntityTable t = new DBEntityTable(typeof(TestedCable));
                 TestedCable cable = t.NewRow() as TestedCable;
                 foreach (DataColumn dc in t.Columns)
@@ -570,15 +570,48 @@ namespace NormaLib.Measure
                 BuildVirtualCableStructuresFromIni(cable);
                 t.Rows.Add(cable);
                 return cable;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
+          //  }
+         //   catch (Exception)
+       //     {
+      //          return null;
+     //       }
+//
         }
 
-        public bool TestedCableIsOnNorma => virtualTest.TestedCable == null ? false : virtualTest.TestedCable.IsOnNorma;
+
+        public CableTestStat GetCablleTestStat()
+        {
+            CableTest test = BuildVirtualTest();
+            CableTestStat stat = new CableTestStat();
+            stat.StructuresNormalPercents = new Dictionary<uint, StructureTestStat>();
+            if (test.TestedCable != null)
+            {
+                stat.IsOnNorma = test.TestedCable.IsOnNorma;
+                stat.CableNormalPercent = test.TestedCable.NormalElementsPercent;
+
+                foreach (TestedCableStructure s in test.TestedCable.CableStructures.Rows)
+                {
+                    StructureTestStat ss = new StructureTestStat();
+                    ss.StructureNormalPercent = s.NormalElementPercent;
+                    ss.MeasuredParameterDataNormalPercents = new Dictionary<uint, double>();
+                    foreach (TestedStructureMeasuredParameterData td in s.MeasuredParameters.Rows)
+                    {
+                        if (!s.TestedParametersIds.Contains(td.ParameterTypeId))
+                            ss.MeasuredParameterDataNormalPercents.Add(td.MeasuredParameterDataId, 0);
+                        else
+                        {
+                            ss.MeasuredParameterDataNormalPercents.Add(td.MeasuredParameterDataId, td.MeasuredPercent);
+                        }
+                    }
+                    ///
+                    stat.StructuresNormalPercents.Add(s.CableStructureId, ss);
+                }
+            }
+
+            return stat;
+        }
+
+        //public bool TestedCableIsOnNorma => virtualTest.TestedCable == null ? false : virtualTest.TestedCable.IsOnNorma;
 
         private void BuildVirtualCableStructuresFromIni(TestedCable cable)
         {
@@ -619,6 +652,7 @@ namespace NormaLib.Measure
             FillAffectedElementOnStructure(structure);
         }
 
+
         
         #endregion
     }
@@ -630,6 +664,19 @@ namespace NormaLib.Measure
 
         }
 
+    }
+
+    public struct CableTestStat
+    {
+        public bool IsOnNorma;
+        public double CableNormalPercent;
+        public Dictionary<uint, StructureTestStat> StructuresNormalPercents;
+    }
+
+    public struct StructureTestStat
+    {
+        public double StructureNormalPercent;
+        public Dictionary<uint, double> MeasuredParameterDataNormalPercents;
     }
 
 }

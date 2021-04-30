@@ -29,6 +29,8 @@ namespace TeraMicroMeasure
         bool IsOnline = false;
         int clientID;
         bool MeasureIsStartedOnDevice;
+        private CableTestStat ? TestStats;
+
 
         private DBEntityTable BarabanTypes;
         private DBEntityTable LeadStatuses;
@@ -37,6 +39,7 @@ namespace TeraMicroMeasure
         private DBEntityTable IsolMaterialCoeffsTable;
         private DBEntityTable LeadMaterials;
         private DBEntityTable MeasuredParametersDataTable;
+        
 
         private Cable cur_cable;
         private Cable currentCable
@@ -79,6 +82,7 @@ namespace TeraMicroMeasure
                 
                 RefreshMeasureParameterDataTabs();
                 RefreshMeasureControl();
+                RefreshTestStatsLabelForCurrentMode();
                 //MessageBox.Show(string.Join(", ", cur_struct.AffectedElements.Keys));
             }
         }
@@ -263,6 +267,7 @@ namespace TeraMicroMeasure
             {
                 SetSourceCableToTest(CableTestStatus.StopedByOperator);
             }
+            RefreshTestStats();
         }
 
         private void LoadMeasuredParametersData()
@@ -329,8 +334,28 @@ namespace TeraMicroMeasure
             }
             barabanTypeCB.SelectedValue = testFile.BarabanTypeId;
             barabanNameCB.Text = testFile.BarabanNumber;
-            cableStatusLable.Text = testFile.TestedCableIsOnNorma ? "Кабель годен" : "Кабель не годен";
+            RefreshTestStats();
+            
+            //cableStatusLable.Text = testFile.TestedCableIsOnNorma ? "Кабель годен" : "Кабель не годен";
             //if (measureState.MeasureTypeId != measureModeOnState && currentCable.MeasuredParameterTypes_IDs.Contains(measureModeOnState)) SetMeasureModeComboBoxValue(measureModeOnState);
+        }
+
+        private void RefreshTestStats()
+        {
+            TestStats = testFile.GetCablleTestStat();
+            RefreshTestStatsLabelForCurrentMode();
+        }
+
+        private void RefreshTestStatsLabelForCurrentMode()
+        {
+            if (TestStats == null) return;
+            string text = $"Процент годности кабеля: {TestStats.Value.CableNormalPercent}%\n";
+            double structPercent = TestStats.Value.StructuresNormalPercents.ContainsKey(currentStructure.StructureTypeId) ? TestStats.Value.StructuresNormalPercents[currentStructure.StructureTypeId].StructureNormalPercent : 0;
+            double mpdPercent = structPercent == 0 ? 0 : TestStats.Value.StructuresNormalPercents[currentStructure.StructureTypeId].MeasuredParameterDataNormalPercents[CurrentParameterData.MeasuredParameterDataId];
+            text += $"Процент годности структуры: {structPercent}%\n";
+            text += $"Процент годности по текущему параметру: {mpdPercent}%";
+
+            cableStatusLable.Text = text;
         }
 
         private void SetMeasureModeComboBoxValue(uint val)
@@ -1183,6 +1208,7 @@ namespace TeraMicroMeasure
             {
                 testFile.SetMeasurePointValue(measurePointMap.CurrentPoint, (float)valueToProtocol, (float)temperatureValue.Value);
                 WriteValueToDataGridViewCell(valueToTable);
+                RefreshTestStats();
             }
 
             return stringVal;
@@ -1221,6 +1247,7 @@ namespace TeraMicroMeasure
         {
             testFile.ClearMeasurePointValue(measurePointMap.CurrentPoint);
             WriteValueToDataGridViewCell(double.NaN, measurePointMap.CurrentElementIndex, measurePointMap.CurrentElementMeasurePointIndex);
+            RefreshTestStats();
         }
 
         public void DisconnectDeviceFromServerSide()
@@ -1603,6 +1630,7 @@ namespace TeraMicroMeasure
                 norma = CurrentParameterData.GetFullTitle();
                 normaLabel.Text = string.IsNullOrWhiteSpace(norma) ? "" : $"Норма: {norma}";
                 resetCurrentResultsButton.Text = $"Очистить результаты {CurrentParameterData.ParameterName}";
+                RefreshTestStatsLabelForCurrentMode();
             }
         }
 
@@ -1693,6 +1721,7 @@ namespace TeraMicroMeasure
             if (r != DialogResult.Yes) return;
             testFile.ClearParameterDataResults(CurrentParameterData);
             RefreshMeasureControl();
+            RefreshTestStats();
         }
 
         private void SetResultFieldStyle(ResultFieldStyle style)
