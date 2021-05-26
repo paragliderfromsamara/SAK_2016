@@ -415,7 +415,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        [DBColumn(PMin_ColumnName, ColumnDomain.UInt, OldDBColumnName = "P_min", Order =20, DefaultValue = 2400, Nullable = true)]
+        [DBColumn(PMin_ColumnName, ColumnDomain.UInt, OldDBColumnName = "P_min", Order =20, DefaultValue = 0, Nullable = true)]
         public float PMin
         {
             get
@@ -428,7 +428,7 @@ namespace NormaLib.DBControl.Tables
             }
         }
 
-        [DBColumn(PMax_ColumnName, ColumnDomain.UInt, OldDBColumnName = "P_max", Order = 21, DefaultValue =0, Nullable =true)]
+        [DBColumn(PMax_ColumnName, ColumnDomain.UInt, OldDBColumnName = "P_max", Order = 21, DefaultValue =2400, Nullable =true)]
         public float PMax
         {
             get
