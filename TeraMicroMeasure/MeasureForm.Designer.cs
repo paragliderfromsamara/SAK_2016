@@ -370,7 +370,6 @@
             // measureResultPanel
             // 
             this.measureResultPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(104)))), ((int)(((byte)(169)))));
-            this.measureResultPanel.Controls.Add(this.cableStatusLable);
             this.measureResultPanel.Controls.Add(this.normaLabel);
             this.measureResultPanel.Controls.Add(this.measureTimerLabel);
             this.measureResultPanel.Controls.Add(this.resultFieldLabel);
@@ -387,7 +386,7 @@
             // cableStatusLable
             // 
             this.cableStatusLable.AutoSize = true;
-            this.cableStatusLable.Location = new System.Drawing.Point(530, 8);
+            this.cableStatusLable.Location = new System.Drawing.Point(487, 62);
             this.cableStatusLable.Name = "cableStatusLable";
             this.cableStatusLable.Size = new System.Drawing.Size(108, 19);
             this.cableStatusLable.TabIndex = 23;
@@ -872,6 +871,7 @@
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.cableStatusLable);
             this.panel5.Controls.Add(this.richTextBox1);
             this.panel5.Controls.Add(this.panel1);
             this.panel5.Controls.Add(this.voltagesGroupBox);
@@ -973,6 +973,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.measureDelayUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cableLengthNumericUpDown)).EndInit();
             this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.measureControlPanel.ResumeLayout(false);
             this.measuredParameterSelect.ResumeLayout(false);
             this.ResumeLayout(false);
