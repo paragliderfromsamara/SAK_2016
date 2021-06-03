@@ -26,7 +26,7 @@ namespace NormaLib.DBControl.Tables
             DBEntityTable DocumentsTable = new DBEntityTable(typeof(Document));
             additional_condition = (string.IsNullOrWhiteSpace(additional_condition)) ? "" : $" AND {additional_condition}";
             string limit = (string.IsNullOrWhiteSpace(additional_condition)) ? " LIMIT 50" : "";
-            string select_for_test_line = $"CONVERT((IF({TestLineNumber_ColumnName} > 0, CONCAT('Линия №', {TestLineNumber_ColumnName}), 'Сервер')), char) AS {TestLineTitle_ColumnName}";
+            string select_for_test_line = $"CONVERT((IF({TestLineNumber_ColumnName} > 0, CONCAT('Поле №', {TestLineNumber_ColumnName}), 'Сервер')), char) AS {TestLineTitle_ColumnName}";
             string query = $"SELECT *, CONCAT({TestedCable.CableName_ColumnName}, ' ', {TestedCable.StructName_ColumnName}) AS {TestedCable.FullCableName_ColumnName}, {select_for_test_line} FROM {CableTestTable.TableName} LEFT OUTER JOIN {TestedCables.TableName} USING({CableTestTable.PrimaryKey[0]}) LEFT OUTER JOIN {DocumentsTable.TableName} USING({Document.DocumentId_ColumnName}) WHERE {CableTestStatus.StatusId_ColumnName} = {CableTestStatus.Finished}{additional_condition} ORDER BY {TestFinishedAt_ColumnName} DESC{limit};";
             CableTestTable = find_by_query(query, typeof(CableTest));
             Debug.WriteLine(CableTestTable.Rows.Count);

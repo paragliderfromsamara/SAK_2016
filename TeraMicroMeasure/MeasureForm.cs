@@ -516,7 +516,7 @@ namespace TeraMicroMeasure
                 string title = $"{d.TypeNameShort} {d.Serial}";
                 if (d.ClientId > 0)
                 {
-                    status = $"(Линия {d.ClientId})";
+                    status = $"(Поле {d.ClientId})";
                 }else if (d.ClientId == 0)
                 {
                     status = $"(Сервер)";

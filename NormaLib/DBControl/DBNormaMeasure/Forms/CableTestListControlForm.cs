@@ -203,7 +203,7 @@ namespace NormaLib.DBControl.DBNormaMeasure.Forms
             cols.Add(BuildDataGridTextColumn(Cable.CableName_ColumnName, "Название кабеля"));
             cols.Add(BuildDataGridTextColumn(CableTest.NettoWeight_ColumnName, "Вес НЕТТО, кг"));
             cols.Add(BuildDataGridTextColumn(CableTest.TestLineNumber_ColumnName, "Номер линии"));
-            cols.Add(BuildDataGridTextColumn(CableTest.TestLineTitle_ColumnName, "Линия", true));
+            cols.Add(BuildDataGridTextColumn(CableTest.TestLineTitle_ColumnName, "Поле", true));
             return cols;
         }
 

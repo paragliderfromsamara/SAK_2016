@@ -279,7 +279,7 @@ namespace NormaLib.SocketControl
             catch (SocketException e)
             {
                 this.Exception = e;
-                SocketLogFile.WriteExceptionAsync(e).GetAwaiter();
+                //SocketLogFile.WriteExceptionAsync(e).GetAwaiter();
                 return false;
             }
             catch (Exception e)
