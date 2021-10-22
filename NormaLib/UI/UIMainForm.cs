@@ -10,10 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Diagnostics;
 
 namespace NormaLib.UI
 {
-    public partial class UIMainForm : Form
+    public partial class UIMainForm : NormaMeasureBaseForm
     {
         protected Button currentButton;
         protected Form currentForm;
@@ -22,26 +23,16 @@ namespace NormaLib.UI
         //Constructor
         public UIMainForm()
         {
-            InitializeDesign();
-            InitCulture();
-            SetThemeColors(panelMenu.BackColor);
-            RefreshThemOnCurrentForm();
-            this.Text = String.Empty;
-            this.ControlBox = false;
-            this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
+           // InitializeDesign();
             //CheckColors();
         }
 
-
-        protected virtual void InitCulture()
+        protected override void InitializeDesign()
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("my");
-            Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
-        }
-
-        protected virtual void InitializeDesign()
-        {
+            base.InitializeDesign();
             InitializeComponent();
+            SetThemeColors(panelMenu.BackColor);
+            RefreshThemOnCurrentForm();
         }
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -80,6 +71,13 @@ namespace NormaLib.UI
             NormaUIColors.SecondaryColor = NormaUIColors.ChangeColorBrightness(color, 0.2);
             NormaUIColors.ThirdColor = NormaUIColors.ChangeColorBrightness(color, 0.3);
 
+            CloseAppButton.FlatAppearance.MouseDownBackColor = NormaUIColors.ThirdColor;
+            CloseAppButton.FlatAppearance.MouseOverBackColor = NormaUIColors.PrimaryColor;
+            MinimizeAppButton.FlatAppearance.MouseDownBackColor = NormaUIColors.ThirdColor;
+            MinimizeAppButton.FlatAppearance.MouseOverBackColor = NormaUIColors.PrimaryColor;
+            MaximizeAppButton.FlatAppearance.MouseOverBackColor = NormaUIColors.PrimaryColor;
+            MaximizeAppButton.FlatAppearance.MouseDownBackColor = NormaUIColors.ThirdColor;
+
         }
 
         protected Color GetButtonColor(string btnName)
@@ -92,6 +90,8 @@ namespace NormaLib.UI
                     return ColorTranslator.FromHtml(NormaUIColors.ColorList[10]);
                 case "btnDataBase":
                     return ColorTranslator.FromHtml(NormaUIColors.ColorList[15]);
+                case "btnDevices":
+                    return ColorTranslator.FromHtml(NormaUIColors.ColorList[13]);
                 default:
                     return Color.White;
             }
@@ -194,6 +194,8 @@ namespace NormaLib.UI
         {
             SetActiveForm(GetMeasureForm(), sender);
         }
+
+
         #endregion
 
         protected virtual Form GetSettingsForm()
@@ -210,6 +212,7 @@ namespace NormaLib.UI
         {
             return new ChildForms.BlankForm();
         }
+
 
 
         protected virtual void SetActiveForm(Form next_form, object btnSender = null)
@@ -238,6 +241,19 @@ namespace NormaLib.UI
             currentForm.BringToFront();
             currentForm.FormClosed += CurrentForm_FormClosed;
             lblTitle.Text = currentForm.Text.ToUpper();
+            if (childFormPanel.Width < currentForm.MinimumSize.Width)
+            {
+                int w = panelMenu.Visible ? currentForm.MinimumSize.Width + panelMenu.Width + this.Padding.Left + this.Padding.Right : currentForm.MinimumSize.Width + this.Padding.Left + this.Padding.Right;
+                this.MinimumSize = new Size(w, this.MinimumSize.Height); 
+                this.Width = w;
+
+            }
+            if (childFormPanel.Height < currentForm.MinimumSize.Height)
+            {
+                int h = panelTitleBar.Visible ? currentForm.MinimumSize.Height + panelMenu.Height + this.Padding.Top + this.Padding.Bottom : currentForm.MinimumSize.Height + this.Padding.Bottom + this.Padding.Top;
+                this.MinimumSize = new Size(this.MinimumSize.Width, h);
+                this.Height = h;
+            }
             currentForm.Show();
         }
 
@@ -253,7 +269,8 @@ namespace NormaLib.UI
               
             }
         }
-    }
 
+    }
+    
     delegate void SetColorDelegate(int colorIdx);
 }

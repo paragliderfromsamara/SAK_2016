@@ -226,6 +226,12 @@ namespace NormaLib.Devices
                 ModbusSerialMaster m = ModbusSerialMaster.CreateRtu(port);
                 value = m.ReadHoldingRegisters(0, addr_start, length);
                 port.Close();
+                while (port.IsOpen) ;
+
+            }catch(System.UnauthorizedAccessException ex)
+            {
+                if (times-- > 0) goto retry;
+                throw new DeviceCommandProtocolException($"Порт занят", ex);
             }
             catch(Exception ex)
             {

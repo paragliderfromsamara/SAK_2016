@@ -26,8 +26,7 @@ using NormaLib.ProtocolBuilders;
 
 namespace TeraMicroMeasure
 {
- 
-    public partial class AppForm : UIMainForm
+    public partial class ClientServerAppForm : UIMainForm
     {
         #region constants
         const string DefaultDbPassword = "kFr16YtWE";
@@ -38,6 +37,7 @@ namespace TeraMicroMeasure
         public static DevicesDispatcher DeviceDispatcher;
         //public static Dictionary<int, MeasureForm> measureFormsList = new Dictionary<int, MeasureForm>();
         public static Dictionary<string, DeviceXMLState> xmlDevices = new Dictionary<string, DeviceXMLState>();
+        public static List<DeviceControlForm> DeviceControlForms = new List<DeviceControlForm>();
         #endregion
 
         #region private fields 
@@ -46,19 +46,17 @@ namespace TeraMicroMeasure
 
         LoadAppForm LoadAppForm;
         Type CurrentFormType => currentForm == null ? null : currentForm.GetType();
-        MeasureForm OpenedMeasureForm => (CurrentFormType == typeof(MeasureForm)) ? (MeasureForm)currentForm : null;  
+        MeasureForm OpenedMeasureForm => (CurrentFormType == typeof(MeasureForm)) ? (MeasureForm)currentForm : null;
+
+        
 
         static bool IsServerApp => SettingsControl.IsServerApp;
+        //static bool IsSinglePCMode => SettingsControl.IsSinglePCMode;
         static bool IsFirstRun => !IniFile.SettingsFileExists();
 
 
-        public AppForm()
+        public ClientServerAppForm()// : base()
         {
-            if (IsFirstRun)
-            {
-                AppTypeSelector appSel = new AppTypeSelector();
-                appSel.ShowDialog();
-            }
             if (!IsFirstRun)
             {
                 TCPSettingsController.OnTCPSettingsChanged += (o, s) => {ReinitTCP();};
@@ -72,7 +70,8 @@ namespace TeraMicroMeasure
                     {
                         InitSessionForm();
                         InitDeviceFinder();
-                    }else
+                    }
+                    else
                     {
                         MessageBox.Show("Невозможно запустить приложение", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Close();
@@ -83,6 +82,27 @@ namespace TeraMicroMeasure
             {
                 Close();
             }
+        }
+
+        /// <summary>
+        /// Инициализация однокомпьютерного приложения
+        /// </summary>
+        /// <returns></returns>
+        private bool InitAsSinglePCApp()
+        {
+            clientTitle.Text = "NormaMeasure";
+            titleLabel_1.Text = "";
+            titleLabel_2.Text = "";
+            connectToServerButton.Visible = false;
+            LoadAppForm = new LoadAppForm();
+            LoadAppForm.Show();
+            LoadAppForm.Refresh();
+            bool flag = InitDataBaseOnServer();
+            LoadAppForm.Close();
+
+            
+
+            return flag;
         }
 
         private void ShowTCPSettingsForm()
@@ -116,13 +136,17 @@ namespace TeraMicroMeasure
             base.InitializeDesign();
             InitializeComponent();
             ReorederMenuItems();
+            this.Text = "assHole";
             FormClosing += MainForm_FormClosing;
             connectToServerButton.Click += switchConnectToServerButton_Click;
+            deviceButtonsContainerPanel.ControlAdded += (o, s) => { devicesListPanel.Visible = true; };
+            deviceButtonsContainerPanel.ControlRemoved += (o, s) => { devicesListPanel.Visible = deviceButtonsContainerPanel.Controls.Count > 0; };
         }
 
         private void ReorederMenuItems()
         {
             this.panelMenu.Controls.Clear();
+            this.panelMenu.Controls.Add(this.devicesListPanel);
             this.panelMenu.Controls.Add(this.btnSettings);
             this.panelMenu.Controls.Add(this.btnDataBase);
             this.panelMenu.Controls.Add(this.btnMeasure);
@@ -140,6 +164,41 @@ namespace TeraMicroMeasure
         protected override Form GetDataBaseForm()
         {
             return new DataBaseTablesControlForm();
+        }
+
+
+
+        private void OpenDeviceControlForm(DeviceBase device)
+        {
+            string formName = $"Device_{device.TypeId}_{device.Serial}_{device.SerialYear}_Form";
+            
+            DeviceControlForm f = null;
+           
+            foreach(DeviceControlForm c in DeviceControlForms)
+            {
+                if (c.Name == formName)
+                {
+                    f = c as DeviceControlForm;
+                    break;
+                }
+            }
+            if (f==null)
+            {
+                f = new DeviceControlForm(device);
+                f.Name = formName;
+                DeviceControlForms.Add(f);
+                f.FormClosed += (o, s) => { DeviceControlForms.Remove(f); };
+                f.StartPosition = FormStartPosition.CenterScreen;
+                f.Show();
+
+            }else
+            {
+                if (f.WindowState == FormWindowState.Minimized) f.WindowState = FormWindowState.Normal;
+                
+            }
+            
+            
+
         }
 
         protected override Form GetMeasureForm()
@@ -777,9 +836,8 @@ namespace TeraMicroMeasure
                 if (IsServerApp)
                 {
                     AddDeviceToServerCommandDispatcher(d);
-                   
                 }
-                
+
                 //MessageBox.Show($"Подключено {d.GetType().Name} Серийный номер {d.SerialYear}-{d.SerialNumber}");
                 //AddOrUpdateDeviceOnToolStrip(d);
 
@@ -788,9 +846,12 @@ namespace TeraMicroMeasure
                 d.OnWorkStatusChanged += WorkStatusChanged_Handler;
                 d.OnGetMeasureResult += OnGetMeasureResult_Handler;
                 d.OnMeasureCycleFlagChanged += OnMeasureCycleFlagChanged_Handler;
+
             }
 
         }
+
+
 
         private void InitSessionForm()
         {
@@ -1088,6 +1149,57 @@ namespace TeraMicroMeasure
                 SessionControl.SignOut();
             };
             InitSessionForm();
+        }
+
+        private void RemoveButtonFromButtonsContainer(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new EventHandler(RemoveButtonFromButtonsContainer), new object[] { sender, e });
+            }
+            else
+            {
+                Button b = sender as Button;
+                deviceButtonsContainerPanel.Controls.Remove(b);
+            }
+        }
+
+        private void AddButtonToDevicesControlPanel(DeviceBase d)
+        {
+            string butName = $"device_{d.TypeId}_{d.SerialYear}_{d.SerialNumber}_Button";
+            bool f = deviceButtonsContainerPanel.Controls.ContainsKey(butName);
+            if (!f)
+            {
+                Button b = BuildDeviceButton();
+                b.Name = butName;
+                b.Text = $"{d.TypeNameFull}\nЗав.№ {d.Serial}";
+                b.Click += (o, s) => { OpenDeviceControlForm(d); };
+                b.TabIndex = deviceButtonsContainerPanel.Controls.Count + 1;
+                d.OnDisconnected += (o ,s) => { RemoveButtonFromButtonsContainer(b, new EventArgs()); };
+                deviceButtonsContainerPanel.Controls.Add(b);
+            }
+        }
+
+        private Button BuildDeviceButton()
+        {
+            Button b = new Button();
+            b.Dock = System.Windows.Forms.DockStyle.Top;
+            b.FlatAppearance.BorderSize = 0;
+            b.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            b.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            b.ForeColor = System.Drawing.Color.Gainsboro;
+            //b.Image = ((System.Drawing.Image)(resources.GetObject("btnDevices.Image")));
+            //b.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            b.Location = new System.Drawing.Point(0, 260);
+            b.Name = "btnDevices";
+            b.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            b.Size = new System.Drawing.Size(240, 60);
+            b.TabIndex = 1;
+            b.Text = "Прибор";
+            b.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            b.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            b.UseVisualStyleBackColor = true;
+            return b;
         }
     }
 

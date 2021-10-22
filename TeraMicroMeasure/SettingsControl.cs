@@ -17,6 +17,8 @@ namespace TeraMicroMeasure
         const string ClientSettingsSectionName = "ClientSettings";
 
         public static bool IsServerApp => GetClientId() == 0;
+        public static bool IsSinglePCMode => GetClientId() == -2;
+
 
         public static void SetLocalIpAndPort(string ip, string port)
         {

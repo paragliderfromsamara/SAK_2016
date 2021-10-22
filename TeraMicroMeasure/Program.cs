@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NormaLib.Utils;
+using NormaMeasure;
 
 namespace TeraMicroMeasure
 {
@@ -26,10 +28,13 @@ namespace TeraMicroMeasure
             }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-  
-            Application.Run(new AppForm());
+            if (!IniFile.SettingsFileExists()) Application.Run(new AppTypeSelector());
+            if (SettingsControl.IsSinglePCMode)
+                Application.Run(new SinglePCAppForm());
+            else
+                Application.Run(new ClientServerAppForm());
 
-            
+
         }
 
     }

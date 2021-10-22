@@ -67,6 +67,17 @@ namespace TeraMicroMeasure
             //this.Dispose();
         }
 
+        private void label1_Click_1(object sender, EventArgs e)
+        {
+            SettingsControl.SetClientId(-2);
+            DBSettingsControl.IsEnabled = false;
+            //Properties.Settings.Default.IsServerApp = false;
+            //Properties.Settings.Default.FirstRun = false;
+            //Properties.Settings.Default.Save();
+            this.Close();
+            //this.Dispose();
+        }
+
         // private void panel1_MouseHover(object sender, EventArgs e)
         //       {
         //

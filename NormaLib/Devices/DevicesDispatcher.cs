@@ -18,22 +18,23 @@ namespace NormaLib.Devices
         public const bool USE_EMULATED_DEVICES = false;
          
         private static object locker = new object();
-        private EventHandler OnDeviceFound;
+        public EventHandler OnDeviceFound;
         private DeviceCommandProtocol commandProtocol;
-        private Dictionary<string, DeviceBase> deviceList;
+        public Dictionary<string, DeviceBase> DeviceList;
+        public int ConnectedCount => DeviceList.Count;
         //private List<string> deviceComList;
         private Thread FindThread;
         private bool NeedStop = false;
         public DevicesDispatcher(DeviceCommandProtocol command_protocol, EventHandler on_device_found)
         {
-            deviceList = new Dictionary<string, DeviceBase>();
+            DeviceList = new Dictionary<string, DeviceBase>();
             commandProtocol = command_protocol;
             OnDeviceFound = on_device_found;
             InitFindThread();
         }
         public DeviceXMLState CaptureDeviceAndGetDeviceXmlState(int type_id, string serial, int client_id)
         {
-            foreach(var d in deviceList.Values)
+            foreach(var d in DeviceList.Values)
             {
                 if ((int)d.TypeId == type_id && serial == d.Serial)
                 {
@@ -53,7 +54,7 @@ namespace NormaLib.Devices
 
         public DeviceXMLState ReleaseDeviceAndGetDeviceXmlState(int client_id)
         {
-            foreach (var d in deviceList.Values)
+            foreach (var d in DeviceList.Values)
             {
                 if (d.ClientId == client_id)
                 {
@@ -84,7 +85,7 @@ namespace NormaLib.Devices
             foreach (string port_name in port_list)
             {
                 ports += $"{port_name}; ";
-                if (!deviceList.ContainsKey(port_name))
+                if (!DeviceList.ContainsKey(port_name))
                 {
                     portList.Add(port_name);
                 }
@@ -103,7 +104,7 @@ namespace NormaLib.Devices
                 foreach(var d in devices)
                 {
                     d.OnDisconnected += OnDeviceDisconnected_Handler;
-                    deviceList.Add(d.PortName, d);
+                    DeviceList.Add(d.PortName, d);
                     d.InitConnection();
                 }
                 OnDeviceFound?.Invoke(tera, new EventArgs());
@@ -125,7 +126,7 @@ namespace NormaLib.Devices
                                 SyncDeviceWithDB(device);
                                 OnDeviceFound?.Invoke(device, new EventArgs());
                                 device.OnDisconnected += OnDeviceDisconnected_Handler;
-                                deviceList.Add(port_name, device);
+                                DeviceList.Add(port_name, device);
                                 device.InitConnection();
                             }
                         }
@@ -148,7 +149,7 @@ namespace NormaLib.Devices
 
         public DeviceBase GetDeviceByTypeAndSerial(int typeId, string serial)
         {
-            foreach(var d in deviceList.Values)
+            foreach(var d in DeviceList.Values)
             {
                 if (d.Serial == serial && (int)d.TypeId == typeId)
                 {
@@ -163,7 +164,7 @@ namespace NormaLib.Devices
             lock (locker)
             {
                 DeviceBase d = sender as DeviceBase;
-                deviceList.Remove(d.PortName);
+                DeviceList.Remove(d.PortName);
                 d.Dispose();
             }
 
@@ -172,9 +173,9 @@ namespace NormaLib.Devices
         public void Dispose()
         {
             StopFind();
-            if (deviceList.Count > 0)
+            if (DeviceList.Count > 0)
             {
-                foreach(DeviceBase d in deviceList.Values)
+                foreach(DeviceBase d in DeviceList.Values)
                 {
                     d.Dispose();
                 }

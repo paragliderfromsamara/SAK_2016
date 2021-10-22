@@ -27,6 +27,9 @@ namespace NormaLib.Devices.Microohmmeter
             type_id = DeviceType.Microohmmeter;
             type_name_short = "µОмМ-01м";
             type_name_full = "Микроомметр µОмМ-01м";
+            AllowRemoteMeasure = true;
+            HasCableStore = false;
+            HasTestResultStore = false;
         }
 
         protected override DeviceCommandProtocol GetDeviceCommandProtocol()

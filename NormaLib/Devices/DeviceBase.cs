@@ -48,7 +48,7 @@ namespace NormaLib.Devices
     public delegate void ConnectionTheadDelegate();
     public class DeviceBase : IDisposable
     {
-        public EventHandler OnDisconnected;
+        public event EventHandler OnDisconnected;
        // public EventHandler OnPCModeFlagChanged;
         public EventHandler OnWorkStatusChanged;
         public EventHandler OnGetMeasureResult;
@@ -56,22 +56,11 @@ namespace NormaLib.Devices
         public EventHandler OnXMLStateChanged;
         protected DeviceCommandProtocol CommandProtocol;
 
-        private static object locker = new object();
-        //private bool thread_is_active = false;
+        public bool AllowRemoteMeasure { protected set; get; }
+        public bool HasCableStore { protected set; get; }
+        public bool HasTestResultStore { protected set; get; }
 
-        //protected bool threadIsActive
-        //{
-        //    get
-        //    {
-        //       return thread_is_active;
-        //   }set
-        //   {
-        //      lock(locker)
-        //       {
-        //            thread_is_active = value;
-        //       }
-        //    }
-        // }
+        private static object locker = new object();
 
         private int device_id_on_db = -1;
         public int DeviceIDOnDB

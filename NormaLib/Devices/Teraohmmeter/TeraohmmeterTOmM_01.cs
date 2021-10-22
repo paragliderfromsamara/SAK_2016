@@ -34,6 +34,9 @@ namespace NormaLib.Devices.Teraohmmeter
             type_id = DeviceType.Teraohmmeter;
             type_name_short = "ТОмМ-01";
             type_name_full = "Тераомметр ТОмМ-01";
+            AllowRemoteMeasure = true;
+            HasCableStore = false;
+            HasTestResultStore = false;
         }
 
         protected override void SetMeasureParametersFromMeasureXMLState(MeasureXMLState measure_state)

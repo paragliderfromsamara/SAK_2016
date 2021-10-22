@@ -56,13 +56,19 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>DDB279167071D4B770493C13893C83E55E01B531</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>NormaMeasure_1_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.3.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
@@ -110,11 +116,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppForm.cs">
+    <Compile Include="ClientServerAppForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AppForm.Designer.cs">
-      <DependentUpon>AppForm.cs</DependentUpon>
+    <Compile Include="ClientServerAppForm.Designer.cs">
+      <DependentUpon>ClientServerAppForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AppTypeSelector.cs">
       <SubType>Form</SubType>
@@ -125,6 +131,18 @@
     <Compile Include="CommandProcessors\ClentSideCommandProcessor.cs" />
     <Compile Include="CommandProcessors\ClientCommandDispatcher.cs" />
     <Compile Include="CommandProcessors\ServerCommandDispatcher.cs" />
+    <Compile Include="Forms\DeviceControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DeviceControlForm.Designer.cs">
+      <DependentUpon>DeviceControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DevicesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DevicesForm.Designer.cs">
+      <DependentUpon>DevicesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DataBaseSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,16 +177,34 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerSettingsControl.cs" />
     <Compile Include="SettingsControl.cs" />
+    <Compile Include="SinglePCAppForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SinglePCAppForm.Designer.cs">
+      <DependentUpon>SinglePCAppForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UsedDevicesSelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UsedDevicesSelectorForm.Designer.cs">
+      <DependentUpon>UsedDevicesSelectorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="XmlObjects\ClientXmlState.cs" />
     <Compile Include="XmlObjects\ServerXmlState.cs" />
-    <EmbeddedResource Include="AppForm.resx">
-      <DependentUpon>AppForm.cs</DependentUpon>
+    <EmbeddedResource Include="ClientServerAppForm.resx">
+      <DependentUpon>ClientServerAppForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AppForm.ru.resx">
-      <DependentUpon>AppForm.cs</DependentUpon>
+    <EmbeddedResource Include="ClientServerAppForm.ru.resx">
+      <DependentUpon>ClientServerAppForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AppTypeSelector.resx">
       <DependentUpon>AppTypeSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DeviceControlForm.resx">
+      <DependentUpon>DeviceControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DevicesForm.resx">
+      <DependentUpon>DevicesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DataBaseSettingsForm.resx">
       <DependentUpon>DataBaseSettingsForm.cs</DependentUpon>
@@ -195,6 +231,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SinglePCAppForm.resx">
+      <DependentUpon>SinglePCAppForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UsedDevicesSelectorForm.resx">
+      <DependentUpon>UsedDevicesSelectorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="NormaMeasure_1_TemporaryKey.pfx" />
     <None Include="NormaMeasure_TemporaryKey.pfx" />

@@ -1,6 +1,6 @@
 ﻿namespace TeraMicroMeasure
 {
-    partial class AppForm
+    partial class ClientServerAppForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClientServerAppForm));
             this.clientTitle = new System.Windows.Forms.Label();
             this.titleLabel_2 = new System.Windows.Forms.Label();
             this.titleLabel_1 = new System.Windows.Forms.Label();
@@ -38,22 +38,29 @@
             this.roleTitleLabel = new System.Windows.Forms.Label();
             this.userNameLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.devicesListPanel = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.deviceButtonsContainerPanel = new System.Windows.Forms.Panel();
             this.panelMenu.SuspendLayout();
             this.panelHeader.SuspendLayout();
+            this.ContentPanel.SuspendLayout();
             this.connectButPanel.SuspendLayout();
             this.sessionPanel.SuspendLayout();
+            this.devicesListPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelMenu
             // 
+            this.panelMenu.Controls.Add(this.devicesListPanel);
             this.panelMenu.Controls.Add(this.sessionPanel);
             this.panelMenu.Controls.Add(this.connectButPanel);
+            this.panelMenu.Controls.SetChildIndex(this.connectButPanel, 0);
+            this.panelMenu.Controls.SetChildIndex(this.sessionPanel, 0);
             this.panelMenu.Controls.SetChildIndex(this.btnSettings, 0);
             this.panelMenu.Controls.SetChildIndex(this.btnDataBase, 0);
             this.panelMenu.Controls.SetChildIndex(this.btnMeasure, 0);
             this.panelMenu.Controls.SetChildIndex(this.panelHeader, 0);
-            this.panelMenu.Controls.SetChildIndex(this.connectButPanel, 0);
-            this.panelMenu.Controls.SetChildIndex(this.sessionPanel, 0);
+            this.panelMenu.Controls.SetChildIndex(this.devicesListPanel, 0);
             // 
             // panelHeader
             // 
@@ -80,7 +87,7 @@
             this.clientTitle.AutoSize = true;
             this.clientTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F);
             this.clientTitle.ForeColor = System.Drawing.Color.White;
-            this.clientTitle.Location = new System.Drawing.Point(12, 3);
+            this.clientTitle.Location = new System.Drawing.Point(12, 11);
             this.clientTitle.Name = "clientTitle";
             this.clientTitle.Size = new System.Drawing.Size(108, 31);
             this.clientTitle.TabIndex = 0;
@@ -92,7 +99,7 @@
             this.titleLabel_2.AutoSize = true;
             this.titleLabel_2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.titleLabel_2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.titleLabel_2.Location = new System.Drawing.Point(15, 57);
+            this.titleLabel_2.Location = new System.Drawing.Point(15, 65);
             this.titleLabel_2.Name = "titleLabel_2";
             this.titleLabel_2.Size = new System.Drawing.Size(181, 15);
             this.titleLabel_2.TabIndex = 1;
@@ -102,7 +109,7 @@
             // 
             this.titleLabel_1.AutoSize = true;
             this.titleLabel_1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.titleLabel_1.Location = new System.Drawing.Point(15, 40);
+            this.titleLabel_1.Location = new System.Drawing.Point(15, 48);
             this.titleLabel_1.Name = "titleLabel_1";
             this.titleLabel_1.Size = new System.Drawing.Size(55, 13);
             this.titleLabel_1.TabIndex = 2;
@@ -121,7 +128,7 @@
             this.connectToServerButton.Location = new System.Drawing.Point(0, 0);
             this.connectToServerButton.Name = "connectToServerButton";
             this.connectToServerButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.connectToServerButton.Size = new System.Drawing.Size(240, 60);
+            this.connectToServerButton.Size = new System.Drawing.Size(320, 60);
             this.connectToServerButton.TabIndex = 4;
             this.connectToServerButton.Text = "  Подключен";
             this.connectToServerButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -131,9 +138,9 @@
             // 
             this.connectButPanel.Controls.Add(this.connectToServerButton);
             this.connectButPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.connectButPanel.Location = new System.Drawing.Point(0, 824);
+            this.connectButPanel.Location = new System.Drawing.Point(0, 553);
             this.connectButPanel.Name = "connectButPanel";
-            this.connectButPanel.Size = new System.Drawing.Size(240, 60);
+            this.connectButPanel.Size = new System.Drawing.Size(320, 60);
             this.connectButPanel.TabIndex = 5;
             // 
             // sessionPanel
@@ -143,9 +150,9 @@
             this.sessionPanel.Controls.Add(this.userNameLabel);
             this.sessionPanel.Controls.Add(this.button1);
             this.sessionPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.sessionPanel.Location = new System.Drawing.Point(0, 764);
+            this.sessionPanel.Location = new System.Drawing.Point(0, 493);
             this.sessionPanel.Name = "sessionPanel";
-            this.sessionPanel.Size = new System.Drawing.Size(240, 60);
+            this.sessionPanel.Size = new System.Drawing.Size(320, 60);
             this.sessionPanel.TabIndex = 6;
             // 
             // roleTitleLabel
@@ -154,7 +161,7 @@
             this.roleTitleLabel.ForeColor = System.Drawing.Color.Gainsboro;
             this.roleTitleLabel.Location = new System.Drawing.Point(76, 27);
             this.roleTitleLabel.Name = "roleTitleLabel";
-            this.roleTitleLabel.Size = new System.Drawing.Size(164, 21);
+            this.roleTitleLabel.Size = new System.Drawing.Size(244, 21);
             this.roleTitleLabel.TabIndex = 2;
             this.roleTitleLabel.Text = "Администратор";
             this.roleTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -165,7 +172,7 @@
             this.userNameLabel.ForeColor = System.Drawing.Color.Gainsboro;
             this.userNameLabel.Location = new System.Drawing.Point(76, 0);
             this.userNameLabel.Name = "userNameLabel";
-            this.userNameLabel.Size = new System.Drawing.Size(164, 27);
+            this.userNameLabel.Size = new System.Drawing.Size(244, 27);
             this.userNameLabel.TabIndex = 1;
             this.userNameLabel.Text = "Иванов Иван Иванович";
             this.userNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -187,21 +194,50 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.signoutButton_Click);
             // 
+            // devicesListPanel
+            // 
+            this.devicesListPanel.Controls.Add(this.panel1);
+            this.devicesListPanel.Controls.Add(this.deviceButtonsContainerPanel);
+            this.devicesListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.devicesListPanel.Location = new System.Drawing.Point(0, 320);
+            this.devicesListPanel.Name = "devicesListPanel";
+            this.devicesListPanel.Size = new System.Drawing.Size(320, 173);
+            this.devicesListPanel.TabIndex = 7;
+            this.devicesListPanel.Visible = false;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.DimGray;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(320, 1);
+            this.panel1.TabIndex = 1;
+            // 
+            // deviceButtonsContainerPanel
+            // 
+            this.deviceButtonsContainerPanel.AutoScroll = true;
+            this.deviceButtonsContainerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.deviceButtonsContainerPanel.Location = new System.Drawing.Point(0, 0);
+            this.deviceButtonsContainerPanel.Name = "deviceButtonsContainerPanel";
+            this.deviceButtonsContainerPanel.Size = new System.Drawing.Size(320, 173);
+            this.deviceButtonsContainerPanel.TabIndex = 1;
+            // 
             // AppForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1284, 884);
+            this.ClientSize = new System.Drawing.Size(1375, 615);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Location = new System.Drawing.Point(0, 0);
-            this.MinimumSize = new System.Drawing.Size(1170, 900);
             this.Name = "AppForm";
             this.Text = "AppForm";
             this.panelMenu.ResumeLayout(false);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
+            this.ContentPanel.ResumeLayout(false);
             this.connectButPanel.ResumeLayout(false);
             this.sessionPanel.ResumeLayout(false);
+            this.devicesListPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -217,5 +253,8 @@
         private System.Windows.Forms.Label roleTitleLabel;
         private System.Windows.Forms.Label userNameLabel;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel devicesListPanel;
+        private System.Windows.Forms.Panel deviceButtonsContainerPanel;
+        private System.Windows.Forms.Panel panel1;
     }
 }

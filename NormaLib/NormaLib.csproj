@@ -283,6 +283,12 @@
     </Compile>
     <Compile Include="UI\NormaUIColors.cs" />
     <Compile Include="UI\NormaUIDataGridStyles.cs" />
+    <Compile Include="UI\NormaMeasureBaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\NormaMeasureBaseForm.Designer.cs">
+      <DependentUpon>NormaMeasureBaseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\StartAppBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -359,6 +365,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\DBTableContolForm.resx">
       <DependentUpon>DBTableContolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\NormaMeasureBaseForm.resx">
+      <DependentUpon>NormaMeasureBaseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\StartAppBox.resx">
       <DependentUpon>StartAppBox.cs</DependentUpon>
