@@ -14,11 +14,11 @@ using NormaLib.ProtocolBuilders;
 
 namespace TeraMicroMeasure.Forms
 {
-    public partial class SettingsForm : ChildFormTabControlled
+    public partial class SettingsFormSinglePCApp : ChildFormTabControlled
     {
         
 
-        public SettingsForm() : base()
+        public SettingsFormSinglePCApp() : base()
         {
         }
 
@@ -33,10 +33,8 @@ namespace TeraMicroMeasure.Forms
             switch (idx)
             {
                 case 0:
-                    return new TCPSettingsForm(new TCPSettingsController(SettingsControl.IsServerApp));
-                case 1:
                     return new DataBaseSettingsForm();
-                case 2:
+                case 1:
                     return new ProtocolSettingsForm();
                 default:
                     return new NormaLib.UI.ChildForms.BlankForm();

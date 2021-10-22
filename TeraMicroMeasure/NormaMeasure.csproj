@@ -155,11 +155,17 @@
     <Compile Include="Forms\DataBaseTablesControlForm.Designer.cs">
       <DependentUpon>DataBaseTablesControlForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SettingsForm.cs">
+    <Compile Include="Forms\SettingsFormSinglePCApp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SettingsForm.Designer.cs">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
+    <Compile Include="Forms\SettingsFormSinglePCApp.Designer.cs">
+      <DependentUpon>SettingsFormSinglePCApp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SettingsFormClientServerApp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SettingsFormClientServerApp.Designer.cs">
+      <DependentUpon>SettingsFormClientServerApp.cs</DependentUpon>
     </Compile>
     <Compile Include="LoadAppForm.cs">
       <SubType>Form</SubType>
@@ -212,8 +218,11 @@
     <EmbeddedResource Include="Forms\DataBaseTablesControlForm.resx">
       <DependentUpon>DataBaseTablesControlForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SettingsForm.resx">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\SettingsFormSinglePCApp.resx">
+      <DependentUpon>SettingsFormSinglePCApp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SettingsFormClientServerApp.resx">
+      <DependentUpon>SettingsFormClientServerApp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoadAppForm.resx">
       <DependentUpon>LoadAppForm.cs</DependentUpon>

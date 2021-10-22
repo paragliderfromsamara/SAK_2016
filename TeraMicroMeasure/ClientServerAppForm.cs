@@ -158,7 +158,7 @@ namespace TeraMicroMeasure
 
         protected override Form GetSettingsForm()
         {
-            return new SettingsForm();
+            return new SettingsFormClientServerApp();
         }
 
         protected override Form GetDataBaseForm()

@@ -117,6 +117,26 @@ namespace NormaMeasure
             //connectButPanel.Visible = !IsServerApp;
         }
 
+        protected override Form GetMeasureForm()
+        {
+            return base.GetMeasureForm();
+            //MeasureForm f = new MeasureForm(SettingsControl.GetClientId());
+            //f.OnMeasureStateChanged += RefreshMeasureStateHandler;
+            //f.Load += (s, a) => { f.SetXmlDeviceList(xmlDevices); };
+            //return f;
+        }
+
+        protected override Form GetSettingsForm()
+        {
+            return new SettingsFormSinglePCApp();
+        }
+
+        protected override Form GetDataBaseForm()
+        {
+            return new DataBaseTablesControlForm();
+        }
+
+
         private bool InitDataBase()
         {
             retry:
@@ -249,6 +269,9 @@ namespace NormaMeasure
             };
             InitSessionForm();
         }
+
+
+
 
     }
 }

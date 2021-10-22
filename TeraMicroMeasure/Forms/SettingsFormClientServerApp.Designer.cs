@@ -1,6 +1,6 @@
 ﻿namespace TeraMicroMeasure.Forms
 {
-    partial class SettingsForm
+    partial class SettingsFormClientServerApp
     {
         /// <summary>
         /// Required designer variable.
