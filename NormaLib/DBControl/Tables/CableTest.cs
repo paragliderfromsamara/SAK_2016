@@ -1048,7 +1048,7 @@ namespace NormaLib.DBControl.Tables
             {
                 foreach(TestedCableStructure structure in cable_test.TestedCable.CableStructures.Rows)
                 {
-                    MeasurePointMap pointMap = new MeasurePointMap(structure, pType.ParameterTypeId);
+                    CableMeasurePointMap pointMap = new CableMeasurePointMap(structure, pType.ParameterTypeId);
                     do
                     {
                         if (pType.IsFreqParameter)

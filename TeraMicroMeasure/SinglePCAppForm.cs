@@ -15,6 +15,7 @@ using System.Threading;
 using TeraMicroMeasure.Forms;
 using NormaLib.SessionControl;
 using NormaLib.Devices;
+using NormaLib.Devices.Teraohmmeter;
 
 
 namespace NormaMeasure
@@ -23,7 +24,7 @@ namespace NormaMeasure
     {
         LoadAppForm LoadAppForm;
         public static DevicesDispatcher DeviceDispatcher;
-        public static List<DeviceControlForm> DeviceControlForms = new List<DeviceControlForm>();
+        public static List<DeviceControlFormBase> DeviceControlForms = new List<DeviceControlFormBase>();
         public SinglePCAppForm()
         {
             //clientTitle.Text = "NormaMeasure";
@@ -212,19 +213,28 @@ namespace NormaMeasure
         {
             string formName = $"Device_{device.TypeId}_{device.Serial}_{device.SerialYear}_Form";
 
-            DeviceControlForm f = null;
+            DeviceControlFormBase f = null;
 
-            foreach (DeviceControlForm c in DeviceControlForms)
+            foreach (DeviceControlFormBase c in DeviceControlForms)
             {
                 if (c.Name == formName)
                 {
-                    f = c as DeviceControlForm;
+                    f = c as DeviceControlFormBase;
                     break;
                 }
             }
             if (f == null)
             {
-                f = new DeviceControlForm(device);
+                switch(device.TypeId)
+                {
+                    case DeviceType.Teraohmmeter:
+                        f = new TeraDeviceControlForm(device);
+                        break;
+                    default:
+                        f = new DeviceControlFormBase(device);
+                        break;
+                }
+                
                 f.Name = formName;
                 DeviceControlForms.Add(f);
                 f.FormClosed += (o, s) => { DeviceControlForms.Remove(f); };

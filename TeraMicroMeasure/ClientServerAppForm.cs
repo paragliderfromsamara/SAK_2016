@@ -37,7 +37,7 @@ namespace TeraMicroMeasure
         public static DevicesDispatcher DeviceDispatcher;
         //public static Dictionary<int, MeasureForm> measureFormsList = new Dictionary<int, MeasureForm>();
         public static Dictionary<string, DeviceXMLState> xmlDevices = new Dictionary<string, DeviceXMLState>();
-        public static List<DeviceControlForm> DeviceControlForms = new List<DeviceControlForm>();
+
         #endregion
 
         #region private fields 
@@ -168,38 +168,7 @@ namespace TeraMicroMeasure
 
 
 
-        private void OpenDeviceControlForm(DeviceBase device)
-        {
-            string formName = $"Device_{device.TypeId}_{device.Serial}_{device.SerialYear}_Form";
-            
-            DeviceControlForm f = null;
-           
-            foreach(DeviceControlForm c in DeviceControlForms)
-            {
-                if (c.Name == formName)
-                {
-                    f = c as DeviceControlForm;
-                    break;
-                }
-            }
-            if (f==null)
-            {
-                f = new DeviceControlForm(device);
-                f.Name = formName;
-                DeviceControlForms.Add(f);
-                f.FormClosed += (o, s) => { DeviceControlForms.Remove(f); };
-                f.StartPosition = FormStartPosition.CenterScreen;
-                f.Show();
 
-            }else
-            {
-                if (f.WindowState == FormWindowState.Minimized) f.WindowState = FormWindowState.Normal;
-                
-            }
-            
-            
-
-        }
 
         protected override Form GetMeasureForm()
         {
@@ -1173,7 +1142,7 @@ namespace TeraMicroMeasure
                 Button b = BuildDeviceButton();
                 b.Name = butName;
                 b.Text = $"{d.TypeNameFull}\nЗав.№ {d.Serial}";
-                b.Click += (o, s) => { OpenDeviceControlForm(d); };
+               // b.Click += (o, s) => { OpenDeviceControlForm(d); };
                 b.TabIndex = deviceButtonsContainerPanel.Controls.Count + 1;
                 d.OnDisconnected += (o ,s) => { RemoveButtonFromButtonsContainer(b, new EventArgs()); };
                 deviceButtonsContainerPanel.Controls.Add(b);

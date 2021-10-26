@@ -202,6 +202,48 @@
     <Compile Include="Devices\TableMap.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Devices\Teraohmmeter\pSTeraMeasureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\pSTeraMeasureForm.Designer.cs">
+      <DependentUpon>pSTeraMeasureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\CalibrationTeraMeasureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\CalibrationTeraMeasureForm.Designer.cs">
+      <DependentUpon>CalibrationTeraMeasureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\RTeraMeasureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\RTeraMeasureForm.Designer.cs">
+      <DependentUpon>RTeraMeasureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\RLTeraMeasureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\RLTeraMeasureForm.Designer.cs">
+      <DependentUpon>RLTeraMeasureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\pVTeraMeasureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\pVTeraMeasureForm.Designer.cs">
+      <DependentUpon>pVTeraMeasureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\TeraDeviceControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\TeraDeviceControlForm.Designer.cs">
+      <DependentUpon>TeraDeviceControlForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\TeraMeasureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Devices\Teraohmmeter\TeraMeasureForm.Designer.cs">
+      <DependentUpon>TeraMeasureForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Devices\Teraohmmeter\TeraohmetrTOmM_01_Emulator.cs" />
     <Compile Include="Devices\Teraohmmeter\TeraohmmeterTOmM_01.cs" />
     <Compile Include="Devices\Teraohmmeter\TOhmM_01_v1_CommandProtocol.cs" />
@@ -211,7 +253,7 @@
     <Compile Include="Devices\XmlObjects\TeraohmmetrXMLState.cs" />
     <Compile Include="Measure\CableTestIni.cs" />
     <Compile Include="Measure\MaterialCoeffCalculator.cs" />
-    <Compile Include="Measure\MeasurePointMap.cs" />
+    <Compile Include="Measure\CableMeasurePointMap.cs" />
     <Compile Include="Measure\MeasurePointsHandler.cs" />
     <Compile Include="Measure\MeasureResultConverter.cs" />
     <Compile Include="Measure\MeasureTimer.cs" />
@@ -281,6 +323,18 @@
     <Compile Include="UI\DBTableContolForm.Designer.cs">
       <DependentUpon>DBTableContolForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\DeviceControlFormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DeviceControlFormBase.Designer.cs">
+      <DependentUpon>DeviceControlFormBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MeasureFormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MeasureFormBase.Designer.cs">
+      <DependentUpon>MeasureFormBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\NormaUIColors.cs" />
     <Compile Include="UI\NormaUIDataGridStyles.cs" />
     <Compile Include="UI\NormaMeasureBaseForm.cs">
@@ -341,6 +395,9 @@
     <EmbeddedResource Include="Devices\SAC\TableMap_testForm.resx">
       <DependentUpon>TableMap_testForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Teraohmmeter\TeraDeviceControlForm.resx">
+      <DependentUpon>TeraDeviceControlForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -365,6 +422,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\DBTableContolForm.resx">
       <DependentUpon>DBTableContolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\DeviceControlFormBase.resx">
+      <DependentUpon>DeviceControlFormBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\MeasureFormBase.resx">
+      <DependentUpon>MeasureFormBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\NormaMeasureBaseForm.resx">
       <DependentUpon>NormaMeasureBaseForm.cs</DependentUpon>

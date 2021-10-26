@@ -142,7 +142,7 @@ namespace AppTest
                     foreach (CableStructure s in cable.CableStructures.Rows)
                     {
 
-                        MeasurePointMap map = new MeasurePointMap(s, MeasuredParameterType.Calling);
+                        CableMeasurePointMap map = new CableMeasurePointMap(s, MeasuredParameterType.Calling);
                         if (s.RealAmount > 4)
                         {
                             for (uint i = LeadTestStatus.Ragged; i < LeadTestStatus.Broken; i++)

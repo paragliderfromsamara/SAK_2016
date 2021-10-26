@@ -61,7 +61,7 @@ namespace NormaLib.UI
                     RefreshThemOnCurrentForm();
                     lblTitle.Text =  currentButton.Text.Trim().ToUpper();
 
-    }
+                 }
             }
         }
 

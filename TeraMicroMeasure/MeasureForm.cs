@@ -240,10 +240,10 @@ namespace TeraMicroMeasure
         private void SetLeadStatusForCurrentPointOnTestFile(LeadTestStatus status)
         {
             if (status.StatusId == GetLeadStatusByElementNumber(measurePointMap.CurrentElementNumber).StatusId) return;
-            MeasurePoint p = measurePointMap.CurrentPoint;
+            CableMeasurePoint p = measurePointMap.CurrentPoint;
             if (status.StatusId == LeadTestStatus.Ok)
             {
-                MeasurePointMap map = new MeasurePointMap(currentStructure, MeasuredParameterType.Calling);
+                CableMeasurePointMap map = new CableMeasurePointMap(currentStructure, MeasuredParameterType.Calling);
                 map.SetMeasurePoint(p.ElementIndex, 0);
                 do
                 {
@@ -1309,7 +1309,7 @@ namespace TeraMicroMeasure
           
         }
 
-        MeasurePointMap measurePointMap;
+        CableMeasurePointMap measurePointMap;
         bool pointChangedByClick = false;
         private void RefreshMeasureControl()
         {
@@ -1483,7 +1483,7 @@ namespace TeraMicroMeasure
 
         private void InitPointMapForCurrentStructureAndCurrentMeasureType()
         {
-            measurePointMap = new MeasurePointMap(currentStructure, measureState.MeasureTypeId);
+            measurePointMap = new CableMeasurePointMap(currentStructure, measureState.MeasureTypeId);
             measurePointMap.OnMeasurePointChanged += OnMeasurePointChanged_Handler;
             RefreshMeasurePointControlButtons();
         }

@@ -131,12 +131,6 @@
     <Compile Include="CommandProcessors\ClentSideCommandProcessor.cs" />
     <Compile Include="CommandProcessors\ClientCommandDispatcher.cs" />
     <Compile Include="CommandProcessors\ServerCommandDispatcher.cs" />
-    <Compile Include="Forms\DeviceControlForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DeviceControlForm.Designer.cs">
-      <DependentUpon>DeviceControlForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\DevicesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,9 +199,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AppTypeSelector.resx">
       <DependentUpon>AppTypeSelector.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DeviceControlForm.resx">
-      <DependentUpon>DeviceControlForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DevicesForm.resx">
       <DependentUpon>DevicesForm.cs</DependentUpon>

@@ -94,10 +94,10 @@ namespace NormaLib.Measure
                 lst.Add(MeasuredParameterType.Calling);
                 foreach (var pTypeId in lst)
                 {
-                    MeasurePointMap mpm = new MeasurePointMap(sourceStrucure, pTypeId);
+                    CableMeasurePointMap mpm = new CableMeasurePointMap(sourceStrucure, pTypeId);
                     do
                     {
-                        MeasurePoint point = mpm.CurrentPoint;
+                        CableMeasurePoint point = mpm.CurrentPoint;
                         MeasuredParameterType mpt = MeasuredParameterType.find_by_parameter_type_id(pTypeId);
                         float value = GetMeasurePointValue((int)point.StructureId, (int)pTypeId, point.PointIndex);
                         if (!float.IsNaN(value))
@@ -449,7 +449,7 @@ namespace NormaLib.Measure
                 return 20f;
         }
 
-        public void SetMeasurePointValue(MeasurePoint point, float value = 0, float temperature = -1)
+        public void SetMeasurePointValue(CableMeasurePoint point, float value = 0, float temperature = -1)
         {
             string section = GetTestResultSectionName((int)point.StructureId);
             string temperatureAttrName = GetTestTemperatureAttrName((int)point.ParameterTypeId, point.PointIndex);
@@ -461,7 +461,7 @@ namespace NormaLib.Measure
             if (temperature >= 5 && temperature <= 35) file.Write(temperatureAttrName, temperature.ToString(), section);
         }
 
-        public void SetLeadStatusOfPoint(MeasurePoint point, int lead_status_id)
+        public void SetLeadStatusOfPoint(CableMeasurePoint point, int lead_status_id)
         {
             string section = GetTestResultSectionName((int)point.StructureId);
             string valueAttrName = GetTestValueAttrName((int)MeasuredParameterType.Calling, point.PointIndex);
@@ -478,7 +478,7 @@ namespace NormaLib.Measure
         private void FillAffectedElementOnStructure(CableStructure structure)
         {
             string section = GetTestResultSectionName((int)structure.CableStructureId);
-            MeasurePointMap point_map = new MeasurePointMap(structure, MeasuredParameterType.Calling);
+            CableMeasurePointMap point_map = new CableMeasurePointMap(structure, MeasuredParameterType.Calling);
             Dictionary<int, uint> affected_elements = new Dictionary<int, uint>();
             do
             {
@@ -499,14 +499,14 @@ namespace NormaLib.Measure
 
         public void ClearParameterDataResults(CableStructureMeasuredParameterData currentParameterData)
         {
-            MeasurePointMap map = new MeasurePointMap(currentParameterData.AssignedStructure, currentParameterData.ParameterTypeId);
+            CableMeasurePointMap map = new CableMeasurePointMap(currentParameterData.AssignedStructure, currentParameterData.ParameterTypeId);
             do
             {
                 ClearMeasurePointValue(map.CurrentPoint);
             } while (map.TryGetNextPoint());
         }
 
-        public void ClearMeasurePointValue(MeasurePoint currentPoint)
+        public void ClearMeasurePointValue(CableMeasurePoint currentPoint)
         {
             string section = GetTestResultSectionName((int)currentPoint.StructureId);
             string val_attr_name;
@@ -517,7 +517,7 @@ namespace NormaLib.Measure
             file.DeleteKey(temperatureAttrName, section);
         }
 
-        public bool HasMeasurePointValue(MeasurePoint point)
+        public bool HasMeasurePointValue(CableMeasurePoint point)
         {
             string section = GetTestResultSectionName((int)point.StructureId);
             string val_attr_name = GetTestValueAttrName((int)point.ParameterTypeId, point.PointIndex);

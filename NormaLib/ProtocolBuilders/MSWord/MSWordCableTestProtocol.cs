@@ -1015,7 +1015,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
                 bool needToBuildTable = false;
                 if (mpt.IsPrimaryParameter)
                 {
-                    MeasurePointMap map = new MeasurePointMap(structure, mpt.ParameterTypeId);
+                    CableMeasurePointMap map = new CableMeasurePointMap(structure, mpt.ParameterTypeId);
                     if ((colsCount + map.MeasurePointsPerElement) > maxCols)
                     {
                         needToBuildTable = true;
@@ -1093,7 +1093,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
                         row.Append(cell);
                         foreach (MeasuredParameterType pType in measuredParameterTypes)
                         {
-                            MeasurePointMap map = new MeasurePointMap(structure, pType.ParameterTypeId);
+                            CableMeasurePointMap map = new CableMeasurePointMap(structure, pType.ParameterTypeId);
                             for (int measIdx = 0; measIdx < map.MeasurePointsPerElement; measIdx++)
                             {
                                 TableCell cellMeasParam = BuildCell();
@@ -1123,7 +1123,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
                             foreach (MeasuredParameterType pType in measuredParameterTypes)
                             {
                                 TestedStructureMeasuredParameterData pData = structure.GetMeasureParameterDatasByParameterType(pType.ParameterTypeId)[0];
-                                MeasurePointMap map = new MeasurePointMap(structure, pType.ParameterTypeId);
+                                CableMeasurePointMap map = new CableMeasurePointMap(structure, pType.ParameterTypeId);
                                 TableCell statCell;
                                 float value = -1;
                                 if (isMaxValueRow) value = pData.MaxResultValue;
@@ -1150,7 +1150,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
                             row.Append(cellNumber);
                             foreach (MeasuredParameterType pType in measuredParameterTypes)
                             {
-                                MeasurePointMap map = new MeasurePointMap(structure, pType.ParameterTypeId);
+                                CableMeasurePointMap map = new CableMeasurePointMap(structure, pType.ParameterTypeId);
                                 for (int measIdx = 0; measIdx < map.MeasurePointsPerElement; measIdx++)
                                 {
                                     TableCell cellValue = BuildCell(new Run[] { GetTestResult(elNumber, measIdx+1, (int)pType.ParameterTypeId, structure) });
@@ -1339,7 +1339,7 @@ namespace NormaLib.ProtocolBuilders.MSWord
 
         private List<List<TableCell>> BuildMeasureParameterHeaderCells(MeasuredParameterType pType, TestedCableStructure structure)
         {
-            MeasurePointMap map = new MeasurePointMap(structure, pType.ParameterTypeId);
+            CableMeasurePointMap map = new CableMeasurePointMap(structure, pType.ParameterTypeId);
             List<TableCell> parameterTitleCells = BuildParameterTitleCells(pType, structure, map.MeasurePointsPerElement);
             List<TableCell> elementMeasureNumberCells = BuildElementMeasureNumberCells(pType, map.MeasurePointsPerElement);
             return new List<List<TableCell>>() { parameterTitleCells, elementMeasureNumberCells };

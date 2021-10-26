@@ -7,7 +7,7 @@ using NormaLib.DBControl.Tables;
 
 namespace NormaLib.Measure
 {
-    public delegate void MeasurePointsHandlerDelegate(MeasurePoint handled_point);
+    public delegate void MeasurePointsHandlerDelegate(CableMeasurePoint handled_point);
 
     public class MeasurePointsHandler
     {
@@ -37,7 +37,7 @@ namespace NormaLib.Measure
 
             }else
             {
-                MeasurePointMap map = new MeasurePointMap(structure, parameter_type.ParameterTypeId);
+                CableMeasurePointMap map = new CableMeasurePointMap(structure, parameter_type.ParameterTypeId);
                 do
                 {
                     HandlerFunction?.Invoke(map.CurrentPoint);

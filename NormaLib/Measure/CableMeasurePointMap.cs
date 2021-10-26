@@ -9,9 +9,9 @@ namespace NormaLib.Measure
 {
 
 
-    public class MeasurePointMap
+    public class CableMeasurePointMap
     {
-        private MeasurePoint currentPoint; //private int currentPoint;
+        private CableMeasurePoint currentPoint; //private int currentPoint;
         private int elementsAmount;
         private int measurePointsPerElement;
         private int measurePointsAmount;
@@ -22,7 +22,7 @@ namespace NormaLib.Measure
         public int CurrentElementNumber => currentPoint.ElementNumber;
         public int CurrentMeasurePointNumber => currentPoint.MeasureNumber;
 
-        public MeasurePoint CurrentPoint => currentPoint;
+        public CableMeasurePoint CurrentPoint => currentPoint;
 
         public int MeasurePointsPerElement => measurePointsPerElement;
 
@@ -55,7 +55,7 @@ namespace NormaLib.Measure
         private uint parameterTypeId;
         public uint ParameterTypeId => parameterTypeId;
 
-        public MeasurePointMap(CableStructure structure, uint parameter_type_id, int start_point_index = 0)
+        public CableMeasurePointMap(CableStructure structure, uint parameter_type_id, int start_point_index = 0)
         {
             parameterTypeId = parameter_type_id;
             current_structure = structure;
@@ -107,16 +107,16 @@ namespace NormaLib.Measure
 
         private void SetMeasurePoint(int next_point)
         {
-            MeasurePoint ? prev = null, next = null;
+            CableMeasurePoint ? prev = null, next = null;
             prev = currentPoint;
             if (NextElementEnabled) next = BuildPointByIndex(next_point + 1);
             currentPoint = BuildPointByIndex(next_point);
             OnMeasurePointChanged?.Invoke(this, new MeasurePointEventArgs(currentPoint, prev, next));
         }
 
-        private MeasurePoint BuildPointByIndex(int next_point)
+        private CableMeasurePoint BuildPointByIndex(int next_point)
         {
-            MeasurePoint point = new MeasurePoint();
+            CableMeasurePoint point = new CableMeasurePoint();
             point.PointIndex = next_point;
             point.ElementIndex = next_point / measurePointsPerElement;
             point.MeasureIndex = next_point % measurePointsPerElement;
@@ -127,7 +127,7 @@ namespace NormaLib.Measure
             return point;
         }
 
-        public void SetMeasurePoint(MeasurePoint point)
+        public void SetMeasurePoint(CableMeasurePoint point)
         {
             SetMeasurePoint(point.ElementIndex, point.MeasureIndex);
         }
@@ -151,10 +151,10 @@ namespace NormaLib.Measure
             return element_index * measurePointsPerElement + element_point_index;
         }
 
-        public MeasurePoint GetPointByElementIndex(int element_index, int element_point_index) => BuildPointByIndex(GetPointIndex(element_index, element_point_index));
+        public CableMeasurePoint GetPointByElementIndex(int element_index, int element_point_index) => BuildPointByIndex(GetPointIndex(element_index, element_point_index));
     }
 
-    public struct MeasurePoint
+    public struct CableMeasurePoint
     {
         public int ElementIndex;
         public int MeasureIndex;
@@ -178,10 +178,10 @@ namespace NormaLib.Measure
 
     public class MeasurePointEventArgs : EventArgs
     {
-        public MeasurePoint ? PrevPoint;
-        public MeasurePoint CurrentPoint;
-        public MeasurePoint ? NextPoint;
-        public MeasurePointEventArgs(MeasurePoint current, MeasurePoint ? prev, MeasurePoint ? next) : base()
+        public CableMeasurePoint ? PrevPoint;
+        public CableMeasurePoint CurrentPoint;
+        public CableMeasurePoint ? NextPoint;
+        public MeasurePointEventArgs(CableMeasurePoint current, CableMeasurePoint ? prev, CableMeasurePoint ? next) : base()
         {
             CurrentPoint = current;
             NextPoint = next;
